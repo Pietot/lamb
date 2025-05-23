@@ -22,7 +22,8 @@ try {
     }
 
     logout($pdo, $id_employee);
-    
+    setcookie('token', '', -1, '/'); 
+
     echo json_encode(['success' => true, 'message' => 'Déconnexion réussie.']);
 } catch (Exception $e) {
     echo json_encode(['success' => false, 'message' => 'Erreur serveur.']);
