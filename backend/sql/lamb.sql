@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : ven. 23 mai 2025 à 13:25
+-- Généré le : ven. 23 mai 2025 à 16:16
 -- Version du serveur : 8.3.0
 -- Version de PHP : 8.2.18
 
@@ -145,6 +145,8 @@ CREATE TABLE IF NOT EXISTS `employee` (
   `email` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `login` varchar(30) NOT NULL,
   `pwd_hash` varchar(72) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `token` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `token_init` datetime NOT NULL,
   `id_role` int NOT NULL,
   PRIMARY KEY (`id_employee`),
   KEY `id_role` (`id_role`)
@@ -154,8 +156,8 @@ CREATE TABLE IF NOT EXISTS `employee` (
 -- Déchargement des données de la table `employee`
 --
 
-INSERT INTO `employee` (`id_employee`, `nom`, `prenom`, `email`, `login`, `pwd_hash`, `id_role`) VALUES
-(1, 'Test', 'Test', 'test@test.com', 'test', '$2y$10$2TUScg0IOjrJ6BkJFwZOjuJEdQBop6CuO/HtTijZgMuzQALlaV8de', 1);
+INSERT INTO `employee` (`id_employee`, `nom`, `prenom`, `email`, `login`, `pwd_hash`, `token`, `token_init`, `id_role`) VALUES
+(1, 'Test', 'Test', 'test@test.com', 'test', '$2y$10$YMfhEoNm8tgkhfSm.kzGF.kezvI4p/SRqFp3VBR45KikqVUsKQc1y', 'ae7cfac3279045b8e7a2fa0d5a2d57', '2025-05-23 18:11:01', 1);
 
 -- --------------------------------------------------------
 
