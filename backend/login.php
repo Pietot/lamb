@@ -20,7 +20,7 @@ try {
 
     if ($user && password_verify($password, $user['pwd_hash'])) {
         $token = setToken($pdo, $user['id_employee']);
-        $_SESSION['id_employee'] = $user['id_employee'];
+        setcookie('token', $token, time() + 3600, '/');
         echo json_encode([
             'success' => true,
             'user' => [
