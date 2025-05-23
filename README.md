@@ -10,6 +10,12 @@ This template should help get you started developing with Vue 3 in Vite.
 
 See [Vite Configuration Reference](https://vite.dev/config/).
 
+## Prerequisite
+
+- Import the database in `backend\sql\lamb.sql` to your database.
+
+- Fill the .env in `backend\.env`
+
 ## Project Setup
 
 ```sh
