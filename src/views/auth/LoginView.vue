@@ -37,7 +37,7 @@
               <input
                 v-model="credentials.login"
                 type="text"
-                placeholder="LOGIN"
+                placeholder="Login"
                 class="form-input"
                 required
               />
@@ -57,7 +57,7 @@
               <input
                 v-model="credentials.password"
                 type="password"
-                placeholder="MOT DE PASSE"
+                placeholder="Mot de passe"
                 class="form-input"
                 required
               />
@@ -369,14 +369,13 @@ export default {
 
 /* MESSAGE D'ERREUR */
 .error-message {
-  background: rgba(239, 68, 68, 0.1);
+  background: rgb(239, 68, 68);
   color: white;
   padding: 1rem;
   border-radius: 12px;
   font-size: 14px;
   font-weight: 500;
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  backdrop-filter: blur(10px);
+  border: 1px solid rgb(255, 0, 0);
 }
 
 /* RESPONSIVE */
