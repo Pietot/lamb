@@ -19,12 +19,13 @@ try {
     $user = getUser($pdo, $login);
 
     if ($user && password_verify($password, $user['pwd_hash'])) {
-        setToken($pdo, $user['id_employee']);
+        $token = setToken($pdo, $user['id_employee']);
         $_SESSION['id_employee'] = $user['id_employee'];
         echo json_encode([
             'success' => true,
             'user' => [
                 'id_employee' => $user['id_employee'],
+                'token' => $token,
             ]
         ]);
 
