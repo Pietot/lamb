@@ -11,7 +11,15 @@ function setToken(PDO $pdo, int $id_employee): string
     return $token;
 }
 
-function verifyToken(PDO $pdo, string $token): bool
+function removeToken(PDO $pdo, int $id_employee): void
+{
+    $stmt = $pdo->prepare('UPDATE employee SET token = NULL, token_init = NULL WHERE id_employee = :id_employee');
+    $stmt->bindValue(':id_employee', $id_employee);
+    $stmt->execute();
+    setcookie('token', '', -1, '/');
+}
+
+function verifyToken(PDO $pdo, string $token): ?int
 {
     $stmt = $pdo->prepare('SELECT id_employee FROM employee WHERE token = :token AND token_init > NOW() - INTERVAL 1 HOUR');
     $stmt->bindValue(':token', $token);
