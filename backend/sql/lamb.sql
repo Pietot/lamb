@@ -145,8 +145,8 @@ CREATE TABLE IF NOT EXISTS `employee` (
   `email` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `login` varchar(30) NOT NULL,
   `pwd_hash` varchar(72) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `token` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `token_init` datetime NOT NULL,
+  `token` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `token_init` datetime NULL,
   `id_role` int NOT NULL,
   PRIMARY KEY (`id_employee`),
   KEY `id_role` (`id_role`)
