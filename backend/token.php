@@ -19,9 +19,9 @@ function verifyToken(PDO $pdo, string $token): bool
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     if ($result) {
         setToken($pdo, $result['id_employee']);
-        return true;
+        return $result['id_employee'];
     } else {
-        setcookie('token', '', time() - 3600, '/');
-        return false;
+        setcookie('token', '', -1, '/');
+        return null;
     }
 }
