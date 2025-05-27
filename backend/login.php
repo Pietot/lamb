@@ -23,7 +23,6 @@ try {
                 'token' => $token,
             ]
         ]);
-
     } else {
         echo json_encode(['success' => false, 'message' => 'Nom d’utilisateur ou mot de passe incorrect.']);
     }
