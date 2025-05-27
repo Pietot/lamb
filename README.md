@@ -12,9 +12,11 @@ See [Vite Configuration Reference](https://vite.dev/config/).
 
 ## Prerequisite
 
+- Clone the repo in `C:\wamp64\www` if you're using wamp, or in `C:\xampp\htdocs` if you're using xampp.
+
 - Import the database in `backend\sql\lamb.sql` to your database.
 
-- Fill the .env in `backend\.env`
+- Create a file named .env in `backend\` and fill the values with your local enviroment from `backend\.env.example`
 
 ## Project Setup
 
