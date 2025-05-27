@@ -16,7 +16,7 @@ See [Vite Configuration Reference](https://vite.dev/config/).
 
 - Import the database in `backend\sql\lamb.sql` to your database.
 
-- Create a file named .env in `backend\` and fill the values with your local enviroment from `backend\.env.example`
+- Fill the .envs in `backend\.env` and `.env.local` (usally `VITE_API_URL=http://localhost/lamb/backend/login.php`)
 
 ## Project Setup
 
