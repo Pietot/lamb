@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const useAuthStore = defineStore("auth", {
   state: () => ({
     user: null,
@@ -10,7 +12,7 @@ export const useAuthStore = defineStore("auth", {
     async login({ login, password }) {
       const isAuthenticated = true;
       const response = await fetch(
-        "http://localhost/mine/lamb/backend/login.php",
+        API_URL,
         {
           method: "POST",
           headers: {
