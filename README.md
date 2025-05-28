@@ -10,6 +10,14 @@ This template should help get you started developing with Vue 3 in Vite.
 
 See [Vite Configuration Reference](https://vite.dev/config/).
 
+## Prerequisite
+
+- Clone the repo in `C:\wamp64\www` if you're using wamp, or in `C:\xampp\htdocs` if you're using xampp.
+
+- Import the database in `backend\sql\lamb.sql` to your database.
+
+- Fill the .envs in `backend\.env` and `.env.local` (usally `VITE_API_URL=http://localhost/lamb/backend/login.php`)
+
 ## Project Setup
 
 ```sh
