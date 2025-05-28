@@ -1,28 +1,75 @@
-import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
-
-const API_URL = import.meta.env.VITE_API_URL;
+import { defineStore } from "pinia";
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
-    user: null,
+    user: JSON.parse(localStorage.getItem("user")) || null,
+    isAuthenticated: !!localStorage.getItem("user"),
   }),
 
   actions: {
     async login({ login, password }) {
-      const isAuthenticated = true;
+      const response = await fetch(import.meta.env.VITE_API_URL + "login.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          login,
+          password,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        this.user = result.user;
+        this.isAuthenticated = true;
+        localStorage.setItem("user", JSON.stringify(result.user));
+      } else {
+        throw new Error(result.message || "Erreur de connexion");
+      }
+    },
+
+    async logout() {
+      await fetch(import.meta.env.VITE_API_URL + "/logout", {
+        method: "POST",
+        body: new URLSearchParams({
+          id_employee: this.user ? this.user.id_employee : "",
+        }),
+      });
+      this.user = null;
+      this.isAuthenticated = false;
+      localStorage.removeItem("user");
+      if (window.location.pathname !== "/login") {
+        window.location.href = "/login";
+      }
+    },
+
+    async initAuth() {
+      const savedUser = localStorage.getItem("user");
+      if (savedUser) {
+        const valid = await this.verifyUser(JSON.parse(savedUser));
+        this.isAuthenticated = valid;
+        return valid;
+      } else {
+        this.logout();
+        return false;
+      }
+    },
+
+    async verifyUser(user) {
+      if (!this.isAuthenticated) return false;
+      const params = new URLSearchParams({
+        id_employee: user.id_employee,
+        token: user.token,
+      });
       const response = await fetch(
-        API_URL,
+        import.meta.env.VITE_API_URL + "verify_user.php?" + params.toString(),
         {
-          method: "POST",
+          method: "GET",
           headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
+            "Content-Type": "application/json",
           },
-          body: new URLSearchParams({
-            login: login,
-            password: password,
-          }),
-          credentials: "include",
         }
       );
 
@@ -30,11 +77,12 @@ export const useAuthStore = defineStore("auth", {
 
       if (result.success) {
         this.user = result.user;
+        this.isAuthenticated = true;
         localStorage.setItem("user", JSON.stringify(result.user));
+        return true;
       } else {
-        throw new Error(result.message);
+        this.logout();
       }
     },
   },
 });
-
