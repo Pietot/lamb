@@ -29,7 +29,6 @@ export default {
     })
 
     onMounted(() => {
-      authStore.initAuth()
     })
 
     return {
