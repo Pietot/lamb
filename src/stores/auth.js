@@ -12,6 +12,7 @@ export const useAuthStore = defineStore("auth", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
         },
         body: new URLSearchParams({
           login,
@@ -33,6 +34,10 @@ export const useAuthStore = defineStore("auth", {
     async logout() {
       await fetch(import.meta.env.VITE_API_URL + "logout", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
+        },
         body: new URLSearchParams({
           id_utilisateur: this.user ? this.user.id_utilisateur : "",
         }),
@@ -60,7 +65,7 @@ export const useAuthStore = defineStore("auth", {
     async verifyUser(user) {
       if (!this.isAuthenticated) return false;
       const params = new URLSearchParams({
-        id_employee: user.id_employee,
+        id_utilisateur: user.id_utilisateur,
         token: user.token,
       });
       const response = await fetch(
@@ -69,6 +74,7 @@ export const useAuthStore = defineStore("auth", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
           },
         }
       );
