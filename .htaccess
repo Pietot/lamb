@@ -1,0 +1,5 @@
+<FilesMatch "^(token|pdo)\.php$">
+    Require all denied
+</FilesMatch>
+
+ErrorDocument 404 /404.html
