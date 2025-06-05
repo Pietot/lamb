@@ -1,5 +1,11 @@
 import { existsSync, readFileSync, appendFileSync } from "fs";
-import { join } from "path";
+
+const RED = "\x1b[31m";
+const YELLOW = "\x1b[33m";
+const GREEN = "\x1b[32m";
+const BLUE = "\x1b[34m";
+const PURPLE = "\x1b[35m";
+const RESET = "\x1b[0m";
 
 function ensureEnvVars(filePath, requiredLines) {
   let content = "";
@@ -17,13 +23,17 @@ function ensureEnvVars(filePath, requiredLines) {
     }
     if (addedLines.length > 0) {
       console.log(
-        `Missing variables found in ${filePath}.\nAdded: ${"\n"}${addedLines.join("\n")}`
+        `${YELLOW}Added missing variables found in ${PURPLE}${filePath}${RESET}.`
       );
     } else {
-      console.log(`All required variables are present in ${filePath}.`);
+      console.log(
+        `${GREEN}All required variables are present in ${PURPLE}${filePath}${RESET}`
+      );
     }
   } else {
-    console.log(`${filePath} not found. Creating new file.`);
+    console.log(
+      `${RED}${filePath} not found. Please run:\n\n${BLUE}npm install\n${RESET}`
+    );
   }
 }
 
