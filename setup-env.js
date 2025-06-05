@@ -8,7 +8,7 @@ function ensureEnvVars(filePath, requiredLines) {
     let addedLines = [];
     const lines = content.split(/\r?\n/);
     for (const line of requiredLines) {
-      const inSet = lines.some(existingLine => existingLine.includes(line));
+      const inSet = lines.some((existingLine) => existingLine.includes(line));
       if (!inSet) {
         lines.push(line);
         appendFileSync(filePath, line + "\n");
@@ -35,6 +35,4 @@ ensureEnvVars(join("backend", ".env"), [
   "DOMAIN=http://localhost:5173",
 ]);
 ensureEnvVars(".env.local", ["VITE_API_URL="]);
-ensureEnvVars(".env.prod", [
-  "VITE_API_URL=https://lamb.com/backend/",
-]);
+ensureEnvVars(".env.prod", ["VITE_API_URL=https://lamb.com/backend/"]);
