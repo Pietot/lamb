@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const backendEnvPath = join(__dirname, "backend", ".env");
+const apiEnvPath = join(__dirname, "api/routes/utils/", ".env");
 const backendEnvLines = [
   "DB_HOST=",
   "DB_NAME=",
@@ -15,15 +15,15 @@ const backendEnvLines = [
   "DOMAIN=http://localhost:5173",
 ];
 const backendEnvContent = backendEnvLines.join("\n");
-if (!existsSync(backendEnvPath)) {
-  writeFileSync(backendEnvPath, backendEnvContent);
-  console.log("backend/.env created with default values.");
+if (!existsSync(apiEnvPath)) {
+  writeFileSync(apiEnvPath, backendEnvContent);
+  console.log("api/routes/utils/.env created with default values.");
 } else {
-  console.log("backend/.env already exists. Skipping creation.");
+  console.log("api/routes/utils/.env already exists. Skipping creation.");
 }
 
 const envLocalPath = join(__dirname, ".env.local");
-const envLocalLines = ["VITE_API_URL=http://localhost:5173/backend/api/"];
+const envLocalLines = ["VITE_API_URL=http://localhost/lamb/api/"];
 const envLocalContent = envLocalLines.join("\n");
 if (!existsSync(envLocalPath)) {
   writeFileSync(envLocalPath, envLocalContent);
@@ -33,7 +33,7 @@ if (!existsSync(envLocalPath)) {
 }
 
 const envProdPath = join(__dirname, ".env.prod");
-const envProdLines = ["VITE_API_URL=https://lamb.com/backend/api/"];
+const envProdLines = ["VITE_API_URL=https://lamb.com/api/"];
 const envProdContent = envProdLines.join("\n");
 if (!existsSync(envProdPath)) {
   writeFileSync(envProdPath, envProdContent);
