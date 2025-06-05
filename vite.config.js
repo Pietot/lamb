@@ -17,10 +17,10 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       proxy: {
-        "/backend": {
+        "/api": {
           target: env.VITE_API_URL,
           changeOrigin: true,
-          rewrite: (p) => p,
+          rewrite: (path) => path.replace(/^\/api/, ""),
         },
       },
     },
