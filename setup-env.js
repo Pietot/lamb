@@ -33,6 +33,7 @@ ensureEnvVars(join("backend", ".env"), [
   "DB_USER=",
   "DB_PASSWORD=",
   "DOMAIN=",
+  "API_KEY=",
 ]);
-ensureEnvVars(".env.local", ["VITE_API_URL="]);
-ensureEnvVars(".env.prod", ["VITE_API_URL="]);
+ensureEnvVars(".env.local", ["VITE_API_URL=", "VITE_API_KEY="]);
+ensureEnvVars(".env.prod", ["VITE_API_URL=", "VITE_API_KEY="]);
