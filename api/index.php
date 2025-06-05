@@ -30,6 +30,10 @@ switch ($path) {
     case '/lamb/api/logout':
         require __DIR__ . '/routes/logout.php';
         exit;
+
+    case '/lamb/api/get_table':
+        require __DIR__ . '/routes/get_table.php';
+        exit;
 }
 
 http_response_code(404);
