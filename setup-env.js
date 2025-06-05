@@ -27,7 +27,7 @@ function ensureEnvVars(filePath, requiredLines) {
   }
 }
 
-ensureEnvVars(join("backend", ".env"), [
+ensureEnvVars("api/routes/utils/.env", [
   "DB_HOST=",
   "DB_NAME=",
   "DB_USER=",
