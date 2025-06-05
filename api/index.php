@@ -11,7 +11,7 @@ include_once __DIR__ . '/routes/utils/verify_auth_api.php';
 
 if (!verifyAuthAPI()) {
     http_response_code(401);
-    echo json_encode(['error' => 'Unauthorized']);
+    echo json_encode(['success' => false, 'message' => 'Non autorisé']);
     exit;
 }
 
@@ -37,4 +37,4 @@ switch ($path) {
 }
 
 http_response_code(404);
-echo json_encode(['error' => 'Route not found', 'route' => $path]);
+echo json_encode(['success' => false, 'message' => 'Route introuvable.', 'route' => $path]);

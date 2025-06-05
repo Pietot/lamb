@@ -22,5 +22,5 @@ try {
     removeToken($pdo, $id_utilisateur);
     echo json_encode(['success' => true, 'message' => 'Déconnexion réussie.']);
 } catch (Exception $e) {
-    echo json_encode(['success' => false, 'message' => 'Erreur serveur.']);
+    echo json_encode(['success' => false, 'message' => 'Erreur du serveur.']);
 }

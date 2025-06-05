@@ -30,7 +30,7 @@ try {
         echo json_encode(['success' => false, 'message' => 'Nom d’utilisateur ou mot de passe incorrect.']);
     }
 } catch (Exception $e) {
-    echo json_encode(['success' => false, 'message' => 'Erreur serveur.' . $e->getMessage()]);
+    echo json_encode(['success' => false, 'message' => 'Erreur du serveur.']);
 }
 
 function getUser(PDO $pdo, string $login): array

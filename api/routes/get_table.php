@@ -13,7 +13,7 @@ $table = $_GET['table'] ?? null;
 
 if (!$table) {
     http_response_code(400);
-    echo json_encode(['success' => false, 'message' => 'Table parameter is required.']);
+    echo json_encode(['success' => false, 'message' => 'Paramètre manquant.']);
     exit;
 }
 
@@ -23,7 +23,7 @@ $tableExists = $stmt->fetchColumn() > 0;
 
 if (!$tableExists) {
     http_response_code(404);
-    echo json_encode(['success' => false, 'message' => "Table '$table' does not exist."]);
+    echo json_encode(['success' => false, 'message' => "Paramètre invalide."]);
     exit;
 }
 
@@ -32,5 +32,5 @@ try {
     echo json_encode(['success' => true, 'articles' => $articles]);
 } catch (Exception $e) {
     http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Server error: ' . $e->getMessage()]);
+    echo json_encode(['success' => false, 'message' => 'Erreur du serveur.']);
 }

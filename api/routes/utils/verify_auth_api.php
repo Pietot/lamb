@@ -22,7 +22,7 @@ function verifyAuthAPI(): bool
 
     if (!$token) {
         http_response_code(401);
-        echo json_encode(['success' => false, 'message' => 'Missing Authorization header']);
+        echo json_encode(['success' => false, 'message' => 'En-tête Authorization manquante']);
         exit;
     }
 
@@ -30,7 +30,7 @@ function verifyAuthAPI(): bool
 
     if ($token !== $_ENV['API_KEY']) {
         http_response_code(403);
-        echo json_encode(['success' => false, 'message' => 'Invalid API key']);
+        echo json_encode(['success' => false, 'message' => 'Clé API invalide']);
         exit;
     }
 

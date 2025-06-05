@@ -39,5 +39,5 @@ if ($result) {
 } else if ($result === false) {
     echo json_encode(['success' => false, 'message' => 'Utilisateur non trouvé ou token invalide.']);
 } else {
-    echo json_encode(['success' => false, 'message' => 'Erreur serveur.']);
+    echo json_encode(['success' => false, 'message' => 'Erreur du serveur.']);
 }
