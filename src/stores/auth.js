@@ -34,7 +34,7 @@ export const useAuthStore = defineStore("auth", {
       await fetch(import.meta.env.VITE_API_URL + "logout", {
         method: "POST",
         body: new URLSearchParams({
-          id_employee: this.user ? this.user.id_employee : "",
+          id_utilisateur: this.user ? this.user.id_utilisateur : "",
         }),
       });
       this.user = null;
