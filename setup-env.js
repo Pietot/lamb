@@ -11,13 +11,13 @@ function ensureEnvVars(filePath, requiredLines) {
       const inSet = lines.some((existingLine) => existingLine.includes(line));
       if (!inSet) {
         lines.push(line);
-        appendFileSync(filePath, line + "\n");
+        appendFileSync(filePath, "\n" + line);
         addedLines.push(line);
       }
     }
     if (addedLines.length > 0) {
       console.log(
-        `Missing variables found in ${filePath}.${"\n"} Added: ${"\n"}${addedLines.join("\n")}`
+        `Missing variables found in ${filePath}.\nAdded: ${"\n"}${addedLines.join("\n")}`
       );
     } else {
       console.log(`All required variables are present in ${filePath}.`);
