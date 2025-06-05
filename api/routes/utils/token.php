@@ -6,7 +6,7 @@ if (basename($_SERVER['SCRIPT_FILENAME']) === basename(__FILE__)) {
 function setToken(PDO $pdo, int $id_utilisateur): string
 {
     $token = bin2hex(random_bytes(30));
-    $stmt = $pdo->prepare('UPDATE employee SET token = :token, token_init = NOW() WHERE id_utilisateur = :id_utilisateur');
+    $stmt = $pdo->prepare('UPDATE utilisateur SET token = :token, token_init = NOW() WHERE id_utilisateur = :id_utilisateur');
     $stmt->bindValue(':id_utilisateur', $id_utilisateur);
     $stmt->bindValue(':token', $token);
     $stmt->execute();
@@ -15,7 +15,7 @@ function setToken(PDO $pdo, int $id_utilisateur): string
 
 function removeToken(PDO $pdo, int $id_utilisateur): void
 {
-    $stmt = $pdo->prepare('UPDATE employee SET token = NULL, token_init = NULL WHERE id_utilisateur = :id_utilisateur');
+    $stmt = $pdo->prepare('UPDATE utilisateur SET token = NULL, token_init = NULL WHERE id_utilisateur = :id_utilisateur');
     $stmt->bindValue(':id_utilisateur', $id_utilisateur);
     $stmt->execute();
 }

@@ -20,7 +20,7 @@ require_once __DIR__ . '/utils/token.php';
 
 $pdo = getPDO();
 
-$stmt = $pdo->prepare('SELECT id_utilisateur FROM employee WHERE id_utilisateur = :id_utilisateur AND token = :token AND token_init > NOW() - INTERVAL 1 HOUR');
+$stmt = $pdo->prepare('SELECT id_utilisateur FROM utilisateur WHERE id_utilisateur = :id_utilisateur AND token = :token AND token_init > NOW() - INTERVAL 1 HOUR');
 $stmt->bindValue(':id_utilisateur', $_GET['id_utilisateur']);
 $stmt->bindValue(':token', $_GET['token']);
 $stmt->execute();

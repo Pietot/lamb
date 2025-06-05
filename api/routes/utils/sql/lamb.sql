@@ -191,22 +191,22 @@ INSERT INTO `commandelot` (`id_lot`, `id_commande`, `quantite`) VALUES
 -- --------------------------------------------------------
 
 --
--- Structure de la table `commande_employee`
+-- Structure de la table `commande_utilisateur`
 --
 
-DROP TABLE IF EXISTS `commande_employee`;
-CREATE TABLE IF NOT EXISTS `commande_employee` (
+DROP TABLE IF EXISTS `commande_utilisateur`;
+CREATE TABLE IF NOT EXISTS `commande_utilisateur` (
   `id_commande` int NOT NULL,
-  `id_employee` int NOT NULL,
-  PRIMARY KEY (`id_commande`,`id_employee`),
-  KEY `id_employee` (`id_employee`)
+  `id_utilisateur` int NOT NULL,
+  PRIMARY KEY (`id_commande`,`id_utilisateur`),
+  KEY `id_utilisateur` (`id_utilisateur`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Déchargement des données de la table `commande_employee`
+-- Déchargement des données de la table `commande_utilisateur`
 --
 
-INSERT INTO `commande_employee` (`id_commande`, `id_employee`) VALUES
+INSERT INTO `commande_utilisateur` (`id_commande`, `id_utilisateur`) VALUES
 (1, 1),
 (2, 1),
 (5, 1),
@@ -372,11 +372,11 @@ ALTER TABLE `commandelot`
   ADD CONSTRAINT `CommandeLot_ibfk_2` FOREIGN KEY (`id_commande`) REFERENCES `commande` (`id_commande`);
 
 --
--- Contraintes pour la table `commande_employee`
+-- Contraintes pour la table `commande_utilisateur`
 --
-ALTER TABLE `commande_employee`
-  ADD CONSTRAINT `Commande_Employee_ibfk_1` FOREIGN KEY (`id_commande`) REFERENCES `commande` (`id_commande`),
-  ADD CONSTRAINT `Commande_Employee_ibfk_2` FOREIGN KEY (`id_employee`) REFERENCES `utilisateur` (`id_utilisateur`);
+ALTER TABLE `commande_utilisateur`
+  ADD CONSTRAINT `Commande_Utilisateur_ibfk_1` FOREIGN KEY (`id_commande`) REFERENCES `commande` (`id_commande`),
+  ADD CONSTRAINT `Commande_Utilisateur_ibfk_2` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateur` (`id_utilisateur`);
 
 --
 -- Contraintes pour la table `mouvement_stock`
@@ -389,7 +389,7 @@ ALTER TABLE `mouvement_stock`
 -- Contraintes pour la table `utilisateur`
 --
 ALTER TABLE `utilisateur`
-  ADD CONSTRAINT `Employee_ibfk_1` FOREIGN KEY (`id_role`) REFERENCES `role` (`id_role`);
+  ADD CONSTRAINT `Utilisateur_ibfk_1` FOREIGN KEY (`id_role`) REFERENCES `role` (`id_role`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

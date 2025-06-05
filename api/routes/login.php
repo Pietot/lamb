@@ -35,7 +35,7 @@ try {
 
 function getUser(PDO $pdo, string $login): array
 {
-    $stmt = $pdo->prepare('SELECT id_utilisateur, pwd_hash FROM employee WHERE login = :login');
+    $stmt = $pdo->prepare('SELECT id_utilisateur, pwd_hash FROM utilisateur WHERE login = :login');
     $stmt->bindValue(':login', $login);
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
