@@ -20,19 +20,19 @@ require_once __DIR__ . '/utils/token.php';
 
 $pdo = getPDO();
 
-$stmt = $pdo->prepare('SELECT id_employee FROM employee WHERE id_employee = :id_employee AND token = :token AND token_init > NOW() - INTERVAL 1 HOUR');
-$stmt->bindValue(':id_employee', $_GET['id_employee']);
+$stmt = $pdo->prepare('SELECT id_utilisateur FROM employee WHERE id_utilisateur = :id_utilisateur AND token = :token AND token_init > NOW() - INTERVAL 1 HOUR');
+$stmt->bindValue(':id_utilisateur', $_GET['id_utilisateur']);
 $stmt->bindValue(':token', $_GET['token']);
 $stmt->execute();
 
 $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if ($result) {
-    $token = setToken($pdo, $result['id_employee']);
+    $token = setToken($pdo, $result['id_utilisateur']);
     echo json_encode([
         'success' => true,
         'user' => [
-            'id_employee' => $result['id_employee'],
+            'id_utilisateur' => $result['id_utilisateur'],
             'token' => $token,
         ]
     ]);

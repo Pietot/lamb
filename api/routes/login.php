@@ -18,11 +18,11 @@ try {
     $user = getUser($pdo, $login);
 
     if ($user && password_verify($password, $user['pwd_hash'])) {
-        $token = setToken($pdo, $user['id_employee']);
+        $token = setToken($pdo, $user['id_utilisateur']);
         echo json_encode([
             'success' => true,
             'user' => [
-                'id_employee' => $user['id_employee'],
+                'id_utilisateur' => $user['id_utilisateur'],
                 'token' => $token,
             ]
         ]);
@@ -35,7 +35,7 @@ try {
 
 function getUser(PDO $pdo, string $login): array
 {
-    $stmt = $pdo->prepare('SELECT id_employee, pwd_hash FROM employee WHERE login = :login');
+    $stmt = $pdo->prepare('SELECT id_utilisateur, pwd_hash FROM employee WHERE login = :login');
     $stmt->bindValue(':login', $login);
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
