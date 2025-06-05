@@ -1,4 +1,9 @@
 <?php
+if (basename($_SERVER['SCRIPT_FILENAME']) === basename(__FILE__)) {
+    http_response_code(403);
+    exit('Access denied.');
+}
+
 $_ENV = parse_ini_file(__DIR__ . '/.env');
 
 function getPDO(): PDO

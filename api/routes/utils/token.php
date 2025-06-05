@@ -1,5 +1,8 @@
 <?php
-
+if (basename($_SERVER['SCRIPT_FILENAME']) === basename(__FILE__)) {
+    http_response_code(403);
+    exit('Access denied.');
+}
 function setToken(PDO $pdo, int $id_employee): string
 {
     $token = bin2hex(random_bytes(30));
