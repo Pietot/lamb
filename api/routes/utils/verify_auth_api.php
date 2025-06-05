@@ -28,7 +28,7 @@ function verifyAuthAPI(): bool
 
     $token = trim(str_replace('Bearer', '', $token));
 
-    if ($token !== $_ENV['KEY_API']) {
+    if ($token !== $_ENV['API_KEY']) {
         http_response_code(403);
         echo json_encode(['success' => false, 'message' => 'Invalid API key']);
         exit;
