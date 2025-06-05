@@ -8,7 +8,7 @@ export const useAuthStore = defineStore("auth", {
 
   actions: {
     async login({ login, password }) {
-      const response = await fetch(import.meta.env.VITE_API_URL + "login.php", {
+      const response = await fetch(import.meta.env.VITE_API_URL + "login", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -31,7 +31,7 @@ export const useAuthStore = defineStore("auth", {
     },
 
     async logout() {
-      await fetch(import.meta.env.VITE_API_URL + "/logout", {
+      await fetch(import.meta.env.VITE_API_URL + "logout", {
         method: "POST",
         body: new URLSearchParams({
           id_employee: this.user ? this.user.id_employee : "",
@@ -64,7 +64,7 @@ export const useAuthStore = defineStore("auth", {
         token: user.token,
       });
       const response = await fetch(
-        import.meta.env.VITE_API_URL + "verify_user.php?" + params.toString(),
+        import.meta.env.VITE_API_URL + "verify_user?" + params.toString(),
         {
           method: "GET",
           headers: {
