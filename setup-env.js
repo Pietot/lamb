@@ -32,7 +32,7 @@ ensureEnvVars(join("backend", ".env"), [
   "DB_NAME=",
   "DB_USER=",
   "DB_PASSWORD=",
-  "DOMAIN=http://localhost:5173",
+  "DOMAIN=",
 ]);
 ensureEnvVars(".env.local", ["VITE_API_URL="]);
-ensureEnvVars(".env.prod", ["VITE_API_URL=https://lamb.com/backend/"]);
+ensureEnvVars(".env.prod", ["VITE_API_URL="]);
