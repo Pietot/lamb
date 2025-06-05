@@ -1,6 +1,6 @@
 <?php
 
-$_ENV = parse_ini_file(__DIR__ . '/.env');
+$_ENV = parse_ini_file(__DIR__ . '/utils/.env');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     header('Access-Control-Allow-Origin: ' . $_ENV['DOMAIN']);
@@ -15,8 +15,8 @@ header('Access-Control-Allow-Origin: ' . $_ENV['DOMAIN']);
 header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Headers: Content-Type');
 
-require_once __DIR__ . '/pdo.php';
-include_once __DIR__ . '/token.php';
+require_once __DIR__ . '/utils/pdo.php';
+require_once __DIR__ . '/utils/token.php';
 
 $pdo = getPDO();
 

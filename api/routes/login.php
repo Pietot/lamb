@@ -1,13 +1,13 @@
 <?php
 
-$_ENV = parse_ini_file(__DIR__ . '/.env');
+$_ENV = parse_ini_file(__DIR__ . '/utils/.env');
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: ' . $_ENV['DOMAIN']);
 header('Access-Control-Allow-Credentials: true');
 
-require_once __DIR__ . '/pdo.php';
-include_once __DIR__ . '/token.php';
+require_once __DIR__ . '/utils/pdo.php';
+require_once __DIR__ . '/utils/token.php';
 
 $pdo = getPDO();
 
