@@ -58,18 +58,18 @@ const router = createRouter({
       component: () => import("@/views/admin/AdminView.vue"),
       meta: { requiresAuth: true, layout: "main" },
     },
-    {
-      path: "/orders/:id",
-      name: "OrderDetail",
-      component: () => import("@/views/orders/OrderDetailView.vue"),
-      meta: { requiresAuth: true, layout: "main" },
-    },
-    {
-      path: "/orders/new",
-      name: "NewOrder",
-      component: () => import("@/views/orders/NewOrderView.vue"),
-      meta: { requiresAuth: true, layout: "main" },
-    },
+    // {
+    //   path: "/orders/:id",
+    //   name: "OrderDetail",
+    //   component: () => import("@/views/orders/OrderDetailView.vue"),
+    //   meta: { requiresAuth: true, layout: "main" },
+    // },
+    // {
+    //   path: "/orders/new",
+    //   name: "NewOrder",
+    //   component: () => import("@/views/orders/NewOrderView.vue"),
+    //   meta: { requiresAuth: true, layout: "main" },
+    // },
   ],
 });
 
