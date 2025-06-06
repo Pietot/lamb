@@ -8,10 +8,11 @@ export const useAuthStore = defineStore("auth", {
 
   actions: {
     async login({ login, password }) {
-      const response = await fetch(import.meta.env.VITE_API_URL + "login.php", {
+      const response = await fetch(import.meta.env.VITE_API_URL + "login", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
         },
         body: new URLSearchParams({
           login,
@@ -31,10 +32,14 @@ export const useAuthStore = defineStore("auth", {
     },
 
     async logout() {
-      await fetch(import.meta.env.VITE_API_URL + "/logout", {
+      await fetch(import.meta.env.VITE_API_URL + "logout", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
+        },
         body: new URLSearchParams({
-          id_employee: this.user ? this.user.id_employee : "",
+          id_utilisateur: this.user ? this.user.id_utilisateur : "",
         }),
       });
       this.user = null;
@@ -60,15 +65,16 @@ export const useAuthStore = defineStore("auth", {
     async verifyUser(user) {
       if (!this.isAuthenticated) return false;
       const params = new URLSearchParams({
-        id_employee: user.id_employee,
+        id_utilisateur: user.id_utilisateur,
         token: user.token,
       });
       const response = await fetch(
-        import.meta.env.VITE_API_URL + "verify_user.php?" + params.toString(),
+        import.meta.env.VITE_API_URL + "verify_user?" + params.toString(),
         {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
           },
         }
       );

@@ -1,5 +1,11 @@
 import { existsSync, readFileSync, appendFileSync } from "fs";
-import { join } from "path";
+
+const RED = "\x1b[31m";
+const YELLOW = "\x1b[33m";
+const GREEN = "\x1b[32m";
+const BLUE = "\x1b[34m";
+const PURPLE = "\x1b[35m";
+const RESET = "\x1b[0m";
 
 function ensureEnvVars(filePath, requiredLines) {
   let content = "";
@@ -8,33 +14,36 @@ function ensureEnvVars(filePath, requiredLines) {
     let addedLines = [];
     const lines = content.split(/\r?\n/);
     for (const line of requiredLines) {
-      const inSet = lines.some(existingLine => existingLine.includes(line));
+      const inSet = lines.some((existingLine) => existingLine.includes(line));
       if (!inSet) {
         lines.push(line);
-        appendFileSync(filePath, line + "\n");
+        appendFileSync(filePath, "\n" + line);
         addedLines.push(line);
       }
     }
     if (addedLines.length > 0) {
       console.log(
-        `Missing variables found in ${filePath}.${"\n"} Added: ${"\n"}${addedLines.join("\n")}`
+        `${YELLOW}Added missing variables found in ${PURPLE}${filePath}${RESET}.`
       );
     } else {
-      console.log(`All required variables are present in ${filePath}.`);
+      console.log(
+        `${GREEN}All required variables are present in ${PURPLE}${filePath}${RESET}`
+      );
     }
   } else {
-    console.log(`${filePath} not found. Creating new file.`);
+    console.log(
+      `${RED}${filePath} not found. Please run:\n\n${BLUE}npm install\n${RESET}`
+    );
   }
 }
 
-ensureEnvVars(join("backend", ".env"), [
+ensureEnvVars("api/routes/utils/.env", [
   "DB_HOST=",
   "DB_NAME=",
   "DB_USER=",
   "DB_PASSWORD=",
-  "DOMAIN=http://localhost:5173",
+  "DOMAIN=",
+  "API_KEY=",
 ]);
-ensureEnvVars(".env.local", ["VITE_API_URL="]);
-ensureEnvVars(".env.prod", [
-  "VITE_API_URL=https://lamb.com/backend/",
-]);
+ensureEnvVars(".env.local", ["VITE_API_URL=", "VITE_API_KEY="]);
+ensureEnvVars(".env.prod", ["VITE_API_URL=", "VITE_API_KEY="]);

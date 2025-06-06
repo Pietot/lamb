@@ -1,6 +1,6 @@
 <?php
 
-$_ENV = parse_ini_file(__DIR__ . '/.env');
+$_ENV = parse_ini_file(__DIR__ . '/utils/.env');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     header('Access-Control-Allow-Origin: ' . $_ENV['DOMAIN']);
@@ -15,29 +15,29 @@ header('Access-Control-Allow-Origin: ' . $_ENV['DOMAIN']);
 header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Headers: Content-Type');
 
-require_once __DIR__ . '/pdo.php';
-include_once __DIR__ . '/token.php';
+require_once __DIR__ . '/utils/pdo.php';
+require_once __DIR__ . '/utils/token.php';
 
 $pdo = getPDO();
 
-$stmt = $pdo->prepare('SELECT id_employee FROM employee WHERE id_employee = :id_employee AND token = :token AND token_init > NOW() - INTERVAL 1 HOUR');
-$stmt->bindValue(':id_employee', $_GET['id_employee']);
+$stmt = $pdo->prepare('SELECT id_utilisateur FROM utilisateur WHERE id_utilisateur = :id_utilisateur AND token = :token AND token_init > NOW() - INTERVAL 1 HOUR');
+$stmt->bindValue(':id_utilisateur', $_GET['id_utilisateur']);
 $stmt->bindValue(':token', $_GET['token']);
 $stmt->execute();
 
 $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if ($result) {
-    $token = setToken($pdo, $result['id_employee']);
+    $token = setToken($pdo, $result['id_utilisateur']);
     echo json_encode([
         'success' => true,
         'user' => [
-            'id_employee' => $result['id_employee'],
+            'id_utilisateur' => $result['id_utilisateur'],
             'token' => $token,
         ]
     ]);
 } else if ($result === false) {
     echo json_encode(['success' => false, 'message' => 'Utilisateur non trouvé ou token invalide.']);
 } else {
-    echo json_encode(['success' => false, 'message' => 'Erreur serveur.']);
+    echo json_encode(['success' => false, 'message' => 'Erreur du serveur.']);
 }
