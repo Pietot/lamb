@@ -18,6 +18,7 @@ const backendEnvLines = [
   "",
   "DOMAIN=http://localhost:5173",
   "API_KEY=",
+  "API_ROUTE=",
 ];
 const backendEnvContent = backendEnvLines.join("\n");
 if (!existsSync(apiEnvPath)) {
