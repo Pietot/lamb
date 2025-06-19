@@ -35,9 +35,9 @@ if ($result) {
             'id_utilisateur' => $result['id_utilisateur'],
             'token' => $token,
         ]
-    ]);
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 } else if ($result === false) {
-    echo json_encode(['success' => false, 'message' => 'Utilisateur non trouvé ou token invalide.']);
+    echo json_encode(['success' => false, 'message' => 'Utilisateur non trouvé ou token invalide.'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 } else {
-    echo json_encode(['success' => false, 'message' => 'Erreur du serveur.']);
+    echo json_encode(['success' => false, 'message' => 'Erreur du serveur.'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 }

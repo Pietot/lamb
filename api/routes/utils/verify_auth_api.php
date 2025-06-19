@@ -1,4 +1,6 @@
 <?php
+header('Content-Type: application/json');
+
 $_ENV = parse_ini_file(__DIR__ . '/.env');
 
 function verifyAuthAPI(): bool
@@ -22,7 +24,7 @@ function verifyAuthAPI(): bool
 
     if (!$token) {
         http_response_code(401);
-        echo json_encode(['success' => false, 'message' => 'En-tête Authorization manquante']);
+        echo json_encode(['success' => false, 'message' => 'En-tête Authorization manquante'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
     }
 
@@ -30,7 +32,7 @@ function verifyAuthAPI(): bool
 
     if ($token !== $_ENV['API_KEY']) {
         http_response_code(403);
-        echo json_encode(['success' => false, 'message' => 'Clé API invalide']);
+        echo json_encode(['success' => false, 'message' => 'Clé API invalide'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
     }
 
