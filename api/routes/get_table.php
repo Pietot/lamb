@@ -9,7 +9,7 @@ require_once __DIR__ . '/utils/pdo.php';
 
 $pdo = getPDO();
 
-$table = $_GET['table'] ?? null;
+$table = htmlspecialchars($_GET['table'] ?? null);
 
 if (!$table) {
     http_response_code(400);
