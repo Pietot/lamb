@@ -28,8 +28,15 @@ if (!$tableExists) {
 }
 
 try {
-    $articles = $pdo->query("SELECT * FROM $table")->fetchAll(PDO::FETCH_ASSOC);
-    echo json_encode(['success' => true, 'articles' => $articles]);
+    if ($table === 'utilisateur') {
+        $stmt = $pdo->prepare("SELECT id_utilisateur, nom, prenom, email, id_role FROM $table");
+        $stmt->execute();
+    } else {
+        $stmt = $pdo->prepare("SELECT * FROM $table");
+        $stmt->execute();
+    }
+    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    echo json_encode(['success' => true, 'data' => $data]);
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => 'Erreur du serveur.']);
