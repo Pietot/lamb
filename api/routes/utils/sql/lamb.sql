@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : ven. 20 juin 2025 à 10:04
+-- Généré le : ven. 20 juin 2025 à 10:06
 -- Version du serveur : 10.4.28-MariaDB
 -- Version de PHP : 8.2.4
 
@@ -28,14 +28,16 @@ SET time_zone = "+00:00";
 --
 
 DROP TABLE IF EXISTS `article`;
-CREATE TABLE `article` (
+CREATE TABLE IF NOT EXISTS `article` (
   `id_article` bigint(20) NOT NULL,
   `description` varchar(50) DEFAULT NULL,
   `nom` varchar(50) DEFAULT NULL,
   `quantite_stock` int(11) DEFAULT NULL,
   `seuil_alerte` int(11) DEFAULT NULL,
   `date_creation` date DEFAULT NULL,
-  `id_categorie` int(11) NOT NULL
+  `id_categorie` int(11) NOT NULL,
+  PRIMARY KEY (`id_article`),
+  KEY `id_categorie` (`id_categorie`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -63,10 +65,12 @@ INSERT INTO `article` (`id_article`, `description`, `nom`, `quantite_stock`, `se
 --
 
 DROP TABLE IF EXISTS `article_lot`;
-CREATE TABLE `article_lot` (
+CREATE TABLE IF NOT EXISTS `article_lot` (
   `id_article` bigint(20) NOT NULL,
   `id_lot` int(11) NOT NULL,
-  `quantite_article` varchar(50) DEFAULT NULL
+  `quantite_article` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id_article`,`id_lot`),
+  KEY `id_lot` (`id_lot`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -89,10 +93,11 @@ INSERT INTO `article_lot` (`id_article`, `id_lot`, `quantite_article`) VALUES
 --
 
 DROP TABLE IF EXISTS `categorie`;
-CREATE TABLE `categorie` (
+CREATE TABLE IF NOT EXISTS `categorie` (
   `id_categorie` int(11) NOT NULL,
   `nom` varchar(50) DEFAULT NULL,
-  `description` varchar(50) DEFAULT NULL
+  `description` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id_categorie`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -113,13 +118,14 @@ INSERT INTO `categorie` (`id_categorie`, `nom`, `description`) VALUES
 --
 
 DROP TABLE IF EXISTS `client`;
-CREATE TABLE `client` (
+CREATE TABLE IF NOT EXISTS `client` (
   `id_client` int(11) NOT NULL,
   `nom` varchar(50) DEFAULT NULL,
   `prénom` varchar(50) DEFAULT NULL,
   `email` varchar(50) DEFAULT NULL,
   `telephone` varchar(10) DEFAULT NULL,
-  `adresse` varchar(100) DEFAULT NULL
+  `adresse` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id_client`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -140,12 +146,14 @@ INSERT INTO `client` (`id_client`, `nom`, `prénom`, `email`, `telephone`, `adre
 --
 
 DROP TABLE IF EXISTS `commande`;
-CREATE TABLE `commande` (
+CREATE TABLE IF NOT EXISTS `commande` (
   `id_commande` int(11) NOT NULL,
   `date_commande` date DEFAULT NULL,
   `statut` varchar(11) NOT NULL,
   `montant_total` decimal(10,2) DEFAULT NULL,
-  `id_client` int(11) NOT NULL
+  `id_client` int(11) NOT NULL,
+  PRIMARY KEY (`id_commande`),
+  KEY `id_client` (`id_client`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -169,10 +177,12 @@ INSERT INTO `commande` (`id_commande`, `date_commande`, `statut`, `montant_total
 --
 
 DROP TABLE IF EXISTS `commandelot`;
-CREATE TABLE `commandelot` (
+CREATE TABLE IF NOT EXISTS `commandelot` (
   `id_lot` int(11) NOT NULL,
   `id_commande` int(11) NOT NULL,
-  `quantite` int(11) DEFAULT NULL
+  `quantite` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_lot`,`id_commande`),
+  KEY `id_commande` (`id_commande`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -193,9 +203,11 @@ INSERT INTO `commandelot` (`id_lot`, `id_commande`, `quantite`) VALUES
 --
 
 DROP TABLE IF EXISTS `commande_utilisateur`;
-CREATE TABLE `commande_utilisateur` (
+CREATE TABLE IF NOT EXISTS `commande_utilisateur` (
   `id_commande` int(11) NOT NULL,
-  `id_utilisateur` int(11) NOT NULL
+  `id_utilisateur` int(11) NOT NULL,
+  PRIMARY KEY (`id_commande`,`id_utilisateur`),
+  KEY `id_utilisateur` (`id_utilisateur`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -216,13 +228,14 @@ INSERT INTO `commande_utilisateur` (`id_commande`, `id_utilisateur`) VALUES
 --
 
 DROP TABLE IF EXISTS `lot`;
-CREATE TABLE `lot` (
+CREATE TABLE IF NOT EXISTS `lot` (
   `id_lot` int(11) NOT NULL,
   `nom` varchar(50) DEFAULT NULL,
   `description` varchar(50) DEFAULT NULL,
   `date_creation` date DEFAULT NULL,
   `quantite_stock` int(11) DEFAULT NULL,
-  `seuil_alerte` int(11) DEFAULT NULL
+  `seuil_alerte` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_lot`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -242,12 +255,15 @@ INSERT INTO `lot` (`id_lot`, `nom`, `description`, `date_creation`, `quantite_st
 --
 
 DROP TABLE IF EXISTS `mouvement_stock`;
-CREATE TABLE `mouvement_stock` (
+CREATE TABLE IF NOT EXISTS `mouvement_stock` (
   `id_mouvement` int(11) NOT NULL,
   `quantite` int(11) DEFAULT NULL,
   `date_mouvement` datetime DEFAULT NULL,
   `id_type` int(11) NOT NULL,
-  `id_article` bigint(20) DEFAULT NULL
+  `id_article` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id_mouvement`),
+  KEY `id_type` (`id_type`),
+  KEY `id_article` (`id_article`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -270,9 +286,10 @@ INSERT INTO `mouvement_stock` (`id_mouvement`, `quantite`, `date_mouvement`, `id
 --
 
 DROP TABLE IF EXISTS `role`;
-CREATE TABLE `role` (
+CREATE TABLE IF NOT EXISTS `role` (
   `id_role` int(11) NOT NULL,
-  `role` varchar(50) DEFAULT NULL
+  `role` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id_role`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -292,9 +309,10 @@ INSERT INTO `role` (`id_role`, `role`) VALUES
 --
 
 DROP TABLE IF EXISTS `type_mouvement`;
-CREATE TABLE `type_mouvement` (
+CREATE TABLE IF NOT EXISTS `type_mouvement` (
   `id_type` int(11) NOT NULL,
-  `type` varchar(50) DEFAULT NULL
+  `type` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id_type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -312,7 +330,7 @@ INSERT INTO `type_mouvement` (`id_type`, `type`) VALUES
 --
 
 DROP TABLE IF EXISTS `utilisateur`;
-CREATE TABLE `utilisateur` (
+CREATE TABLE IF NOT EXISTS `utilisateur` (
   `id_utilisateur` int(11) NOT NULL,
   `nom` varchar(50) NOT NULL,
   `prenom` varchar(50) NOT NULL,
@@ -321,7 +339,9 @@ CREATE TABLE `utilisateur` (
   `pwd_hash` varchar(72) NOT NULL,
   `token` varchar(60) DEFAULT NULL,
   `token_init` datetime DEFAULT NULL,
-  `id_role` int(11) NOT NULL
+  `id_role` int(11) NOT NULL,
+  PRIMARY KEY (`id_utilisateur`),
+  KEY `id_role` (`id_role`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -332,90 +352,6 @@ INSERT INTO `utilisateur` (`id_utilisateur`, `nom`, `prenom`, `email`, `login`, 
 (1, 'Test', 'Test', 'test@test.com', 'test', '$2y$10$YMfhEoNm8tgkhfSm.kzGF.kezvI4p/SRqFp3VBR45KikqVUsKQc1y', '988d403cb144ff4b184c69089a755bc0ff8dd4c72ce654acf60ec8cea824', '2025-06-20 09:53:59', 1),
 (2, 'Laurent', 'Claire', 'claire.laurent@lamb.com', 'clairel', '$2y$10$dXJazd1Xvz1234examplehashedPWD', NULL, NULL, 2),
 (3, 'Fabrice', 'Fief', 'fabrice.fief@lamb.com', 'Fabgaming', '$2y$10$dXJazd1Xvz1234examplehashedPWD', NULL, NULL, 0);
-
---
--- Index pour les tables déchargées
---
-
---
--- Index pour la table `article`
---
-ALTER TABLE `article`
-  ADD PRIMARY KEY (`id_article`),
-  ADD KEY `id_categorie` (`id_categorie`);
-
---
--- Index pour la table `article_lot`
---
-ALTER TABLE `article_lot`
-  ADD PRIMARY KEY (`id_article`,`id_lot`),
-  ADD KEY `id_lot` (`id_lot`);
-
---
--- Index pour la table `categorie`
---
-ALTER TABLE `categorie`
-  ADD PRIMARY KEY (`id_categorie`);
-
---
--- Index pour la table `client`
---
-ALTER TABLE `client`
-  ADD PRIMARY KEY (`id_client`);
-
---
--- Index pour la table `commande`
---
-ALTER TABLE `commande`
-  ADD PRIMARY KEY (`id_commande`),
-  ADD KEY `id_client` (`id_client`);
-
---
--- Index pour la table `commandelot`
---
-ALTER TABLE `commandelot`
-  ADD PRIMARY KEY (`id_lot`,`id_commande`),
-  ADD KEY `id_commande` (`id_commande`);
-
---
--- Index pour la table `commande_utilisateur`
---
-ALTER TABLE `commande_utilisateur`
-  ADD PRIMARY KEY (`id_commande`,`id_utilisateur`),
-  ADD KEY `id_utilisateur` (`id_utilisateur`);
-
---
--- Index pour la table `lot`
---
-ALTER TABLE `lot`
-  ADD PRIMARY KEY (`id_lot`);
-
---
--- Index pour la table `mouvement_stock`
---
-ALTER TABLE `mouvement_stock`
-  ADD PRIMARY KEY (`id_mouvement`),
-  ADD KEY `id_type` (`id_type`),
-  ADD KEY `id_article` (`id_article`);
-
---
--- Index pour la table `role`
---
-ALTER TABLE `role`
-  ADD PRIMARY KEY (`id_role`);
-
---
--- Index pour la table `type_mouvement`
---
-ALTER TABLE `type_mouvement`
-  ADD PRIMARY KEY (`id_type`);
-
---
--- Index pour la table `utilisateur`
---
-ALTER TABLE `utilisateur`
-  ADD PRIMARY KEY (`id_utilisateur`),
-  ADD KEY `id_role` (`id_role`);
 
 --
 -- Contraintes pour les tables déchargées
