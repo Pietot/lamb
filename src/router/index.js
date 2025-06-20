@@ -70,6 +70,11 @@ const router = createRouter({
     //   component: () => import("@/views/orders/NewOrderView.vue"),
     //   meta: { requiresAuth: true, layout: "main" },
     // },
+    {
+      path: "/errors",
+      name: "NotFound",
+      component: () => import("@/views/errors/NotFound.vue"),
+    },
   ],
 });
 
@@ -80,6 +85,8 @@ router.beforeEach(async (to, from, next) => {
     next("/login");
   } else if (to.meta.requiresGuest && authStore.isAuthenticated) {
     next("/");
+  } else if (!router.hasRoute(to.name)) {
+    next("/errors");
   } else {
     next();
   }
