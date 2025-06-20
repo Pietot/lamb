@@ -27,17 +27,9 @@ function verifyAuthAPI(): bool
         $token = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
     }
 
-    if (!$token) {
+    if (!$token || trim(str_replace('Bearer', '', $token)) !== $_ENV['API_KEY']) {
         http_response_code(401);
-        echo json_encode(['success' => false, 'message' => 'En-tête Authorization manquante'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-        exit;
-    }
-
-    $token = trim(str_replace('Bearer', '', $token));
-
-    if ($token !== $_ENV['API_KEY']) {
-        http_response_code(403);
-        echo json_encode(['success' => false, 'message' => 'Clé API invalide'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        echo json_encode(['success' => false, 'message' => 'Permission refusée'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
     }
 
