@@ -16,11 +16,11 @@ $id_utilisateur = $_POST['id_utilisateur'] ?? null;
 
 try {
     if ($id_utilisateur === null) {
-        echo json_encode(['success' => false, 'message' => 'Utilisateur non connecté.']);
+        echo json_encode(['success' => false, 'message' => 'Utilisateur non connecté.'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
     }
     removeToken($pdo, $id_utilisateur);
-    echo json_encode(['success' => true, 'message' => 'Déconnexion réussie.']);
+    echo json_encode(['success' => true, 'message' => 'Déconnexion réussie.'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 } catch (Exception $e) {
-    echo json_encode(['success' => false, 'message' => 'Erreur du serveur.']);
+    echo json_encode(['success' => false, 'message' => 'Erreur du serveur.'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 }

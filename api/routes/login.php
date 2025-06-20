@@ -25,12 +25,12 @@ try {
                 'id_utilisateur' => $user['id_utilisateur'],
                 'token' => $token,
             ]
-        ]);
+        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Nom d’utilisateur ou mot de passe incorrect.']);
+        echo json_encode(['success' => false, 'message' => 'Nom d’utilisateur ou mot de passe incorrect.'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     }
 } catch (Exception $e) {
-    echo json_encode(['success' => false, 'message' => 'Erreur du serveur.']);
+    echo json_encode(['success' => false, 'message' => 'Erreur du serveur.'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 }
 
 function getUser(PDO $pdo, string $login): array

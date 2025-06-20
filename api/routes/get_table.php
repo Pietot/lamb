@@ -13,7 +13,7 @@ $table = $_GET['table'] ?? null;
 
 if (!$table) {
     http_response_code(400);
-    echo json_encode(['success' => false, 'message' => 'Paramètre manquant.']);
+    echo json_encode(['success' => false, 'message' => 'Paramètre manquant.'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     exit;
 }
 
@@ -23,7 +23,7 @@ $tableExists = $stmt->fetchColumn() > 0;
 
 if (!$tableExists) {
     http_response_code(404);
-    echo json_encode(['success' => false, 'message' => "Paramètre invalide."]);
+    echo json_encode(['success' => false, 'message' => "Paramètre invalide."], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     exit;
 }
 
@@ -36,8 +36,8 @@ try {
         $stmt->execute();
     }
     $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    echo json_encode(['success' => true, 'data' => $data]);
+    echo json_encode(['success' => true, 'data' => $data], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 } catch (Exception $e) {
     http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Erreur du serveur.']);
+    echo json_encode(['success' => false, 'message' => 'Erreur du serveur.'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 }

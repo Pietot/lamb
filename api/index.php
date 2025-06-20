@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: application/json');
 header("Access-Control-Allow-Origin: http://localhost:5173");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Authorization, Content-Type");
@@ -34,5 +35,5 @@ if (verifyAuthAPI()) {
     }
 
     http_response_code(404);
-    echo json_encode(['success' => false, 'message' => 'Route introuvable.', 'route' => $path, 'referer' => $_ENV['API_ROUTE'] . 'login']);
+    echo json_encode(['success' => false, 'message' => 'Route introuvable.', 'route' => $path, 'referer' => $_ENV['API_ROUTE'] . 'login'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 }
