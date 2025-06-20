@@ -9,8 +9,8 @@
           </svg>
         </div>
         <div class="kpi-content">
-          <p class="kpi-label">Seuil de stock</p>
-          <p class="kpi-value">3</p>
+          <p class="kpi-label">Alertes<br>de stock</p>
+          <p class="kpi-value">{{ stockAlerts }}</p>
         </div>
       </div>
 
@@ -26,7 +26,7 @@
         </div>
         <div class="kpi-content">
           <p class="kpi-label">Commandes<br>en préparation</p>
-          <p class="kpi-value">12</p>
+          <p class="kpi-value">{{ ordersInPreparation }}</p>
         </div>
       </div>
 
@@ -41,101 +41,76 @@
         </div>
         <div class="kpi-content">
           <p class="kpi-label">Livraisons<br>à réceptionner</p>
-          <p class="kpi-value">5</p>
-        </div>
-      </div>
-
-      <div class="kpi-card kpi-alerts">
-        <div class="kpi-icon alerts-icon">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-          </svg>
-        </div>
-        <div class="kpi-content">
-          <p class="kpi-label">Alertes</p>
-          <p class="kpi-value">1</p>
+          <p class="kpi-value">{{ deliveriesToReceive }}</p>
         </div>
       </div>
     </div>
 
     <!-- Contenu principal -->
     <div class="dashboard-content">
-      <!-- Graphique niveau de stock -->
-      <div class="content-section">
-        <div class="section-card">
-          <h3 class="section-title">Niveau de stock</h3>
-          <div class="stock-chart">
-            <div class="chart-container">
-              <div class="chart-bar" :style="{ height: '70%' }"></div>
-              <div class="chart-bar" :style="{ height: '85%' }"></div>
-              <div class="chart-bar" :style="{ height: '60%' }"></div>
-              <div class="chart-bar" :style="{ height: '45%' }"></div>
-              <div class="chart-bar" :style="{ height: '90%' }"></div>
-              <div class="chart-bar" :style="{ height: '75%' }"></div>
-            </div>
-            <div class="chart-labels">
-              <span>A1</span>
-              <span>A2</span>
-              <span>A3</span>
-              <span>A4</span>
-              <span>A5</span>
-              <span>A6</span>
-            </div>
-          </div>
+      <!-- Commandes récentes - Pleine largeur -->
+      <div class="section-card full-width">
+        <h3 class="section-title">Commandes récentes</h3>
+        <div v-if="loadingOrders || loadingClients" class="loading-container">
+          <div class="loader"></div>
+          <p>Chargement des commandes...</p>
         </div>
-
-        <!-- Commandes récentes -->
-        <div class="section-card">
-          <h3 class="section-title">Commandes récentes</h3>
-          <div class="table-container">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Client</th>
-                  <th>Date</th>
-                  <th>Statut</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="order-id">1005</td>
-                  <td>Dupont SAS</td>
-                  <td>4 mai 2023</td>
-                  <td><span class="status status-preparing">En préparation</span></td>
-                </tr>
-                <tr>
-                  <td class="order-id">1004</td>
-                  <td>Martin & Cie</td>
-                  <td>4 mai 2023</td>
-                  <td><span class="status status-preparing">En préparation</span></td>
-                </tr>
-                <tr>
-                  <td class="order-id">1005</td>
-                  <td>Durand SA</td>
-                  <td>3 mai 2023</td>
-                  <td><span class="status status-received">Réceptionnée</span></td>
-                </tr>
-                <tr>
-                  <td class="order-id">1002</td>
-                  <td>Durand SA</td>
-                  <td>2 mai 2023</td>
-                  <td><span class="status status-received">Réceptionnée</span></td>
-                </tr>
-                <tr>
-                  <td class="order-id">1001</td>
-                  <td>Bernard FR</td>
-                  <td>2 mai 2023</td>
-                  <td><span class="status status-received">Réceptionnée</span></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+        <div v-else-if="ordersError" class="error-container">
+          <p class="error-message">{{ ordersError }}</p>
+          <button @click="fetchOrders" class="retry-button">Réessayer</button>
+        </div>
+        <div v-else class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Client</th>
+                <th>Date</th>
+                <th>Montant</th>
+                <th>Statut</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="order in recentOrders" :key="order.id_commande">
+                <td class="order-id">#{{ order.id_commande }}</td>
+                <td>{{ getClientName(order.id_client) }}</td>
+                <td>{{ formatDate(order.date_commande) }}</td>
+                <td>{{ formatCurrency(order.montant_total) }}</td>
+                <td>
+                  <span class="status" :class="getStatusClass(order.statut)">
+                    {{ getStatusLabel(order.statut) }}
+                  </span>
+                </td>
+              </tr>
+              <tr v-if="recentOrders.length === 0">
+                <td colspan="5" class="empty-message">Aucune commande récente</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
       <!-- Section inférieure -->
       <div class="dashboard-bottom">
+        <!-- Articles en alerte -->
+        <div class="section-card">
+          <h3 class="section-title">Articles en alerte</h3>
+          <div class="alerts-container">
+            <div v-for="item in lowStockItems" :key="item.id_article" class="alert-item">
+              <div class="alert-icon-container">
+                <div class="alert-dot stock-alert"></div>
+              </div>
+              <div class="alert-content">
+                <p class="alert-title">{{ item.nom }}</p>
+                <p class="alert-description">Stock: {{ item.quantite_stock }} / Seuil: {{ item.seuil_alerte }}</p>
+              </div>
+            </div>
+            <div v-if="lowStockItems.length === 0" class="empty-message">
+              Aucune alerte de stock
+            </div>
+          </div>
+        </div>
+
         <!-- Livraisons à réceptionner -->
         <div class="section-card">
           <h3 class="section-title">Livraisons à réceptionner</h3>
@@ -149,48 +124,16 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td class="delivery-id">5003</td>
-                  <td>Durand SA</td>
-                  <td>6 mai 2023</td>
+                <tr v-for="delivery in deliveries" :key="delivery.id">
+                  <td class="delivery-id">{{ delivery.id }}</td>
+                  <td>{{ delivery.supplier }}</td>
+                  <td>{{ delivery.date }}</td>
                 </tr>
-                <tr>
-                  <td class="delivery-id">5002</td>
-                  <td>Bernard FR</td>
-                  <td>6 mai 2023</td>
-                </tr>
-                <tr>
-                  <td class="delivery-id">5001</td>
-                  <td>Bernard FR</td>
-                  <td>3 mai 2023</td>
+                <tr v-if="deliveries.length === 0">
+                  <td colspan="3" class="empty-message">Aucune livraison en attente</td>
                 </tr>
               </tbody>
             </table>
-          </div>
-        </div>
-
-        <!-- Alertes -->
-        <div class="section-card">
-          <h3 class="section-title">Alertes</h3>
-          <div class="alerts-container">
-            <div class="alert-item">
-              <div class="alert-icon-container">
-                <div class="alert-dot stock-alert"></div>
-              </div>
-              <div class="alert-content">
-                <p class="alert-title">Stock bas</p>
-                <p class="alert-description">Article DEF</p>
-              </div>
-            </div>
-            <div class="alert-item">
-              <div class="alert-icon-container">
-                <div class="alert-dot delivery-alert"></div>
-              </div>
-              <div class="alert-content">
-                <p class="alert-title">Problème de livraison</p>
-                <p class="alert-description">Livraison #5001</p>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -199,8 +142,234 @@
 </template>
 
 <script>
+import { ref, computed, onMounted } from 'vue'
+
 export default {
-  name: 'DashboardView'
+  name: 'DashboardView',
+  setup() {
+    // États réactifs
+    const orders = ref([])
+    const clients = ref([])
+    const articles = ref([])
+    const deliveries = ref([])
+    const loadingOrders = ref(true)
+    const loadingClients = ref(true)
+    const loadingArticles = ref(true)
+    const ordersError = ref(null)
+    const clientsError = ref(null)
+    const articlesError = ref(null)
+
+    // Données mockées pour les livraisons (à remplacer par vos endpoints)
+    const mockDeliveries = [
+      { id: '5003', supplier: 'Durand SA', date: '6 mai 2023' },
+      { id: '5002', supplier: 'Bernard FR', date: '6 mai 2023' },
+      { id: '5001', supplier: 'Bernard FR', date: '3 mai 2023' }
+    ]
+
+    // Fonction pour récupérer les commandes
+    const fetchOrders = async () => {
+      loadingOrders.value = true
+      ordersError.value = null
+      
+      try {
+        const response = await fetch(import.meta.env.VITE_API_URL + "get_table?table=commande", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
+          },
+        })
+
+        if (!response.ok) {
+          throw new Error(`Erreur HTTP: ${response.status}`)
+        }
+
+        const data = await response.json()
+        
+        if (data.success && data.articles) {
+          orders.value = data.articles
+        } else {
+          throw new Error('Format de données invalide')
+        }
+      } catch (err) {
+        console.error('Erreur lors du chargement des commandes:', err)
+        ordersError.value = 'Impossible de charger les commandes.'
+      } finally {
+        loadingOrders.value = false
+      }
+    }
+
+    // Fonction pour récupérer les clients
+    const fetchClients = async () => {
+      loadingClients.value = true
+      clientsError.value = null
+      
+      try {
+        const response = await fetch(import.meta.env.VITE_API_URL + "get_table?table=client", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
+          },
+        })
+
+        if (!response.ok) {
+          throw new Error(`Erreur HTTP: ${response.status}`)
+        }
+
+        const data = await response.json()
+        
+        if (data.success && data.articles) {
+          clients.value = data.articles
+        } else {
+          throw new Error('Format de données invalide')
+        }
+      } catch (err) {
+        console.error('Erreur lors du chargement des clients:', err)
+        clientsError.value = 'Impossible de charger les clients.'
+      } finally {
+        loadingClients.value = false
+      }
+    }
+
+    // Fonction pour récupérer les articles (pour les alertes de stock)
+    const fetchArticles = async () => {
+      loadingArticles.value = true
+      articlesError.value = null
+      
+      try {
+        const response = await fetch(import.meta.env.VITE_API_URL + "get_table?table=article", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
+          },
+        })
+
+        if (!response.ok) {
+          throw new Error(`Erreur HTTP: ${response.status}`)
+        }
+
+        const data = await response.json()
+        
+        if (data.success && data.articles) {
+          articles.value = data.articles
+        } else {
+          throw new Error('Format de données invalide')
+        }
+      } catch (err) {
+        console.error('Erreur lors du chargement des articles:', err)
+        articlesError.value = 'Impossible de charger les articles.'
+      } finally {
+        loadingArticles.value = false
+      }
+    }
+
+    // Computed properties
+    const recentOrders = computed(() => {
+      // Trier par date décroissante et prendre les 5 dernières
+      return orders.value
+        .sort((a, b) => new Date(b.date_commande) - new Date(a.date_commande))
+        .slice(0, 5)
+    })
+
+    const ordersInPreparation = computed(() => {
+      return orders.value.filter(order => order.statut === 'preparation').length
+    })
+
+    const deliveriesToReceive = computed(() => {
+      return deliveries.value.length
+    })
+
+    const stockAlerts = computed(() => {
+      return articles.value.filter(article => article.quantite_stock <= article.seuil_alerte).length
+    })
+
+    const lowStockItems = computed(() => {
+      // Récupérer les 5 premiers articles en alerte
+      return articles.value
+        .filter(article => article.quantite_stock <= article.seuil_alerte)
+        .slice(0, 5)
+    })
+
+    // Fonction pour obtenir le nom du client
+    const getClientName = (clientId) => {
+      const client = clients.value.find(c => c.id_client === clientId)
+      if (client) {
+        return `${client.prénom} ${client.nom}`
+      }
+      return `Client #${clientId}`
+    }
+
+    // Fonctions utilitaires
+    const formatDate = (dateString) => {
+      const date = new Date(dateString)
+      const months = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.']
+      return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`
+    }
+
+    const formatCurrency = (amount) => {
+      return new Intl.NumberFormat('fr-FR', {
+        style: 'currency',
+        currency: 'EUR'
+      }).format(amount)
+    }
+
+    const getStatusClass = (status) => {
+      const statusClasses = {
+        'preparation': 'status-preparing',
+        'expedie': 'status-shipped',
+        'attente': 'status-wait',
+        'annule': 'status-cancelled'
+      }
+      return statusClasses[status] || 'status-default'
+    }
+
+    const getStatusLabel = (status) => {
+      const statusLabels = {
+        'preparation': 'En préparation',
+        'expedie': 'Expédiée',
+        'attente': 'En attente',
+        'annule': 'Annulée'
+      }
+      return statusLabels[status] || status
+    }
+
+    // Charger les données au montage du composant
+    onMounted(() => {
+      fetchOrders()
+      fetchClients()
+      fetchArticles()
+      // Charger les données mockées
+      deliveries.value = mockDeliveries
+    })
+
+    return {
+      orders,
+      clients,
+      articles,
+      deliveries,
+      loadingOrders,
+      loadingClients,
+      loadingArticles,
+      ordersError,
+      clientsError,
+      articlesError,
+      recentOrders,
+      ordersInPreparation,
+      deliveriesToReceive,
+      stockAlerts,
+      lowStockItems,
+      fetchOrders,
+      fetchClients,
+      fetchArticles,
+      getClientName,
+      formatDate,
+      formatCurrency,
+      getStatusClass,
+      getStatusLabel
+    }
+  }
 }
 </script>
 
@@ -213,7 +382,7 @@ export default {
 /* SECTION KPI */
 .kpi-section {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
   margin-bottom: 2rem;
 }
@@ -227,6 +396,12 @@ export default {
   gap: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   border: 1px solid #F1F5F9;
+  transition: all 0.2s ease;
+}
+
+.kpi-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
 
 .kpi-icon {
@@ -259,11 +434,6 @@ export default {
   color: #059669;
 }
 
-.alerts-icon {
-  background: #FFFBEB;
-  color: #D97706;
-}
-
 .kpi-content {
   flex: 1;
 }
@@ -286,13 +456,8 @@ export default {
 
 /* CONTENU DASHBOARD */
 .dashboard-content {
-  display: grid;
-  gap: 1.5rem;
-}
-
-.content-section {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 1.5rem;
 }
 
@@ -310,6 +475,10 @@ export default {
   border: 1px solid #F1F5F9;
 }
 
+.section-card.full-width {
+  width: 100%;
+}
+
 .section-title {
   font-size: 16px;
   font-weight: 600;
@@ -317,41 +486,47 @@ export default {
   margin: 0 0 1.5rem 0;
 }
 
-/* GRAPHIQUE STOCK */
-.stock-chart {
-  height: 200px;
-  display: flex;
-  flex-direction: column;
-}
-
-.chart-container {
-  flex: 1;
-  display: flex;
-  align-items: end;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.chart-bar {
-  background: linear-gradient(to top, #00B8D4, #0891A6);
-  border-radius: 4px 4px 0 0;
-  flex: 1;
-  min-height: 20px;
-  transition: all 0.3s ease;
-}
-
-.chart-bar:hover {
-  background: linear-gradient(to top, #0891A6, #0E7490);
-  transform: scaleY(1.05);
-}
-
-.chart-labels {
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
+/* LOADING & ERROR */
+.loading-container,
+.error-container {
+  text-align: center;
+  padding: 2rem;
   color: #64748B;
+}
+
+.loader {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #F1F5F9;
+  border-top-color: #00B8D4;
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.error-message {
+  color: #DC2626;
+  margin-bottom: 1rem;
+}
+
+.retry-button {
+  background: #00B8D4;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 14px;
   font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.retry-button:hover {
+  background: #0891A6;
 }
 
 /* TABLEAUX */
@@ -382,9 +557,24 @@ export default {
   color: #334155;
 }
 
+.data-table tbody tr:hover {
+  background-color: #F8FAFC;
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
 .order-id, .delivery-id {
   font-weight: 600;
   color: #0F172A;
+}
+
+.empty-message {
+  text-align: center;
+  color: #64748B;
+  font-style: italic;
+  padding: 1rem;
 }
 
 .status {
@@ -400,9 +590,24 @@ export default {
   color: #1D4ED8;
 }
 
-.status-received {
-  background: #F0FDF4;
-  color: #166534;
+.status-wait {
+  background: #FEF3C7;
+  color: #92400E;
+}
+
+.status-shipped {
+  background: #E0E7FF;
+  color: #4338CA;
+}
+
+.status-cancelled {
+  background: #FEF2F2;
+  color: #DC2626;
+}
+
+.status-default {
+  background: #F1F5F9;
+  color: #64748B;
 }
 
 /* ALERTES */
@@ -410,6 +615,8 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  max-height: 300px;
+  overflow-y: auto;
 }
 
 .alert-item {
@@ -420,6 +627,12 @@ export default {
   background: #F8FAFC;
   border-radius: 8px;
   border: 1px solid #E2E8F0;
+  transition: all 0.2s ease;
+}
+
+.alert-item:hover {
+  background: #F1F5F9;
+  border-color: #CBD5E1;
 }
 
 .alert-icon-container {
@@ -430,14 +643,26 @@ export default {
   width: 12px;
   height: 12px;
   border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .stock-alert {
   background: #EF4444;
-}
-
-.delivery-alert {
-  background: #F59E0B;
 }
 
 .alert-content {
@@ -460,20 +685,15 @@ export default {
 /* RESPONSIVE */
 @media (max-width: 1024px) {
   .kpi-section {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
   }
   
-  .content-section,
   .dashboard-bottom {
     grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 640px) {
-  .kpi-section {
-    grid-template-columns: 1fr;
-  }
-  
   .kpi-card {
     padding: 1rem;
   }

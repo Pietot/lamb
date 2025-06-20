@@ -12,15 +12,15 @@
             <line x1="12" y1="8" x2="12" y2="16"/>
             <line x1="8" y1="12" x2="16" y2="12"/>
           </svg>
-          Enregistrer une livraison
+          <span>Enregistrer une livraison</span>
         </button>
       </div>
     </div>
 
     <!-- Cartes statistiques -->
     <div class="stats-section">
-      <div class="stat-card stat-pending">
-        <div class="stat-icon">
+      <div class="stat-card">
+        <div class="stat-icon truck-icon">
           <svg viewBox="0 0 24 24" fill="currentColor">
             <rect x="1" y="3" width="15" height="13"/>
             <polygon points="16,3 19,7 19,13 16,13"/>
@@ -29,31 +29,31 @@
           </svg>
         </div>
         <div class="stat-content">
-          <h3 class="stat-title">Livraisons à réceptionner</h3>
+          <p class="stat-label">Livraisons<br>à réceptionner</p>
           <p class="stat-value">3</p>
         </div>
       </div>
       
-      <div class="stat-card stat-success">
-        <div class="stat-icon">
+      <div class="stat-card">
+        <div class="stat-icon check-icon">
           <svg viewBox="0 0 24 24" fill="currentColor">
-            <polyline points="20,6 9,17 4,12"/>
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
           </svg>
         </div>
         <div class="stat-content">
-          <h3 class="stat-title">Réceptionnées ce mois</h3>
+          <p class="stat-label">Réceptionnées<br>ce mois</p>
           <p class="stat-value">12</p>
         </div>
       </div>
       
-      <div class="stat-card stat-warning">
-        <div class="stat-icon">
+      <div class="stat-card">
+        <div class="stat-icon warning-icon">
           <svg viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 2L1 21h22L12 2zm0 3.99L19.53 19H4.47L12 5.99zM11 16h2v2h-2v-2zm0-6h2v4h-2v-4z"/>
           </svg>
         </div>
         <div class="stat-content">
-          <h3 class="stat-title">Problèmes signalés</h3>
+          <p class="stat-label">Problèmes<br>signalés</p>
           <p class="stat-value">1</p>
         </div>
       </div>
@@ -61,7 +61,7 @@
 
     <!-- Filtres -->
     <div class="filters-section">
-      <div class="filters-group">
+      <div class="filter-group">
         <div class="search-container">
           <input
             v-model="searchQuery"
@@ -94,7 +94,19 @@
     <!-- Livraisons à réceptionner -->
     <div class="deliveries-section">
       <div class="section-card">
-        <h3 class="section-title">Livraisons à réceptionner</h3>
+        <div class="section-header">
+          <h3 class="section-title">Livraisons à réceptionner</h3>
+          <div class="section-stats">
+            <span class="stat-item">
+              <span class="stat-label">En attente:</span>
+              <span class="stat-value">{{ pendingCount }}</span>
+            </span>
+            <span class="stat-item">
+              <span class="stat-label">Problèmes:</span>
+              <span class="stat-value problem">{{ problemCount }}</span>
+            </span>
+          </div>
+        </div>
         
         <div class="table-container">
           <table class="deliveries-table">
@@ -112,7 +124,7 @@
             <tbody>
               <tr v-for="delivery in filteredDeliveries" :key="delivery.id">
                 <td class="delivery-id">#{{ delivery.id }}</td>
-                <td class="supplier-name">
+                <td>
                   <div class="supplier-info">
                     <div class="supplier-avatar">{{ getSupplierInitials(delivery.supplier) }}</div>
                     <span>{{ delivery.supplier }}</span>
@@ -126,33 +138,31 @@
                     {{ delivery.status }}
                   </span>
                 </td>
-                <td class="actions-cell">
-                  <div class="action-buttons">
-                    <button 
-                      v-if="delivery.status === 'En attente'"
-                      class="action-button receive-button"
-                      @click="receiveDelivery(delivery.id)"
-                      title="Réceptionner"
-                    >
-                      Réceptionner
-                    </button>
-                    <button 
-                      v-if="delivery.status === 'Problème'"
-                      class="action-button report-button"
-                      @click="reportProblem(delivery.id)"
-                      title="Signaler"
-                    >
-                      Signaler
-                    </button>
-                    <button 
-                      v-if="delivery.status === 'Problème'"
-                      class="action-button details-button"
-                      @click="viewDetails(delivery.id)"
-                      title="Détails"
-                    >
-                      Détails
-                    </button>
-                  </div>
+                <td class="actions">
+                  <button 
+                    v-if="delivery.status === 'En attente'"
+                    class="action-btn primary"
+                    @click="receiveDelivery(delivery.id)"
+                  >
+                    Réceptionner
+                  </button>
+                  <button 
+                    v-if="delivery.status === 'Problème'"
+                    class="action-btn danger"
+                    @click="reportProblem(delivery.id)"
+                  >
+                    Signaler
+                  </button>
+                  <button 
+                    class="action-btn secondary"
+                    @click="viewDetails(delivery.id)"
+                    title="Voir détails"
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                      <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                  </button>
                 </td>
               </tr>
             </tbody>
@@ -182,18 +192,18 @@
             <tbody>
               <tr v-for="item in deliveryHistory" :key="item.id">
                 <td class="delivery-id">#{{ item.id }}</td>
-                <td class="supplier-name">{{ item.supplier }}</td>
+                <td>{{ item.supplier }}</td>
                 <td class="delivery-date">{{ item.receptionDate }}</td>
                 <td class="order-reference">{{ item.orderRef }}</td>
-                <td class="received-by">{{ item.receivedBy }}</td>
+                <td>{{ item.receivedBy }}</td>
                 <td>
-                  <span class="status-badge" :class="getStatusClass(item.status)">
+                  <span class="status-badge status-received">
                     {{ item.status }}
                   </span>
                 </td>
-                <td class="actions-cell">
+                <td class="actions">
                   <button 
-                    class="action-button view-button"
+                    class="action-btn secondary"
                     @click="viewDeliveryDetails(item.id)"
                     title="Voir détails"
                   >
@@ -244,7 +254,6 @@ export default {
       status: ''
     })
 
-    // Données des livraisons selon la maquette
     const deliveries = ref([
       {
         id: '5003',
@@ -272,7 +281,6 @@ export default {
       }
     ])
 
-    // Historique des livraisons
     const deliveryHistory = ref([
       {
         id: '4998',
@@ -303,17 +311,14 @@ export default {
     const filteredDeliveries = computed(() => {
       let result = deliveries.value
 
-      // Filtre par fournisseur
       if (filters.value.supplier) {
         result = result.filter(delivery => delivery.supplier === filters.value.supplier)
       }
 
-      // Filtre par statut
       if (filters.value.status) {
         result = result.filter(delivery => delivery.status === filters.value.status)
       }
 
-      // Filtre par recherche
       if (searchQuery.value) {
         result = result.filter(delivery =>
           delivery.id.includes(searchQuery.value) ||
@@ -323,6 +328,14 @@ export default {
       }
 
       return result
+    })
+
+    const pendingCount = computed(() => {
+      return deliveries.value.filter(d => d.status === 'En attente').length
+    })
+
+    const problemCount = computed(() => {
+      return deliveries.value.filter(d => d.status === 'Problème').length
     })
 
     const getSupplierInitials = (name) => {
@@ -340,22 +353,18 @@ export default {
 
     const receiveDelivery = (deliveryId) => {
       console.log('Réceptionner livraison:', deliveryId)
-      // Logique pour réceptionner une livraison
     }
 
     const reportProblem = (deliveryId) => {
       console.log('Signaler problème:', deliveryId)
-      // Logique pour signaler un problème
     }
 
     const viewDetails = (deliveryId) => {
       console.log('Voir détails:', deliveryId)
-      // Logique pour voir les détails
     }
 
     const viewDeliveryDetails = (deliveryId) => {
       console.log('Voir détails livraison:', deliveryId)
-      // Logique pour voir les détails de livraison
     }
 
     return {
@@ -365,6 +374,8 @@ export default {
       deliveries,
       deliveryHistory,
       filteredDeliveries,
+      pendingCount,
+      problemCount,
       getSupplierInitials,
       getStatusClass,
       receiveDelivery,
@@ -398,37 +409,37 @@ export default {
 }
 
 .new-delivery-button {
-  background: #059669;
+  background: #00B8D4;
   color: white;
   border: none;
   border-radius: 8px;
   padding: 0.75rem 1.5rem;
-  font-size: 14px;
-  font-weight: 500;
   display: flex;
   align-items: center;
   gap: 0.5rem;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 184, 212, 0.3);
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .new-delivery-button:hover {
-  background: #047857;
+  background: #0891A6;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 184, 212, 0.4);
 }
 
 .new-delivery-button svg {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   stroke-width: 2;
 }
 
 /* STATISTIQUES */
 .stats-section {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
   margin-bottom: 2rem;
 }
@@ -437,22 +448,17 @@ export default {
   background: white;
   border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  border: 1px solid #F1F5F9;
   display: flex;
   align-items: center;
   gap: 1rem;
-  transition: transform 0.2s ease;
-}
-
-.stat-card:hover {
-  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid #F1F5F9;
 }
 
 .stat-icon {
   width: 48px;
   height: 48px;
-  border-radius: 12px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -464,27 +470,31 @@ export default {
   height: 24px;
 }
 
-.stat-pending .stat-icon {
-  background: #EFF6FF;
-  color: #2563EB;
-}
-
-.stat-success .stat-icon {
+.truck-icon {
   background: #F0FDF4;
   color: #059669;
 }
 
-.stat-warning .stat-icon {
+.check-icon {
+  background: #EFF6FF;
+  color: #2563EB;
+}
+
+.warning-icon {
   background: #FFFBEB;
   color: #D97706;
 }
 
-.stat-title {
-  font-size: 14px;
-  font-weight: 500;
+.stat-content {
+  flex: 1;
+}
+
+.stat-label {
+  font-size: 13px;
   color: #64748B;
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 4px 0;
   line-height: 1.3;
+  font-weight: 500;
 }
 
 .stat-value {
@@ -500,7 +510,7 @@ export default {
   margin-bottom: 2rem;
 }
 
-.filters-group {
+.filter-group {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -510,7 +520,7 @@ export default {
 .search-container {
   position: relative;
   flex: 1;
-  min-width: 250px;
+  max-width: 300px;
 }
 
 .search-input {
@@ -549,7 +559,7 @@ export default {
   padding: 0.75rem 1rem;
   font-size: 14px;
   color: #64748B;
-  min-width: 160px;
+  min-width: 140px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -569,18 +579,49 @@ export default {
 .section-card {
   background: white;
   border-radius: 12px;
-  padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   border: 1px solid #F1F5F9;
+  overflow: hidden;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-bottom: 1px solid #E2E8F0;
 }
 
 .section-title {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   color: #0F172A;
-  margin: 0 0 1.5rem 0;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid #F1F5F9;
+  margin: 0;
+}
+
+.section-stats {
+  display: flex;
+  gap: 2rem;
+}
+
+.section-stats .stat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 14px;
+}
+
+.section-stats .stat-label {
+  color: #64748B;
+}
+
+.section-stats .stat-value {
+  font-weight: 600;
+  color: #0F172A;
+}
+
+.section-stats .stat-value.problem {
+  color: #DC2626;
 }
 
 /* TABLEAUX */
@@ -598,14 +639,13 @@ export default {
 .history-table th {
   background: #F8FAFC;
   text-align: left;
-  padding: 0.75rem 1rem;
+  padding: 1rem;
   font-size: 12px;
   font-weight: 600;
   color: #64748B;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   border-bottom: 1px solid #E2E8F0;
-  white-space: nowrap;
 }
 
 .deliveries-table td,
@@ -617,12 +657,16 @@ export default {
   vertical-align: middle;
 }
 
-.deliveries-table tr:hover,
-.history-table tr:hover {
+.deliveries-table tbody tr:hover,
+.history-table tbody tr:hover {
   background: #F8FAFC;
 }
 
-/* CELLULES SPÉCIFIQUES */
+.deliveries-table tbody tr:last-child td,
+.history-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
 .delivery-id {
   font-weight: 600;
   color: #0F172A;
@@ -632,7 +676,6 @@ export default {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  min-width: 140px;
 }
 
 .supplier-avatar {
@@ -649,11 +692,6 @@ export default {
   flex-shrink: 0;
 }
 
-.supplier-name {
-  font-weight: 500;
-  color: #334155;
-}
-
 .delivery-date {
   color: #64748B;
   font-size: 13px;
@@ -662,6 +700,11 @@ export default {
 .order-reference {
   font-weight: 500;
   color: #3B82F6;
+  cursor: pointer;
+}
+
+.order-reference:hover {
+  text-decoration: underline;
 }
 
 .articles-count {
@@ -670,15 +713,12 @@ export default {
   text-align: center;
 }
 
-.received-by {
-  color: #64748B;
-  font-size: 13px;
-}
-
 /* BADGES DE STATUT */
 .status-badge {
-  padding: 0.25rem 0.75rem;
-  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.75rem;
+  border-radius: 16px;
   font-size: 12px;
   font-weight: 500;
   white-space: nowrap;
@@ -700,78 +740,56 @@ export default {
 }
 
 /* ACTIONS */
-.actions-cell {
-  min-width: 120px;
-}
-
-.action-buttons {
+.actions {
   display: flex;
-  align-items: center;
   gap: 0.5rem;
-  flex-wrap: wrap;
 }
 
-.action-button {
+.action-btn {
   border: none;
   border-radius: 6px;
-  padding: 0.5rem 0.75rem;
+  padding: 0.5rem 1rem;
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
-  white-space: nowrap;
 }
 
-.receive-button {
-  background: #059669;
+.action-btn.primary {
+  background: #00B8D4;
   color: white;
 }
 
-.receive-button:hover {
-  background: #047857;
-  transform: translateY(-1px);
+.action-btn.primary:hover {
+  background: #0891A6;
 }
 
-.report-button {
+.action-btn.danger {
   background: #DC2626;
   color: white;
 }
 
-.report-button:hover {
+.action-btn.danger:hover {
   background: #B91C1C;
-  transform: translateY(-1px);
 }
 
-.details-button {
-  background: #3B82F6;
-  color: white;
-}
-
-.details-button:hover {
-  background: #2563EB;
-  transform: translateY(-1px);
-}
-
-.view-button {
+.action-btn.secondary {
   background: none;
   border: 1px solid #E2E8F0;
   color: #64748B;
-  padding: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 6px;
 }
 
-.view-button:hover {
+.action-btn.secondary:hover {
   background: #F8FAFC;
   border-color: #CBD5E1;
   color: #334155;
 }
 
-.view-button svg {
-  width: 14px;
-  height: 14px;
-  stroke-width: 2;
+.action-btn.secondary svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 1.5;
 }
 
 /* MODAL */
@@ -848,23 +866,36 @@ export default {
     align-items: stretch;
   }
   
-  .filters-group {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .search-container {
-    min-width: auto;
+  .new-delivery-button {
+    width: 100%;
+    justify-content: center;
   }
   
   .stats-section {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
+  }
+  
+  .filter-group {
+    flex-direction: column;
+  }
+  
+  .search-container,
+  .filter-select {
+    width: 100%;
+    max-width: none;
   }
 }
 
 @media (max-width: 768px) {
-  .stats-section {
-    grid-template-columns: 1fr;
+  .section-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  
+  .section-stats {
+    width: 100%;
+    justify-content: space-between;
   }
   
   .deliveries-table,
@@ -879,26 +910,14 @@ export default {
     padding: 0.75rem 0.5rem;
   }
   
-  .supplier-info {
-    min-width: 100px;
-  }
-  
-  .action-buttons {
+  .actions {
     flex-direction: column;
     gap: 0.25rem;
   }
-}
-
-@media (max-width: 640px) {
-  .deliveries-table th:nth-child(3),
-  .deliveries-table td:nth-child(3),
-  .deliveries-table th:nth-child(4),
-  .deliveries-table td:nth-child(4),
-  .history-table th:nth-child(3),
-  .history-table td:nth-child(3),
-  .history-table th:nth-child(4),
-  .history-table td:nth-child(4) {
-    display: none;
+  
+  .action-btn {
+    padding: 0.375rem 0.75rem;
+    font-size: 11px;
   }
 }
 </style>
