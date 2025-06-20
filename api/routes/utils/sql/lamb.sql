@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : ven. 20 juin 2025 à 09:58
+-- Généré le : ven. 20 juin 2025 à 10:04
 -- Version du serveur : 10.4.28-MariaDB
 -- Version de PHP : 8.2.4
 
@@ -27,6 +27,7 @@ SET time_zone = "+00:00";
 -- Structure de la table `article`
 --
 
+DROP TABLE IF EXISTS `article`;
 CREATE TABLE `article` (
   `id_article` bigint(20) NOT NULL,
   `description` varchar(50) DEFAULT NULL,
@@ -61,6 +62,7 @@ INSERT INTO `article` (`id_article`, `description`, `nom`, `quantite_stock`, `se
 -- Structure de la table `article_lot`
 --
 
+DROP TABLE IF EXISTS `article_lot`;
 CREATE TABLE `article_lot` (
   `id_article` bigint(20) NOT NULL,
   `id_lot` int(11) NOT NULL,
@@ -86,6 +88,7 @@ INSERT INTO `article_lot` (`id_article`, `id_lot`, `quantite_article`) VALUES
 -- Structure de la table `categorie`
 --
 
+DROP TABLE IF EXISTS `categorie`;
 CREATE TABLE `categorie` (
   `id_categorie` int(11) NOT NULL,
   `nom` varchar(50) DEFAULT NULL,
@@ -109,6 +112,7 @@ INSERT INTO `categorie` (`id_categorie`, `nom`, `description`) VALUES
 -- Structure de la table `client`
 --
 
+DROP TABLE IF EXISTS `client`;
 CREATE TABLE `client` (
   `id_client` int(11) NOT NULL,
   `nom` varchar(50) DEFAULT NULL,
@@ -135,6 +139,7 @@ INSERT INTO `client` (`id_client`, `nom`, `prénom`, `email`, `telephone`, `adre
 -- Structure de la table `commande`
 --
 
+DROP TABLE IF EXISTS `commande`;
 CREATE TABLE `commande` (
   `id_commande` int(11) NOT NULL,
   `date_commande` date DEFAULT NULL,
@@ -163,6 +168,7 @@ INSERT INTO `commande` (`id_commande`, `date_commande`, `statut`, `montant_total
 -- Structure de la table `commandelot`
 --
 
+DROP TABLE IF EXISTS `commandelot`;
 CREATE TABLE `commandelot` (
   `id_lot` int(11) NOT NULL,
   `id_commande` int(11) NOT NULL,
@@ -186,6 +192,7 @@ INSERT INTO `commandelot` (`id_lot`, `id_commande`, `quantite`) VALUES
 -- Structure de la table `commande_utilisateur`
 --
 
+DROP TABLE IF EXISTS `commande_utilisateur`;
 CREATE TABLE `commande_utilisateur` (
   `id_commande` int(11) NOT NULL,
   `id_utilisateur` int(11) NOT NULL
@@ -208,6 +215,7 @@ INSERT INTO `commande_utilisateur` (`id_commande`, `id_utilisateur`) VALUES
 -- Structure de la table `lot`
 --
 
+DROP TABLE IF EXISTS `lot`;
 CREATE TABLE `lot` (
   `id_lot` int(11) NOT NULL,
   `nom` varchar(50) DEFAULT NULL,
@@ -233,6 +241,7 @@ INSERT INTO `lot` (`id_lot`, `nom`, `description`, `date_creation`, `quantite_st
 -- Structure de la table `mouvement_stock`
 --
 
+DROP TABLE IF EXISTS `mouvement_stock`;
 CREATE TABLE `mouvement_stock` (
   `id_mouvement` int(11) NOT NULL,
   `quantite` int(11) DEFAULT NULL,
@@ -260,6 +269,7 @@ INSERT INTO `mouvement_stock` (`id_mouvement`, `quantite`, `date_mouvement`, `id
 -- Structure de la table `role`
 --
 
+DROP TABLE IF EXISTS `role`;
 CREATE TABLE `role` (
   `id_role` int(11) NOT NULL,
   `role` varchar(50) DEFAULT NULL
@@ -281,6 +291,7 @@ INSERT INTO `role` (`id_role`, `role`) VALUES
 -- Structure de la table `type_mouvement`
 --
 
+DROP TABLE IF EXISTS `type_mouvement`;
 CREATE TABLE `type_mouvement` (
   `id_type` int(11) NOT NULL,
   `type` varchar(50) DEFAULT NULL
@@ -300,6 +311,7 @@ INSERT INTO `type_mouvement` (`id_type`, `type`) VALUES
 -- Structure de la table `utilisateur`
 --
 
+DROP TABLE IF EXISTS `utilisateur`;
 CREATE TABLE `utilisateur` (
   `id_utilisateur` int(11) NOT NULL,
   `nom` varchar(50) NOT NULL,
