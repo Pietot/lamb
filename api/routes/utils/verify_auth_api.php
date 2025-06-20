@@ -35,3 +35,9 @@ function verifyAuthAPI(): bool
 
     return true;
 }
+
+function isAdmin(): bool
+{
+    $headers = array_change_key_case(getallheaders(), CASE_LOWER);
+    return isset($headers['authorization-admin']) && $headers['authorization-admin'] === $_ENV['API_KEY_ADMIN'];
+}
