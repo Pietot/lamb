@@ -37,16 +37,19 @@ try {
         echo json_encode(['success' => false, 'message' => 'Champs invalides'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
     }
+
     $pdo = getPDO();
-    // Check if email already exists
+    // Vérifier si l'email existe déjà
     $checkStmt = $pdo->prepare('SELECT COUNT(*) FROM utilisateur WHERE email = :email');
     $checkStmt->bindValue(':email', $email);
     $checkStmt->execute();
+
     if ($checkStmt->fetchColumn() > 0) {
         http_response_code(409);
         echo json_encode(['success' => false, 'message' => 'Email déjà utilisé'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
     }
+
     $stmt = $pdo->prepare('INSERT INTO utilisateur (nom, prenom, email, login, pwd_hash, id_role) VALUES (:nom, :prenom, :email, :login, :pwd_hash, :id_role)');
     $stmt->bindValue(':nom', $nom);
     $stmt->bindValue(':prenom', $prenom);
