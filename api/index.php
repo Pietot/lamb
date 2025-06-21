@@ -39,6 +39,10 @@ if (verifyAuthAPI()) {
             require __DIR__ . '/routes/get_table.php';
             exit;
 
+        case $_ENV['API_ROUTE'] . 'new_user':
+            require __DIR__ . '/routes/new_user.php';
+            exit;
+
         case $_ENV['API_ROUTE'] . 'new_client':
             require __DIR__ . '/routes/new_client.php';
             exit;

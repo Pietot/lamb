@@ -39,5 +39,6 @@ if ($result) {
 } else if ($result === false) {
     echo json_encode(['success' => false, 'message' => 'Utilisateur non trouvé ou token invalide.'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 } else {
+    http_response_code(500);
     echo json_encode(['success' => false, 'message' => 'Erreur du serveur.'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 }
