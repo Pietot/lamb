@@ -8,7 +8,7 @@ header('Access-Control-Allow-Credentials: true');
 require_once __DIR__ . '/utils/pdo.php';
 
 try {
-    if (!isAdmin() || !isCommercial()) {
+    if (!isAdmin() && !isCommercial()) {
         http_response_code(403);
         echo json_encode(['success' => false, 'message' => 'Permission refusée'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
