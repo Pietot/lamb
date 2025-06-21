@@ -44,6 +44,7 @@ ensureEnvVars("api/routes/utils/.env", [
   "DB_PASSWORD=",
   "DOMAIN=",
   "API_KEY=",
+  "API_KEY_ADMIN=",
   "API_ROUTE=",
 ]);
 ensureEnvVars(".env.local", ["VITE_API_URL=", "VITE_API_KEY="]);

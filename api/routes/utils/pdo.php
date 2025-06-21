@@ -11,6 +11,7 @@ $_ENV = parse_ini_file(__DIR__ . '/.env');
 function getPDO(): PDO
 {
     if (!isset($_ENV['DB_HOST'], $_ENV['DB_NAME'], $_ENV['DB_USER'], $_ENV['DB_PASSWORD'])) {
+        http_response_code(500);
         echo json_encode(['success' => false, 'message' => 'Erreur du serveur.'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
     }

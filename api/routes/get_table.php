@@ -7,8 +7,6 @@ header('Access-Control-Allow-Credentials: true');
 
 require_once __DIR__ . '/utils/pdo.php';
 
-$pdo = getPDO();
-
 $table = htmlspecialchars($_GET['table'] ?? null);
 
 if (!$table) {
@@ -17,6 +15,7 @@ if (!$table) {
     exit;
 }
 
+$pdo = getPDO();
 $stmt = $pdo->prepare("SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = :table");
 $stmt->execute(['table' => $table]);
 $tableExists = $stmt->fetchColumn() > 0;
