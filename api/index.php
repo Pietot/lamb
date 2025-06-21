@@ -38,6 +38,10 @@ if (verifyAuthAPI()) {
         case $_ENV['API_ROUTE'] . 'get_table':
             require __DIR__ . '/routes/get_table.php';
             exit;
+
+        case $_ENV['API_ROUTE'] . 'new_client':
+            require __DIR__ . '/routes/new_client.php';
+            exit;
     }
 
     http_response_code(404);
