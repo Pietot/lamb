@@ -29,7 +29,7 @@ SET time_zone = "+00:00";
 
 DROP TABLE IF EXISTS `article`;
 CREATE TABLE IF NOT EXISTS `article` (
-  `id_article` bigint(20) NOT NULL,
+  `id_article` bigint(20) NOT NULL AUTO_INCREMENT,
   `description` varchar(50) DEFAULT NULL,
   `nom` varchar(50) DEFAULT NULL,
   `quantite_stock` int(11) DEFAULT NULL,
@@ -45,18 +45,18 @@ CREATE TABLE IF NOT EXISTS `article` (
 --
 
 INSERT INTO `article` (`id_article`, `description`, `nom`, `quantite_stock`, `seuil_alerte`, `date_creation`, `id_categorie`) VALUES
-(1001, 'Jean slim en denim brut', 'Jean Slim Homme', 120, 10, '2024-09-01', 1),
-(1002, 'Robe d\'été légère', 'Robe Floral Femme', 80, 5, '2024-07-15', 2),
-(1003, 'Ceinture cuir marron', 'Ceinture Homme', 5, 10, '2024-06-20', 3),
-(1004, 'T-shirt en coton bio', 'T-shirt Blanc Unisexe', 200, 400, '2024-08-01', 1),
-(1005, 'Blazer cintré en laine', 'Blazer Femme', 60, 5, '2024-10-05', 2),
-(1006, 'Mini-sac en cuir vegan', 'Sac Bandoulière', 40, 5, '2024-11-20', 3),
-(1007, 'Pantalon garçon 6-8 ans', 'Pantalon Enfant', 100, 10, '2025-01-10', 4),
-(1008, 'Baskets montantes blanches', 'Baskets Montantes', 70, 10, '2025-02-15', 5),
-(1009, 'Chapeau rond estival', 'Chapeau Melon', 5, 15, '2025-06-06', 3),
-(1010, 'T-shirt stylisé thème Burgouz', 'T-Shirt Burgouz', 100, 20, '2025-06-07', 1),
-(1011, 'T-shirt stylisé thème Batman', 'T-Shirt Batman', 100, 20, '2025-06-08', 1),
-(1012, 'Chaussure de villes marron', 'Chaussure marron', 70, 10, '2025-06-15', 5);
+(1, 'Jean slim en denim brut', 'Jean Slim Homme', 120, 10, '2024-09-01', 1),
+(2, 'Robe d\'été légère', 'Robe Floral Femme', 80, 5, '2024-07-15', 2),
+(3, 'Ceinture cuir marron', 'Ceinture Homme', 5, 10, '2024-06-20', 3),
+(4, 'T-shirt en coton bio', 'T-shirt Blanc Unisexe', 200, 400, '2024-08-01', 1),
+(5, 'Blazer cintré en laine', 'Blazer Femme', 60, 5, '2024-10-05', 2),
+(6, 'Mini-sac en cuir vegan', 'Sac Bandoulière', 40, 5, '2024-11-20', 3),
+(7, 'Pantalon garçon 6-8 ans', 'Pantalon Enfant', 100, 10, '2025-01-10', 4),
+(8, 'Baskets montantes blanches', 'Baskets Montantes', 70, 10, '2025-02-15', 5),
+(9, 'Chapeau rond estival', 'Chapeau Melon', 5, 15, '2025-06-06', 3),
+(10, 'T-shirt stylisé thème Burgouz', 'T-Shirt Burgouz', 100, 20, '2025-06-07', 1),
+(11, 'T-shirt stylisé thème Batman', 'T-Shirt Batman', 100, 20, '2025-06-08', 1),
+(12, 'Chaussure de villes marron', 'Chaussure marron', 70, 10, '2025-06-15', 5);
 
 -- --------------------------------------------------------
 
@@ -66,7 +66,7 @@ INSERT INTO `article` (`id_article`, `description`, `nom`, `quantite_stock`, `se
 
 DROP TABLE IF EXISTS `article_lot`;
 CREATE TABLE IF NOT EXISTS `article_lot` (
-  `id_article` bigint(20) NOT NULL,
+  `id_article` bigint(20) NOT NULL AUTO_INCREMENT,
   `id_lot` int(11) NOT NULL,
   `quantite_article` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id_article`,`id_lot`),
@@ -78,13 +78,13 @@ CREATE TABLE IF NOT EXISTS `article_lot` (
 --
 
 INSERT INTO `article_lot` (`id_article`, `id_lot`, `quantite_article`) VALUES
-(1001, 1, '50'),
-(1002, 2, '30'),
-(1004, 1, '60'),
-(1005, 3, '20'),
-(1006, 3, '15'),
-(1007, 4, '25'),
-(1008, 3, '30');
+(1, 1, '50'),
+(2, 2, '30'),
+(4, 1, '60'),
+(5, 3, '20'),
+(6, 3, '15'),
+(7, 4, '25'),
+(8, 3, '30');
 
 -- --------------------------------------------------------
 
@@ -94,7 +94,7 @@ INSERT INTO `article_lot` (`id_article`, `id_lot`, `quantite_article`) VALUES
 
 DROP TABLE IF EXISTS `categorie`;
 CREATE TABLE IF NOT EXISTS `categorie` (
-  `id_categorie` int(11) NOT NULL,
+  `id_categorie` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(50) DEFAULT NULL,
   `description` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id_categorie`)
@@ -119,7 +119,7 @@ INSERT INTO `categorie` (`id_categorie`, `nom`, `description`) VALUES
 
 DROP TABLE IF EXISTS `client`;
 CREATE TABLE IF NOT EXISTS `client` (
-  `id_client` int(11) NOT NULL,
+  `id_client` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(50) DEFAULT NULL,
   `prénom` varchar(50) DEFAULT NULL,
   `email` varchar(50) DEFAULT NULL,
@@ -147,7 +147,7 @@ INSERT INTO `client` (`id_client`, `nom`, `prénom`, `email`, `telephone`, `adre
 
 DROP TABLE IF EXISTS `commande`;
 CREATE TABLE IF NOT EXISTS `commande` (
-  `id_commande` int(11) NOT NULL,
+  `id_commande` int(11) NOT NULL AUTO_INCREMENT,
   `date_commande` date DEFAULT NULL,
   `statut` varchar(11) NOT NULL,
   `montant_total` decimal(10,2) DEFAULT NULL,
@@ -173,11 +173,11 @@ INSERT INTO `commande` (`id_commande`, `date_commande`, `statut`, `montant_total
 -- --------------------------------------------------------
 
 --
--- Structure de la table `commandelot`
+-- Structure de la table `commande_lot`
 --
 
-DROP TABLE IF EXISTS `commandelot`;
-CREATE TABLE IF NOT EXISTS `commandelot` (
+DROP TABLE IF EXISTS `commande_lot`;
+CREATE TABLE IF NOT EXISTS `commande_lot` (
   `id_lot` int(11) NOT NULL,
   `id_commande` int(11) NOT NULL,
   `quantite` int(11) DEFAULT NULL,
@@ -186,10 +186,10 @@ CREATE TABLE IF NOT EXISTS `commandelot` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Déchargement des données de la table `commandelot`
+-- Déchargement des données de la table `commande_lot`
 --
 
-INSERT INTO `commandelot` (`id_lot`, `id_commande`, `quantite`) VALUES
+INSERT INTO `commande_lot` (`id_lot`, `id_commande`, `quantite`) VALUES
 (1, 1, 2),
 (1, 5, 1),
 (2, 2, 1),
@@ -229,7 +229,7 @@ INSERT INTO `commande_utilisateur` (`id_commande`, `id_utilisateur`) VALUES
 
 DROP TABLE IF EXISTS `lot`;
 CREATE TABLE IF NOT EXISTS `lot` (
-  `id_lot` int(11) NOT NULL,
+  `id_lot` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(50) DEFAULT NULL,
   `description` varchar(50) DEFAULT NULL,
   `date_creation` date DEFAULT NULL,
@@ -256,7 +256,7 @@ INSERT INTO `lot` (`id_lot`, `nom`, `description`, `date_creation`, `quantite_st
 
 DROP TABLE IF EXISTS `mouvement_stock`;
 CREATE TABLE IF NOT EXISTS `mouvement_stock` (
-  `id_mouvement` int(11) NOT NULL,
+  `id_mouvement` int(11) NOT NULL AUTO_INCREMENT,
   `quantite` int(11) DEFAULT NULL,
   `date_mouvement` datetime DEFAULT NULL,
   `id_type` int(11) NOT NULL,
@@ -271,13 +271,13 @@ CREATE TABLE IF NOT EXISTS `mouvement_stock` (
 --
 
 INSERT INTO `mouvement_stock` (`id_mouvement`, `quantite`, `date_mouvement`, `id_type`, `id_article`) VALUES
-(1, 50, '2025-04-10 10:00:00', 1, 1001),
-(2, 10, '2025-05-10 12:00:00', 2, 1001),
-(3, 60, '2025-05-01 09:00:00', 1, 1004),
-(4, 5, '2025-05-14 10:30:00', 2, 1005),
-(5, 10, '2025-05-15 14:00:00', 2, 1008),
-(6, 25, '2025-05-12 11:00:00', 1, 1007),
-(7, 8, '2025-05-16 15:45:00', 2, 1001);
+(1, 50, '2025-04-10 10:00:00', 1, 1),
+(2, 10, '2025-05-10 12:00:00', 2, 1),
+(3, 60, '2025-05-01 09:00:00', 1, 4),
+(4, 5, '2025-05-14 10:30:00', 2, 5),
+(5, 10, '2025-05-15 14:00:00', 2, 8),
+(6, 25, '2025-05-12 11:00:00', 1, 7),
+(7, 8, '2025-05-16 15:45:00', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -287,7 +287,7 @@ INSERT INTO `mouvement_stock` (`id_mouvement`, `quantite`, `date_mouvement`, `id
 
 DROP TABLE IF EXISTS `role`;
 CREATE TABLE IF NOT EXISTS `role` (
-  `id_role` int(11) NOT NULL,
+  `id_role` int(11) NOT NULL AUTO_INCREMENT,
   `role` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id_role`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -297,8 +297,7 @@ CREATE TABLE IF NOT EXISTS `role` (
 --
 
 INSERT INTO `role` (`id_role`, `role`) VALUES
-(0, 'Administrateur'),
-(1, 'Test'),
+(1, 'Administrateur'),
 (2, 'Gestionnaire'),
 (3, 'Commercial');
 
@@ -310,7 +309,7 @@ INSERT INTO `role` (`id_role`, `role`) VALUES
 
 DROP TABLE IF EXISTS `type_mouvement`;
 CREATE TABLE IF NOT EXISTS `type_mouvement` (
-  `id_type` int(11) NOT NULL,
+  `id_type` int(11) NOT NULL AUTO_INCREMENT,
   `type` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id_type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -331,7 +330,7 @@ INSERT INTO `type_mouvement` (`id_type`, `type`) VALUES
 
 DROP TABLE IF EXISTS `utilisateur`;
 CREATE TABLE IF NOT EXISTS `utilisateur` (
-  `id_utilisateur` int(11) NOT NULL,
+  `id_utilisateur` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(50) NOT NULL,
   `prenom` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
@@ -351,7 +350,7 @@ CREATE TABLE IF NOT EXISTS `utilisateur` (
 INSERT INTO `utilisateur` (`id_utilisateur`, `nom`, `prenom`, `email`, `login`, `pwd_hash`, `token`, `token_init`, `id_role`) VALUES
 (1, 'Test', 'Test', 'test@test.com', 'test', '$2y$10$YMfhEoNm8tgkhfSm.kzGF.kezvI4p/SRqFp3VBR45KikqVUsKQc1y', '988d403cb144ff4b184c69089a755bc0ff8dd4c72ce654acf60ec8cea824', '2025-06-20 09:53:59', 1),
 (2, 'Laurent', 'Claire', 'claire.laurent@lamb.com', 'clairel', '$2y$10$dXJazd1Xvz1234examplehashedPWD', NULL, NULL, 2),
-(3, 'Fabrice', 'Fief', 'fabrice.fief@lamb.com', 'Fabgaming', '$2y$10$dXJazd1Xvz1234examplehashedPWD', NULL, NULL, 0);
+(3, 'Fabrice', 'Fief', 'fabrice.fief@lamb.com', 'Fabgaming', '$2y$10$dXJazd1Xvz1234examplehashedPWD', NULL, NULL, 3);
 
 --
 -- Contraintes pour les tables déchargées
@@ -377,11 +376,11 @@ ALTER TABLE `commande`
   ADD CONSTRAINT `Commande_ibfk_1` FOREIGN KEY (`id_client`) REFERENCES `client` (`id_client`);
 
 --
--- Contraintes pour la table `commandelot`
+-- Contraintes pour la table `commande_lot`
 --
-ALTER TABLE `commandelot`
-  ADD CONSTRAINT `CommandeLot_ibfk_1` FOREIGN KEY (`id_lot`) REFERENCES `lot` (`id_lot`),
-  ADD CONSTRAINT `CommandeLot_ibfk_2` FOREIGN KEY (`id_commande`) REFERENCES `commande` (`id_commande`);
+ALTER TABLE `commande_lot`
+  ADD CONSTRAINT `Commande_Lot_ibfk_1` FOREIGN KEY (`id_lot`) REFERENCES `lot` (`id_lot`),
+  ADD CONSTRAINT `Commande_Lot_ibfk_2` FOREIGN KEY (`id_commande`) REFERENCES `commande` (`id_commande`);
 
 --
 -- Contraintes pour la table `commande_utilisateur`
