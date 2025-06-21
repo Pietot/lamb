@@ -121,7 +121,7 @@ DROP TABLE IF EXISTS `client`;
 CREATE TABLE IF NOT EXISTS `client` (
   `id_client` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(50) DEFAULT NULL,
-  `prénom` varchar(50) DEFAULT NULL,
+  `prenom` varchar(50) DEFAULT NULL,
   `email` varchar(50) DEFAULT NULL,
   `telephone` varchar(10) DEFAULT NULL,
   `adresse` varchar(100) DEFAULT NULL,
@@ -132,7 +132,7 @@ CREATE TABLE IF NOT EXISTS `client` (
 -- Déchargement des données de la table `client`
 --
 
-INSERT INTO `client` (`id_client`, `nom`, `prénom`, `email`, `telephone`, `adresse`) VALUES
+INSERT INTO `client` (`id_client`, `nom`, `prenom`, `email`, `telephone`, `adresse`) VALUES
 (1, 'Durand', 'Claire', 'claire.durand@email.com', '0650506565', '15 rue Lafayette, Paris'),
 (2, 'Martin', 'Julien', 'julien.martin@email.com', '0666549865', '42 avenue des Champs, Lyon'),
 (3, 'Lemoine', 'Sarah', 'sarah.lemoine@email.com', '0780964587', '20 place Bellecour, Lyon'),
