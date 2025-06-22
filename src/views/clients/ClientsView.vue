@@ -700,8 +700,7 @@ export default {
 
 .stat-label {
   font-size: 13px;
-  color: #64748B;
-  margin: 0 0 4px 0;
+  color: #64748B;  
   font-weight: 500;
 }
 

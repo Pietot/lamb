@@ -492,7 +492,6 @@ export default {
 .stat-label {
   font-size: 13px;
   color: #64748B;
-  margin: 0 0 4px 0;
   line-height: 1.3;
   font-weight: 500;
 }
