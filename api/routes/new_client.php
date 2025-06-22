@@ -13,6 +13,7 @@ try {
         echo json_encode(['success' => false, 'message' => 'Permission refusée'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
     }
+
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         http_response_code(405);
         echo json_encode(['success' => false, 'message' => 'Méthode non autorisée'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
@@ -66,5 +67,5 @@ try {
 
 function verifyPhoneNumber($phone): bool
 {
-     return preg_match('/^0[1-9][0-9]{8}$/', $phone);
+    return preg_match('/^0[1-9][0-9]{8}$/', $phone);
 }
