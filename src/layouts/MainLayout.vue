@@ -1,7 +1,19 @@
 <template>
-  <div class="app-layout">
+  <div class="app-layout" 
+       @touchstart="handleTouchStart"
+       @touchmove="handleTouchMove" 
+       @touchend="handleTouchEnd">
+    <!-- Overlay pour mobile -->
+    <div 
+      v-if="sidebarOpen" 
+      class="sidebar-overlay"
+      @click="closeSidebar"
+    ></div>
+
     <!-- Sidebar -->
-    <aside class="sidebar">
+    <aside class="sidebar" 
+           :class="{ 'sidebar-open': sidebarOpen, 'sidebar-dragging': isDragging }"
+           :style="`translateX(${sidebarTransform}px)`">
       <!-- Logo LAMB Solutions -->
       <div class="sidebar-header">
         <div class="logo-container">
@@ -26,6 +38,7 @@
           :to="item.to"
           class="nav-link"
           :class="{ 'nav-link-active': $route.name === item.name }"
+          @click="closeSidebar"
         >
           <div class="nav-icon">
             <component :is="item.icon" />
@@ -56,11 +69,19 @@
     </aside>
 
     <!-- Main Content Area -->
-    <main class="main-content">
+    <main class="main-content" :class="{ 'main-content-dimmed': sidebarOpen }">
       <!-- Top Header -->
       <header class="main-header">
         <div class="header-content">
           <h1 class="page-title">{{ pageTitle }}</h1>
+          <!-- Menu Burger Icon for Mobile to display / hide sidebar -->
+          <button class="menu-toggle" @click="toggleSidebar" title="Menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <line x1="3" y1="12" x2="21" y2="12"/>
+              <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+          </button>
         </div>
       </header>
 
@@ -73,7 +94,7 @@
 </template>
 
 <script>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 
@@ -178,6 +199,11 @@ export default {
     const router = useRouter()
     const route = useRoute()
     const authStore = useAuthStore()
+    const sidebarOpen = ref(false)
+    const sidebarTransform = ref(0)
+    const isDragging = ref(false)
+    const startX = ref(0)
+    const currentX = ref(0)
 
     const menuItems = [
       {
@@ -256,13 +282,92 @@ export default {
       router.push('/login')
     }
 
+    const toggleSidebar = () => {
+      sidebarOpen.value = !sidebarOpen.value
+    }
+
+    const closeSidebar = () => {
+      sidebarOpen.value = false
+      sidebarTransform.value = 0
+      isDragging.value = false
+    }
+
+    // Gestion des gestes tactiles
+    const handleTouchStart = (e) => {
+      if (window.innerWidth > 768) return
+      
+      startX.value = e.touches[0].clientX
+      currentX.value = startX.value
+      isDragging.value = true
+    }
+
+    const handleTouchMove = (e) => {
+      if (!isDragging.value || window.innerWidth > 768) return
+      
+      currentX.value = e.touches[0].clientX
+      const deltaX = currentX.value - startX.value
+      
+      if (sidebarOpen.value) {
+        // Sidebar ouverte, on peut la fermer en swipant vers la gauche
+        if (deltaX < 0) {
+          const progress = Math.max(0, Math.min(1, Math.abs(deltaX) / 260))
+          sidebarTransform.value = -progress * 280
+        }
+      } else {
+        // Sidebar fermée, on peut l'ouvrir en swipant vers la droite depuis le bord gauche
+        if (startX.value < window.innerWidth / 3 && deltaX > 0) {
+          const progress = Math.max(0, Math.min(1, deltaX / 260))
+          sidebarTransform.value = progress * 280 - 280
+        }
+      }
+    }
+
+    const handleTouchEnd = () => {
+      if (!isDragging.value || window.innerWidth > 768) return
+      
+      const deltaX = currentX.value - startX.value
+      // Seuil pour déclencher l'ouverture/fermeture
+      const threshold = 30
+      
+      if (sidebarOpen.value) {
+        // Sidebar ouverte
+        if (Math.abs(deltaX) > threshold && deltaX < 0) {
+          // Fermer la sidebar
+          closeSidebar()
+        } else {
+          // Revenir à l'état ouvert
+          sidebarTransform.value = 0
+        }
+      } else {
+        // Sidebar fermée
+        if (startX.value < window.innerWidth / 3 && deltaX > threshold) {
+          // Ouvrir la sidebar
+          sidebarOpen.value = true
+          sidebarTransform.value = 0
+        } else {
+          // Revenir à l'état fermé
+          sidebarTransform.value = 0
+        }
+      }
+      
+      isDragging.value = false
+    }
+
     return {
-      authStore,
+      authStore,  
       menuItems,
       pageTitle,
       userInitials,
       userRoleLabel,
-      handleLogout
+      handleLogout,
+      toggleSidebar,
+      closeSidebar,
+      sidebarOpen,
+      sidebarTransform,
+      isDragging,
+      handleTouchStart,
+      handleTouchMove,
+      handleTouchEnd
     }
   }
 }
@@ -274,6 +379,19 @@ export default {
   height: 100vh;
   background: #F8FAFC;
   font-family: 'Inter', sans-serif;
+  position: relative;
+}
+
+/* OVERLAY MOBILE */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 40;
+  display: none;
 }
 
 /* SIDEBAR */
@@ -365,8 +483,8 @@ export default {
 }
 
 .nav-icon svg {
-  width: 18px;
-  height: 18px;
+  width: 25px;
+  height: 25px;
   stroke-width: 1.5;
 }
 
@@ -457,6 +575,12 @@ export default {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.main-content-dimmed {
+  pointer-events: none;
+  filter: brightness(0.7);
 }
 
 .main-header {
@@ -466,7 +590,11 @@ export default {
 }
 
 .header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 1rem 1.5rem;
+  height: 64px;
 }
 
 .page-title {
@@ -474,6 +602,31 @@ export default {
   font-weight: 600;
   color: #0F172A;
   margin: 0;
+}
+
+.menu-toggle {
+  background: none;
+  border: none;
+  color: #0F172A;
+  cursor: pointer;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  display: none;
+  transition: all 0.2s ease;
+}
+
+.menu-toggle:hover {
+  background: rgba(15, 23, 42, 0.1);
+}
+
+.menu-toggle svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 1.5;
 }
 
 .page-content {
@@ -493,18 +646,38 @@ export default {
 @media (max-width: 768px) {
   .sidebar {
     position: fixed;
-    left: -260px;
+    left: -280px;
     width: 260px;
+    height: 100%;
     z-index: 50;
-    transition: left 0.3s ease;
+    transition: transform 0.3s ease;
+    border-radius: 0 1rem 1rem 0;
+    box-shadow: 3px 0px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  .sidebar-open {
+    transform: translateX(280px);
+  }
+
+  .sidebar-dragging {
+    transition: none;
+  }
+  
+  .sidebar-overlay {
+    display: block;
   }
   
   .main-content {
     margin-left: 0;
+    width: 100%;
   }
   
   .page-content {
     padding: 1rem;
+  }
+
+  .menu-toggle {
+    display: flex;
   }
 }
 </style>
