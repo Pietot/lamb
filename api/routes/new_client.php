@@ -8,7 +8,7 @@ header('Access-Control-Allow-Credentials: true');
 require_once __DIR__ . '/utils/pdo.php';
 
 try {
-    if (!isAdmin()) {
+    if (!isAdmin() && !isCommercial()) {
         http_response_code(403);
         echo json_encode(['success' => false, 'message' => 'Permission refusée'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
@@ -23,17 +23,16 @@ try {
     $nom = htmlspecialchars(trim($_POST['nom'] ?? ''));
     $prenom = htmlspecialchars(trim($_POST['prenom'] ?? ''));
     $email = htmlspecialchars(trim($_POST['email'] ?? ''));
-    $login = htmlspecialchars(trim($_POST['login'] ?? ''));
-    $password = htmlspecialchars(trim($_POST['password'] ?? ''));
-    $id_role = htmlspecialchars(trim($_POST['id_role'] ?? ''));
+    $telephone = htmlspecialchars(trim($_POST['telephone'] ?? ''));
+    $adresse = htmlspecialchars(trim($_POST['adresse'] ?? ''));
 
-    if (empty($nom) || empty($prenom) || empty($email) || empty($login) || empty($password) || empty($id_role)) {
+    if (empty($nom) || empty($prenom) || empty($email) || empty($telephone) || empty($adresse)) {
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Champs manquants'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
     }
 
-    if (strlen($nom) >= 50 || strlen($prenom) >= 50 || strlen($login) >= 30 || !filter_var($email, FILTER_VALIDATE_EMAIL) || !isPasswordValid($password) || !is_numeric($id_role)) {
+    if (strlen($nom) >= 50 || strlen($prenom) >= 50 || strlen($telephone) >= 30 || !filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($adresse) >= 100) {
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Champs invalides'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
@@ -41,26 +40,24 @@ try {
 
     $pdo = getPDO();
     // Vérifier si l'email existe déjà
-    $checkStmt = $pdo->prepare('SELECT COUNT(*) FROM utilisateur WHERE email = :email');
+    $checkStmt = $pdo->prepare('SELECT COUNT(*) FROM client WHERE email = :email');
     $checkStmt->bindValue(':email', $email);
     $checkStmt->execute();
-
     if ($checkStmt->fetchColumn() > 0) {
         http_response_code(409);
         echo json_encode(['success' => false, 'message' => 'Email déjà utilisé'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
     }
 
-    $stmt = $pdo->prepare('INSERT INTO utilisateur (nom, prenom, email, login, pwd_hash, id_role) VALUES (:nom, :prenom, :email, :login, :pwd_hash, :id_role)');
+    $stmt = $pdo->prepare('INSERT INTO client (nom, prenom, email, telephone, adresse) VALUES (:nom, :prenom, :email, :telephone, :adresse)');
     $stmt->bindValue(':nom', $nom);
     $stmt->bindValue(':prenom', $prenom);
     $stmt->bindValue(':email', $email);
-    $stmt->bindValue(':login', $login);
-    $stmt->bindValue(':pwd_hash', password_hash($password, PASSWORD_BCRYPT));
-    $stmt->bindValue(':id_role', $id_role, PDO::PARAM_INT);
+    $stmt->bindValue(':telephone', $telephone);
+    $stmt->bindValue(':adresse', $adresse);
     $stmt->execute();
     http_response_code(201);
-    echo json_encode(['success' => true, 'message' => 'Utilisateur créé avec succès'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    echo json_encode(['success' => true, 'message' => 'Client créé avec succès'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 
 } catch (Exception $e) {
     http_response_code(500);
@@ -68,7 +65,7 @@ try {
     exit;
 }
 
-function isPasswordValid($password)
+function verifyPhoneNumber($phone): bool
 {
-    return preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,30}$/', $password);
+    return preg_match('/^0[1-9][0-9]{8}$/', $phone);
 }

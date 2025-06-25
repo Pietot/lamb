@@ -44,8 +44,19 @@ ensureEnvVars("api/routes/utils/.env", [
   "DB_PASSWORD=",
   "DOMAIN=",
   "API_KEY=",
+  "API_KEY_COMMERCIAL=",
   "API_KEY_ADMIN=",
   "API_ROUTE=",
 ]);
-ensureEnvVars(".env.local", ["VITE_API_URL=", "VITE_API_KEY="]);
-ensureEnvVars(".env.prod", ["VITE_API_URL=", "VITE_API_KEY="]);
+ensureEnvVars(".env.local", [
+  "VITE_API_URL=",
+  "VITE_API_KEY=",
+  "VITE_API_KEY_COMMERCIAL=",
+  "VITE_API_KEY_ADMIN=",
+]);
+ensureEnvVars(".env.prod", [
+  "VITE_API_URL=",
+  "VITE_API_KEY=",
+  "VITE_API_KEY_COMMERCIAL=",
+  "VITE_API_KEY_ADMIN=",
+]);

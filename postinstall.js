@@ -18,6 +18,7 @@ const backendEnvLines = [
   "",
   "DOMAIN=http://localhost:5173",
   "API_KEY=",
+  "API_KEY_COMMERCIAL=",
   "API_KEY_ADMIN=",
   "API_ROUTE=",
 ];
@@ -37,6 +38,8 @@ const envLocalPath = join(__dirname, ".env.local");
 const envLocalLines = [
   "VITE_API_URL=http://localhost/lamb/api/",
   "VITE_API_KEY=",
+  "VITE_API_KEY_COMMERCIAL=",
+  "VITE_API_KEY_ADMIN=",
 ];
 const envLocalContent = envLocalLines.join("\n");
 if (!existsSync(envLocalPath)) {

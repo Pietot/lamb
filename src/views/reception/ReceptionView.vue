@@ -174,8 +174,16 @@
     <!-- Historique des livraisons -->
     <div class="history-section">
       <div class="section-card">
-        <h3 class="section-title">Historique des livraisons</h3>
-        
+        <div class="section-header">
+          <h3 class="section-title">Historique des livraisons</h3>
+          <div class="section-stats">
+            <span class="stat-item">
+              <span class="stat-label">Total:</span>
+              <span class="stat-value">{{ deliveryHistory.length }}</span>
+            </span>
+          </div>
+        </div>
+
         <div class="table-container">
           <table class="history-table">
             <thead>
@@ -492,7 +500,6 @@ export default {
 .stat-label {
   font-size: 13px;
   color: #64748B;
-  margin: 0 0 4px 0;
   line-height: 1.3;
   font-weight: 500;
 }

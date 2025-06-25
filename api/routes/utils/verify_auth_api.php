@@ -41,3 +41,9 @@ function isAdmin(): bool
     $headers = array_change_key_case(getallheaders(), CASE_LOWER);
     return isset($headers['authorization-admin']) && $headers['authorization-admin'] === $_ENV['API_KEY_ADMIN'];
 }
+
+function isCommercial(): bool
+{
+    $headers = array_change_key_case(getallheaders(), CASE_LOWER);
+    return isset($headers['authorization-commercial']) && $headers['authorization-commercial'] === $_ENV['API_KEY_COMMERCIAL'];
+}
