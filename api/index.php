@@ -50,6 +50,10 @@ if (verifyAuthAPI()) {
         case $_ENV['API_ROUTE'] . 'new_article':
             require __DIR__ . '/routes/new_article.php';
             exit;
+        
+        case $_ENV['API_ROUTE'] . 'new_fournisseur':
+            require __DIR__ . '/routes/new_fournisseur.php';
+            exit;
     }
 
     http_response_code(404);
