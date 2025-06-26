@@ -12,56 +12,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 require_once __DIR__ . '/routes/utils/pdo.php';
-include_once __DIR__ . '/routes/utils/verify_auth_api.php';
 
-if (verifyAuthAPI()) {
-    // if (tooManyAttempts($_SERVER['REMOTE_ADDR'])) {
-    //     http_response_code(429);
-    //     echo json_encode(['success' => false, 'message' => 'Trop de tentatives. Veuillez réessayer plus tard.']);
-    //     exit;
-    // }
-    $_ENV = parse_ini_file(__DIR__ . '/routes/utils/.env');
+$requestUri = $_SERVER['REQUEST_URI'];
+$path = parse_url($requestUri, PHP_URL_PATH);
 
-    $requestUri = $_SERVER['REQUEST_URI'];
-    $path = parse_url($requestUri, PHP_URL_PATH);
+switch ($path) {
+    case $_ENV['API_ROUTE'] . 'verify_user':
+        require __DIR__ . '/routes/verify_user.php';
+        exit;
 
-    switch ($path) {
-        case $_ENV['API_ROUTE'] . 'verify_user':
-            require __DIR__ . '/routes/verify_user.php';
-            exit;
+    case $_ENV['API_ROUTE'] . 'login':
+        require __DIR__ . '/routes/login.php';
+        exit;
 
-        case $_ENV['API_ROUTE'] . 'login':
-            require __DIR__ . '/routes/login.php';
-            exit;
+    case $_ENV['API_ROUTE'] . 'logout':
+        require __DIR__ . '/routes/logout.php';
+        exit;
 
-        case $_ENV['API_ROUTE'] . 'logout':
-            require __DIR__ . '/routes/logout.php';
-            exit;
+    case $_ENV['API_ROUTE'] . 'get_table':
+        require __DIR__ . '/routes/get_table.php';
+        exit;
 
-        case $_ENV['API_ROUTE'] . 'get_table':
-            require __DIR__ . '/routes/get_table.php';
-            exit;
+    case $_ENV['API_ROUTE'] . 'new_user':
+        require __DIR__ . '/routes/new_user.php';
+        exit;
 
-        case $_ENV['API_ROUTE'] . 'new_user':
-            require __DIR__ . '/routes/new_user.php';
-            exit;
+    case $_ENV['API_ROUTE'] . 'new_client':
+        require __DIR__ . '/routes/new_client.php';
+        exit;
 
-        case $_ENV['API_ROUTE'] . 'new_client':
-            require __DIR__ . '/routes/new_client.php';
-            exit;
-
-        case $_ENV['API_ROUTE'] . 'new_article':
-            require __DIR__ . '/routes/new_article.php';
-            exit;
-        
-        case $_ENV['API_ROUTE'] . 'new_fournisseur':
-            require __DIR__ . '/routes/new_fournisseur.php';
-            exit;
-    }
-
-    http_response_code(404);
-    echo json_encode(['success' => false, 'message' => 'Route introuvable.', 'route' => $path, 'referer' => $_ENV['API_ROUTE'] . 'login'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    case $_ENV['API_ROUTE'] . 'new_article':
+        require __DIR__ . '/routes/new_article.php';
+        exit;
+    
+    case $_ENV['API_ROUTE'] . 'new_fournisseur':
+        require __DIR__ . '/routes/new_fournisseur.php';
+        exit;
 }
+
+http_response_code(404);
+echo json_encode(['success' => false, 'message' => 'Route introuvable.', 'route' => $path, 'referer' => $_ENV['API_ROUTE'] . 'login'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 
 // function tooManyAttempts($ip)
 // {

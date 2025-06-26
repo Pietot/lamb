@@ -1,10 +1,6 @@
 <?php
-$_ENV = parse_ini_file(__DIR__ . '/utils/.env');
-
-header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: ' . $_ENV['DOMAIN']);
-header('Access-Control-Allow-Credentials: true');
-
+require_once __DIR__ . '/utils/verify_auth_api.php';
+require_once __DIR__ . '/utils/cors.php';
 require_once __DIR__ . '/utils/pdo.php';
 
 $table = htmlspecialchars($_GET['table'] ?? null);
@@ -13,6 +9,13 @@ if (!$table) {
     http_response_code(400);
     echo json_encode(['success' => false, 'message' => 'Paramètre manquant.'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     exit;
+}
+
+// Authentification obligatoire
+if ($table === 'utilisateur') {
+    require_auth(1); // 1 = admin, à adapter selon la table role
+} else {
+    require_auth();
 }
 
 $pdo = getPDO();
