@@ -5,7 +5,7 @@
       <div class="header-left">
         <button class="back-button" @click="goBack">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <polyline points="15,18 9,12 15,6"/>
+            <polyline points="15,18 9,12 15,6" />
           </svg>
           Retour
         </button>
@@ -19,31 +19,21 @@
       <div class="form-section">
         <div class="section-card">
           <h3 class="section-title">Informations client</h3>
-          
+
           <div class="client-search">
             <div class="search-container">
-              <input
-                v-model="clientSearch"
-                type="text"
-                placeholder="Rechercher un client..."
-                class="client-search-input"
-                @input="searchClients"
-                @focus="showClientDropdown = true"
-              />
+              <input v-model="clientSearch" type="text" placeholder="Rechercher un client..."
+                class="client-search-input" @input="searchClients" @focus="showClientDropdown = true" />
               <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <circle cx="11" cy="11" r="8"/>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>
             </div>
-            
+
             <!-- Dropdown clients -->
             <div v-if="showClientDropdown && filteredClients.length" class="client-dropdown">
-              <div
-                v-for="client in filteredClients"
-                :key="client.id"
-                class="client-option"
-                @click="selectClient(client)"
-              >
+              <div v-for="client in filteredClients" :key="client.id" class="client-option"
+                @click="selectClient(client)">
                 <div class="client-name">{{ client.name }}</div>
                 <div class="client-contact">{{ client.contact }}</div>
               </div>
@@ -55,8 +45,8 @@
             <div class="client-card">
               <button type="button" class="remove-client" @click="removeClient">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <line x1="18" y1="6" x2="6" y2="18"/>
-                  <line x1="6" y1="6" x2="18" y2="18"/>
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
                 </svg>
               </button>
               <div class="client-info">
@@ -74,18 +64,13 @@
       <div class="form-section">
         <div class="section-card">
           <h3 class="section-title">Détails de la commande</h3>
-          
+
           <div class="form-grid">
             <div class="form-field">
               <label class="field-label">Date</label>
-              <input
-                v-model="orderDetails.date"
-                type="date"
-                class="form-input"
-                required
-              />
+              <input v-model="orderDetails.date" type="date" class="form-input" required />
             </div>
-            
+
             <div class="form-field">
               <label class="field-label">Mode de livraison</label>
               <select v-model="orderDetails.deliveryMode" class="form-select" required>
@@ -95,7 +80,7 @@
                 <option value="Urgente">Urgente</option>
               </select>
             </div>
-            
+
             <div class="form-field">
               <label class="field-label">Mode de paiement</label>
               <select v-model="orderDetails.paymentMode" class="form-select" required>
@@ -115,15 +100,11 @@
         <div class="section-card">
           <div class="section-header">
             <h3 class="section-title">Articles</h3>
-            <button
-              type="button"
-              class="add-article-button"
-              @click="showAddArticleModal = true"
-            >
+            <button type="button" class="add-article-button" @click="showAddArticleModal = true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <circle cx="12" cy="12" r="10"/>
-                <line x1="12" y1="8" x2="12" y2="16"/>
-                <line x1="8" y1="12" x2="16" y2="12"/>
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="16" />
+                <line x1="8" y1="12" x2="16" y2="12" />
               </svg>
               Ajouter un article
             </button>
@@ -148,24 +129,15 @@
                   <td class="item-product">{{ item.product }}</td>
                   <td class="item-price">{{ formatCurrency(item.unitPrice) }}</td>
                   <td class="item-quantity">
-                    <input
-                      v-model.number="item.quantity"
-                      type="number"
-                      min="1"
-                      class="quantity-input"
-                      @input="updateItemTotal(index)"
-                    />
+                    <input v-model.number="item.quantity" type="number" min="1" class="quantity-input"
+                      @input="updateItemTotal(index)" />
                   </td>
                   <td class="item-total">{{ formatCurrency(item.total) }}</td>
                   <td class="item-actions">
-                    <button
-                      type="button"
-                      class="remove-item-button"
-                      @click="removeItem(index)"
-                    >
+                    <button type="button" class="remove-item-button" @click="removeItem(index)">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <polyline points="3,6 5,6 21,6"/>
-                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                        <polyline points="3,6 5,6 21,6" />
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
                       </svg>
                     </button>
                   </td>
@@ -215,8 +187,8 @@
           <h3>Ajouter un article</h3>
           <button @click="showAddArticleModal = false" class="modal-close">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <line x1="18" y1="6" x2="6" y2="18"/>
-              <line x1="6" y1="6" x2="18" y2="18"/>
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
         </div>
@@ -232,13 +204,7 @@
           </div>
           <div class="form-field">
             <label class="field-label">Quantité</label>
-            <input
-              v-model.number="newArticle.quantity"
-              type="number"
-              min="1"
-              class="form-input"
-              placeholder="1"
-            />
+            <input v-model.number="newArticle.quantity" type="number" min="1" class="form-input" placeholder="1" />
           </div>
           <div class="modal-actions">
             <button type="button" class="cancel-button" @click="showAddArticleModal = false">
@@ -262,18 +228,18 @@ export default {
   name: 'NewOrderView',
   setup() {
     const router = useRouter()
-    
+
     const clientSearch = ref('')
     const showClientDropdown = ref(false)
     const selectedClient = ref(null)
     const showAddArticleModal = ref(false)
-    
+
     const orderDetails = reactive({
       date: new Date().toISOString().split('T')[0],
       deliveryMode: 'Standard',
       paymentMode: ''
     })
-    
+
     const orderItems = ref([
       {
         reference: 'A2A',
@@ -283,7 +249,7 @@ export default {
         total: 250.00
       }
     ])
-    
+
     const newArticle = reactive({
       reference: '',
       quantity: 1
@@ -379,11 +345,11 @@ export default {
 
     const addArticle = () => {
       if (!newArticle.reference) return
-      
+
       const article = availableArticles.value.find(a => a.reference === newArticle.reference)
       if (article) {
         const existingIndex = orderItems.value.findIndex(item => item.reference === newArticle.reference)
-        
+
         if (existingIndex >= 0) {
           orderItems.value[existingIndex].quantity += newArticle.quantity
           orderItems.value[existingIndex].total = orderItems.value[existingIndex].quantity * orderItems.value[existingIndex].unitPrice
@@ -396,7 +362,7 @@ export default {
             total: article.unitPrice * newArticle.quantity
           })
         }
-        
+
         newArticle.reference = ''
         newArticle.quantity = 1
         showAddArticleModal.value = false
@@ -1009,19 +975,19 @@ export default {
     align-items: flex-start;
     gap: 1rem;
   }
-  
+
   .form-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .form-actions {
     flex-direction: column;
   }
-  
+
   .articles-table {
     font-size: 12px;
   }
-  
+
   .articles-table th:nth-child(3),
   .articles-table td:nth-child(3) {
     display: none;

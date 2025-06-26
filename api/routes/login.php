@@ -2,6 +2,8 @@
 require_once __DIR__ . '/utils/cors.php';
 require_once __DIR__ . '/utils/pdo.php';
 
+$_ENV = parse_ini_file(__DIR__ . '/utils/.env');
+
 $pdo = getPDO();
 
 try {
@@ -14,6 +16,8 @@ try {
         // Stocker l'utilisateur et le rôle dans la session
         $_SESSION['user'] = $user['id_utilisateur'];
         $_SESSION['role'] = $user['role'];
+        session_regenerate_id(true);
+        addLastLogin($pdo, $user['id_utilisateur']);
         echo json_encode([
             'success' => true,
             'user' => [
@@ -36,4 +40,11 @@ function getUser(PDO $pdo, string $login): array
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     return $result !== false ? $result : [];
+}
+
+function addLastLogin(PDO $pdo, int $userId): void
+{
+    $stmt = $pdo->prepare('UPDATE utilisateur SET last_login = NOW() WHERE id_utilisateur = :id');
+    $stmt->bindValue(':id', $userId);
+    $stmt->execute();
 }

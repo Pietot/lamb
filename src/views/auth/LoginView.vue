@@ -14,9 +14,9 @@
       <div class="logo-section">
         <div class="logo-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-            <path d="M2 17l10 5 10-5"/>
-            <path d="M2 12l10 5 10-5"/>
+            <path d="M12 2L2 7l10 5 10-5-10-5z" />
+            <path d="M2 17l10 5 10-5" />
+            <path d="M2 12l10 5 10-5" />
           </svg>
         </div>
         <h1 class="logo-text">LAMB Solutions</h1>
@@ -30,17 +30,11 @@
             <div class="input-wrapper">
               <div class="input-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                  <circle cx="12" cy="7" r="4"/>
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
                 </svg>
               </div>
-              <input
-                v-model="credentials.login"
-                type="text"
-                placeholder="Login"
-                class="form-input"
-                required
-              />
+              <input v-model="credentials.login" type="text" placeholder="Login" class="form-input" required />
             </div>
           </div>
 
@@ -49,27 +43,18 @@
             <div class="input-wrapper">
               <div class="input-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                  <circle cx="12" cy="16" r="1"/>
-                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                  <circle cx="12" cy="16" r="1" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                 </svg>
               </div>
-              <input
-                v-model="credentials.password"
-                type="password"
-                placeholder="Mot de passe"
-                class="form-input"
-                required
-              />
+              <input v-model="credentials.password" type="password" placeholder="Mot de passe" class="form-input"
+                required />
             </div>
           </div>
 
           <!-- Bouton LOGIN -->
-          <button
-            type="submit"
-            :disabled="isLoading"
-            class="login-button"
-          >
+          <button type="submit" :disabled="isLoading" class="login-button">
             {{ isLoading ? 'CONNEXION...' : 'LOGIN' }}
           </button>
         </form>
@@ -98,7 +83,7 @@ export default {
   setup() {
     const router = useRouter()
     const authStore = useAuthStore()
-    
+
     const isLoading = ref(false)
     const error = ref('')
     const credentials = reactive({
@@ -108,7 +93,7 @@ export default {
 
     const handleLogin = async () => {
       error.value = ''
-      
+
       if (!credentials.login || !credentials.password) {
         error.value = 'Veuillez remplir tous les champs'
         return
@@ -202,10 +187,23 @@ export default {
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  25% { transform: translateY(-20px) rotate(90deg); }
-  50% { transform: translateY(0px) rotate(180deg); }
-  75% { transform: translateY(20px) rotate(270deg); }
+
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+
+  25% {
+    transform: translateY(-20px) rotate(90deg);
+  }
+
+  50% {
+    transform: translateY(0px) rotate(180deg);
+  }
+
+  75% {
+    transform: translateY(20px) rotate(270deg);
+  }
 }
 
 /* CONTENU PRINCIPAL */
@@ -313,7 +311,7 @@ export default {
   box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
 }
 
-.form-input:focus + .input-icon svg {
+.form-input:focus+.input-icon svg {
   color: #00B8D4;
 }
 
@@ -383,20 +381,20 @@ export default {
   .login-container {
     padding: 0 1rem;
   }
-  
+
   .login-form-container {
     padding: 2rem 1.5rem;
   }
-  
+
   .logo-text {
     font-size: 1.5rem;
   }
-  
+
   .logo-icon {
     width: 60px;
     height: 60px;
   }
-  
+
   .logo-icon svg {
     width: 30px;
     height: 30px;

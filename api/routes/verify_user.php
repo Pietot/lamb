@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/utils/cors.php';
-session_start();
 
 if (isset($_SESSION['user']) && isset($_SESSION['role'])) {
     echo json_encode([

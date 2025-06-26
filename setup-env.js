@@ -49,14 +49,8 @@ ensureEnvVars("api/routes/utils/.env", [
   "API_ROUTE=",
 ]);
 ensureEnvVars(".env.local", [
-  "VITE_API_URL=",
-  "VITE_API_KEY=",
-  "VITE_API_KEY_COMMERCIAL=",
-  "VITE_API_KEY_ADMIN=",
+  "VITE_API_URL=http://localhost/lamb/api/",
 ]);
-ensureEnvVars(".env.prod", [
+ensureEnvVars(".env.production.local", [
   "VITE_API_URL=",
-  "VITE_API_KEY=",
-  "VITE_API_KEY_COMMERCIAL=",
-  "VITE_API_KEY_ADMIN=",
 ]);

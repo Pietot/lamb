@@ -2,19 +2,18 @@
 
 $_ENV = parse_ini_file(__DIR__ . '/routes/utils/.env');
 
-header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: ' . $_ENV['DOMAIN']);
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-header("Access-Control-Allow-Headers: Authorization, Content-Type");
-
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    exit(0);
-}
-
+require_once __DIR__ . '/routes/utils/cors.php';
 require_once __DIR__ . '/routes/utils/pdo.php';
+require_once __DIR__ . '/routes/utils/auth.php';
+
+const ADMIN_ROLE = 1;
+const COMMERCIAL_ROLE = 2;
+const GESTIONNAIRE_ROLE = 3;
 
 $requestUri = $_SERVER['REQUEST_URI'];
 $path = parse_url($requestUri, PHP_URL_PATH);
+
+session_start();
 
 switch ($path) {
     case $_ENV['API_ROUTE'] . 'verify_user':
@@ -30,22 +29,27 @@ switch ($path) {
         exit;
 
     case $_ENV['API_ROUTE'] . 'get_table':
+        require_auth();
         require __DIR__ . '/routes/get_table.php';
         exit;
 
     case $_ENV['API_ROUTE'] . 'new_user':
+        require_auth([ADMIN_ROLE]);
         require __DIR__ . '/routes/new_user.php';
         exit;
 
     case $_ENV['API_ROUTE'] . 'new_client':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
         require __DIR__ . '/routes/new_client.php';
         exit;
 
     case $_ENV['API_ROUTE'] . 'new_article':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
         require __DIR__ . '/routes/new_article.php';
         exit;
-    
+
     case $_ENV['API_ROUTE'] . 'new_fournisseur':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
         require __DIR__ . '/routes/new_fournisseur.php';
         exit;
 }

@@ -296,6 +296,7 @@ export default {
             "Content-Type": "application/x-www-form-urlencoded",
             Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
           },
+          credentials: 'include',
         })
 
         // Récupérer les clients
@@ -305,6 +306,7 @@ export default {
             "Content-Type": "application/x-www-form-urlencoded",
             Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
           },
+          credentials: 'include',
         })
 
         if (!ordersResponse.ok || !clientsResponse.ok) {
