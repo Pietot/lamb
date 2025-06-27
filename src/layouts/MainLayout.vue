@@ -1,27 +1,19 @@
 <template>
-  <div class="app-layout" 
-       @touchstart="handleTouchStart"
-       @touchmove="handleTouchMove" 
-       @touchend="handleTouchEnd">
+  <div class="app-layout" @touchstart="handleTouchStart" @touchmove="handleTouchMove" @touchend="handleTouchEnd">
     <!-- Overlay pour mobile -->
-    <div 
-      v-if="sidebarOpen" 
-      class="sidebar-overlay"
-      @click="closeSidebar"
-    ></div>
+    <div v-if="sidebarOpen" class="sidebar-overlay" @click="closeSidebar"></div>
 
     <!-- Sidebar -->
-    <aside class="sidebar" 
-           :class="{ 'sidebar-open': sidebarOpen, 'sidebar-dragging': isDragging }"
-           :style="`translateX(${sidebarTransform}px)`">
+    <aside class="sidebar" :class="{ 'sidebar-open': sidebarOpen, 'sidebar-dragging': isDragging }"
+      :style="`translateX(${sidebarTransform}px)`">
       <!-- Logo LAMB Solutions -->
       <div class="sidebar-header">
         <div class="logo-container">
           <div class="logo-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-              <path d="M2 17l10 5 10-5"/>
-              <path d="M2 12l10 5 10-5"/>
+              <path d="M12 2L2 7l10 5 10-5-10-5z" />
+              <path d="M2 17l10 5 10-5" />
+              <path d="M2 12l10 5 10-5" />
             </svg>
           </div>
           <div class="logo-text">
@@ -32,14 +24,8 @@
 
       <!-- Navigation Menu -->
       <nav class="sidebar-nav">
-        <router-link
-          v-for="item in menuItems"
-          :key="item.name"
-          :to="item.to"
-          class="nav-link"
-          :class="{ 'nav-link-active': $route.name === item.name }"
-          @click="closeSidebar"
-        >
+        <router-link v-for="item in menuItems" :key="item.name" :to="item.to" class="nav-link"
+          :class="{ 'nav-link-active': $route.name === item.name }" @click="closeSidebar">
           <div class="nav-icon">
             <component :is="item.icon" />
           </div>
@@ -59,9 +45,9 @@
           </div>
           <button @click="handleLogout" class="logout-button" title="Se déconnecter">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path d="M9 21H5a2 2 0 0 1-2 2V5a2 2 0 0 1 2-2h4"/>
-              <polyline points="16,17 21,12 16,7"/>
-              <line x1="21" y1="12" x2="9" y2="12"/>
+              <path d="M9 21H5a2 2 0 0 1-2 2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16,17 21,12 16,7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
             </svg>
           </button>
         </div>
@@ -77,9 +63,9 @@
           <!-- Menu Burger Icon for Mobile to display / hide sidebar -->
           <button class="menu-toggle" @click="toggleSidebar" title="Menu">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <line x1="3" y1="6" x2="21" y2="6"/>
-              <line x1="3" y1="12" x2="21" y2="12"/>
-              <line x1="3" y1="18" x2="21" y2="18"/>
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
             </svg>
           </button>
         </div>
@@ -295,7 +281,7 @@ export default {
     // Gestion des gestes tactiles
     const handleTouchStart = (e) => {
       if (window.innerWidth > 768) return
-      
+
       startX.value = e.touches[0].clientX
       currentX.value = startX.value
       isDragging.value = true
@@ -303,10 +289,10 @@ export default {
 
     const handleTouchMove = (e) => {
       if (!isDragging.value || window.innerWidth > 768) return
-      
+
       currentX.value = e.touches[0].clientX
       const deltaX = currentX.value - startX.value
-      
+
       if (sidebarOpen.value) {
         // Sidebar ouverte, on peut la fermer en swipant vers la gauche
         if (deltaX < 0) {
@@ -324,11 +310,11 @@ export default {
 
     const handleTouchEnd = () => {
       if (!isDragging.value || window.innerWidth > 768) return
-      
+
       const deltaX = currentX.value - startX.value
       // Seuil pour déclencher l'ouverture/fermeture
       const threshold = 30
-      
+
       if (sidebarOpen.value) {
         // Sidebar ouverte
         if (Math.abs(deltaX) > threshold && deltaX < 0) {
@@ -349,12 +335,12 @@ export default {
           sidebarTransform.value = 0
         }
       }
-      
+
       isDragging.value = false
     }
 
     return {
-      authStore,  
+      authStore,
       menuItems,
       pageTitle,
       userInitials,
@@ -654,7 +640,7 @@ export default {
     border-radius: 0 1rem 1rem 0;
     box-shadow: 3px 0px 15px rgba(0, 0, 0, 0.2);
   }
-  
+
   .sidebar-open {
     transform: translateX(280px);
   }
@@ -662,16 +648,16 @@ export default {
   .sidebar-dragging {
     transition: none;
   }
-  
+
   .sidebar-overlay {
     display: block;
   }
-  
+
   .main-content {
     margin-left: 0;
     width: 100%;
   }
-  
+
   .page-content {
     padding: 1rem;
   }

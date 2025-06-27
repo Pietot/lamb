@@ -5,7 +5,7 @@
       <div class="header-left">
         <button class="back-button" @click="goBack">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <polyline points="15,18 9,12 15,6"/>
+            <polyline points="15,18 9,12 15,6" />
           </svg>
           <span>Retour</span>
         </button>
@@ -14,16 +14,16 @@
       <div class="header-actions">
         <button class="print-button">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <polyline points="6,9 6,2 18,2 18,9"/>
-            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
-            <rect x="6" y="14" width="12" height="8"/>
+            <polyline points="6,9 6,2 18,2 18,9" />
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+            <rect x="6" y="14" width="12" height="8" />
           </svg>
           <span>Imprimer</span>
         </button>
         <button class="edit-button">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
           </svg>
           <span>Modifier</span>
         </button>
@@ -44,8 +44,8 @@
         <div class="info-grid">
           <div class="info-item">
             <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-              <polyline points="22,6 12,13 2,6"/>
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+              <polyline points="22,6 12,13 2,6" />
             </svg>
             <div class="info-content">
               <span class="info-label">EMAIL</span>
@@ -55,7 +55,8 @@
 
           <div class="info-item">
             <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+              <path
+                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
             </svg>
             <div class="info-content">
               <span class="info-label">TÉLÉPHONE</span>
@@ -65,8 +66,8 @@
 
           <div class="info-item">
             <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-              <circle cx="12" cy="10" r="3"/>
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+              <circle cx="12" cy="10" r="3" />
             </svg>
             <div class="info-content">
               <span class="info-label">ADRESSE</span>
@@ -90,18 +91,18 @@
       <!-- Statistiques -->
       <div class="stats-card">
         <h3 class="card-title">Statistiques</h3>
-        
+
         <div class="stats-grid">
           <div class="stat-item">
             <p class="stat-label">Produits fournis</p>
             <p class="stat-value">{{ supplierData.stats.products }}</p>
           </div>
-          
+
           <div class="stat-item">
             <p class="stat-label">Livraisons totales</p>
             <p class="stat-value">{{ supplierData.stats.deliveries }}</p>
           </div>
-          
+
           <div class="stat-item">
             <p class="stat-label">Commandes en cours</p>
             <p class="stat-value">{{ supplierData.stats.currentOrders }}</p>
@@ -113,18 +114,19 @@
             <span class="metric-label">Délais SLA</span>
             <span class="metric-value">{{ supplierData.metrics.slaAmount }}</span>
           </div>
-          
+
           <div class="metric-item">
             <span class="metric-label">Délai prévu</span>
             <span class="metric-value">{{ supplierData.metrics.avgDelay }}</span>
           </div>
-          
+
           <div class="metric-item">
             <span class="metric-label">Note qualité</span>
             <div class="rating">
               <span class="metric-value">{{ supplierData.metrics.rating }}</span>
               <div class="stars">
-                <span v-for="i in 5" :key="i" class="star" :class="{ 'filled': i <= Math.floor(supplierData.metrics.rating) }">★</span>
+                <span v-for="i in 5" :key="i" class="star"
+                  :class="{ 'filled': i <= Math.floor(supplierData.metrics.rating) }">★</span>
               </div>
             </div>
           </div>
@@ -135,13 +137,8 @@
     <!-- Onglets -->
     <div class="tabs-section">
       <div class="tabs-nav">
-        <button 
-          v-for="tab in tabs" 
-          :key="tab.id"
-          class="tab-button"
-          :class="{ 'active': activeTab === tab.id }"
-          @click="activeTab = tab.id"
-        >
+        <button v-for="tab in tabs" :key="tab.id" class="tab-button" :class="{ 'active': activeTab === tab.id }"
+          @click="activeTab = tab.id">
           {{ tab.label }}
         </button>
       </div>
@@ -154,9 +151,9 @@
             <h3 class="table-title">Produits fournis</h3>
             <button class="export-button">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                <polyline points="7,10 12,15 17,10"/>
-                <line x1="12" y1="15" x2="12" y2="3"/>
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7,10 12,15 17,10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
               </svg>
               Exporter
             </button>
@@ -757,7 +754,7 @@ export default {
   .info-section {
     grid-template-columns: 1fr;
   }
-  
+
   .stats-grid {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -768,36 +765,36 @@ export default {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .header-left {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.75rem;
   }
-  
+
   .header-actions {
     justify-content: space-between;
   }
-  
+
   .supplier-header {
     flex-direction: column;
     align-items: center;
     text-align: center;
   }
-  
+
   .tabs-nav {
     flex-wrap: wrap;
   }
-  
+
   .tab-button {
     flex: 1;
     min-width: 100px;
   }
-  
+
   .data-table {
     font-size: 12px;
   }
-  
+
   .data-table th,
   .data-table td {
     padding: 0.75rem 0.5rem;
@@ -808,7 +805,7 @@ export default {
   .stats-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .data-table th:nth-child(3),
   .data-table td:nth-child(3),
   .data-table th:nth-child(4),

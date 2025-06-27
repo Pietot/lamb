@@ -1,26 +1,20 @@
 <?php
+require_once __DIR__ . '/utils/cors.php';
 
-$_ENV = parse_ini_file(__DIR__ . '/utils/.env');
-
-header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: ' . $_ENV['DOMAIN']);
-header('Access-Control-Allow-Credentials: true');
-header('Access-Control-Allow-Headers: Content-Type');
-
-require_once __DIR__ . '/utils/pdo.php';
-require_once __DIR__ . '/utils/token.php';
-
-$id_utilisateur = $_POST['id_utilisateur'] ?? null;
-
-try {
-    if ($id_utilisateur === null) {
-        echo json_encode(['success' => false, 'message' => 'Utilisateur non connecté.'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-        exit;
-    }
-    $pdo = getPDO();
-    removeToken($pdo, $id_utilisateur);
-    echo json_encode(['success' => true, 'message' => 'Déconnexion réussie.'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-} catch (Exception $e) {
-    http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Erreur du serveur.'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+// Détruit la session
+$_SESSION = [];
+if (ini_get("session.use_cookies")) {
+    $params = session_get_cookie_params();
+    setcookie(
+        session_name(),
+        '',
+        time() - 42000,
+        $params["path"],
+        $params["domain"],
+        $params["secure"],
+        $params["httponly"]
+    );
 }
+session_unset();
+session_destroy();
+echo json_encode(['success' => true, 'message' => 'Déconnexion réussie.'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);

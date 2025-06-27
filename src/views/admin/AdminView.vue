@@ -8,9 +8,9 @@
       <div class="header-right">
         <button class="new-user-button" @click="showNewUserModal = true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="12" y1="8" x2="12" y2="16"/>
-            <line x1="8" y1="12" x2="16" y2="12"/>
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="16" />
+            <line x1="8" y1="12" x2="16" y2="12" />
           </svg>
           <span>Nouvel utilisateur</span>
         </button>
@@ -20,13 +20,8 @@
     <!-- Onglets de navigation -->
     <div class="tabs-section">
       <div class="tabs-nav">
-        <button 
-          v-for="tab in tabs" 
-          :key="tab.id"
-          class="tab-button"
-          :class="{ 'active': activeTab === tab.id }"
-          @click="activeTab = tab.id"
-        >
+        <button v-for="tab in tabs" :key="tab.id" class="tab-button" :class="{ 'active': activeTab === tab.id }"
+          @click="activeTab = tab.id">
           {{ tab.label }}
         </button>
       </div>
@@ -37,15 +32,10 @@
         <div v-if="activeTab === 'users'" class="users-section">
           <div class="section-header">
             <div class="search-container">
-              <input
-                v-model="userSearch"
-                type="text"
-                placeholder="Rechercher un utilisateur..."
-                class="search-input"
-              />
+              <input v-model="userSearch" type="text" placeholder="Rechercher un utilisateur..." class="search-input" />
               <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <circle cx="11" cy="11" r="8"/>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>
             </div>
           </div>
@@ -103,20 +93,17 @@
                     <td class="actions">
                       <button class="action-btn primary" @click="editUser(user)" title="Modifier">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                         </svg>
                       </button>
-                      <button 
-                        class="action-btn" 
-                        @click="toggleUserStatus(user)" 
-                        :title="getUserStatus(user) ? 'Désactiver' : 'Activer'"
-                      >
+                      <button class="action-btn" @click="toggleUserStatus(user)"
+                        :title="getUserStatus(user) ? 'Désactiver' : 'Activer'">
                         <svg v-if="getUserStatus(user)" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                          <path d="M18 6L6 18M6 6l12 12"/>
+                          <path d="M18 6L6 18M6 6l12 12" />
                         </svg>
                         <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                          <polyline points="20 6 9 17 4 12"/>
+                          <polyline points="20 6 9 17 4 12" />
                         </svg>
                       </button>
                     </td>
@@ -147,7 +134,7 @@
               <div class="role-header">
                 <div class="role-icon" :style="{ backgroundColor: getRoleColor(role.id_role) }">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                   </svg>
                 </div>
                 <div class="role-info">
@@ -187,8 +174,8 @@
           <h3>Nouvel utilisateur</h3>
           <button @click="showNewUserModal = false" class="modal-close">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <line x1="18" y1="6" x2="6" y2="18"/>
-              <line x1="6" y1="6" x2="18" y2="18"/>
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
         </div>
@@ -205,8 +192,8 @@
           <h3>Modifier l'utilisateur</h3>
           <button @click="showEditUserModal = false" class="modal-close">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <line x1="18" y1="6" x2="6" y2="18"/>
-              <line x1="6" y1="6" x2="18" y2="18"/>
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
         </div>
@@ -321,7 +308,7 @@ export default {
     const fetchData = async () => {
       loading.value = true
       error.value = null
-      
+
       try {
         // Récupérer les utilisateurs
         const usersResponse = await fetch(import.meta.env.VITE_API_URL + "get_table?table=utilisateur", {
@@ -330,6 +317,7 @@ export default {
             "Content-Type": "application/x-www-form-urlencoded",
             Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
           },
+          credentials: 'include',
         })
 
         // Récupérer les rôles
@@ -339,6 +327,7 @@ export default {
             "Content-Type": "application/x-www-form-urlencoded",
             Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
           },
+          credentials: 'include',
         })
 
         if (!usersResponse.ok || !rolesResponse.ok) {
@@ -347,11 +336,11 @@ export default {
 
         const usersData = await usersResponse.json()
         const rolesData = await rolesResponse.json()
-        
+
         if (usersData.success && usersData.articles) {
           users.value = usersData.articles
         }
-        
+
         if (rolesData.success && rolesData.articles) {
           roles.value = rolesData.articles
         }
@@ -432,11 +421,11 @@ export default {
       const now = new Date()
       const diffTime = Math.abs(now - date)
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-      
+
       if (diffDays === 0) return "Aujourd'hui"
       if (diffDays === 1) return "Hier"
       if (diffDays < 7) return `Il y a ${diffDays} jours`
-      
+
       const options = { day: 'numeric', month: 'short', year: 'numeric' }
       return date.toLocaleDateString('fr-FR', options)
     }
@@ -560,7 +549,9 @@ export default {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .error-message {
@@ -1140,16 +1131,16 @@ export default {
     gap: 1rem;
     align-items: stretch;
   }
-  
+
   .new-user-button {
     width: 100%;
     justify-content: center;
   }
-  
+
   .search-container {
     max-width: none;
   }
-  
+
   .roles-grid {
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   }
@@ -1159,40 +1150,41 @@ export default {
   .data-table {
     font-size: 12px;
   }
-  
+
   .data-table th,
   .data-table td {
     padding: 0.75rem 0.5rem;
   }
-  
+
   .actions {
     flex-direction: column;
     gap: 0.25rem;
   }
-  
+
   .action-btn {
     padding: 4px;
   }
-  
+
   .action-btn svg {
     width: 14px;
     height: 14px;
   }
-  
+
   .roles-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .modal-actions {
     flex-direction: column;
   }
-  
+
   .modal-btn {
     width: 100%;
   }
 }
 
 @media (max-width: 640px) {
+
   .data-table th:nth-child(3),
   .data-table td:nth-child(3),
   .data-table th:nth-child(5),

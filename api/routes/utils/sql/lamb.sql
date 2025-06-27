@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : mar. 24 juin 2025 à 18:03
+-- Généré le : jeu. 26 juin 2025 à 10:05
 -- Version du serveur : 9.1.0
 -- Version de PHP : 8.3.14
 
@@ -338,8 +338,7 @@ CREATE TABLE IF NOT EXISTS `utilisateur` (
   `email` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
   `login` varchar(30) COLLATE utf8mb4_general_ci NOT NULL,
   `pwd_hash` varchar(72) COLLATE utf8mb4_general_ci NOT NULL,
-  `token` varchar(60) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `token_init` datetime DEFAULT NULL,
+  `last_login` datetime DEFAULT NULL,
   `id_role` int NOT NULL,
   PRIMARY KEY (`id_utilisateur`),
   KEY `id_role` (`id_role`)
@@ -349,10 +348,10 @@ CREATE TABLE IF NOT EXISTS `utilisateur` (
 -- Déchargement des données de la table `utilisateur`
 --
 
-INSERT INTO `utilisateur` (`id_utilisateur`, `nom`, `prenom`, `email`, `login`, `pwd_hash`, `token`, `token_init`, `id_role`) VALUES
-(1, 'Test', 'Test', 'test@test.com', 'test', '$2y$10$YMfhEoNm8tgkhfSm.kzGF.kezvI4p/SRqFp3VBR45KikqVUsKQc1y', NULL, NULL, 1),
-(2, 'Laurent', 'Claire', 'claire.laurent@lamb.com', 'clairel', '$2y$10$dXJazd1Xvz1234examplehashedPWD', NULL, NULL, 2),
-(3, 'Fabrice', 'Fief', 'fabrice.fief@lamb.com', 'Fabgaming', '$2y$10$dXJazd1Xvz1234examplehashedPWD', NULL, NULL, 3);
+INSERT INTO `utilisateur` (`id_utilisateur`, `nom`, `prenom`, `email`, `login`, `pwd_hash`, `last_login`, `id_role`) VALUES
+(1, 'Test', 'Test', 'test@test.com', 'test', '$2y$10$YMfhEoNm8tgkhfSm.kzGF.kezvI4p/SRqFp3VBR45KikqVUsKQc1y', '2025-06-26 11:55:08', 1),
+(2, 'Laurent', 'Claire', 'claire.laurent@lamb.com', 'clairel', '$2y$10$dXJazd1Xvz1234examplehashedPWD', NULL, 2),
+(3, 'Fabrice', 'Fief', 'fabrice.fief@lamb.com', 'Fabgaming', '$2y$10$dXJazd1Xvz1234examplehashedPWD', NULL, 3);
 
 --
 -- Contraintes pour les tables déchargées

@@ -9,8 +9,8 @@
       <div class="header-right">
         <button class="mark-prepared-button" :disabled="selectedOrders.length === 0">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <polyline points="9,11 12,14 22,4"/>
-            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+            <polyline points="9,11 12,14 22,4" />
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
           </svg>
           <span>Marquer comme préparées ({{ selectedOrders.length }})</span>
         </button>
@@ -22,9 +22,9 @@
       <div class="stat-card urgent">
         <div class="stat-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-            <line x1="12" y1="9" x2="12" y2="13"/>
-            <line x1="12" y1="17" x2="12.01" y2="17"/>
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+            <line x1="12" y1="9" x2="12" y2="13" />
+            <line x1="12" y1="17" x2="12.01" y2="17" />
           </svg>
         </div>
         <div class="stat-content">
@@ -35,11 +35,11 @@
       <div class="stat-card normal">
         <div class="stat-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-            <polyline points="14 2 14 8 20 8"/>
-            <line x1="16" y1="13" x2="8" y2="13"/>
-            <line x1="16" y1="17" x2="8" y2="17"/>
-            <polyline points="10 9 9 9 8 9"/>
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+            <line x1="16" y1="13" x2="8" y2="13" />
+            <line x1="16" y1="17" x2="8" y2="17" />
+            <polyline points="10 9 9 9 8 9" />
           </svg>
         </div>
         <div class="stat-content">
@@ -50,8 +50,8 @@
       <div class="stat-card time">
         <div class="stat-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <circle cx="12" cy="12" r="10"/>
-            <polyline points="12 6 12 12 16 14"/>
+            <circle cx="12" cy="12" r="10" />
+            <polyline points="12 6 12 12 16 14" />
           </svg>
         </div>
         <div class="stat-content">
@@ -69,31 +69,26 @@
           <option value="Urgente">Urgente</option>
           <option value="Normale">Normale</option>
         </select>
-        
+
         <select v-model="filters.status" class="filter-select">
           <option value="">Tous les statuts</option>
           <option value="En attente">En attente</option>
           <option value="En cours">En cours</option>
         </select>
-        
+
         <div class="search-container">
-          <input 
-            v-model="searchQuery" 
-            type="text" 
-            placeholder="Rechercher une commande..."
-            class="search-input"
-          />
+          <input v-model="searchQuery" type="text" placeholder="Rechercher une commande..." class="search-input" />
           <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <circle cx="11" cy="11" r="8"/>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg>
         </div>
 
         <button class="refresh-button" @click="refreshData">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <polyline points="1 4 1 10 7 10"/>
-            <polyline points="23 20 23 14 17 14"/>
-            <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+            <polyline points="1 4 1 10 7 10" />
+            <polyline points="23 20 23 14 17 14" />
+            <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15" />
           </svg>
           Actualiser
         </button>
@@ -105,28 +100,16 @@
       <div class="orders-card">
         <div class="orders-header">
           <h3 class="orders-title">File de préparation ({{ filteredOrders.length }})</h3>
-          <button 
-            class="select-all-button"
-            @click="toggleSelectAll"
-          >
+          <button class="select-all-button" @click="toggleSelectAll">
             {{ selectedOrders.length === filteredOrders.length ? 'Tout désélectionner' : 'Tout sélectionner' }}
           </button>
         </div>
 
         <div class="orders-list">
-          <div
-            v-for="order in filteredOrders"
-            :key="order.id"
-            class="order-item"
-            :class="{ 'selected': selectedOrders.includes(order.id) }"
-          >
+          <div v-for="order in filteredOrders" :key="order.id" class="order-item"
+            :class="{ 'selected': selectedOrders.includes(order.id) }">
             <div class="order-select">
-              <input
-                type="checkbox"
-                :value="order.id"
-                v-model="selectedOrders"
-                class="checkbox"
-              />
+              <input type="checkbox" :value="order.id" v-model="selectedOrders" class="checkbox" />
             </div>
 
             <div class="order-content">
@@ -171,29 +154,19 @@
             </div>
 
             <div class="order-actions">
-              <button 
-                v-if="order.status === 'En attente'"
-                class="action-btn primary"
-                @click="startPreparation(order)"
-              >
+              <button v-if="order.status === 'En attente'" class="action-btn primary" @click="startPreparation(order)">
                 Commencer
               </button>
-              
-              <button 
-                v-else-if="order.status === 'En cours'"
-                class="action-btn success"
-                @click="completePreparation(order)"
-              >
+
+              <button v-else-if="order.status === 'En cours'" class="action-btn success"
+                @click="completePreparation(order)">
                 Terminer
               </button>
 
-              <button 
-                class="action-btn secondary"
-                @click="viewOrder(order.id)"
-              >
+              <button class="action-btn secondary" @click="viewOrder(order.id)">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                  <circle cx="12" cy="12" r="3"/>
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
                 </svg>
               </button>
             </div>
@@ -201,9 +174,9 @@
 
           <div v-if="filteredOrders.length === 0" class="empty-state">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
-              <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
-              <path d="M12 11l-2 2 2 2M16 11l2 2-2 2"/>
+              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+              <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
+              <path d="M12 11l-2 2 2 2M16 11l2 2-2 2" />
             </svg>
             <h3>Aucune commande à préparer</h3>
             <p>Toutes les commandes sont préparées ou il n'y a pas de nouvelles commandes.</p>
@@ -224,7 +197,7 @@ export default {
     const router = useRouter()
     const searchQuery = ref('')
     const selectedOrders = ref([])
-    
+
     const filters = ref({
       priority: '',
       status: ''
@@ -293,7 +266,7 @@ export default {
       }
 
       if (searchQuery.value) {
-        result = result.filter(order => 
+        result = result.filter(order =>
           order.id.includes(searchQuery.value) ||
           order.client.toLowerCase().includes(searchQuery.value.toLowerCase())
         )
@@ -905,15 +878,15 @@ export default {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .stats-section {
     grid-template-columns: 1fr;
   }
-  
+
   .filter-group {
     flex-direction: column;
   }
-  
+
   .filter-select,
   .search-container,
   .refresh-button {
@@ -925,20 +898,20 @@ export default {
   .order-header-info {
     flex-direction: column;
   }
-  
+
   .order-dates {
     text-align: left;
   }
-  
+
   .order-stats {
     flex-direction: column;
     gap: 0.5rem;
   }
-  
+
   .order-actions {
     flex-direction: row;
   }
-  
+
   .action-btn {
     padding: 0.375rem 0.75rem;
     font-size: 11px;

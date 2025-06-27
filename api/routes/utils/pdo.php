@@ -4,7 +4,7 @@ if (basename($_SERVER['SCRIPT_FILENAME']) === basename(__FILE__)) {
     exit('Access denied.');
 }
 
-header('Content-Type: application/json');
+require_once __DIR__ . '/cors.php';
 
 $_ENV = parse_ini_file(__DIR__ . '/.env');
 

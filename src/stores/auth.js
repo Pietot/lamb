@@ -12,8 +12,8 @@ export const useAuthStore = defineStore("auth", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
-          Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
         },
+        credentials: "include",
         body: new URLSearchParams({
           login,
           password,
@@ -36,11 +36,8 @@ export const useAuthStore = defineStore("auth", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
-          Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
         },
-        body: new URLSearchParams({
-          id_utilisateur: this.user ? this.user.id_utilisateur : "",
-        }),
+        credentials: "include",
       });
       this.user = null;
       this.isAuthenticated = false;
@@ -53,7 +50,7 @@ export const useAuthStore = defineStore("auth", {
     async initAuth() {
       const savedUser = localStorage.getItem("user");
       if (savedUser) {
-        const valid = await this.verifyUser(JSON.parse(savedUser));
+        const valid = await this.verifyUser();
         this.isAuthenticated = valid;
         return valid;
       } else {
@@ -62,20 +59,13 @@ export const useAuthStore = defineStore("auth", {
       }
     },
 
-    async verifyUser(user) {
-      if (!this.isAuthenticated) return false;
-      const params = new URLSearchParams({
-        id_utilisateur: user.id_utilisateur,
-        token: user.token,
-      });
+    async verifyUser() {
+      // Vérifie la session côté back
       const response = await fetch(
-        import.meta.env.VITE_API_URL + "verify_user?" + params.toString(),
+        import.meta.env.VITE_API_URL + "verify_user",
         {
           method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
-          },
+          credentials: "include",
         }
       );
 
@@ -88,6 +78,7 @@ export const useAuthStore = defineStore("auth", {
         return true;
       } else {
         this.logout();
+        return false;
       }
     },
   },
