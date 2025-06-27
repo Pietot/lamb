@@ -22,7 +22,7 @@ try {
         exit;
     }
 
-    if (strlen($nom) >= 50 || strlen($prenom) >= 50 || strlen($login) >= 30 || !filter_var($email, FILTER_VALIDATE_EMAIL) || !isPasswordValid($password) || !is_numeric($id_role)) {
+    if (strlen($nom) > 50 || strlen($prenom) > 50 || strlen($login) > 30 || !filter_var($email, FILTER_VALIDATE_EMAIL) || !isPasswordValid($password) || !is_numeric($id_role)) {
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Champs invalides'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
