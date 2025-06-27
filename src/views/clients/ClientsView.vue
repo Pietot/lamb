@@ -385,8 +385,8 @@ export default {
 
         const data = await response.json()
         
-        if (data.success && data.articles) {
-          clients.value = data.articles
+        if (data.success && data.data) {
+          clients.value = data.data
         } else {
           throw new Error('Format de données invalide')
         }
@@ -700,7 +700,8 @@ export default {
 
 .stat-label {
   font-size: 13px;
-  color: #64748B;  
+  color: #64748B;
+  margin: 0 0 4px 0;
   font-weight: 500;
 }
 

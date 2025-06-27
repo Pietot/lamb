@@ -340,8 +340,8 @@ export default {
 
         const data = await response.json()
         
-        if (data.success && data.articles) {
-          articles.value = data.articles
+        if (data.success && data.data) {
+          articles.value = data.data
         } else {
           throw new Error('Format de données invalide')
         }

@@ -233,7 +233,7 @@
               </div>
               <div v-if="getClient(selectedOrder.id_client)" class="detail-row">
                 <span class="detail-label">Téléphone:</span>
-                <span class="detail-value">{{ getClient(selectedOrder.id_client).telephone }}</span>
+                <span class="detail-value">{{ formatPhone(getClient(selectedOrder.id_client).telephone) }}</span>
               </div>
             </div>
             
@@ -314,15 +314,15 @@ export default {
         const ordersData = await ordersResponse.json()
         const clientsData = await clientsResponse.json()
         
-        if (ordersData.success && ordersData.articles) {
+        if (ordersData.success && ordersData.data) {
           // Trier les commandes par date décroissante
-          orders.value = ordersData.articles.sort((a, b) => 
+          orders.value = ordersData.data.sort((a, b) => 
             new Date(b.date_commande) - new Date(a.date_commande)
           )
         }
 
-        if (clientsData.success && clientsData.articles) {
-          clients.value = clientsData.articles
+        if (clientsData.success && clientsData.data) {
+          clients.value = clientsData.data
         }
       } catch (err) {
         console.error('Erreur lors du chargement:', err)
@@ -449,6 +449,17 @@ export default {
       }).format(amount)
     }
 
+    const formatPhone = (phone) => {
+      if (!phone || phone === '32767') return 'Non renseigné'
+      
+      // Formater le numéro de téléphone français
+      const cleaned = phone.toString().replace(/\D/g, '')
+      if (cleaned.length === 10) {
+        return cleaned.replace(/(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/, '$1 $2 $3 $4 $5')
+      }
+      return phone
+    }
+
     const getStatusClass = (status) => {
       const statusClasses = {
         'attente': 'status-pending',
@@ -520,6 +531,7 @@ export default {
       getClientName,
       formatDate,
       formatCurrency,
+      formatPhone,
       getStatusClass,
       getStatusLabel,
       goToPage,

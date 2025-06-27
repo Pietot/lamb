@@ -348,12 +348,12 @@ export default {
         const usersData = await usersResponse.json()
         const rolesData = await rolesResponse.json()
         
-        if (usersData.success && usersData.articles) {
-          users.value = usersData.articles
+        if (usersData.success && usersData.data) {
+          users.value = usersData.data
         }
         
-        if (rolesData.success && rolesData.articles) {
-          roles.value = rolesData.articles
+        if (rolesData.success && rolesData.data) {
+          roles.value = rolesData.data
         }
       } catch (err) {
         console.error('Erreur lors du chargement:', err)

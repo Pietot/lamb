@@ -186,8 +186,8 @@ export default {
 
         const data = await response.json()
         
-        if (data.success && data.articles) {
-          orders.value = data.articles
+        if (data.success && data.data) {
+          orders.value = data.data
         } else {
           throw new Error('Format de données invalide')
         }
@@ -219,8 +219,8 @@ export default {
 
         const data = await response.json()
         
-        if (data.success && data.articles) {
-          clients.value = data.articles
+        if (data.success && data.data) {
+          clients.value = data.data
         } else {
           throw new Error('Format de données invalide')
         }
@@ -252,8 +252,8 @@ export default {
 
         const data = await response.json()
         
-        if (data.success && data.articles) {
-          articles.value = data.articles
+        if (data.success && data.data) {
+          articles.value = data.data
         } else {
           throw new Error('Format de données invalide')
         }
@@ -441,6 +441,7 @@ export default {
 .kpi-label {
   font-size: 13px;
   color: #64748B;
+  margin: 0 0 4px 0;
   line-height: 1.3;
   font-weight: 500;
 }
