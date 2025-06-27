@@ -57,6 +57,11 @@ switch ($path) {
         require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
         require __DIR__ . '/routes/new_fournisseur.php';
         exit;
+
+    case $_ENV['API_ROUTE'] . 'new_article_lot':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
+        require __DIR__ . '/routes/new_article_lot.php';
+        exit;
 }
 
 http_response_code(404);
