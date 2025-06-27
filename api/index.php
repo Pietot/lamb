@@ -48,9 +48,24 @@ switch ($path) {
         require __DIR__ . '/routes/new_article.php';
         exit;
 
+    case $_ENV['API_ROUTE'] . 'new_commande':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
+        require __DIR__ . '/routes/new_commande.php';
+        exit;
+
     case $_ENV['API_ROUTE'] . 'new_fournisseur':
         require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
         require __DIR__ . '/routes/new_fournisseur.php';
+        exit;
+
+    case $_ENV['API_ROUTE'] . 'new_article_lot':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
+        require __DIR__ . '/routes/new_article_lot.php';
+        exit;
+
+    case $_ENV['API_ROUTE'] . 'new_categorie':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
+        require __DIR__ . '/routes/new_categorie.php';
         exit;
 }
 

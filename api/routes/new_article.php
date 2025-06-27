@@ -22,7 +22,7 @@ try {
         exit;
     }
 
-    if (strlen($reference) >= 20 || strlen($description) >= 200 || strlen($nom) >= 50 || !is_numeric($quantite) || !is_numeric($seuil_alerte) || $seuil_alerte < 0 || !is_numeric($id_categorie)) {
+    if (strlen($reference) > 20 || strlen($description) > 200 || strlen($nom) > 50 || !is_numeric($quantite) || !is_numeric($seuil_alerte) || $seuil_alerte < 0 || !is_numeric($id_categorie)) {
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Champs invalides'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
