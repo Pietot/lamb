@@ -19,7 +19,6 @@ export default {
   },
   setup() {
     const route = useRoute()
-    const authStore = useAuthStore()
 
     const layoutComponent = computed(() => {
       if (route.meta.layout === 'main') {

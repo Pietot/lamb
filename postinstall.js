@@ -17,9 +17,11 @@ const backendEnvLines = [
   "DB_PASSWORD=",
   "",
   "DOMAIN=http://localhost:5173",
-  "API_KEY=",
-  "API_KEY_COMMERCIAL=",
-  "API_KEY_ADMIN=",
+  "DOMAIN_WITHOUT_PORT=localhost",
+  "DOMAIN_PROXY=",
+  "DOMAIN_PC_AZALEE=",
+  "",
+  "COOKIE_SECURE=false",
   "API_ROUTE=",
 ];
 const backendEnvContent = backendEnvLines.join("\n");
@@ -37,9 +39,6 @@ if (!existsSync(apiEnvPath)) {
 const envLocalPath = join(__dirname, ".env.local");
 const envLocalLines = [
   "VITE_API_URL=http://localhost/lamb/api/",
-  "VITE_API_KEY=",
-  "VITE_API_KEY_COMMERCIAL=",
-  "VITE_API_KEY_ADMIN=",
 ];
 const envLocalContent = envLocalLines.join("\n");
 if (!existsSync(envLocalPath)) {
@@ -49,12 +48,12 @@ if (!existsSync(envLocalPath)) {
   console.log(`${GREEN}.env.local already exists. Skipping creation.${RESET}`);
 }
 
-const envProdPath = join(__dirname, ".env.prod");
-const envProdLines = ["VITE_API_URL=https://lamb.com/api/", "VITE_API_KEY="];
+const envProdPath = join(__dirname, ".env.production.local");
+const envProdLines = ["VITE_API_URL=https://lamb.com/api/"];
 const envProdContent = envProdLines.join("\n");
 if (!existsSync(envProdPath)) {
   writeFileSync(envProdPath, envProdContent);
-  console.log(`${BLUE}.env.prod created with default values.${RESET}`);
+  console.log(`${BLUE}.env.production.local created with default values.${RESET}`);
 } else {
-  console.log(`${GREEN}.env.prod already exists. Skipping creation.${RESET}`);
+  console.log(`${GREEN}.env.production.local already exists. Skipping creation.${RESET}`);
 }

@@ -33,7 +33,7 @@ try {
 
     $pdo = getPDO();
     // Vérifier si l'email existe déjà
-    $checkStmt = $pdo->prepare('SELECT COUNT(*) FROM client WHERE email = :email');
+    $checkStmt = $pdo->prepare('SELECT COUNT(*) FROM fournisseur WHERE email = :email');
     $checkStmt->bindValue(':email', $email);
     $checkStmt->execute();
     if ($checkStmt->fetchColumn() > 0) {
@@ -42,7 +42,7 @@ try {
         exit;
     }
 
-    $stmt = $pdo->prepare('INSERT INTO client (nom, prenom, email, telephone, adresse, raison_sociale, siren, siret, fonction_contact) VALUES (:nom, :prenom, :email, :telephone, :adresse, :raison_sociale, :siren, :siret, :fonction_contact)');
+    $stmt = $pdo->prepare('INSERT INTO fournisseur (nom, prenom, email, telephone, adresse, raison_sociale, siren, siret, fonction_contact) VALUES (:nom, :prenom, :email, :telephone, :adresse, :raison_sociale, :siren, :siret, :fonction_contact)');
     $stmt->bindValue(':nom', $nom);
     $stmt->bindValue(':prenom', $prenom);
     $stmt->bindValue(':email', $email);
@@ -54,7 +54,7 @@ try {
     $stmt->bindValue(':fonction_contact', $fonction_contact);
     $stmt->execute();
     http_response_code(201);
-    echo json_encode(['success' => true, 'message' => 'Client créé avec succès'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    echo json_encode(['success' => true, 'message' => 'Fournisseur créé avec succès'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => "Erreur du serveur"], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);

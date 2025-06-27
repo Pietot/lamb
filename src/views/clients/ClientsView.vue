@@ -375,8 +375,8 @@ export default {
           method: "GET",
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
-            Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
           },
+          credentials: 'include',
         })
 
         if (!response.ok) {

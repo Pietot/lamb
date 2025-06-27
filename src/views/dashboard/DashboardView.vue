@@ -5,7 +5,7 @@
       <div class="kpi-card kpi-alert">
         <div class="kpi-icon alert-icon">
           <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2L1 21h22L12 2zm0 3.99L19.53 19H4.47L12 5.99zM11 16h2v2h-2v-2zm0-6h2v4h-2v-4z"/>
+            <path d="M12 2L1 21h22L12 2zm0 3.99L19.53 19H4.47L12 5.99zM11 16h2v2h-2v-2zm0-6h2v4h-2v-4z" />
           </svg>
         </div>
         <div class="kpi-content">
@@ -17,11 +17,11 @@
       <div class="kpi-card kpi-orders">
         <div class="kpi-icon orders-icon">
           <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
-            <polyline points="14,2 14,8 20,8"/>
-            <line x1="16" y1="13" x2="8" y2="13"/>
-            <line x1="16" y1="17" x2="8" y2="17"/>
-            <polyline points="10,9 9,9 8,9"/>
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" />
+            <polyline points="14,2 14,8 20,8" />
+            <line x1="16" y1="13" x2="8" y2="13" />
+            <line x1="16" y1="17" x2="8" y2="17" />
+            <polyline points="10,9 9,9 8,9" />
           </svg>
         </div>
         <div class="kpi-content">
@@ -33,10 +33,10 @@
       <div class="kpi-card kpi-delivery">
         <div class="kpi-icon delivery-icon">
           <svg viewBox="0 0 24 24" fill="currentColor">
-            <rect x="1" y="3" width="15" height="13"/>
-            <polygon points="16,3 19,7 19,13 16,13"/>
-            <circle cx="5.5" cy="18.5" r="2.5"/>
-            <circle cx="18.5" cy="18.5" r="2.5"/>
+            <rect x="1" y="3" width="15" height="13" />
+            <polygon points="16,3 19,7 19,13 16,13" />
+            <circle cx="5.5" cy="18.5" r="2.5" />
+            <circle cx="18.5" cy="18.5" r="2.5" />
           </svg>
         </div>
         <div class="kpi-content">
@@ -170,14 +170,14 @@ export default {
     const fetchOrders = async () => {
       loadingOrders.value = true
       ordersError.value = null
-      
+
       try {
         const response = await fetch(import.meta.env.VITE_API_URL + "get_table?table=commande", {
           method: "GET",
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
-            Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
           },
+          credentials: 'include',
         })
 
         if (!response.ok) {
@@ -203,14 +203,14 @@ export default {
     const fetchClients = async () => {
       loadingClients.value = true
       clientsError.value = null
-      
+
       try {
         const response = await fetch(import.meta.env.VITE_API_URL + "get_table?table=client", {
           method: "GET",
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
-            Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
           },
+          credentials: 'include',
         })
 
         if (!response.ok) {
@@ -236,14 +236,14 @@ export default {
     const fetchArticles = async () => {
       loadingArticles.value = true
       articlesError.value = null
-      
+
       try {
         const response = await fetch(import.meta.env.VITE_API_URL + "get_table?table=article", {
           method: "GET",
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
-            Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
           },
+          credentials: 'include',
         })
 
         if (!response.ok) {
@@ -505,7 +505,9 @@ export default {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .error-message {
@@ -565,7 +567,8 @@ export default {
   border-bottom: none;
 }
 
-.order-id, .delivery-id {
+.order-id,
+.delivery-id {
   font-weight: 600;
   color: #0F172A;
 }
@@ -651,10 +654,12 @@ export default {
     transform: scale(1);
     opacity: 1;
   }
+
   50% {
     transform: scale(1.1);
     opacity: 0.8;
   }
+
   100% {
     transform: scale(1);
     opacity: 1;
@@ -687,7 +692,7 @@ export default {
   .kpi-section {
     grid-template-columns: 1fr;
   }
-  
+
   .dashboard-bottom {
     grid-template-columns: 1fr;
   }
@@ -697,11 +702,11 @@ export default {
   .kpi-card {
     padding: 1rem;
   }
-  
+
   .section-card {
     padding: 1rem;
   }
-  
+
   .data-table th,
   .data-table td {
     padding: 8px;

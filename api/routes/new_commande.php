@@ -1,10 +1,5 @@
 <?php
-$_ENV = parse_ini_file(__DIR__ . '/utils/.env');
-
-header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: ' . $_ENV['DOMAIN']);
-header('Access-Control-Allow-Credentials: true');
-
+require_once __DIR__ . '/utils/cors.php';
 require_once __DIR__ . '/utils/pdo.php';
 
 
@@ -13,12 +8,6 @@ const PREPARATION = 1;
 const EXPEDIE = 2;
 
 try {
-    if (!isAdmin() && !isCommercial()) {
-        http_response_code(403);
-        echo json_encode(['success' => false, 'message' => 'Permission refusée'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-        exit;
-    }
-
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         http_response_code(405);
         echo json_encode(['success' => false, 'message' => 'Méthode non autorisée'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);

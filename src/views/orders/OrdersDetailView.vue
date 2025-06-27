@@ -5,7 +5,7 @@
       <div class="header-left">
         <button class="back-button" @click="goBack">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <polyline points="15,18 9,12 15,6"/>
+            <polyline points="15,18 9,12 15,6" />
           </svg>
           Retour
         </button>
@@ -14,16 +14,16 @@
       <div class="header-actions">
         <button class="action-button print-button">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <polyline points="6,9 6,2 18,2 18,9"/>
-            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
-            <rect x="6" y="14" width="12" height="8"/>
+            <polyline points="6,9 6,2 18,2 18,9" />
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+            <rect x="6" y="14" width="12" height="8" />
           </svg>
           Imprimer
         </button>
         <button class="action-button edit-button">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
           </svg>
           Modifier
         </button>
@@ -144,7 +144,7 @@ export default {
   setup() {
     const router = useRouter()
     const route = useRoute()
-    
+
     const orderId = computed(() => route.params.id || '00006')
 
     // Données de la commande selon la maquette
@@ -546,17 +546,17 @@ export default {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .header-left {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.75rem;
   }
-  
+
   .header-actions {
     justify-content: flex-end;
   }
-  
+
   .order-content {
     grid-template-columns: 1fr;
   }
@@ -567,32 +567,33 @@ export default {
     flex-direction: column;
     width: 100%;
   }
-  
+
   .action-button {
     justify-content: center;
   }
-  
+
   .items-table {
     font-size: 12px;
   }
-  
+
   .items-table th,
   .items-table td {
     padding: 0.5rem;
   }
-  
+
   .detail-row {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.25rem;
   }
-  
+
   .detail-value {
     text-align: left;
   }
 }
 
 @media (max-width: 640px) {
+
   .items-table th:nth-child(3),
   .items-table td:nth-child(3) {
     display: none;

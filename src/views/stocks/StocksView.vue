@@ -8,9 +8,9 @@
       <div class="header-right">
         <button class="add-button" @click="showAddModal = true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="12" y1="8" x2="12" y2="16"/>
-            <line x1="8" y1="12" x2="16" y2="12"/>
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="16" />
+            <line x1="8" y1="12" x2="16" y2="12" />
           </svg>
           <span>Ajouter un article</span>
         </button>
@@ -20,13 +20,9 @@
     <!-- Filtres de recherche -->
     <div class="filters-section">
       <div class="filter-group">
-        <input 
-          v-model="searchQuery" 
-          type="text" 
-          placeholder="Rechercher par nom ou description..."
-          class="search-input"
-        />
-        
+        <input v-model="searchQuery" type="text" placeholder="Rechercher par nom ou description..."
+          class="search-input" />
+
         <select v-model="filters.category" class="filter-select">
           <option value="">Toutes les catégories</option>
           <option value="1">Vêtements Homme</option>
@@ -35,17 +31,17 @@
           <option value="4">Enfants</option>
           <option value="5">Chaussures</option>
         </select>
-        
+
         <select v-model="filters.stockStatus" class="filter-select">
           <option value="">Tous les stocks</option>
           <option value="low">Stock faible</option>
           <option value="normal">Stock normal</option>
         </select>
-        
+
         <button class="search-button" @click="applyFilters">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <circle cx="11" cy="11" r="8"/>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg>
           Rechercher
         </button>
@@ -90,7 +86,8 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in paginatedArticles" :key="item.id_article" :class="{ 'low-stock': item.quantite_stock <= item.seuil_alerte }">
+              <tr v-for="item in paginatedArticles" :key="item.id_article"
+                :class="{ 'low-stock': item.quantite_stock <= item.seuil_alerte }">
                 <td class="reference">#{{ item.id_article }}</td>
                 <td class="product-name">{{ item.nom }}</td>
                 <td class="description">{{ item.description }}</td>
@@ -104,14 +101,14 @@
                 <td class="actions">
                   <button class="action-btn" @click="editArticle(item)" title="Modifier">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                     </svg>
                   </button>
                   <button class="action-btn" @click="viewArticle(item)" title="Voir détails">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                      <circle cx="12" cy="12" r="3"/>
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                      <circle cx="12" cy="12" r="3" />
                     </svg>
                   </button>
                 </td>
@@ -129,36 +126,22 @@
             Affichage {{ startIndex + 1 }}-{{ endIndex }} sur {{ filteredArticles.length }} articles
           </div>
           <div class="pagination-controls">
-            <button 
-              class="pagination-btn" 
-              @click="goToPage(currentPage - 1)"
-              :disabled="currentPage === 1"
-            >
+            <button class="pagination-btn" @click="goToPage(currentPage - 1)" :disabled="currentPage === 1">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <polyline points="15 18 9 12 15 6"/>
+                <polyline points="15 18 9 12 15 6" />
               </svg>
             </button>
-            
+
             <div class="page-numbers">
-              <button
-                v-for="page in visiblePages"
-                :key="page"
-                class="page-number"
-                :class="{ 'active': page === currentPage }"
-                @click="goToPage(page)"
-                :disabled="page === '...'"
-              >
+              <button v-for="page in visiblePages" :key="page" class="page-number"
+                :class="{ 'active': page === currentPage }" @click="goToPage(page)" :disabled="page === '...'">
                 {{ page }}
               </button>
             </div>
-            
-            <button 
-              class="pagination-btn" 
-              @click="goToPage(currentPage + 1)"
-              :disabled="currentPage === totalPages"
-            >
+
+            <button class="pagination-btn" @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPages">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <polyline points="9 18 15 12 9 6"/>
+                <polyline points="9 18 15 12 9 6" />
               </svg>
             </button>
           </div>
@@ -173,8 +156,8 @@
           <h3>Ajouter un article</h3>
           <button @click="showAddModal = false" class="modal-close">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <line x1="18" y1="6" x2="6" y2="18"/>
-              <line x1="6" y1="6" x2="18" y2="18"/>
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
         </div>
@@ -191,8 +174,8 @@
           <h3>Détails de l'article</h3>
           <button @click="showDetailsModal = false" class="modal-close">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <line x1="18" y1="6" x2="6" y2="18"/>
-              <line x1="6" y1="6" x2="18" y2="18"/>
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
         </div>
@@ -223,7 +206,8 @@
               <div class="detail-row">
                 <span class="detail-label">Quantité en stock:</span>
                 <span class="detail-value">
-                  <span class="stock-badge" :class="{ 'low': selectedArticle.quantite_stock <= selectedArticle.seuil_alerte }">
+                  <span class="stock-badge"
+                    :class="{ 'low': selectedArticle.quantite_stock <= selectedArticle.seuil_alerte }">
                     {{ selectedArticle.quantite_stock }}
                   </span>
                 </span>
@@ -235,7 +219,8 @@
               <div class="detail-row">
                 <span class="detail-label">Statut:</span>
                 <span class="detail-value">
-                  <span v-if="selectedArticle.quantite_stock <= selectedArticle.seuil_alerte" class="status-badge status-critical">
+                  <span v-if="selectedArticle.quantite_stock <= selectedArticle.seuil_alerte"
+                    class="status-badge status-critical">
                     Stock critique
                   </span>
                   <span v-else class="status-badge status-ok">
@@ -253,7 +238,8 @@
               </div>
               <div class="detail-row">
                 <span class="detail-label">Valeur du stock:</span>
-                <span class="detail-value">{{ formatCurrency(selectedArticle.prix_unitaire * selectedArticle.quantite_stock) }}</span>
+                <span class="detail-value">{{ formatCurrency(selectedArticle.prix_unitaire *
+                  selectedArticle.quantite_stock) }}</span>
               </div>
             </div>
           </div>
@@ -268,17 +254,17 @@
           <h3>Modifier l'article</h3>
           <button @click="showEditModal = false" class="modal-close">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <line x1="18" y1="6" x2="6" y2="18"/>
-              <line x1="6" y1="6" x2="18" y2="18"/>
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
         </div>
         <div class="modal-body">
           <div class="todo-container">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="todo-icon">
-              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-              <path d="M2 17l10 5 10-5"/>
-              <path d="M2 12l10 5 10-5"/>
+              <path d="M12 2L2 7l10 5 10-5-10-5z" />
+              <path d="M2 17l10 5 10-5" />
+              <path d="M2 12l10 5 10-5" />
             </svg>
             <h4>Fonctionnalité à venir</h4>
             <p>La modification des articles sera bientôt disponible.</p>
@@ -305,7 +291,7 @@ export default {
     const searchQuery = ref('')
     const currentPage = ref(1)
     const itemsPerPage = 10
-    
+
     const filters = reactive({
       category: '',
       stockStatus: ''
@@ -324,14 +310,14 @@ export default {
     const fetchArticles = async () => {
       loading.value = true
       error.value = null
-      
+
       try {
         const response = await fetch(import.meta.env.VITE_API_URL + "get_table?table=article", {
           method: "GET",
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
-            Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
           },
+          credentials: 'include',
         })
 
         if (!response.ok) {
@@ -360,7 +346,7 @@ export default {
       // Filtre par recherche
       if (searchQuery.value) {
         const query = searchQuery.value.toLowerCase()
-        result = result.filter(article => 
+        result = result.filter(article =>
           article.nom.toLowerCase().includes(query) ||
           article.description.toLowerCase().includes(query) ||
           article.id_article.toString().includes(query)
@@ -660,7 +646,9 @@ export default {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .error-message {
@@ -1122,53 +1110,53 @@ export default {
     gap: 1rem;
     align-items: stretch;
   }
-  
+
   .add-button {
     width: 100%;
     justify-content: center;
   }
-  
+
   .filter-group {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .search-input,
   .filter-select,
   .search-button {
     width: 100%;
   }
-  
+
   .table-header {
     flex-direction: column;
     gap: 1rem;
     align-items: flex-start;
   }
-  
+
   .table-stats {
     width: 100%;
     justify-content: space-between;
   }
-  
+
   .stocks-table {
     font-size: 12px;
   }
-  
+
   .stocks-table th,
   .stocks-table td {
     padding: 0.75rem 0.5rem;
   }
-  
+
   .stocks-table th:nth-child(3),
   .stocks-table td:nth-child(3) {
     display: none;
   }
-  
+
   .actions {
     flex-direction: column;
     gap: 0.25rem;
   }
-  
+
   .stocks-table th:last-child,
   .stocks-table td:last-child {
     display: none;
@@ -1183,7 +1171,7 @@ export default {
     flex-wrap: wrap;
     justify-content: center;
   }
-  
+
   .details-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;

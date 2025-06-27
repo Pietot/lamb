@@ -8,9 +8,9 @@
       <div class="header-right">
         <button class="new-delivery-button" @click="showNewDeliveryModal = true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="12" y1="8" x2="12" y2="16"/>
-            <line x1="8" y1="12" x2="16" y2="12"/>
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="16" />
+            <line x1="8" y1="12" x2="16" y2="12" />
           </svg>
           <span>Enregistrer une livraison</span>
         </button>
@@ -22,10 +22,10 @@
       <div class="stat-card">
         <div class="stat-icon truck-icon">
           <svg viewBox="0 0 24 24" fill="currentColor">
-            <rect x="1" y="3" width="15" height="13"/>
-            <polygon points="16,3 19,7 19,13 16,13"/>
-            <circle cx="5.5" cy="18.5" r="2.5"/>
-            <circle cx="18.5" cy="18.5" r="2.5"/>
+            <rect x="1" y="3" width="15" height="13" />
+            <polygon points="16,3 19,7 19,13 16,13" />
+            <circle cx="5.5" cy="18.5" r="2.5" />
+            <circle cx="18.5" cy="18.5" r="2.5" />
           </svg>
         </div>
         <div class="stat-content">
@@ -33,11 +33,12 @@
           <p class="stat-value">3</p>
         </div>
       </div>
-      
+
       <div class="stat-card">
         <div class="stat-icon check-icon">
           <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            <path
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
           </svg>
         </div>
         <div class="stat-content">
@@ -45,11 +46,11 @@
           <p class="stat-value">12</p>
         </div>
       </div>
-      
+
       <div class="stat-card">
         <div class="stat-icon warning-icon">
           <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2L1 21h22L12 2zm0 3.99L19.53 19H4.47L12 5.99zM11 16h2v2h-2v-2zm0-6h2v4h-2v-4z"/>
+            <path d="M12 2L1 21h22L12 2zm0 3.99L19.53 19H4.47L12 5.99zM11 16h2v2h-2v-2zm0-6h2v4h-2v-4z" />
           </svg>
         </div>
         <div class="stat-content">
@@ -63,25 +64,20 @@
     <div class="filters-section">
       <div class="filter-group">
         <div class="search-container">
-          <input
-            v-model="searchQuery"
-            type="text"
-            placeholder="Rechercher une livraison..."
-            class="search-input"
-          />
+          <input v-model="searchQuery" type="text" placeholder="Rechercher une livraison..." class="search-input" />
           <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <circle cx="11" cy="11" r="8"/>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg>
         </div>
-        
+
         <select v-model="filters.supplier" class="filter-select">
           <option value="">Tous les fournisseurs</option>
           <option value="Durand SA">Durand SA</option>
           <option value="Bernard FR">Bernard FR</option>
           <option value="Martin SA">Martin SA</option>
         </select>
-        
+
         <select v-model="filters.status" class="filter-select">
           <option value="">Tous les statuts</option>
           <option value="En attente">En attente</option>
@@ -107,7 +103,7 @@
             </span>
           </div>
         </div>
-        
+
         <div class="table-container">
           <table class="deliveries-table">
             <thead>
@@ -139,28 +135,18 @@
                   </span>
                 </td>
                 <td class="actions">
-                  <button 
-                    v-if="delivery.status === 'En attente'"
-                    class="action-btn primary"
-                    @click="receiveDelivery(delivery.id)"
-                  >
+                  <button v-if="delivery.status === 'En attente'" class="action-btn primary"
+                    @click="receiveDelivery(delivery.id)">
                     Réceptionner
                   </button>
-                  <button 
-                    v-if="delivery.status === 'Problème'"
-                    class="action-btn danger"
-                    @click="reportProblem(delivery.id)"
-                  >
+                  <button v-if="delivery.status === 'Problème'" class="action-btn danger"
+                    @click="reportProblem(delivery.id)">
                     Signaler
                   </button>
-                  <button 
-                    class="action-btn secondary"
-                    @click="viewDetails(delivery.id)"
-                    title="Voir détails"
-                  >
+                  <button class="action-btn secondary" @click="viewDetails(delivery.id)" title="Voir détails">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                      <circle cx="12" cy="12" r="3"/>
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                      <circle cx="12" cy="12" r="3" />
                     </svg>
                   </button>
                 </td>
@@ -210,14 +196,10 @@
                   </span>
                 </td>
                 <td class="actions">
-                  <button 
-                    class="action-btn secondary"
-                    @click="viewDeliveryDetails(item.id)"
-                    title="Voir détails"
-                  >
+                  <button class="action-btn secondary" @click="viewDeliveryDetails(item.id)" title="Voir détails">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                      <circle cx="12" cy="12" r="3"/>
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                      <circle cx="12" cy="12" r="3" />
                     </svg>
                   </button>
                 </td>
@@ -235,8 +217,8 @@
           <h3>Enregistrer une livraison</h3>
           <button @click="showNewDeliveryModal = false" class="modal-close">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <line x1="18" y1="6" x2="6" y2="18"/>
-              <line x1="6" y1="6" x2="18" y2="18"/>
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
         </div>
@@ -256,7 +238,7 @@ export default {
   setup() {
     const searchQuery = ref('')
     const showNewDeliveryModal = ref(false)
-    
+
     const filters = ref({
       supplier: '',
       status: ''
@@ -872,20 +854,20 @@ export default {
     gap: 1rem;
     align-items: stretch;
   }
-  
+
   .new-delivery-button {
     width: 100%;
     justify-content: center;
   }
-  
+
   .stats-section {
     grid-template-columns: 1fr;
   }
-  
+
   .filter-group {
     flex-direction: column;
   }
-  
+
   .search-container,
   .filter-select {
     width: 100%;
@@ -899,29 +881,29 @@ export default {
     gap: 1rem;
     align-items: flex-start;
   }
-  
+
   .section-stats {
     width: 100%;
     justify-content: space-between;
   }
-  
+
   .deliveries-table,
   .history-table {
     font-size: 12px;
   }
-  
+
   .deliveries-table th,
   .deliveries-table td,
   .history-table th,
   .history-table td {
     padding: 0.75rem 0.5rem;
   }
-  
+
   .actions {
     flex-direction: column;
     gap: 0.25rem;
   }
-  
+
   .action-btn {
     padding: 0.375rem 0.75rem;
     font-size: 11px;

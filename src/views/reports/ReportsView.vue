@@ -12,19 +12,19 @@
           <option value="trimestre">Ce trimestre</option>
           <option value="annee-derniere">Année dernière</option>
         </select>
-        
+
         <button class="filter-button">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <polygon points="22,3 2,3 10,12.46 10,19 14,21 14,12.46"/>
+            <polygon points="22,3 2,3 10,12.46 10,19 14,21 14,12.46" />
           </svg>
           Filtres
         </button>
-        
+
         <button class="export-button">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="7,10 12,15 17,10"/>
-            <line x1="12" y1="15" x2="12" y2="3"/>
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7,10 12,15 17,10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
           </svg>
           Exporter
         </button>
@@ -33,13 +33,8 @@
 
     <!-- Navigation des onglets -->
     <div class="tabs-nav">
-      <button 
-        v-for="tab in tabs" 
-        :key="tab.id"
-        class="tab-button"
-        :class="{ 'active': activeTab === tab.id }"
-        @click="activeTab = tab.id"
-      >
+      <button v-for="tab in tabs" :key="tab.id" class="tab-button" :class="{ 'active': activeTab === tab.id }"
+        @click="activeTab = tab.id">
         <component :is="tab.icon" class="tab-icon" />
         {{ tab.label }}
       </button>
@@ -54,8 +49,8 @@
           <div class="kpi-card kpi-sales">
             <div class="kpi-icon">
               <svg viewBox="0 0 24 24" fill="currentColor">
-                <circle cx="12" cy="12" r="10"/>
-                <path d="M12 6v6l4 2"/>
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 6v6l4 2" />
               </svg>
             </div>
             <div class="kpi-content">
@@ -64,12 +59,12 @@
               <p class="kpi-trend positive">+7% par rapport à l'année précédente</p>
             </div>
           </div>
-          
+
           <div class="kpi-card kpi-orders">
             <div class="kpi-icon">
               <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
-                <polyline points="14,2 14,8 20,8"/>
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" />
+                <polyline points="14,2 14,8 20,8" />
               </svg>
             </div>
             <div class="kpi-content">
@@ -78,13 +73,13 @@
               <p class="kpi-trend positive">+5% par rapport à l'année précédente</p>
             </div>
           </div>
-          
+
           <div class="kpi-card kpi-basket">
             <div class="kpi-icon">
               <svg viewBox="0 0 24 24" fill="currentColor">
-                <circle cx="9" cy="21" r="1"/>
-                <circle cx="20" cy="21" r="1"/>
-                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                <circle cx="9" cy="21" r="1" />
+                <circle cx="20" cy="21" r="1" />
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
               </svg>
             </div>
             <div class="kpi-content">
@@ -93,14 +88,14 @@
               <p class="kpi-trend negative">-2% par rapport à l'année précédente</p>
             </div>
           </div>
-          
+
           <div class="kpi-card kpi-clients">
             <div class="kpi-icon">
               <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                <circle cx="9" cy="7" r="4"/>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
               </svg>
             </div>
             <div class="kpi-content">
@@ -144,16 +139,16 @@
         <div class="reports-section">
           <div class="section-card">
             <h3 class="section-title">Rapports récents</h3>
-            
+
             <div class="reports-list">
               <div v-for="report in recentReports" :key="report.id" class="report-item">
                 <div class="report-icon">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                    <polyline points="14,2 14,8 20,8"/>
-                    <line x1="16" y1="13" x2="8" y2="13"/>
-                    <line x1="16" y1="17" x2="8" y2="17"/>
-                    <polyline points="10,9 9,9 8,9"/>
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14,2 14,8 20,8" />
+                    <line x1="16" y1="13" x2="8" y2="13" />
+                    <line x1="16" y1="17" x2="8" y2="17" />
+                    <polyline points="10,9 9,9 8,9" />
                   </svg>
                 </div>
                 <div class="report-info">
@@ -175,7 +170,7 @@
           <div class="placeholder-icon">
             <component :is="tabs.find(t => t.id === activeTab)?.icon" />
           </div>
-          <h3>{{ tabs.find(t => t.id === activeTab)?.label }}</h3>
+          <h3>{{tabs.find(t => t.id === activeTab)?.label}}</h3>
           <p>Cette section est en cours de développement</p>
         </div>
       </div>
@@ -273,11 +268,11 @@ export default {
         // Graphique évolution des ventes (ligne)
         if (salesChart.value) {
           const ctx = salesChart.value.getContext('2d')
-          
+
           // Simulation d'un graphique simple avec Canvas
           ctx.fillStyle = '#F8FAFC'
           ctx.fillRect(0, 0, salesChart.value.width, salesChart.value.height)
-          
+
           // Grille
           ctx.strokeStyle = '#E2E8F0'
           ctx.lineWidth = 1
@@ -288,7 +283,7 @@ export default {
             ctx.lineTo(salesChart.value.width, y)
             ctx.stroke()
           }
-          
+
           // Ligne de données
           ctx.strokeStyle = '#3B82F6'
           ctx.lineWidth = 3
@@ -305,7 +300,7 @@ export default {
             { x: 450, y: 40 },
             { x: 500, y: 30 }
           ]
-          
+
           points.forEach((point, index) => {
             if (index === 0) {
               ctx.moveTo(point.x, point.y)
@@ -314,7 +309,7 @@ export default {
             }
           })
           ctx.stroke()
-          
+
           // Points
           ctx.fillStyle = '#3B82F6'
           points.forEach(point => {
@@ -330,25 +325,25 @@ export default {
           const centerX = clientsChart.value.width / 2
           const centerY = clientsChart.value.height / 2
           const radius = Math.min(centerX, centerY) - 20
-          
+
           const data = [
             { label: 'Dupont SAS', value: 35, color: '#3B82F6' },
             { label: 'Martin & Cie', value: 25, color: '#10B981' },
             { label: 'Bernard FR', value: 20, color: '#F59E0B' },
             { label: 'Durand SA', value: 20, color: '#EF4444' }
           ]
-          
+
           let currentAngle = 0
           data.forEach(item => {
             const sliceAngle = (item.value / 100) * 2 * Math.PI
-            
+
             ctx.fillStyle = item.color
             ctx.beginPath()
             ctx.moveTo(centerX, centerY)
             ctx.arc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle)
             ctx.closePath()
             ctx.fill()
-            
+
             currentAngle += sliceAngle
           })
         }
@@ -359,7 +354,7 @@ export default {
           const barWidth = 60
           const spacing = 20
           const maxHeight = categoryChart.value.height - 40
-          
+
           const categories = [
             { name: 'Catégorie 1', value: 80, color: '#3B82F6' },
             { name: 'Catégorie 2', value: 65, color: '#10B981' },
@@ -367,15 +362,15 @@ export default {
             { name: 'Catégorie 4', value: 30, color: '#EF4444' },
             { name: 'Autres', value: 15, color: '#8B5CF6' }
           ]
-          
+
           categories.forEach((cat, index) => {
             const x = (barWidth + spacing) * index + spacing
             const barHeight = (cat.value / 100) * maxHeight
             const y = categoryChart.value.height - barHeight - 20
-            
+
             ctx.fillStyle = cat.color
             ctx.fillRect(x, y, barWidth, barHeight)
-            
+
             // Labels
             ctx.fillStyle = '#64748B'
             ctx.font = '12px Inter'
@@ -793,15 +788,15 @@ export default {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .header-controls {
     justify-content: center;
   }
-  
+
   .charts-section {
     grid-template-columns: 1fr;
   }
-  
+
   .kpi-section {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -811,35 +806,35 @@ export default {
   .tab-content {
     padding: 1rem;
   }
-  
+
   .kpi-section {
     grid-template-columns: 1fr;
   }
-  
+
   .tabs-nav {
     flex-direction: column;
   }
-  
+
   .tab-button {
     justify-content: flex-start;
     border-bottom: none;
     border-right: 3px solid transparent;
   }
-  
+
   .tab-button.active {
     border-bottom: none;
     border-right-color: #3B82F6;
   }
-  
+
   .header-controls {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .chart-container {
     height: 250px;
   }
-  
+
   .report-item {
     flex-direction: column;
     text-align: center;
@@ -852,7 +847,7 @@ export default {
     flex-direction: column;
     text-align: center;
   }
-  
+
   .chart-container {
     height: 200px;
   }

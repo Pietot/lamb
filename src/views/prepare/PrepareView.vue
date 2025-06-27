@@ -64,7 +64,7 @@
           <option value="attente">En attente</option>
           <option value="preparation">En préparation</option>
         </select>
-        
+
         <div class="search-container">
           <input 
             v-model="searchQuery" 
@@ -73,8 +73,8 @@
             class="search-input"
           />
           <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <circle cx="11" cy="11" r="8"/>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg>
         </div>
       </div>
@@ -1231,11 +1231,11 @@ export default {
   .kpi-section {
     grid-template-columns: 1fr;
   }
-  
+
   .filter-group {
     flex-direction: column;
   }
-  
+
   .filter-select,
   .search-container {
     width: 100%;
