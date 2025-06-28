@@ -308,17 +308,17 @@ export default {
           method: "GET",
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
-            Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
           },
+          credentials: 'include',
         })
 
         // Récupérer les clients
         const clientsResponse = await fetch(import.meta.env.VITE_API_URL + "get_table?table=client", {
-          method: "GET",
+           method: "GET",
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
-            Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
           },
+          credentials: 'include',
         })
 
         if (!ordersResponse.ok || !clientsResponse.ok) {
