@@ -23,7 +23,7 @@
         <select v-model="filters.clientId" class="filter-select">
           <option value="">Tous les clients</option>
           <option v-for="client in uniqueClients" :key="client.id_client" :value="client.id_client">
-            {{ client.prénom }} {{ client.nom }}
+            {{ getClientName(client.id_client) }}
           </option>
         </select>
         
@@ -233,7 +233,7 @@
               </div>
               <div v-if="getClient(selectedOrder.id_client)" class="detail-row">
                 <span class="detail-label">Téléphone:</span>
-                <span class="detail-value">{{ getClient(selectedOrder.id_client).telephone }}</span>
+                <span class="detail-value">{{ formatPhone(getClient(selectedOrder.id_client).telephone) }}</span>
               </div>
             </div>
             
@@ -314,15 +314,15 @@ export default {
         const ordersData = await ordersResponse.json()
         const clientsData = await clientsResponse.json()
         
-        if (ordersData.success && ordersData.articles) {
+        if (ordersData.success && ordersData.data) {
           // Trier les commandes par date décroissante
-          orders.value = ordersData.articles.sort((a, b) => 
+          orders.value = ordersData.data.sort((a, b) => 
             new Date(b.date_commande) - new Date(a.date_commande)
           )
         }
 
-        if (clientsData.success && clientsData.articles) {
-          clients.value = clientsData.articles
+        if (clientsData.success && clientsData.data) {
+          clients.value = clientsData.data
         }
       } catch (err) {
         console.error('Erreur lors du chargement:', err)
@@ -334,7 +334,11 @@ export default {
 
     // Computed properties
     const uniqueClients = computed(() => {
-      return clients.value.sort((a, b) => a.nom.localeCompare(b.nom))
+      return clients.value.sort((a, b) => {
+        const nameA = getFullName(a)
+        const nameB = getFullName(b)
+        return nameA.localeCompare(nameB)
+      })
     })
 
     const filteredOrders = computed(() => {
@@ -357,7 +361,7 @@ export default {
         const query = searchQuery.value.toLowerCase()
         result = result.filter(order => {
           const client = getClient(order.id_client)
-          const clientName = client ? `${client.prénom} ${client.nom}`.toLowerCase() : ''
+          const clientName = client ? getFullName(client).toLowerCase() : ''
           return (
             order.id_commande.toString().includes(query) ||
             clientName.includes(query) ||
@@ -431,9 +435,25 @@ export default {
       return clients.value.find(client => client.id_client === clientId)
     }
 
+    const getFullName = (client) => {
+      if (!client) return ''
+      
+      // Si le client a une raison sociale, l'utiliser
+      if (client.raison_sociale) {
+        return client.raison_sociale
+      }
+      
+      // Sinon, combiner prénom et nom
+      const prenom = client.prénom || ''
+      const nom = client.nom || ''
+      return `${prenom} ${nom}`.trim()
+    }
+
     const getClientName = (clientId) => {
       const client = getClient(clientId)
-      return client ? `${client.prénom} ${client.nom}` : `Client #${clientId}`
+      if (!client) return `Client #${clientId}`
+      
+      return getFullName(client) || `Client #${clientId}`
     }
 
     const formatDate = (dateString) => {
@@ -447,6 +467,17 @@ export default {
         style: 'currency',
         currency: 'EUR'
       }).format(amount)
+    }
+
+    const formatPhone = (phone) => {
+      if (!phone || phone === '32767') return 'Non renseigné'
+      
+      // Formater le numéro de téléphone français
+      const cleaned = phone.toString().replace(/\D/g, '')
+      if (cleaned.length === 10) {
+        return cleaned.replace(/(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/, '$1 $2 $3 $4 $5')
+      }
+      return phone
     }
 
     const getStatusClass = (status) => {
@@ -520,6 +551,7 @@ export default {
       getClientName,
       formatDate,
       formatCurrency,
+      formatPhone,
       getStatusClass,
       getStatusLabel,
       goToPage,

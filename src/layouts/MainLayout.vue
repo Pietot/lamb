@@ -223,6 +223,12 @@ export default {
         icon: 'ReceptionIcon'
       },
       {
+        name: 'Agenda',
+        label: 'Agenda',
+        to: '/agenda',
+        icon: 'AgendaIcon'
+      },
+      {
         name: 'Clients',
         label: 'Clients',
         to: '/clients',

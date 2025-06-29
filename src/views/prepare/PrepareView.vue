@@ -2,96 +2,81 @@
   <div class="prepare-page">
     <!-- En-tête -->
     <div class="page-header">
-      <div class="header-left">
-        <h1 class="page-title">Commandes à préparer</h1>
-        <p class="page-subtitle">File d'attente de préparation</p>
-      </div>
-      <div class="header-right">
-        <button class="mark-prepared-button" :disabled="selectedOrders.length === 0">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <polyline points="9,11 12,14 22,4" />
-            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
-          </svg>
-          <span>Marquer comme préparées ({{ selectedOrders.length }})</span>
-        </button>
-      </div>
+      <h1 class="page-title">Commandes à préparer</h1>
     </div>
 
-    <!-- Cartes de statistiques -->
-    <div class="stats-section">
-      <div class="stat-card urgent">
-        <div class="stat-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-            <line x1="12" y1="9" x2="12" y2="13" />
-            <line x1="12" y1="17" x2="12.01" y2="17" />
+    <!-- Cartes KPI -->
+    <div class="kpi-section">
+      <div class="kpi-card kpi-urgent">
+        <div class="kpi-icon urgent-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
           </svg>
         </div>
-        <div class="stat-content">
-          <span class="stat-value">3</span>
-          <span class="stat-label">Urgentes</span>
+        <div class="kpi-content">
+          <p class="kpi-label">Urgentes</p>
+          <p class="kpi-value">{{ urgentCount }}</p>
         </div>
       </div>
-      <div class="stat-card normal">
-        <div class="stat-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-            <polyline points="14 2 14 8 20 8" />
-            <line x1="16" y1="13" x2="8" y2="13" />
-            <line x1="16" y1="17" x2="8" y2="17" />
-            <polyline points="10 9 9 9 8 9" />
+
+      <div class="kpi-card kpi-normal">
+        <div class="kpi-icon normal-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
           </svg>
         </div>
-        <div class="stat-content">
-          <span class="stat-value">9</span>
-          <span class="stat-label">Normales</span>
+        <div class="kpi-content">
+          <p class="kpi-label">En file d'attente</p>
+          <p class="kpi-value">{{ totalPending }}</p>
         </div>
       </div>
-      <div class="stat-card time">
-        <div class="stat-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <circle cx="12" cy="12" r="10" />
-            <polyline points="12 6 12 12 16 14" />
+
+      <div class="kpi-card kpi-progress">
+        <div class="kpi-icon progress-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
           </svg>
         </div>
-        <div class="stat-content">
-          <span class="stat-value">{{ averageTime }}min</span>
-          <span class="stat-label">Temps moyen</span>
+        <div class="kpi-content">
+          <p class="kpi-label">En cours</p>
+          <p class="kpi-value">{{ inProgressCount }}</p>
         </div>
       </div>
     </div>
 
-    <!-- Filtres -->
+    <!-- Filtres simplifiés -->
     <div class="filters-section">
       <div class="filter-group">
-        <select v-model="filters.priority" class="filter-select">
+        <select v-model="filterPriority" class="filter-select">
           <option value="">Toutes les priorités</option>
-          <option value="Urgente">Urgente</option>
-          <option value="Normale">Normale</option>
+          <option value="urgent">Urgente</option>
+          <option value="normal">Normale</option>
         </select>
-
-        <select v-model="filters.status" class="filter-select">
+        
+        <select v-model="filterStatus" class="filter-select">
           <option value="">Tous les statuts</option>
-          <option value="En attente">En attente</option>
-          <option value="En cours">En cours</option>
+          <option value="attente">En attente</option>
+          <option value="preparation">En préparation</option>
         </select>
 
         <div class="search-container">
-          <input v-model="searchQuery" type="text" placeholder="Rechercher une commande..." class="search-input" />
+          <input 
+            v-model="searchQuery" 
+            type="text" 
+            placeholder="Rechercher..."
+            class="search-input"
+          />
           <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <circle cx="11" cy="11" r="8" />
             <line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg>
         </div>
-
-        <button class="refresh-button" @click="refreshData">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <polyline points="1 4 1 10 7 10" />
-            <polyline points="23 20 23 14 17 14" />
-            <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15" />
-          </svg>
-          Actualiser
-        </button>
       </div>
     </div>
 
@@ -99,87 +84,186 @@
     <div class="orders-section">
       <div class="orders-card">
         <div class="orders-header">
-          <h3 class="orders-title">File de préparation ({{ filteredOrders.length }})</h3>
-          <button class="select-all-button" @click="toggleSelectAll">
-            {{ selectedOrders.length === filteredOrders.length ? 'Tout désélectionner' : 'Tout sélectionner' }}
-          </button>
+          <h3 class="orders-title">File d'attente</h3>
+          <span class="orders-count">{{ filteredOrders.length }} commande(s)</span>
         </div>
 
-        <div class="orders-list">
-          <div v-for="order in filteredOrders" :key="order.id" class="order-item"
-            :class="{ 'selected': selectedOrders.includes(order.id) }">
-            <div class="order-select">
-              <input type="checkbox" :value="order.id" v-model="selectedOrders" class="checkbox" />
-            </div>
+        <div v-if="loading" class="loading-container">
+          <div class="loader"></div>
+          <p>Chargement des commandes...</p>
+        </div>
 
-            <div class="order-content">
-              <div class="order-header-info">
-                <div class="order-primary">
-                  <span class="order-id">#{{ order.id }}</span>
-                  <span class="order-client">{{ order.client }}</span>
-                  <span class="priority-badge" :class="`priority-${order.priority.toLowerCase()}`">
-                    {{ order.priority }}
-                  </span>
-                  <span class="status-badge" :class="getStatusClass(order.status)">
-                    {{ order.status }}
-                  </span>
-                </div>
-                <div class="order-dates">
-                  <span class="order-date">Commandé le {{ order.orderDate }}</span>
-                  <span class="delivery-date">Livraison: {{ order.deliveryDate }}</span>
-                </div>
-              </div>
+        <div v-else-if="error" class="error-container">
+          <p class="error-message">{{ error }}</p>
+          <button @click="fetchData" class="retry-button">Réessayer</button>
+        </div>
 
-              <div class="order-details">
-                <div class="order-stats">
-                  <span class="stat-item">
-                    <span class="stat-label">Articles:</span>
-                    <span class="stat-value">{{ order.itemsCount }}</span>
-                  </span>
-                  <span class="stat-item">
-                    <span class="stat-label">Total:</span>
-                    <span class="stat-value">{{ formatCurrency(order.total) }}</span>
-                  </span>
-                  <span class="stat-item">
-                    <span class="stat-label">Temps estimé:</span>
-                    <span class="stat-value">{{ order.estimatedTime }}min</span>
-                  </span>
-                </div>
-              </div>
-
-              <div v-if="order.status === 'En cours'" class="progress-bar">
-                <div class="progress-fill" :style="{ width: order.progress + '%' }"></div>
-                <span class="progress-text">{{ order.progress }}%</span>
+        <div v-else class="orders-list">
+          <div
+            v-for="order in filteredOrders"
+            :key="order.id_commande"
+            class="order-item"
+            :class="{ 'urgent': isUrgent(order) }"
+          >
+            <div class="order-main">
+              <div class="order-info">
+                <span class="order-id">#{{ String(order.id_commande).padStart(5, '0') }}</span>
+                <span class="order-client">{{ getClientName(order.id_client) }}</span>
+                <span class="order-date">{{ formatDate(order.date_commande) }}</span>
+                <span class="order-amount">{{ formatCurrency(order.montant_total) }}</span>
               </div>
             </div>
+            
+            <div class="order-right">
+              <div class="order-badges">
+                <span v-if="isUrgent(order)" class="badge badge-urgent">Urgent</span>
+                <span class="badge" :class="getStatusClass(order.statut)">
+                  {{ getStatusLabel(order.statut) }}
+                </span>
+              </div>
+              
+              <div class="order-actions">
+                <button 
+                  v-if="order.statut === 'attente'"
+                  class="action-btn primary"
+                  @click="startPreparation(order)"
+                >
+                  Commencer
+                </button>
+                
+                <button 
+                  v-else-if="order.statut === 'preparation'"
+                  class="action-btn success"
+                  @click="completePreparation(order)"
+                >
+                  Terminer
+                </button>
 
-            <div class="order-actions">
-              <button v-if="order.status === 'En attente'" class="action-btn primary" @click="startPreparation(order)">
-                Commencer
-              </button>
-
-              <button v-else-if="order.status === 'En cours'" class="action-btn success"
-                @click="completePreparation(order)">
-                Terminer
-              </button>
-
-              <button class="action-btn secondary" @click="viewOrder(order.id)">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                  <circle cx="12" cy="12" r="3" />
-                </svg>
-              </button>
+                <button 
+                  class="action-btn icon-btn"
+                  @click="viewOrder(order)"
+                  title="Voir détails"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+                
+                <button 
+                  class="action-btn icon-btn"
+                  @click="viewOrderContent(order)"
+                  title="Voir contenu"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2"/>
+                    <line x1="9" y1="12" x2="15" y2="12"/>
+                    <line x1="9" y1="16" x2="15" y2="16"/>
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
 
-          <div v-if="filteredOrders.length === 0" class="empty-state">
+          <div v-if="filteredOrders.length === 0" class="empty-message">
+            <p>Aucune commande à préparer</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Contenu de la commande -->
+    <div v-if="showContentModal" class="modal-overlay" @click="showContentModal = false">
+      <div class="modal-content modal-details" @click.stop>
+        <div class="modal-header">
+          <h3>Contenu de la commande</h3>
+          <button @click="showContentModal = false" class="modal-close">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
-              <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
-              <path d="M12 11l-2 2 2 2M16 11l2 2-2 2" />
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
             </svg>
-            <h3>Aucune commande à préparer</h3>
-            <p>Toutes les commandes sont préparées ou il n'y a pas de nouvelles commandes.</p>
+          </button>
+        </div>
+        <div class="modal-body" v-if="selectedOrder">
+          <div class="order-summary">
+            <div class="summary-item">
+              <span class="summary-label">Commande:</span>
+              <span class="summary-value">#{{ String(selectedOrder.id_commande).padStart(5, '0') }}</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Client:</span>
+              <span class="summary-value">{{ getClientName(selectedOrder.id_client) }}</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Date:</span>
+              <span class="summary-value">{{ formatFullDate(selectedOrder.date_commande) }}</span>
+            </div>
+          </div>
+
+          <div class="articles-section">
+            <h4 class="section-subtitle">Articles de la commande</h4>
+            <div v-if="loadingArticles" class="loading-container">
+              <div class="small-loader"></div>
+              <p>Chargement des articles...</p>
+            </div>
+            <div v-else-if="orderArticles.length > 0" class="articles-list">
+              <div v-for="(article, index) in orderArticles" :key="index" class="article-item">
+                <div class="article-info">
+                  <span class="article-name">{{ article.nom || `Article #${article.id_article}` }}</span>
+                  <span class="article-ref">Réf: {{ article.reference || 'N/A' }}</span>
+                </div>
+                <div class="article-quantity">
+                  <span class="quantity-label">Quantité:</span>
+                  <span class="quantity-value">{{ article.quantite || 1 }}</span>
+                </div>
+              </div>
+            </div>
+            <div v-else class="empty-articles">
+              <p>Aucun article trouvé pour cette commande</p>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <div class="total-section">
+              <span class="total-label">Total de la commande:</span>
+              <span class="total-value">{{ formatCurrency(selectedOrder.montant_total) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Confirmation terminer -->
+    <div v-if="showConfirmModal" class="modal-overlay" @click="showConfirmModal = false">
+      <div class="modal-content modal-confirm" @click.stop>
+        <div class="modal-header">
+          <h3>Confirmer la fin de préparation</h3>
+          <button @click="showConfirmModal = false" class="modal-close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body" v-if="orderToComplete">
+          <div class="confirm-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <p class="confirm-message">
+            Êtes-vous sûr de vouloir marquer la commande <strong>#{{ String(orderToComplete.id_commande).padStart(5, '0') }}</strong> comme terminée ?
+          </p>
+          <p class="confirm-submessage">
+            Cette action changera le statut de la commande en "Expédiée".
+          </p>
+          <div class="modal-actions">
+            <button class="modal-btn secondary" @click="showConfirmModal = false">
+              Annuler
+            </button>
+            <button class="modal-btn primary" @click="confirmCompletePreparation">
+              Confirmer
+            </button>
           </div>
         </div>
       </div>
@@ -188,103 +272,158 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 export default {
   name: 'PrepareView',
   setup() {
     const router = useRouter()
+    
+    // États
+    const orders = ref([])
+    const clients = ref([])
+    const loading = ref(true)
+    const error = ref(null)
     const searchQuery = ref('')
-    const selectedOrders = ref([])
+    const filterPriority = ref('')
+    const filterStatus = ref('')
+    
+    // États pour les modales
+    const showContentModal = ref(false)
+    const showConfirmModal = ref(false)
+    const selectedOrder = ref(null)
+    const orderToComplete = ref(null)
+    const orderArticles = ref([])
+    const loadingArticles = ref(false)
 
-    const filters = ref({
-      priority: '',
-      status: ''
+    // Fonction pour récupérer les données
+    const fetchData = async () => {
+      loading.value = true
+      error.value = null
+      
+      try {
+        // Récupérer les commandes
+        const ordersResponse = await fetch(import.meta.env.VITE_API_URL + "get_table?table=commande", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          credentials: 'include',
+        })
+
+        // Récupérer les clients
+        const clientsResponse = await fetch(import.meta.env.VITE_API_URL + "get_table?table=client", {
+           method: "GET",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          credentials: 'include',
+        })
+
+        if (!ordersResponse.ok || !clientsResponse.ok) {
+          throw new Error('Erreur lors du chargement des données')
+        }
+
+        const ordersData = await ordersResponse.json()
+        const clientsData = await clientsResponse.json()
+        
+        if (ordersData.success && ordersData.data) {
+          // Filtrer seulement les commandes en attente ou en préparation
+          orders.value = ordersData.data.filter(order => 
+            order.statut === 'attente' || order.statut === 'preparation'
+          )
+        }
+
+        if (clientsData.success && clientsData.data) {
+          clients.value = clientsData.data
+        }
+      } catch (err) {
+        console.error('Erreur lors du chargement:', err)
+        error.value = 'Impossible de charger les commandes.'
+      } finally {
+        loading.value = false
+      }
+    }
+
+    // Computed properties
+    const urgentCount = computed(() => {
+      return orders.value.filter(order => isUrgent(order)).length
     })
 
-    const orders = ref([
-      {
-        id: '00012',
-        client: 'Boutique Mode Paris',
-        orderDate: '15 mai 2023',
-        deliveryDate: '18 mai 2023',
-        priority: 'Urgente',
-        status: 'En attente',
-        estimatedTime: 25,
-        itemsCount: 8,
-        total: 1850.00,
-        progress: 0
-      },
-      {
-        id: '00011',
-        client: 'Fashion Store Lyon',
-        orderDate: '14 mai 2023',
-        deliveryDate: '19 mai 2023',
-        priority: 'Normale',
-        status: 'En cours',
-        estimatedTime: 35,
-        itemsCount: 12,
-        total: 2340.00,
-        progress: 65
-      },
-      {
-        id: '00010',
-        client: 'Dupont SAS',
-        orderDate: '13 mai 2023',
-        deliveryDate: '17 mai 2023',
-        priority: 'Urgente',
-        status: 'En cours',
-        estimatedTime: 20,
-        itemsCount: 6,
-        total: 980.00,
-        progress: 40
-      },
-      {
-        id: '00009',
-        client: 'Martin & Cie',
-        orderDate: '12 mai 2023',
-        deliveryDate: '20 mai 2023',
-        priority: 'Normale',
-        status: 'En attente',
-        estimatedTime: 40,
-        itemsCount: 15,
-        total: 3200.00,
-        progress: 0
-      }
-    ])
+    const totalPending = computed(() => {
+      return orders.value.filter(order => order.statut === 'attente').length
+    })
+
+    const inProgressCount = computed(() => {
+      return orders.value.filter(order => order.statut === 'preparation').length
+    })
 
     const filteredOrders = computed(() => {
-      let result = orders.value
+      let result = [...orders.value]
 
-      if (filters.value.priority) {
-        result = result.filter(order => order.priority === filters.value.priority)
+      // Filtre par priorité
+      if (filterPriority.value === 'urgent') {
+        result = result.filter(order => isUrgent(order))
+      } else if (filterPriority.value === 'normal') {
+        result = result.filter(order => !isUrgent(order))
       }
 
-      if (filters.value.status) {
-        result = result.filter(order => order.status === filters.value.status)
+      // Filtre par statut
+      if (filterStatus.value) {
+        result = result.filter(order => order.statut === filterStatus.value)
       }
 
+      // Filtre par recherche
       if (searchQuery.value) {
-        result = result.filter(order =>
-          order.id.includes(searchQuery.value) ||
-          order.client.toLowerCase().includes(searchQuery.value.toLowerCase())
-        )
+        const query = searchQuery.value.toLowerCase()
+        result = result.filter(order => {
+          const client = getClient(order.id_client)
+          const clientName = client ? `${client.raison_sociale}`.toLowerCase() : ''
+          return (
+            order.id_commande.toString().includes(query) ||
+            clientName.includes(query)
+          )
+        })
       }
 
+      // Trier par urgence puis par date
       return result.sort((a, b) => {
-        const priorityOrder = { 'Urgente': 0, 'Normale': 1 }
-        if (priorityOrder[a.priority] !== priorityOrder[b.priority]) {
-          return priorityOrder[a.priority] - priorityOrder[b.priority]
+        if (isUrgent(a) !== isUrgent(b)) {
+          return isUrgent(a) ? -1 : 1
         }
-        return new Date(a.deliveryDate) - new Date(b.deliveryDate)
+        return new Date(a.date_commande) - new Date(b.date_commande)
       })
     })
 
-    const averageTime = computed(() => {
-      const total = orders.value.reduce((sum, o) => sum + o.estimatedTime, 0)
-      return Math.round(total / orders.value.length)
-    })
+    // Fonctions utilitaires
+    const getClient = (clientId) => {
+      return clients.value.find(client => client.id_client === clientId)
+    }
+
+    const getClientName = (clientId) => {
+      const client = getClient(clientId)
+      return client ? `${client.raison_sociale}` : `Client #${clientId}`
+    }
+
+    const formatDate = (dateString) => {
+      const date = new Date(dateString)
+      const now = new Date()
+      const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24))
+      
+      if (diffDays === 0) return "Aujourd'hui"
+      if (diffDays === 1) return "Hier"
+      if (diffDays <= 7) return `Il y a ${diffDays} jours`
+      
+      const months = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.']
+      return `${date.getDate()} ${months[date.getMonth()]}`
+    }
+
+    const formatFullDate = (dateString) => {
+      const date = new Date(dateString)
+      const months = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre']
+      return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`
+    }
 
     const formatCurrency = (amount) => {
       return new Intl.NumberFormat('fr-FR', {
@@ -293,59 +432,119 @@ export default {
       }).format(amount)
     }
 
+    const isUrgent = (order) => {
+      // Considérer une commande comme urgente si elle date de plus de 3 jours
+      const orderDate = new Date(order.date_commande)
+      const now = new Date()
+      const diffDays = Math.floor((now - orderDate) / (1000 * 60 * 60 * 24))
+      return diffDays > 3
+    }
+
     const getStatusClass = (status) => {
       const statusClasses = {
-        'En attente': 'status-waiting',
-        'En cours': 'status-progress'
+        'attente': 'badge-waiting',
+        'preparation': 'badge-progress',
+        'expedie': 'badge-shipped'
       }
-      return statusClasses[status] || 'status-default'
+      return statusClasses[status] || 'badge-default'
     }
 
-    const toggleSelectAll = () => {
-      if (selectedOrders.value.length === filteredOrders.value.length) {
-        selectedOrders.value = []
-      } else {
-        selectedOrders.value = filteredOrders.value.map(o => o.id)
+    const getStatusLabel = (status) => {
+      const statusLabels = {
+        'attente': 'En attente',
+        'preparation': 'En préparation',
+        'expedie': 'Expédiée'
       }
+      return statusLabels[status] || status
     }
 
-    const startPreparation = (order) => {
-      const index = orders.value.findIndex(o => o.id === order.id)
+    const startPreparation = async (order) => {
+      // TODO: Appeler l'API pour mettre à jour le statut
+      const index = orders.value.findIndex(o => o.id_commande === order.id_commande)
       if (index !== -1) {
-        orders.value[index].status = 'En cours'
-        orders.value[index].progress = 10
+        orders.value[index].statut = 'preparation'
       }
     }
 
-    const completePreparation = (order) => {
-      const index = orders.value.findIndex(o => o.id === order.id)
+    const completePreparation = async (order) => {
+      orderToComplete.value = order
+      showConfirmModal.value = true
+    }
+
+    const confirmCompletePreparation = async () => {
+      if (!orderToComplete.value) return
+      
+      // TODO: Appeler l'API pour mettre à jour le statut
+      const index = orders.value.findIndex(o => o.id_commande === orderToComplete.value.id_commande)
       if (index !== -1) {
-        orders.value.splice(index, 1)
+        orders.value[index].statut = 'expedie'
+        // Retirer de la liste après un court délai
+        setTimeout(() => {
+          orders.value = orders.value.filter(o => o.id_commande !== orderToComplete.value.id_commande)
+        }, 500)
       }
+      
+      showConfirmModal.value = false
+      orderToComplete.value = null
     }
 
-    const viewOrder = (orderId) => {
-      router.push(`/orders/${orderId}`)
+    const viewOrder = (order) => {
+      router.push(`/orders/${order.id_commande}`)
     }
 
-    const refreshData = () => {
-      console.log('Actualisation des données...')
+    const viewOrderContent = async (order) => {
+      selectedOrder.value = order
+      showContentModal.value = true
+      loadingArticles.value = true
+      orderArticles.value = []
+      
+      // TODO: Récupérer les articles de la commande via l'API
+      // Pour l'instant, on simule avec des données
+      setTimeout(() => {
+        orderArticles.value = [
+          { id_article: 1, nom: 'Robe d\'été fleurie', reference: 'REF-001', quantite: 2 },
+          { id_article: 2, nom: 'T-shirt basique blanc', reference: 'REF-002', quantite: 5 },
+          { id_article: 3, nom: 'Jean slim noir', reference: 'REF-003', quantite: 3 }
+        ]
+        loadingArticles.value = false
+      }, 1000)
     }
+
+    // Charger les données au montage
+    onMounted(() => {
+      fetchData()
+    })
 
     return {
-      searchQuery,
-      selectedOrders,
-      filters,
       orders,
+      loading,
+      error,
+      searchQuery,
+      filterPriority,
+      filterStatus,
+      showContentModal,
+      showConfirmModal,
+      selectedOrder,
+      orderToComplete,
+      orderArticles,
+      loadingArticles,
+      urgentCount,
+      totalPending,
+      inProgressCount,
       filteredOrders,
-      averageTime,
+      fetchData,
+      getClientName,
+      formatDate,
+      formatFullDate,
       formatCurrency,
+      isUrgent,
       getStatusClass,
-      toggleSelectAll,
+      getStatusLabel,
       startPreparation,
       completePreparation,
+      confirmCompletePreparation,
       viewOrder,
-      refreshData
+      viewOrderContent
     }
   }
 }
@@ -359,69 +558,25 @@ export default {
 
 /* EN-TÊTE */
 .page-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
   margin-bottom: 2rem;
-  gap: 2rem;
 }
 
 .page-title {
   font-size: 24px;
   font-weight: 600;
   color: #0F172A;
-  margin: 0 0 0.25rem 0;
-}
-
-.page-subtitle {
-  color: #64748B;
   margin: 0;
-  font-size: 14px;
 }
 
-.mark-prepared-button {
-  background: #00B8D4;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 0.75rem 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0, 184, 212, 0.3);
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.mark-prepared-button:hover:not(:disabled) {
-  background: #0891A6;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 184, 212, 0.4);
-}
-
-.mark-prepared-button:disabled {
-  background: #94A3B8;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-.mark-prepared-button svg {
-  width: 18px;
-  height: 18px;
-  stroke-width: 2;
-}
-
-/* STATISTIQUES */
-.stats-section {
+/* SECTION KPI */
+.kpi-section {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
   margin-bottom: 2rem;
 }
 
-.stat-card {
+.kpi-card {
   background: white;
   border-radius: 12px;
   padding: 1.5rem;
@@ -430,21 +585,15 @@ export default {
   gap: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   border: 1px solid #F1F5F9;
+  transition: all 0.2s ease;
 }
 
-.stat-card.urgent {
-  border-left: 4px solid #EF4444;
+.kpi-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
 
-.stat-card.normal {
-  border-left: 4px solid #3B82F6;
-}
-
-.stat-card.time {
-  border-left: 4px solid #F59E0B;
-}
-
-.stat-icon {
+.kpi-icon {
   width: 48px;
   height: 48px;
   border-radius: 8px;
@@ -454,43 +603,43 @@ export default {
   flex-shrink: 0;
 }
 
-.stat-card.urgent .stat-icon {
+.kpi-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.urgent-icon {
   background: #FEF2F2;
   color: #DC2626;
 }
 
-.stat-card.normal .stat-icon {
+.normal-icon {
   background: #EFF6FF;
   color: #2563EB;
 }
 
-.stat-card.time .stat-icon {
+.progress-icon {
   background: #FEF3C7;
   color: #D97706;
 }
 
-.stat-icon svg {
-  width: 24px;
-  height: 24px;
-  stroke-width: 1.5;
-}
-
-.stat-content {
+.kpi-content {
   flex: 1;
 }
 
-.stat-value {
-  font-size: 24px;
-  font-weight: 700;
-  color: #0F172A;
-  display: block;
-  margin-bottom: 0.25rem;
-}
-
-.stat-label {
+.kpi-label {
   font-size: 13px;
   color: #64748B;
+  margin: 0 0 4px 0;
   font-weight: 500;
+}
+
+.kpi-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0;
+  line-height: 1;
 }
 
 /* FILTRES */
@@ -558,30 +707,47 @@ export default {
   pointer-events: none;
 }
 
-.refresh-button {
-  background: #3B82F6;
+/* LOADING & ERROR */
+.loading-container,
+.error-container {
+  text-align: center;
+  padding: 3rem;
+  color: #64748B;
+}
+
+.loader {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #F1F5F9;
+  border-top-color: #00B8D4;
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.error-message {
+  color: #DC2626;
+  margin-bottom: 1rem;
+}
+
+.retry-button {
+  background: #00B8D4;
   color: white;
   border: none;
-  border-radius: 8px;
-  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
   font-size: 14px;
   font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.refresh-button:hover {
-  background: #2563EB;
-  transform: translateY(-1px);
-}
-
-.refresh-button svg {
-  width: 16px;
-  height: 16px;
-  stroke-width: 2;
+.retry-button:hover {
+  background: #0891A6;
 }
 
 /* LISTE DES COMMANDES */
@@ -612,22 +778,9 @@ export default {
   margin: 0;
 }
 
-.select-all-button {
-  background: none;
-  border: 1px solid #E2E8F0;
-  border-radius: 6px;
-  padding: 0.5rem 1rem;
-  font-size: 12px;
-  font-weight: 500;
+.orders-count {
+  font-size: 14px;
   color: #64748B;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.select-all-button:hover {
-  background: #F8FAFC;
-  border-color: #CBD5E1;
-  color: #334155;
 }
 
 .orders-list {
@@ -637,177 +790,122 @@ export default {
 
 .order-item {
   display: flex;
-  align-items: stretch;
-  gap: 1rem;
-  padding: 1.5rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
   border-bottom: 1px solid #F1F5F9;
   transition: all 0.2s ease;
+  gap: 2rem;
 }
 
 .order-item:hover {
   background: #F8FAFC;
 }
 
-.order-item.selected {
-  background: #F0F9FF;
+.order-item.urgent {
+  border-left: 4px solid #DC2626;
+  background: #FEF2F2;
 }
 
 .order-item:last-child {
   border-bottom: none;
 }
 
-.order-select {
-  display: flex;
-  align-items: center;
-}
-
-.checkbox {
-  width: 18px;
-  height: 18px;
-  accent-color: #00B8D4;
-  cursor: pointer;
-}
-
-.order-content {
+.order-main {
   flex: 1;
   display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  align-items: center;
 }
 
-.order-header-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 1rem;
-}
-
-.order-primary {
+.order-info {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 2rem;
   flex-wrap: wrap;
 }
 
+.order-right {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
 .order-id {
-  font-weight: 700;
+  font-weight: 600;
   color: #0F172A;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .order-client {
   font-weight: 500;
   color: #334155;
+  font-size: 14px;
 }
 
-.priority-badge {
-  padding: 0.25rem 0.5rem;
-  border-radius: 12px;
-  font-size: 11px;
+.order-date {
+  font-size: 13px;
+  color: #64748B;
+}
+
+.order-amount {
   font-weight: 600;
-  text-transform: uppercase;
+  color: #0F172A;
+  font-size: 14px;
 }
 
-.priority-urgente {
-  background: #FEF2F2;
-  color: #991B1B;
+.order-badges {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
-.priority-normale {
-  background: #EFF6FF;
-  color: #1E40AF;
-}
-
-.status-badge {
-  padding: 0.25rem 0.5rem;
-  border-radius: 12px;
-  font-size: 11px;
+.badge {
+  padding: 6px 16px;
+  border-radius: 24px;
+  font-size: 13px;
   font-weight: 500;
+  white-space: nowrap;
+  letter-spacing: -0.01em;
 }
 
-.status-waiting {
+.badge-urgent {
+  background: #DC2626;
+  color: white;
+}
+
+.badge-waiting {
   background: #FEF3C7;
   color: #92400E;
 }
 
-.status-progress {
+.badge-progress {
   background: #DBEAFE;
   color: #1E40AF;
 }
 
-.order-dates {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  font-size: 12px;
-  color: #64748B;
-  text-align: right;
-}
-
-.order-stats {
-  display: flex;
-  gap: 2rem;
-}
-
-.order-stats .stat-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 14px;
-}
-
-.order-stats .stat-label {
-  color: #64748B;
-}
-
-.order-stats .stat-value {
-  font-weight: 600;
-  color: #0F172A;
-}
-
-.progress-bar {
-  position: relative;
-  height: 8px;
-  background: #F1F5F9;
-  border-radius: 4px;
-  overflow: hidden;
-  margin-top: 0.5rem;
-}
-
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(to right, #00B8D4, #0891A6);
-  border-radius: 4px;
-  transition: width 0.3s ease;
-}
-
-.progress-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 10px;
-  font-weight: 600;
-  color: white;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+.badge-shipped {
+  background: #D1FAE5;
+  color: #047857;
 }
 
 .order-actions {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+  padding-left: 1rem;
+  border-left: 1px solid #E2E8F0;
+  margin-left: 1rem;
 }
 
 .action-btn {
   border: none;
-  border-radius: 6px;
-  padding: 0.5rem 1rem;
-  font-size: 12px;
+  border-radius: 8px;
+  padding: 0.625rem 1.25rem;
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
-  min-width: 100px;
 }
 
 .action-btn.primary {
@@ -828,58 +926,309 @@ export default {
   background: #047857;
 }
 
-.action-btn.secondary {
-  background: none;
+.action-btn.icon-btn {
+  background: white;
   border: 1px solid #E2E8F0;
   color: #64748B;
-  padding: 6px;
-  min-width: auto;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
 }
 
-.action-btn.secondary:hover {
+.action-btn.icon-btn:hover {
   background: #F8FAFC;
   border-color: #CBD5E1;
   color: #334155;
 }
 
-.action-btn.secondary svg {
-  width: 16px;
-  height: 16px;
+.action-btn.icon-btn svg {
+  width: 18px;
+  height: 18px;
   stroke-width: 1.5;
 }
 
-.empty-state {
+.empty-message {
   text-align: center;
-  padding: 3rem 2rem;
+  color: #64748B;
+  font-style: italic;
+  padding: 2rem;
+}
+
+/* MODAL */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.modal-confirm {
+  max-width: 450px;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.modal-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #0F172A;
+  margin: 0;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: #64748B;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+  background: #F1F5F9;
+  color: #334155;
+}
+
+.modal-close svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2;
+}
+
+.modal-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+  max-height: calc(90vh - 120px);
+}
+
+/* MODAL CONTENU */
+.order-summary {
+  background: #F8FAFC;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+}
+
+.summary-label {
+  font-size: 13px;
+  color: #64748B;
+  font-weight: 500;
+}
+
+.summary-value {
+  font-size: 14px;
+  color: #0F172A;
+  font-weight: 600;
+}
+
+.articles-section {
+  margin-bottom: 1.5rem;
+}
+
+.section-subtitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0F172A;
+  margin: 0 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.small-loader {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #F1F5F9;
+  border-top-color: #00B8D4;
+  border-radius: 50%;
+  margin: 0 auto 0.5rem;
+  animation: spin 1s linear infinite;
+}
+
+.articles-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.article-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: #F8FAFC;
+  border-radius: 6px;
+  border: 1px solid #E2E8F0;
+}
+
+.article-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.article-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #0F172A;
+}
+
+.article-ref {
+  font-size: 12px;
   color: #64748B;
 }
 
-.empty-state svg {
-  width: 48px;
-  height: 48px;
-  margin-bottom: 1rem;
+.article-quantity {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.quantity-label {
+  font-size: 12px;
+  color: #64748B;
+}
+
+.quantity-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #00B8D4;
+}
+
+.empty-articles {
+  text-align: center;
+  padding: 2rem;
+  color: #64748B;
+  font-style: italic;
+}
+
+.modal-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #E2E8F0;
+  background: #F8FAFC;
+}
+
+.total-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.total-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0F172A;
+}
+
+.total-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #00B8D4;
+}
+
+/* MODAL CONFIRMATION */
+.confirm-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.confirm-icon svg {
+  width: 64px;
+  height: 64px;
+  color: #059669;
   stroke-width: 1.5;
 }
 
-.empty-state h3 {
-  color: #334155;
+.confirm-message {
+  text-align: center;
+  font-size: 16px;
+  color: #0F172A;
   margin-bottom: 0.5rem;
-  font-size: 18px;
 }
 
-.empty-state p {
-  margin: 0;
+.confirm-message strong {
+  color: #00B8D4;
+}
+
+.confirm-submessage {
+  text-align: center;
   font-size: 14px;
+  color: #64748B;
+  margin-bottom: 2rem;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.modal-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  min-width: 100px;
+}
+
+.modal-btn.primary {
+  background: #00B8D4;
+  color: white;
+}
+
+.modal-btn.primary:hover {
+  background: #0891A6;
+}
+
+.modal-btn.secondary {
+  background: #F1F5F9;
+  color: #64748B;
+}
+
+.modal-btn.secondary:hover {
+  background: #E2E8F0;
+  color: #334155;
 }
 
 /* RESPONSIVE */
 @media (max-width: 1024px) {
-  .page-header {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .stats-section {
+  .kpi-section {
     grid-template-columns: 1fr;
   }
 
@@ -888,33 +1237,60 @@ export default {
   }
 
   .filter-select,
-  .search-container,
-  .refresh-button {
+  .search-container {
     width: 100%;
+    max-width: none;
   }
 }
 
 @media (max-width: 768px) {
-  .order-header-info {
+  .order-item {
     flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
   }
-
-  .order-dates {
-    text-align: left;
+  
+  .order-main {
+    width: 100%;
   }
-
-  .order-stats {
+  
+  .order-info {
     flex-direction: column;
+    align-items: flex-start;
     gap: 0.5rem;
   }
-
-  .order-actions {
-    flex-direction: row;
+  
+  .order-right {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
   }
-
-  .action-btn {
-    padding: 0.375rem 0.75rem;
-    font-size: 11px;
+  
+  .order-badges {
+    justify-content: flex-start;
+  }
+  
+  .order-actions {
+    justify-content: flex-end;
+    padding-left: 0;
+    border-left: none;
+    margin-left: 0;
+    padding-top: 0.75rem;
+    border-top: 1px solid #E2E8F0;
+  }
+  
+  .modal-content {
+    width: 95%;
+    margin: 1rem;
+  }
+  
+  .modal-actions {
+    flex-direction: column;
+  }
+  
+  .modal-btn {
+    width: 100%;
   }
 }
 </style>
