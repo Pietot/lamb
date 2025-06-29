@@ -58,8 +58,6 @@
                     <th>UTILISATEUR</th>
                     <th>EMAIL</th>
                     <th>RÔLE</th>
-                    <th>STATUT</th>
-                    <th>DERNIÈRE CONNEXION</th>
                     <th>ACTIONS</th>
                   </tr>
                 </thead>
@@ -82,14 +80,6 @@
                         {{ getRoleName(user.id_role) }}
                       </span>
                     </td>
-                    <td>
-                      <span class="status-badge" :class="getUserStatus(user) ? 'status-active' : 'status-inactive'">
-                        {{ getUserStatus(user) ? 'Actif' : 'Inactif' }}
-                      </span>
-                    </td>
-                    <td class="last-connection">
-                      {{ user.token_init ? formatDate(user.token_init) : 'Jamais connecté' }}
-                    </td>
                     <td class="actions">
                       <button class="action-btn primary" @click="editUser(user)" title="Modifier">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -97,19 +87,16 @@
                           <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                         </svg>
                       </button>
-                      <button class="action-btn" @click="toggleUserStatus(user)"
-                        :title="getUserStatus(user) ? 'Désactiver' : 'Activer'">
-                        <svg v-if="getUserStatus(user)" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                          <path d="M18 6L6 18M6 6l12 12" />
-                        </svg>
-                        <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                          <polyline points="20 6 9 17 4 12" />
+                      <button class="action-btn danger" @click="deleteUser(user)" title="Supprimer">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                          <polyline points="3 6 5 6 21 6"/>
+                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
                         </svg>
                       </button>
                     </td>
                   </tr>
                   <tr v-if="filteredUsers.length === 0">
-                    <td colspan="6" class="empty-message">Aucun utilisateur trouvé</td>
+                    <td colspan="4" class="empty-message">Aucun utilisateur trouvé</td>
                   </tr>
                 </tbody>
               </table>
@@ -167,12 +154,12 @@
       </div>
     </div>
 
-    <!-- Modal Nouvel utilisateur (placeholder) -->
+    <!-- Modal Nouvel utilisateur -->
     <div v-if="showNewUserModal" class="modal-overlay" @click="showNewUserModal = false">
       <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3>Nouvel utilisateur</h3>
-          <button @click="showNewUserModal = false" class="modal-close">
+          <button @click="closeNewUserModal" class="modal-close">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
@@ -180,7 +167,133 @@
           </button>
         </div>
         <div class="modal-body">
-          <p>Fonctionnalité en cours de développement</p>
+          <form @submit.prevent="handleCreateUser" class="user-form">
+            <div class="form-group">
+              <label for="nom" class="form-label">Nom</label>
+              <input 
+                id="nom"
+                v-model="newUserForm.nom" 
+                type="text" 
+                class="form-input" 
+                placeholder="Entrez le nom"
+                maxlength="50"
+                required
+              />
+            </div>
+            
+            <div class="form-group">
+              <label for="prenom" class="form-label">Prénom</label>
+              <input 
+                id="prenom"
+                v-model="newUserForm.prenom" 
+                type="text" 
+                class="form-input" 
+                placeholder="Entrez le prénom"
+                maxlength="50"
+                required
+              />
+            </div>
+            
+            <div class="form-group">
+              <label for="email" class="form-label">Email</label>
+              <input 
+                id="email"
+                v-model="newUserForm.email" 
+                type="email" 
+                class="form-input" 
+                placeholder="exemple@lamb.com"
+                required
+              />
+            </div>
+            
+            <div class="form-group">
+              <label for="login" class="form-label">Login</label>
+              <input 
+                id="login"
+                v-model="newUserForm.login" 
+                type="text" 
+                class="form-input" 
+                placeholder="Nom d'utilisateur pour la connexion"
+                maxlength="30"
+                required
+              />
+            </div>
+            
+            <div class="form-group">
+              <label for="password" class="form-label">Mot de passe</label>
+              <div class="password-input-container">
+                <input 
+                  id="password"
+                  v-model="newUserForm.password" 
+                  :type="showPassword ? 'text' : 'password'" 
+                  class="form-input" 
+                  placeholder="Ex: MonPass123!"
+                  pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,30}$"
+                  minlength="8"
+                  maxlength="30"
+                  title="Le mot de passe doit contenir au moins : une majuscule, une minuscule, un chiffre et un caractère spécial (@$!%*?&)"
+                  required
+                />
+                <button 
+                  type="button" 
+                  class="password-toggle"
+                  @click="showPassword = !showPassword"
+                >
+                  <svg v-if="!showPassword" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                  <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                    <line x1="1" y1="1" x2="23" y2="23"/>
+                  </svg>
+                </button>
+              </div>
+              <span class="form-hint">Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial (@$!%*?&)</span>
+            </div>
+            
+            <div class="form-group">
+              <label for="role" class="form-label">Rôle</label>
+              <select 
+                id="role"
+                v-model="newUserForm.id_role" 
+                class="form-select"
+                required
+              >
+                <option value="" disabled>Sélectionnez un rôle</option>
+                <option v-for="role in roles" :key="role.id_role" :value="role.id_role">
+                  {{ role.role }}
+                </option>
+              </select>
+            </div>
+
+            <div v-if="createError" class="form-error">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+              {{ createError }}
+            </div>
+
+            <div v-if="createSuccess" class="form-success">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+              Utilisateur créé avec succès !
+            </div>
+
+            <div class="modal-actions">
+              <button type="button" class="modal-btn secondary" @click="closeNewUserModal">
+                Annuler
+              </button>
+              <button type="submit" class="modal-btn primary" :disabled="creatingUser">
+                <span v-if="creatingUser" class="loading-spinner"></span>
+                {{ creatingUser ? 'Création...' : 'Créer l\'utilisateur' }}
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -209,22 +322,14 @@
               </div>
             </div>
             <div class="detail-row">
-              <span class="detail-label">Login:</span>
-              <span class="detail-value">{{ selectedUser.login }}</span>
+              <span class="detail-label">ID Utilisateur:</span>
+              <span class="detail-value">#{{ selectedUser.id_utilisateur }}</span>
             </div>
             <div class="detail-row">
               <span class="detail-label">Rôle actuel:</span>
               <span class="detail-value">
                 <span class="role-badge" :class="getRoleClass(selectedUser.id_role)">
                   {{ getRoleName(selectedUser.id_role) }}
-                </span>
-              </span>
-            </div>
-            <div class="detail-row">
-              <span class="detail-label">Statut:</span>
-              <span class="detail-value">
-                <span class="status-badge" :class="getUserStatus(selectedUser) ? 'status-active' : 'status-inactive'">
-                  {{ getUserStatus(selectedUser) ? 'Actif' : 'Inactif' }}
                 </span>
               </span>
             </div>
@@ -258,21 +363,28 @@ export default {
     const roles = ref([])
     const loading = ref(true)
     const error = ref(null)
+    const creatingUser = ref(false)
+    const createError = ref(null)
+    const createSuccess = ref(false)
+    const showPassword = ref(false)
 
     const tabs = ref([
       { id: 'users', label: 'Utilisateurs' },
       { id: 'roles', label: 'Rôles et permissions' }
     ])
 
+    // Formulaire nouvel utilisateur
+    const newUserForm = ref({
+      nom: '',
+      prenom: '',
+      email: '',
+      login: '',
+      password: '',
+      id_role: ''
+    })
+
     // Mapping des permissions par rôle
     const rolePermissions = {
-      0: [ // Administrateur
-        'Gestion des utilisateurs',
-        'Configuration système',
-        'Accès aux logs',
-        'Gestion des rôles',
-        'Accès complet'
-      ],
       1: [ // Test
         'Accès de test',
         'Fonctionnalités limitées'
@@ -287,21 +399,28 @@ export default {
         'Gestion des clients',
         'Création de commandes',
         'Suivi des ventes'
+      ],
+      4: [ // Administrateur
+        'Gestion des utilisateurs',
+        'Configuration système',
+        'Accès aux logs',
+        'Gestion des rôles',
+        'Accès complet'
       ]
     }
 
     const roleDescriptions = {
-      0: 'Accès complet au système',
       1: 'Compte de test avec accès limité',
       2: 'Gestion des opérations',
-      3: 'Gestion des ventes et clients'
+      3: 'Gestion des ventes et clients',
+      4: 'Accès complet au système'
     }
 
     const roleColors = {
-      0: '#DC2626', // Rouge pour admin
       1: '#6B7280', // Gris pour test
       2: '#059669', // Vert pour gestionnaire
-      3: '#3B82F6'  // Bleu pour commercial
+      3: '#3B82F6', // Bleu pour commercial
+      4: '#DC2626'  // Rouge pour admin
     }
 
     // Fonction pour récupérer les données
@@ -350,6 +469,70 @@ export default {
       }
     }
 
+    // Fonction pour créer un nouvel utilisateur
+    const handleCreateUser = async () => {
+      createError.value = null
+      createSuccess.value = false
+      creatingUser.value = true
+
+      try {
+        // Créer les données en format URLSearchParams pour x-www-form-urlencoded
+        const formData = new URLSearchParams()
+        formData.append('nom', newUserForm.value.nom)
+        formData.append('prenom', newUserForm.value.prenom)
+        formData.append('email', newUserForm.value.email)
+        formData.append('login', newUserForm.value.login)
+        formData.append('password', newUserForm.value.password)
+        formData.append('id_role', newUserForm.value.id_role.toString())
+
+        const response = await fetch(import.meta.env.VITE_API_URL + "new_user", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          credentials: 'include',
+          body: formData.toString()
+        })
+
+        const data = await response.json()
+
+        if (!response.ok || !data.success) {
+          throw new Error(data.message || 'Erreur lors de la création de l\'utilisateur')
+        }
+
+        createSuccess.value = true
+        
+        // Rafraîchir la liste des utilisateurs après 1.5 secondes
+        setTimeout(() => {
+          fetchData()
+          closeNewUserModal()
+        }, 1500)
+
+      } catch (err) {
+        console.error('Erreur lors de la création:', err)
+        // Adapter le message d'erreur selon le code de réponse
+        if (err.message === 'Champs invalides') {
+          createError.value = 'Vérifiez que le mot de passe respecte les critères de sécurité et que l\'email est valide.'
+        } else if (err.message === 'Email déjà utilisé') {
+          createError.value = 'Cet email est déjà utilisé par un autre utilisateur.'
+        } else if (err.message === 'Champs manquants') {
+          createError.value = 'Veuillez remplir tous les champs obligatoires.'
+        } else {
+          createError.value = err.message || 'Impossible de créer l\'utilisateur. Veuillez réessayer.'
+        }
+      } finally {
+        creatingUser.value = false
+      }
+    }
+
+    // Fonction pour supprimer un utilisateur (placeholder)
+    const deleteUser = (user) => {
+      if (confirm(`Êtes-vous sûr de vouloir supprimer l'utilisateur ${user.prenom} ${user.nom} ?`)) {
+        console.log('Supprimer utilisateur:', user.id_utilisateur)
+        // TODO: Implémenter l'API DELETE
+      }
+    }
+
     // Computed properties
     const filteredUsers = computed(() => {
       if (!userSearch.value) return users.value
@@ -357,8 +540,7 @@ export default {
       return users.value.filter(user =>
         user.nom.toLowerCase().includes(search) ||
         user.prenom.toLowerCase().includes(search) ||
-        user.email.toLowerCase().includes(search) ||
-        user.login.toLowerCase().includes(search)
+        user.email.toLowerCase().includes(search)
       )
     })
 
@@ -388,10 +570,10 @@ export default {
 
     const getRoleClass = (roleId) => {
       const roleClasses = {
-        0: 'role-admin',
+        1: 'role-test',
         2: 'role-manager',
         3: 'role-commercial',
-        1: 'role-test'
+        4: 'role-admin'
       }
       return roleClasses[roleId] || 'role-default'
     }
@@ -408,39 +590,30 @@ export default {
       return rolePermissions[roleId] || []
     }
 
-    const getUserStatus = (user) => {
-      // Un utilisateur est considéré actif s'il a un token
-      return user.token !== null
-    }
-
-    const formatDate = (dateString) => {
-      if (!dateString) return 'Jamais'
-      const date = new Date(dateString)
-      const now = new Date()
-      const diffTime = Math.abs(now - date)
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-
-      if (diffDays === 0) return "Aujourd'hui"
-      if (diffDays === 1) return "Hier"
-      if (diffDays < 7) return `Il y a ${diffDays} jours`
-
-      const options = { day: 'numeric', month: 'short', year: 'numeric' }
-      return date.toLocaleDateString('fr-FR', options)
-    }
-
     const editUser = (user) => {
       selectedUser.value = user
       showEditUserModal.value = true
     }
 
-    const toggleUserStatus = (user) => {
-      console.log('Toggle status for user:', user.id_utilisateur)
-      // TODO: Implémenter l'API pour changer le statut
-    }
-
     const editRole = (role) => {
       console.log('Modifier rôle:', role.id_role)
       // TODO: Implémenter la modification des rôles
+    }
+
+    const closeNewUserModal = () => {
+      showNewUserModal.value = false
+      showPassword.value = false
+      // Réinitialiser le formulaire
+      newUserForm.value = {
+        nom: '',
+        prenom: '',
+        email: '',
+        login: '',
+        password: '',
+        id_role: ''
+      }
+      createError.value = null
+      createSuccess.value = false
     }
 
     // Charger les données au montage
@@ -459,6 +632,11 @@ export default {
       roles,
       loading,
       error,
+      creatingUser,
+      createError,
+      createSuccess,
+      showPassword,
+      newUserForm,
       filteredUsers,
       rolesWithStats,
       getInitials,
@@ -468,12 +646,12 @@ export default {
       getRoleColor,
       getRoleDescription,
       getRolePermissions,
-      getUserStatus,
-      formatDate,
       editUser,
-      toggleUserStatus,
+      deleteUser,
       editRole,
-      fetchData
+      fetchData,
+      handleCreateUser,
+      closeNewUserModal
     }
   }
 }
@@ -550,6 +728,16 @@ export default {
   to {
     transform: rotate(360deg);
   }
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
 }
 
 .error-message {
@@ -747,14 +935,8 @@ export default {
   color: #334155;
 }
 
-.last-connection {
-  color: #64748B;
-  font-size: 13px;
-}
-
 /* BADGES */
-.role-badge,
-.status-badge {
+.role-badge {
   display: inline-flex;
   align-items: center;
   padding: 0.375rem 0.75rem;
@@ -789,16 +971,6 @@ export default {
   color: #6B7280;
 }
 
-.status-active {
-  background: #D1FAE5;
-  color: #047857;
-}
-
-.status-inactive {
-  background: #FEF2F2;
-  color: #DC2626;
-}
-
 /* ACTIONS */
 .actions {
   display: flex;
@@ -830,6 +1002,17 @@ export default {
 .action-btn.primary:hover {
   background: #0891A6;
   border-color: #0891A6;
+}
+
+.action-btn.danger {
+  background: #FEE2E2;
+  color: #DC2626;
+  border-color: #FECACA;
+}
+
+.action-btn.danger:hover {
+  background: #FCA5A5;
+  border-color: #F87171;
 }
 
 .action-btn svg {
@@ -964,6 +1147,119 @@ export default {
   color: #334155;
 }
 
+/* FORMULAIRE */
+.user-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #0F172A;
+}
+
+.form-input,
+.form-select {
+  background: white;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 14px;
+  color: #334155;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.form-input:focus,
+.form-select:focus {
+  outline: none;
+  border-color: #00B8D4;
+  box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
+}
+
+.form-input::placeholder {
+  color: #94A3B8;
+}
+
+.form-hint {
+  font-size: 12px;
+  color: #64748B;
+  margin-top: 0.25rem;
+  line-height: 1.4;
+}
+
+.password-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-container .form-input {
+  padding-right: 2.5rem;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  color: #64748B;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.password-toggle:hover {
+  color: #334155;
+}
+
+.password-toggle svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2;
+}
+
+.form-error,
+.form-success {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.form-error {
+  background: #FEF2F2;
+  color: #DC2626;
+  border: 1px solid #FECACA;
+}
+
+.form-success {
+  background: #F0FDF4;
+  color: #059669;
+  border: 1px solid #BBF7D0;
+}
+
+.form-error svg,
+.form-success svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2;
+  flex-shrink: 0;
+}
+
 /* MODAL */
 .modal-overlay {
   position: fixed;
@@ -1031,6 +1327,8 @@ export default {
 .modal-body {
   padding: 1.5rem;
   color: #64748B;
+  overflow-y: auto;
+  max-height: calc(90vh - 120px);
 }
 
 /* MODAL EDIT USER */
@@ -1091,6 +1389,7 @@ export default {
   display: flex;
   gap: 1rem;
   justify-content: flex-end;
+  margin-top: 1.5rem;
 }
 
 .modal-btn {
@@ -1101,6 +1400,14 @@ export default {
   cursor: pointer;
   transition: all 0.2s ease;
   border: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.modal-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .modal-btn.primary {
@@ -1108,7 +1415,7 @@ export default {
   color: white;
 }
 
-.modal-btn.primary:hover {
+.modal-btn.primary:hover:not(:disabled) {
   background: #0891A6;
 }
 
@@ -1178,15 +1485,13 @@ export default {
 
   .modal-btn {
     width: 100%;
+    justify-content: center;
   }
 }
 
 @media (max-width: 640px) {
-
   .data-table th:nth-child(3),
-  .data-table td:nth-child(3),
-  .data-table th:nth-child(5),
-  .data-table td:nth-child(5) {
+  .data-table td:nth-child(3) {
     display: none;
   }
 }
