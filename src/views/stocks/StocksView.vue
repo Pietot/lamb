@@ -6,7 +6,7 @@
         <h1 class="page-title">Stock</h1>
       </div>
       <div class="header-right">
-        <button class="add-button" @click="showAddModal = true">
+        <button class="add-button" @click="openAddModal">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <circle cx="12" cy="12" r="10" />
             <line x1="12" y1="8" x2="12" y2="16" />
@@ -76,7 +76,7 @@
           <table class="stocks-table">
             <thead>
               <tr>
-                <th>ID</th>
+                <th>Référence</th>
                 <th>Nom</th>
                 <th>Description</th>
                 <th>Catégorie</th>
@@ -88,7 +88,7 @@
             <tbody>
               <tr v-for="item in paginatedArticles" :key="item.id_article"
                 :class="{ 'low-stock': item.quantite_stock <= item.seuil_alerte }">
-                <td class="reference">#{{ item.id_article }}</td>
+                <td class="reference">{{ item.reference || '#' + item.id_article }}</td>
                 <td class="product-name">{{ item.nom }}</td>
                 <td class="description">{{ item.description }}</td>
                 <td>{{ getCategoryName(item.id_categorie) }}</td>
@@ -149,12 +149,12 @@
       </div>
     </div>
 
-    <!-- Modal Ajouter un article (placeholder) -->
-    <div v-if="showAddModal" class="modal-overlay" @click="showAddModal = false">
-      <div class="modal-content" @click.stop>
+    <!-- Modal Ajouter un article -->
+    <div v-if="showAddModal" class="modal-overlay" @click="closeAddModal">
+      <div class="modal-content modal-form" @click.stop>
         <div class="modal-header">
           <h3>Ajouter un article</h3>
-          <button @click="showAddModal = false" class="modal-close">
+          <button @click="closeAddModal" class="modal-close">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
@@ -162,7 +162,162 @@
           </button>
         </div>
         <div class="modal-body">
-          <p>Fonctionnalité en cours de développement</p>
+          <form @submit.prevent="submitNewArticle" class="article-form">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="reference" class="form-label">Référence *</label>
+                <input 
+                  v-model="newArticle.reference" 
+                  type="text" 
+                  id="reference" 
+                  class="form-input"
+                  :class="{ 'error': formErrors.reference }"
+                  maxlength="20"
+                  required
+                />
+                <span v-if="formErrors.reference" class="error-text">{{ formErrors.reference }}</span>
+              </div>
+
+              <div class="form-group">
+                <label for="nom" class="form-label">Nom *</label>
+                <input 
+                  v-model="newArticle.nom" 
+                  type="text" 
+                  id="nom" 
+                  class="form-input"
+                  :class="{ 'error': formErrors.nom }"
+                  maxlength="50"
+                  required
+                />
+                <span v-if="formErrors.nom" class="error-text">{{ formErrors.nom }}</span>
+              </div>
+
+              <div class="form-group full-width">
+                <label for="description" class="form-label">Description *</label>
+                <textarea 
+                  v-model="newArticle.description" 
+                  id="description" 
+                  class="form-input form-textarea"
+                  :class="{ 'error': formErrors.description }"
+                  maxlength="200"
+                  rows="3"
+                  required
+                ></textarea>
+                <span v-if="formErrors.description" class="error-text">{{ formErrors.description }}</span>
+              </div>
+
+              <div class="form-group">
+                <label for="quantite" class="form-label">Quantité initiale *</label>
+                <input 
+                  v-model.number="newArticle.quantite" 
+                  type="number" 
+                  id="quantite" 
+                  class="form-input"
+                  :class="{ 'error': formErrors.quantite }"
+                  min="0"
+                  required
+                />
+                <span v-if="formErrors.quantite" class="error-text">{{ formErrors.quantite }}</span>
+              </div>
+
+              <div class="form-group">
+                <label for="seuil_alerte" class="form-label">Seuil d'alerte *</label>
+                <input 
+                  v-model.number="newArticle.seuil_alerte" 
+                  type="number" 
+                  id="seuil_alerte" 
+                  class="form-input"
+                  :class="{ 'error': formErrors.seuil_alerte }"
+                  min="0"
+                  required
+                />
+                <span v-if="formErrors.seuil_alerte" class="error-text">{{ formErrors.seuil_alerte }}</span>
+              </div>
+
+              <div class="form-group">
+                <label for="id_categorie" class="form-label">Catégorie *</label>
+                <select 
+                  v-model="newArticle.id_categorie" 
+                  id="id_categorie" 
+                  class="form-input"
+                  :class="{ 'error': formErrors.id_categorie }"
+                  required
+                >
+                  <option value="">Sélectionner une catégorie</option>
+                  <option value="1">Vêtements Homme</option>
+                  <option value="2">Vêtements Femme</option>
+                  <option value="3">Accessoires</option>
+                  <option value="4">Enfants</option>
+                  <option value="5">Chaussures</option>
+                </select>
+                <span v-if="formErrors.id_categorie" class="error-text">{{ formErrors.id_categorie }}</span>
+              </div>
+
+              <div class="form-group">
+                <label for="id_fournisseur" class="form-label">Fournisseur principal *</label>
+                <select 
+                  v-model="newArticle.id_fournisseur" 
+                  id="id_fournisseur" 
+                  class="form-input"
+                  :class="{ 'error': formErrors.id_fournisseur }"
+                  required
+                >
+                  <option value="">Sélectionner un fournisseur</option>
+                  <option v-for="supplier in suppliers" :key="supplier.id_fournisseur" :value="supplier.id_fournisseur">
+                    {{ supplier.nom || supplier.raison_sociale }}
+                  </option>
+                </select>
+                <span v-if="formErrors.id_fournisseur" class="error-text">{{ formErrors.id_fournisseur }}</span>
+              </div>
+
+              <div class="form-group">
+                <label for="reference_fournisseur" class="form-label">Référence fournisseur *</label>
+                <input 
+                  v-model="newArticle.reference_fournisseur" 
+                  type="text" 
+                  id="reference_fournisseur" 
+                  class="form-input"
+                  :class="{ 'error': formErrors.reference_fournisseur }"
+                  maxlength="20"
+                  required
+                />
+                <span v-if="formErrors.reference_fournisseur" class="error-text">{{ formErrors.reference_fournisseur }}</span>
+              </div>
+
+              <div class="form-group">
+                <label for="prix_achat" class="form-label">Prix d'achat (€) *</label>
+                <input 
+                  v-model.number="newArticle.prix_achat" 
+                  type="number" 
+                  id="prix_achat" 
+                  class="form-input"
+                  :class="{ 'error': formErrors.prix_achat }"
+                  min="0"
+                  step="0.01"
+                  required
+                />
+                <span v-if="formErrors.prix_achat" class="error-text">{{ formErrors.prix_achat }}</span>
+              </div>
+            </div>
+
+            <div v-if="submitError" class="alert alert-error">
+              {{ submitError }}
+            </div>
+
+            <div v-if="submitSuccess" class="alert alert-success">
+              Article créé avec succès !
+            </div>
+
+            <div class="form-actions">
+              <button type="button" @click="closeAddModal" class="btn-secondary">
+                Annuler
+              </button>
+              <button type="submit" class="btn-primary" :disabled="submitting">
+                <span v-if="submitting">Création en cours...</span>
+                <span v-else>Créer l'article</span>
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -184,8 +339,8 @@
             <div class="details-section">
               <h4 class="section-subtitle">Informations générales</h4>
               <div class="detail-row">
-                <span class="detail-label">ID Article:</span>
-                <span class="detail-value">#{{ selectedArticle.id_article }}</span>
+                <span class="detail-label">Référence:</span>
+                <span class="detail-value">{{ selectedArticle.reference || '#' + selectedArticle.id_article }}</span>
               </div>
               <div class="detail-row">
                 <span class="detail-label">Nom:</span>
@@ -230,16 +385,24 @@
               </div>
             </div>
 
-            <div class="details-section full-width" v-if="selectedArticle.prix_unitaire">
+            <div class="details-section full-width">
               <h4 class="section-subtitle">Informations commerciales</h4>
               <div class="detail-row">
-                <span class="detail-label">Prix unitaire:</span>
-                <span class="detail-value">{{ formatCurrency(selectedArticle.prix_unitaire) }}</span>
+                <span class="detail-label">Prix d'achat:</span>
+                <span class="detail-value">{{ formatCurrency(selectedArticle.prix_achat) }}</span>
               </div>
               <div class="detail-row">
                 <span class="detail-label">Valeur du stock:</span>
-                <span class="detail-value">{{ formatCurrency(selectedArticle.prix_unitaire *
+                <span class="detail-value">{{ formatCurrency(selectedArticle.prix_achat *
                   selectedArticle.quantite_stock) }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Fournisseur principal:</span>
+                <span class="detail-value">{{ getSupplierName(selectedArticle.id_fournisseur_principal) }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Référence fournisseur:</span>
+                <span class="detail-value">{{ selectedArticle.reference_fournisseur || 'N/A' }}</span>
               </div>
             </div>
           </div>
@@ -286,15 +449,44 @@ export default {
     const showEditModal = ref(false)
     const selectedArticle = ref(null)
     const articles = ref([])
+    const suppliers = ref([])
     const loading = ref(true)
     const error = ref(null)
     const searchQuery = ref('')
     const currentPage = ref(1)
     const itemsPerPage = 10
+    const submitting = ref(false)
+    const submitError = ref('')
+    const submitSuccess = ref(false)
 
     const filters = reactive({
       category: '',
       stockStatus: ''
+    })
+
+    // Formulaire nouvel article
+    const newArticle = reactive({
+      reference: '',
+      description: '',
+      nom: '',
+      quantite: '',
+      seuil_alerte: '',
+      id_categorie: '',
+      id_fournisseur: '',
+      reference_fournisseur: '',
+      prix_achat: ''
+    })
+
+    const formErrors = reactive({
+      reference: '',
+      description: '',
+      nom: '',
+      quantite: '',
+      seuil_alerte: '',
+      id_categorie: '',
+      id_fournisseur: '',
+      reference_fournisseur: '',
+      prix_achat: ''
     })
 
     // Mapping des catégories
@@ -339,6 +531,31 @@ export default {
       }
     }
 
+    // Fonction pour récupérer les fournisseurs
+    const fetchSuppliers = async () => {
+      try {
+        const response = await fetch(import.meta.env.VITE_API_URL + "get_table?table=fournisseur", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          credentials: 'include',
+        })
+
+        if (!response.ok) {
+          throw new Error(`Erreur HTTP: ${response.status}`)
+        }
+
+        const data = await response.json()
+        
+        if (data.success && data.data) {
+          suppliers.value = data.data
+        }
+      } catch (err) {
+        console.error('Erreur lors du chargement des fournisseurs:', err)
+      }
+    }
+
     // Computed properties
     const filteredArticles = computed(() => {
       let result = articles.value
@@ -349,6 +566,7 @@ export default {
         result = result.filter(article =>
           article.nom.toLowerCase().includes(query) ||
           article.description.toLowerCase().includes(query) ||
+          (article.reference && article.reference.toLowerCase().includes(query)) ||
           article.id_article.toString().includes(query)
         )
       }
@@ -391,31 +609,21 @@ export default {
       const current = currentPage.value
 
       if (total <= 7) {
-        // Si 7 pages ou moins, afficher toutes les pages
         for (let i = 1; i <= total; i++) {
           pages.push(i)
         }
       } else {
-        // Toujours afficher la première page
         pages.push(1)
-
-        if (current > 3) {
-          pages.push('...')
-        }
-
-        // Pages autour de la page courante
+        if (current > 3) pages.push('...')
+        
         const start = Math.max(2, current - 1)
         const end = Math.min(total - 1, current + 1)
-
+        
         for (let i = start; i <= end; i++) {
           pages.push(i)
         }
-
-        if (current < total - 2) {
-          pages.push('...')
-        }
-
-        // Toujours afficher la dernière page
+        
+        if (current < total - 2) pages.push('...')
         pages.push(total)
       }
 
@@ -430,13 +638,20 @@ export default {
 
     // Watchers
     watch([searchQuery, filters], () => {
-      // Réinitialiser à la première page lors du changement de filtres
       currentPage.value = 1
     })
 
     // Fonctions utilitaires
     const getCategoryName = (categoryId) => {
       return categories[categoryId] || `Catégorie ${categoryId}`
+    }
+
+    const getSupplierName = (supplierId) => {
+      const supplier = suppliers.value.find(s => s.id_fournisseur === supplierId)
+      if (supplier) {
+        return supplier.nom || supplier.raison_sociale || `Fournisseur #${supplierId}`
+      }
+      return `Fournisseur #${supplierId}`
     }
 
     const formatCurrency = (amount) => {
@@ -446,9 +661,152 @@ export default {
       }).format(amount || 0)
     }
 
+    // Validation du formulaire
+    const validateForm = () => {
+      let isValid = true
+      
+      // Réinitialiser les erreurs
+      Object.keys(formErrors).forEach(key => {
+        formErrors[key] = ''
+      })
+
+      // Valider la référence
+      if (!newArticle.reference) {
+        formErrors.reference = 'La référence est requise'
+        isValid = false
+      } else if (newArticle.reference.length > 20) {
+        formErrors.reference = 'La référence ne doit pas dépasser 20 caractères'
+        isValid = false
+      }
+
+      // Valider le nom
+      if (!newArticle.nom) {
+        formErrors.nom = 'Le nom est requis'
+        isValid = false
+      } else if (newArticle.nom.length > 50) {
+        formErrors.nom = 'Le nom ne doit pas dépasser 50 caractères'
+        isValid = false
+      }
+
+      // Valider la description
+      if (!newArticle.description) {
+        formErrors.description = 'La description est requise'
+        isValid = false
+      } else if (newArticle.description.length > 200) {
+        formErrors.description = 'La description ne doit pas dépasser 200 caractères'
+        isValid = false
+      }
+
+      // Valider la quantité
+      if (newArticle.quantite === '' || newArticle.quantite < 0) {
+        formErrors.quantite = 'La quantité doit être un nombre positif'
+        isValid = false
+      }
+
+      // Valider le seuil d'alerte
+      if (newArticle.seuil_alerte === '' || newArticle.seuil_alerte < 0) {
+        formErrors.seuil_alerte = 'Le seuil d\'alerte doit être un nombre positif'
+        isValid = false
+      }
+
+      // Valider la catégorie
+      if (!newArticle.id_categorie) {
+        formErrors.id_categorie = 'Veuillez sélectionner une catégorie'
+        isValid = false
+      }
+
+      // Valider le fournisseur
+      if (!newArticle.id_fournisseur) {
+        formErrors.id_fournisseur = 'Veuillez sélectionner un fournisseur'
+        isValid = false
+      }
+
+      // Valider la référence fournisseur
+      if (!newArticle.reference_fournisseur) {
+        formErrors.reference_fournisseur = 'La référence fournisseur est requise'
+        isValid = false
+      } else if (newArticle.reference_fournisseur.length > 20) {
+        formErrors.reference_fournisseur = 'La référence fournisseur ne doit pas dépasser 20 caractères'
+        isValid = false
+      }
+
+      // Valider le prix d'achat
+      if (newArticle.prix_achat === '' || newArticle.prix_achat < 0) {
+        formErrors.prix_achat = 'Le prix d\'achat doit être un nombre positif'
+        isValid = false
+      }
+
+      return isValid
+    }
+
+    // Soumettre le nouvel article
+    const submitNewArticle = async () => {
+      if (!validateForm()) {
+        return
+      }
+
+      submitting.value = true
+      submitError.value = ''
+      submitSuccess.value = false
+
+      const formData = new FormData()
+      formData.append('reference', newArticle.reference)
+      formData.append('description', newArticle.description)
+      formData.append('nom', newArticle.nom)
+      formData.append('quantite', newArticle.quantite)
+      formData.append('seuil_alerte', newArticle.seuil_alerte)
+      formData.append('id_categorie', newArticle.id_categorie)
+      formData.append('id_fournisseur', newArticle.id_fournisseur)
+      formData.append('reference_fournisseur', newArticle.reference_fournisseur)
+      formData.append('prix_achat', newArticle.prix_achat)
+
+      try {
+        const response = await fetch(import.meta.env.VITE_API_URL + "new_article", {
+          method: "POST",
+          body: formData,
+          credentials: 'include',
+        })
+
+        const data = await response.json()
+
+        if (response.ok && data.success) {
+          submitSuccess.value = true
+          // Recharger les articles
+          await fetchArticles()
+          // Fermer la modale après un délai
+          setTimeout(() => {
+            closeAddModal()
+          }, 1500)
+        } else {
+          submitError.value = data.message || 'Erreur lors de la création de l\'article'
+        }
+      } catch (err) {
+        console.error('Erreur lors de la création de l\'article:', err)
+        submitError.value = 'Erreur de connexion au serveur'
+      } finally {
+        submitting.value = false
+      }
+    }
+
+    const openAddModal = () => {
+      showAddModal.value = true
+      fetchSuppliers()
+    }
+
+    const closeAddModal = () => {
+      showAddModal.value = false
+      // Réinitialiser le formulaire
+      Object.keys(newArticle).forEach(key => {
+        newArticle[key] = ''
+      })
+      Object.keys(formErrors).forEach(key => {
+        formErrors[key] = ''
+      })
+      submitError.value = ''
+      submitSuccess.value = false
+    }
+
     const applyFilters = () => {
-      // Les filtres sont déjà appliqués via computed property
-      // Cette fonction peut être utilisée pour des actions supplémentaires
       currentPage.value = 1
     }
 
@@ -466,6 +824,7 @@ export default {
     const viewArticle = (article) => {
       selectedArticle.value = article
       showDetailsModal.value = true
+      fetchSuppliers()
     }
 
     // Charger les données au montage
@@ -479,6 +838,7 @@ export default {
       showEditModal,
       selectedArticle,
       articles,
+      suppliers,
       loading,
       error,
       searchQuery,
@@ -492,13 +852,22 @@ export default {
       startIndex,
       endIndex,
       visiblePages,
+      newArticle,
+      formErrors,
+      submitting,
+      submitError,
+      submitSuccess,
       fetchArticles,
       getCategoryName,
+      getSupplierName,
       formatCurrency,
       applyFilters,
       goToPage,
       editArticle,
-      viewArticle
+      viewArticle,
+      openAddModal,
+      closeAddModal,
+      submitNewArticle
     }
   }
 }
@@ -967,6 +1336,10 @@ export default {
   max-width: 700px;
 }
 
+.modal-content.modal-form {
+  max-width: 800px;
+}
+
 .modal-header {
   display: flex;
   align-items: center;
@@ -1008,6 +1381,132 @@ export default {
   color: #64748B;
   overflow-y: auto;
   max-height: calc(90vh - 80px);
+}
+
+/* FORMULAIRE */
+.article-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #334155;
+}
+
+.form-input {
+  background: white;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  padding: 0.75rem;
+  font-size: 14px;
+  color: #334155;
+  transition: all 0.2s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #00B8D4;
+  box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
+}
+
+.form-input.error {
+  border-color: #DC2626;
+}
+
+.form-input.error:focus {
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.error-text {
+  font-size: 12px;
+  color: #DC2626;
+  margin-top: -0.25rem;
+}
+
+.alert {
+  padding: 1rem;
+  border-radius: 6px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.alert-error {
+  background: #FEE2E2;
+  color: #991B1B;
+  border: 1px solid #FECACA;
+}
+
+.alert-success {
+  background: #D1FAE5;
+  color: #047857;
+  border: 1px solid #A7F3D0;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  padding-top: 1rem;
+  border-top: 1px solid #E2E8F0;
+}
+
+.btn-secondary,
+.btn-primary {
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.btn-secondary {
+  background: #F1F5F9;
+  color: #64748B;
+}
+
+.btn-secondary:hover {
+  background: #E2E8F0;
+  color: #334155;
+}
+
+.btn-primary {
+  background: #00B8D4;
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #0891A6;
+}
+
+.btn-primary:disabled {
+  background: #CBD5E1;
+  cursor: not-allowed;
 }
 
 /* MODAL DÉTAILS */
@@ -1172,9 +1671,22 @@ export default {
     justify-content: center;
   }
 
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
   .details-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .btn-secondary,
+  .btn-primary {
+    width: 100%;
   }
 }
 </style>
