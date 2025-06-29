@@ -379,7 +379,7 @@ export default {
         const query = searchQuery.value.toLowerCase()
         result = result.filter(order => {
           const client = getClient(order.id_client)
-          const clientName = client ? `${client.prénom} ${client.nom}`.toLowerCase() : ''
+          const clientName = client ? `${client.raison_sociale}`.toLowerCase() : ''
           return (
             order.id_commande.toString().includes(query) ||
             clientName.includes(query)
@@ -403,7 +403,7 @@ export default {
 
     const getClientName = (clientId) => {
       const client = getClient(clientId)
-      return client ? `${client.prénom} ${client.nom}` : `Client #${clientId}`
+      return client ? `${client.raison_sociale}` : `Client #${clientId}`
     }
 
     const formatDate = (dateString) => {

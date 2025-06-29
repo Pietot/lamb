@@ -23,7 +23,7 @@
         <select v-model="filters.clientId" class="filter-select">
           <option value="">Tous les clients</option>
           <option v-for="client in uniqueClients" :key="client.id_client" :value="client.id_client">
-            {{ client.prénom }} {{ client.nom }}
+            {{ getClientName(client.id_client) }}
           </option>
         </select>
         
@@ -334,7 +334,11 @@ export default {
 
     // Computed properties
     const uniqueClients = computed(() => {
-      return clients.value.sort((a, b) => a.nom.localeCompare(b.nom))
+      return clients.value.sort((a, b) => {
+        const nameA = getFullName(a)
+        const nameB = getFullName(b)
+        return nameA.localeCompare(nameB)
+      })
     })
 
     const filteredOrders = computed(() => {
@@ -357,7 +361,7 @@ export default {
         const query = searchQuery.value.toLowerCase()
         result = result.filter(order => {
           const client = getClient(order.id_client)
-          const clientName = client ? `${client.prénom} ${client.nom}`.toLowerCase() : ''
+          const clientName = client ? getFullName(client).toLowerCase() : ''
           return (
             order.id_commande.toString().includes(query) ||
             clientName.includes(query) ||
@@ -431,9 +435,25 @@ export default {
       return clients.value.find(client => client.id_client === clientId)
     }
 
+    const getFullName = (client) => {
+      if (!client) return ''
+      
+      // Si le client a une raison sociale, l'utiliser
+      if (client.raison_sociale) {
+        return client.raison_sociale
+      }
+      
+      // Sinon, combiner prénom et nom
+      const prenom = client.prénom || ''
+      const nom = client.nom || ''
+      return `${prenom} ${nom}`.trim()
+    }
+
     const getClientName = (clientId) => {
       const client = getClient(clientId)
-      return client ? `${client.prénom} ${client.nom}` : `Client #${clientId}`
+      if (!client) return `Client #${clientId}`
+      
+      return getFullName(client) || `Client #${clientId}`
     }
 
     const formatDate = (dateString) => {
