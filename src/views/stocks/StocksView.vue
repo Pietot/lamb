@@ -20,7 +20,7 @@
     <!-- Filtres de recherche -->
     <div class="filters-section">
       <div class="filter-group">
-        <input v-model="searchQuery" type="text" placeholder="Rechercher par nom ou description..."
+        <input v-model="searchQuery" type="text" placeholder="Rechercher par référence, nom, description..."
           class="search-input" />
 
         <select v-model="filters.category" class="filter-select">
