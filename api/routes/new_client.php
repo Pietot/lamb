@@ -9,29 +9,36 @@ try {
         exit;
     }
 
-    $nom = htmlspecialchars(trim($_POST['nom'] ?? ''));
-    $prenom = htmlspecialchars(trim($_POST['prenom'] ?? ''));
+    $raison_sociale = htmlspecialchars(trim($_POST['raison_sociale'] ?? ''));
+    $nom_commercial = htmlspecialchars(trim($_POST['nom_commercial'] ?? ''));
     $email = htmlspecialchars(trim($_POST['email'] ?? ''));
     $telephone = htmlspecialchars(trim($_POST['telephone'] ?? ''));
     $adresse = htmlspecialchars(trim($_POST['adresse'] ?? ''));
-    $raison_sociale = htmlspecialchars(trim($_POST['raison_sociale'] ?? ''));
-    $siren = htmlspecialchars(trim($_POST['siren'] ?? ''));
+    $code_postal = htmlspecialchars(trim($_POST['code_postal'] ?? ''));
+    $ville = htmlspecialchars(trim($_POST['ville'] ?? ''));
     $siret = htmlspecialchars(trim($_POST['siret'] ?? ''));
-    $fonction_contact = htmlspecialchars(trim($_POST['fonction_contact'] ?? ''));
+    $secteur_activite = htmlspecialchars(trim($_POST['secteur_activite'] ?? ''));
+    $contact_principal = htmlspecialchars(trim($_POST['contact_principal'] ?? ''));
 
-    if (empty($nom) || empty($prenom) || empty($email) || empty($telephone) || empty($adresse) || empty($raison_sociale) || empty($siren) || empty($siret) || empty($fonction_contact)) {
+    if (empty($raison_sociale) || empty($email) || empty($telephone) || empty($adresse) || 
+        empty($code_postal) || empty($ville) || empty($siret) || empty($contact_principal)) {
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Champs manquants'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
     }
 
-    if (strlen($nom) > 50 || strlen($prenom) > 50 || !verifyPhoneNumber($telephone) || !filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($adresse) > 100 || strlen($raison_sociale) > 100 || !verifySiren($siren) || !verifySiret($siret) || strlen($fonction_contact) > 50) {
+    if (!verifyPhoneNumber($telephone) || !filter_var($email, FILTER_VALIDATE_EMAIL) || 
+        strlen($adresse) > 255 || strlen($raison_sociale) > 100 || 
+        strlen($nom_commercial) > 100 || !verifyCodePostal($code_postal) || 
+        !verifySiret($siret) || strlen($ville) > 100 || 
+        strlen($secteur_activite) > 100 || strlen($contact_principal) > 100) {
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Champs invalides'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
     }
 
     $pdo = getPDO();
+    
     // Vérifier si l'email existe déjà
     $checkStmt = $pdo->prepare('SELECT COUNT(*) FROM client WHERE email = :email');
     $checkStmt->bindValue(':email', $email);
@@ -42,17 +49,22 @@ try {
         exit;
     }
 
-    $stmt = $pdo->prepare('INSERT INTO client (nom, prenom, email, telephone, adresse, raison_sociale, siren, siret, fonction_contact) VALUES (:nom, :prenom, :email, :telephone, :adresse, :raison_sociale, :siren, :siret, :fonction_contact)');
-    $stmt->bindValue(':nom', $nom);
-    $stmt->bindValue(':prenom', $prenom);
+    $stmt = $pdo->prepare('INSERT INTO client (raison_sociale, nom_commercial, email, telephone, adresse, code_postal, ville, siret, secteur_activite, contact_principal) 
+                          VALUES (:raison_sociale, :nom_commercial, :email, :telephone, :adresse, :code_postal, :ville, :siret, :secteur_activite, :contact_principal)');
+    
+    $stmt->bindValue(':raison_sociale', $raison_sociale);
+    $stmt->bindValue(':nom_commercial', $nom_commercial);
     $stmt->bindValue(':email', $email);
     $stmt->bindValue(':telephone', $telephone);
     $stmt->bindValue(':adresse', $adresse);
-    $stmt->bindValue(':raison_sociale', $raison_sociale);
-    $stmt->bindValue(':siren', $siren);
+    $stmt->bindValue(':code_postal', $code_postal);
+    $stmt->bindValue(':ville', $ville);
     $stmt->bindValue(':siret', $siret);
-    $stmt->bindValue(':fonction_contact', $fonction_contact);
+    $stmt->bindValue(':secteur_activite', $secteur_activite);
+    $stmt->bindValue(':contact_principal', $contact_principal);
+    
     $stmt->execute();
+    
     http_response_code(201);
     echo json_encode(['success' => true, 'message' => 'Client créé avec succès'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 } catch (Exception $e) {
@@ -66,9 +78,9 @@ function verifyPhoneNumber($phone): bool
     return preg_match('/^0[1-9][0-9]{8}$/', $phone);
 }
 
-function verifySiren($siren): bool
+function verifyCodePostal($code): bool
 {
-    return preg_match('/^\d{9}$/', $siren);
+    return preg_match('/^\d{5}$/', $code);
 }
 
 function verifySiret($siret): bool

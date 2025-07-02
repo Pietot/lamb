@@ -175,7 +175,7 @@
                       {{ getClientInitials(client) }}
                     </div>
                     <div class="client-details">
-                      <p class="client-name">{{ client.prénom }} {{ client.nom }}</p>
+                      <p class="client-name">{{ client.contact_principal || client.raison_sociale }}</p>
                       <p class="client-id">ID #{{ client.id_client }}</p>
                     </div>
                   </div>
@@ -184,7 +184,7 @@
                   <p class="contact-email">{{ client.email }}</p>
                 </td>
                 <td class="address-info">
-                  {{ getCityFromAddress(client.adresse) }}
+                  {{ getCityFromAddress(client) }}
                 </td>
                 <td class="phone-info">
                   {{ formatPhone(client.telephone) }}
@@ -215,9 +215,9 @@
       </div>
     </div>
 
-    <!-- Modal Nouveau client (placeholder) -->
+    <!-- Modal Nouveau client -->
     <div v-if="showNewClientModal" class="modal-overlay" @click="showNewClientModal = false">
-      <div class="modal-content" @click.stop>
+      <div class="modal-content modal-form" @click.stop>
         <div class="modal-header">
           <h3>Nouveau client</h3>
           <button @click="showNewClientModal = false" class="modal-close">
@@ -228,7 +228,185 @@
           </button>
         </div>
         <div class="modal-body">
-          <p>Fonctionnalité en cours de développement</p>
+          <form @submit.prevent="handleSubmitNewClient" class="client-form">
+            <div class="form-grid">
+              <!-- Informations entreprise -->
+              <div class="form-section">
+                <h4 class="form-section-title">Informations entreprise</h4>
+                
+                <div class="form-group">
+                  <label for="raison_sociale" class="form-label">Raison sociale <span class="required">*</span></label>
+                  <input
+                    id="raison_sociale"
+                    v-model="newClientForm.raison_sociale"
+                    type="text"
+                    class="form-input"
+                    placeholder="SARL Exemple"
+                    required
+                    maxlength="100"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="nom_commercial" class="form-label">Nom commercial</label>
+                  <input
+                    id="nom_commercial"
+                    v-model="newClientForm.nom_commercial"
+                    type="text"
+                    class="form-input"
+                    placeholder="Exemple Distribution"
+                    maxlength="100"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="secteur_activite" class="form-label">Secteur d'activité</label>
+                  <input
+                    id="secteur_activite"
+                    v-model="newClientForm.secteur_activite"
+                    type="text"
+                    class="form-input"
+                    placeholder="Distribution textile"
+                    maxlength="100"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="siret" class="form-label">SIRET <span class="required">*</span></label>
+                  <input
+                    id="siret"
+                    v-model="newClientForm.siret"
+                    type="text"
+                    class="form-input"
+                    placeholder="12345678901234"
+                    pattern="\d{14}"
+                    required
+                    maxlength="14"
+                  />
+                  <p class="form-hint">14 chiffres</p>
+                </div>
+              </div>
+
+              <!-- Informations contact -->
+              <div class="form-section">
+                <h4 class="form-section-title">Contact</h4>
+                
+                <div class="form-group">
+                  <label for="contact_principal" class="form-label">Contact principal <span class="required">*</span></label>
+                  <input
+                    id="contact_principal"
+                    v-model="newClientForm.contact_principal"
+                    type="text"
+                    class="form-input"
+                    placeholder="Jean Dupont"
+                    required
+                    maxlength="100"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="email" class="form-label">Email <span class="required">*</span></label>
+                  <input
+                    id="email"
+                    v-model="newClientForm.email"
+                    type="email"
+                    class="form-input"
+                    placeholder="contact@entreprise.fr"
+                    required
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="telephone" class="form-label">Téléphone <span class="required">*</span></label>
+                  <input
+                    id="telephone"
+                    v-model="newClientForm.telephone"
+                    type="tel"
+                    class="form-input"
+                    placeholder="0123456789"
+                    pattern="0[1-9][0-9]{8}"
+                    required
+                  />
+                  <p class="form-hint">Format: 10 chiffres commençant par 0</p>
+                </div>
+              </div>
+
+              <!-- Adresse -->
+              <div class="form-section full-width">
+                <h4 class="form-section-title">Adresse</h4>
+                
+                <div class="form-group">
+                  <label for="adresse" class="form-label">Adresse <span class="required">*</span></label>
+                  <input
+                    id="adresse"
+                    v-model="newClientForm.adresse"
+                    type="text"
+                    class="form-input"
+                    placeholder="123 rue de la Paix"
+                    required
+                    maxlength="255"
+                  />
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="code_postal" class="form-label">Code postal <span class="required">*</span></label>
+                    <input
+                      id="code_postal"
+                      v-model="newClientForm.code_postal"
+                      type="text"
+                      class="form-input"
+                      placeholder="75001"
+                      pattern="\d{5}"
+                      required
+                      maxlength="5"
+                    />
+                    <p class="form-hint">5 chiffres</p>
+                  </div>
+
+                  <div class="form-group" style="flex: 2;">
+                    <label for="ville" class="form-label">Ville <span class="required">*</span></label>
+                    <input
+                      id="ville"
+                      v-model="newClientForm.ville"
+                      type="text"
+                      class="form-input"
+                      placeholder="Paris"
+                      required
+                      maxlength="100"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Messages d'erreur -->
+            <div v-if="formError" class="form-error">
+              <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+              {{ formError }}
+            </div>
+
+            <!-- Actions -->
+            <div class="modal-actions">
+              <button type="button" class="modal-btn secondary" @click="showNewClientModal = false">
+                Annuler
+              </button>
+              <button type="submit" class="modal-btn primary" :disabled="submitting">
+                <span v-if="!submitting">Créer le client</span>
+                <span v-else class="loading-text">
+                  <svg class="spinner" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" opacity="0.25"/>
+                    <path d="M12 2a10 10 0 0 1 0 20" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+                  </svg>
+                  Création...
+                </span>
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -255,7 +433,19 @@
               </div>
               <div class="detail-row">
                 <span class="detail-label">Nom:</span>
-                <span class="detail-value">{{ selectedClient.prénom }} {{ selectedClient.nom }}</span>
+                <span class="detail-value">{{ selectedClient.contact_principal }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Raison sociale:</span>
+                <span class="detail-value">{{ selectedClient.raison_sociale }}</span>
+              </div>
+              <div class="detail-row" v-if="selectedClient.nom_commercial">
+                <span class="detail-label">Nom commercial:</span>
+                <span class="detail-value">{{ selectedClient.nom_commercial }}</span>
+              </div>
+              <div class="detail-row" v-if="selectedClient.secteur_activite">
+                <span class="detail-label">Secteur d'activité:</span>
+                <span class="detail-value">{{ selectedClient.secteur_activite }}</span>
               </div>
               <div class="detail-row">
                 <span class="detail-label">Date d'inscription:</span>
@@ -277,10 +467,22 @@
                 <span class="detail-label">Adresse:</span>
                 <span class="detail-value">{{ selectedClient.adresse }}</span>
               </div>
+              <div class="detail-row">
+                <span class="detail-label">Code postal / Ville:</span>
+                <span class="detail-value">{{ selectedClient.code_postal }} {{ selectedClient.ville }}</span>
+              </div>
             </div>
             
             <div class="details-section full-width">
               <h4 class="section-subtitle">Statistiques client</h4>
+              <div class="detail-row">
+                <span class="detail-label">SIRET:</span>
+                <span class="detail-value">{{ selectedClient.siret }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Date de création:</span>
+                <span class="detail-value">{{ selectedClient.date_creation ? new Date(selectedClient.date_creation).toLocaleDateString('fr-FR') : 'Non renseignée' }}</span>
+              </div>
               <div class="detail-row">
                 <span class="detail-label">Nombre de commandes:</span>
                 <span class="detail-value">{{ Math.floor(Math.random() * 20) + 1 }}</span>
@@ -288,10 +490,6 @@
               <div class="detail-row">
                 <span class="detail-label">Chiffre d'affaires total:</span>
                 <span class="detail-value amount">{{ formatCurrency(Math.random() * 50000) }}</span>
-              </div>
-              <div class="detail-row">
-                <span class="detail-label">Dernière commande:</span>
-                <span class="detail-value">{{ new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toLocaleDateString('fr-FR') }}</span>
               </div>
             </div>
           </div>
@@ -329,7 +527,8 @@
             <h4>Fonctionnalité en cours de développement</h4>
             <p>La modification des informations client sera bientôt disponible.</p>
             <div class="client-preview" v-if="selectedClient">
-              <p><strong>Client sélectionné:</strong> {{ selectedClient.prénom }} {{ selectedClient.nom }}</p>
+              <p><strong>Client sélectionné:</strong> {{ selectedClient.raison_sociale }}</p>
+              <p><strong>Contact:</strong> {{ selectedClient.contact_principal }}</p>
               <p><strong>Email:</strong> {{ selectedClient.email }}</p>
             </div>
           </div>
@@ -345,7 +544,7 @@
 </template>
 
 <script>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 
 export default {
   name: 'ClientsView',
@@ -359,6 +558,22 @@ export default {
     const showDetailsModal = ref(false)
     const showEditModal = ref(false)
     const selectedClient = ref(null)
+    const submitting = ref(false)
+    const formError = ref('')
+    
+    // Formulaire nouveau client
+    const newClientForm = ref({
+      raison_sociale: '',
+      nom_commercial: '',
+      email: '',
+      telephone: '',
+      adresse: '',
+      code_postal: '',
+      ville: '',
+      siret: '',
+      secteur_activite: '',
+      contact_principal: ''
+    })
     
     const filters = ref({
       city: '',
@@ -376,7 +591,7 @@ export default {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
           },
-          credentials: 'include',
+          credentials: 'include',  
         })
 
         if (!response.ok) {
@@ -412,7 +627,7 @@ export default {
     })
 
     const uniqueCities = computed(() => {
-      const cities = new Set(clients.value.map(client => getCityFromAddress(client.adresse)))
+      const cities = new Set(clients.value.map(client => client.ville).filter(ville => ville))
       return cities.size
     })
 
@@ -423,8 +638,8 @@ export default {
 
     // Villes disponibles pour le filtre
     const availableCities = computed(() => {
-      const cities = new Set(clients.value.map(client => getCityFromAddress(client.adresse)))
-      return Array.from(cities).filter(city => city).sort()
+      const cities = new Set(clients.value.map(client => client.ville).filter(ville => ville))
+      return Array.from(cities).sort()
     })
 
     // Clients filtrés
@@ -433,26 +648,28 @@ export default {
 
       // Filtre par ville
       if (filters.value.city) {
-        result = result.filter(client => 
-          getCityFromAddress(client.adresse) === filters.value.city
-        )
+        result = result.filter(client => client.ville === filters.value.city)
       }
 
       // Filtre par recherche
       if (searchQuery.value) {
         const query = searchQuery.value.toLowerCase()
-        result = result.filter(client =>
-          client.nom.toLowerCase().includes(query) ||
-          client.prénom.toLowerCase().includes(query) ||
-          client.email.toLowerCase().includes(query) ||
-          client.id_client.toString().includes(query)
-        )
+        result = result.filter(client => {
+          const contactName = client.contact_principal ? client.contact_principal.toLowerCase() : ''
+          const raisonSociale = client.raison_sociale ? client.raison_sociale.toLowerCase() : ''
+          return (
+            contactName.includes(query) ||
+            raisonSociale.includes(query) ||
+            client.email.toLowerCase().includes(query) ||
+            client.id_client.toString().includes(query)
+          )
+        })
       }
 
       // Tri
       switch (filters.value.sort) {
         case 'name':
-          result.sort((a, b) => `${a.nom} ${a.prénom}`.localeCompare(`${b.nom} ${b.prénom}`))
+          result.sort((a, b) => (a.raison_sociale || '').localeCompare(b.raison_sociale || ''))
           break
         case 'recent':
           result.sort((a, b) => b.id_client - a.id_client)
@@ -467,15 +684,17 @@ export default {
 
     // Fonctions utilitaires
     const getClientInitials = (client) => {
-      const firstInitial = client.prénom ? client.prénom[0].toUpperCase() : ''
-      const lastInitial = client.nom ? client.nom[0].toUpperCase() : ''
-      return firstInitial + lastInitial
+      if (client.contact_principal) {
+        const parts = client.contact_principal.split(' ')
+        const firstInitial = parts[0] ? parts[0][0].toUpperCase() : ''
+        const lastInitial = parts.length > 1 && parts[parts.length - 1] ? parts[parts.length - 1][0].toUpperCase() : ''
+        return firstInitial + lastInitial
+      }
+      return '??'
     }
 
-    const getCityFromAddress = (address) => {
-      if (!address) return 'Non renseigné'
-      const parts = address.split(',')
-      return parts.length > 1 ? parts[parts.length - 1].trim() : 'Non renseigné'
+    const getCityFromAddress = (client) => {
+      return client.ville || 'Non renseigné'
     }
 
     const formatPhone = (phone) => {
@@ -508,18 +727,22 @@ export default {
     }
 
     const exportClients = () => {
-      // Fonction d'export (à implémenter)
+      // Fonction d'export
       console.log('Export des clients...')
-      // Vous pourriez créer un CSV ou utiliser une autre méthode d'export
       const csv = [
-        ['ID', 'Nom', 'Prénom', 'Email', 'Téléphone', 'Adresse'],
+        ['ID', 'Raison sociale', 'Nom commercial', 'Contact principal', 'Email', 'Téléphone', 'Adresse', 'Code postal', 'Ville', 'SIRET', 'Secteur activité'],
         ...clients.value.map(c => [
           c.id_client,
-          c.nom,
-          c.prénom,
+          c.raison_sociale,
+          c.nom_commercial || '',
+          c.contact_principal,
           c.email,
           c.telephone,
-          c.adresse
+          c.adresse,
+          c.code_postal,
+          c.ville,
+          c.siret,
+          c.secteur_activite || ''
         ])
       ].map(row => row.join(',')).join('\n')
       
@@ -548,6 +771,74 @@ export default {
       }
     }
 
+    // Fonction pour créer un nouveau client
+    const handleSubmitNewClient = async () => {
+      formError.value = ''
+      submitting.value = true
+
+      try {
+        // Créer les données du formulaire
+        const formData = new URLSearchParams()
+        Object.keys(newClientForm.value).forEach(key => {
+          formData.append(key, newClientForm.value[key])
+        })
+
+        const response = await fetch(import.meta.env.VITE_API_URL + "new_client", {
+          method: "POST",
+          body: formData,
+          credentials: 'include',
+        })
+
+        const data = await response.json()
+
+        if (!response.ok) {
+          if (response.status === 409) {
+            throw new Error('Cet email est déjà utilisé')
+          } else if (response.status === 400) {
+            throw new Error(data.message || 'Veuillez vérifier tous les champs')
+          } else {
+            throw new Error(data.message || 'Une erreur est survenue')
+          }
+        }
+
+        if (data.success) {
+          // Réinitialiser le formulaire
+          Object.keys(newClientForm.value).forEach(key => {
+            newClientForm.value[key] = ''
+          })
+          
+          // Fermer la modale
+          showNewClientModal.value = false
+          
+          // Recharger la liste des clients
+          await fetchClients()
+          
+          // Message de succès (vous pouvez implémenter un système de toast si vous voulez)
+          console.log('Client créé avec succès')
+        }
+      } catch (err) {
+        console.error('Erreur lors de la création du client:', err)
+        formError.value = err.message || 'Impossible de créer le client. Veuillez réessayer.'
+      } finally {
+        submitting.value = false
+      }
+    }
+
+    // Réinitialiser le formulaire quand on ferme la modale
+    const resetNewClientForm = () => {
+      Object.keys(newClientForm.value).forEach(key => {
+        newClientForm.value[key] = ''
+      })
+      formError.value = ''
+    }
+
+    // Watcher pour réinitialiser le formulaire quand on ferme la modale
+    watch(showNewClientModal, (newValue) => {
+      if (!newValue) {
+        resetNewClientForm()
+      }
+    })
+
     // Charger les données au montage
     onMounted(() => {
       fetchClients()
@@ -562,6 +853,9 @@ export default {
       showDetailsModal,
       showEditModal,
       selectedClient,
+      submitting,
+      formError,
+      newClientForm,
       filters,
       totalClients,
       percentageChange,
@@ -579,7 +873,9 @@ export default {
       resetFilters,
       exportClients,
       viewClient,
-      editClient
+      editClient,
+      handleSubmitNewClient,
+      resetNewClientForm
     }
   }
 }
@@ -1241,6 +1537,120 @@ export default {
   color: #0F172A;
 }
 
+/* FORMULAIRE */
+.modal-form {
+  max-width: 800px;
+}
+
+.client-form {
+  width: 100%;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-section.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0F172A;
+  margin: 0 0 0.5rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #334155;
+}
+
+.form-label .required {
+  color: #DC2626;
+}
+
+.form-input {
+  background: white;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  font-size: 14px;
+  color: #0F172A;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #00B8D4;
+  box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
+}
+
+.form-input::placeholder {
+  color: #94A3B8;
+}
+
+.form-hint {
+  font-size: 12px;
+  color: #64748B;
+  margin: 0;
+}
+
+.form-error {
+  background: #FEF2F2;
+  color: #DC2626;
+  padding: 1rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  font-size: 14px;
+}
+
+.form-error .error-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.loading-text {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  animation: spin 1s linear infinite;
+}
+
 /* RESPONSIVE */
 @media (max-width: 1024px) {
   .page-header {
@@ -1271,6 +1681,10 @@ export default {
   }
   
   .details-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-grid {
     grid-template-columns: 1fr;
   }
 }
@@ -1311,6 +1725,10 @@ export default {
   
   .modal-btn {
     width: 100%;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
   }
 }
 
