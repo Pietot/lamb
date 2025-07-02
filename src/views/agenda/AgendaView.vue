@@ -49,7 +49,7 @@
           </svg>
         </div>
         <div class="kpi-content">
-          <p class="kpi-label">Expéditions<br>ce mois</p>
+          <p class="kpi-label">Commandes<br>ce mois</p>
           <p class="kpi-value">{{ monthOrders }}</p>
           <p class="kpi-sublabel">{{ pendingOrders }} à traiter</p>
         </div>
@@ -79,11 +79,9 @@
           </svg>
           Aujourd'hui
         </button>
-        <button class="view-mode-btn" @click="toggleViewMode" :class="{ active: viewMode === 'week' }">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-            <line x1="9" y1="4" x2="9" y2="22"/>
-            <line x1="15" y1="4" x2="15" y2="22"/>
+        <button class="refresh-btn" @click="fetchData" :disabled="loading">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" :class="{ 'animate-spin': loading }">
+            <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
           </svg>
         </button>
       </div>
@@ -199,24 +197,6 @@
                 </svg>
               </div>
               <p class="empty-text">Aucun événement prévu ce jour</p>
-              <div class="empty-actions">
-                <button class="add-event-btn delivery" @click="addDelivery">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <rect x="1" y="3" width="15" height="13"/>
-                    <polygon points="16,3 19,7 19,13 16,13"/>
-                    <circle cx="5.5" cy="18.5" r="2.5"/>
-                    <circle cx="18.5" cy="18.5" r="2.5"/>
-                  </svg>
-                  Ajouter une livraison
-                </button>
-                <button class="add-event-btn order" @click="addOrder">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
-                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
-                  </svg>
-                  Planifier une expédition
-                </button>
-              </div>
             </div>
 
             <!-- Liste des événements -->
@@ -247,36 +227,27 @@
 
                     <div class="event-content">
                       <div class="event-header">
-                        <span class="event-id">#{{ event.id }}</span>
-                        <span v-if="event.completed" class="event-badge completed">Reçu</span>
-                        <span v-else class="event-badge pending">En attente</span>
+                        <span class="event-id">{{ event.numero_livraison || '#' + event.id }}</span>
+                        <span v-if="event.completed" class="event-badge completed">{{ getDeliveryStatusLabel(event.statut) }}</span>
+                        <span v-else class="event-badge pending">{{ getDeliveryStatusLabel(event.statut) }}</span>
                       </div>
                       <div class="event-main">
                         <p class="event-partner">{{ event.partner }}</p>
-                        <p class="event-info">{{ event.items || 'Articles divers' }}</p>
+                        <p class="event-info">Bon: {{ event.numero_bon_livraison || 'N/A' }}</p>
+                        <p v-if="event.notes" class="event-notes">{{ event.notes }}</p>
                       </div>
                     </div>
 
                     <div class="event-actions">
                       <button 
                         class="action-btn"
-                        @click="viewDetails(event)"
+                        @click="viewDeliveryDetails(event)"
                         title="Voir détails"
                       >
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                           <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
                           <circle cx="12" cy="12" r="3"/>
                         </svg>
-                      </button>
-                      <button 
-                        v-if="!event.completed"
-                        class="action-btn success"
-                        @click="markAsReceived(event)"
-                      >
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                          <polyline points="20 6 9 17 4 12"/>
-                        </svg>
-                        Réceptionner
                       </button>
                     </div>
                   </div>
@@ -289,7 +260,7 @@
                     <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
                     <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
                   </svg>
-                  Expéditions ({{ orderEvents.length }})
+                  Commandes ({{ orderEvents.length }})
                 </h4>
                 <div class="section-events">
                   <div 
@@ -306,9 +277,8 @@
 
                     <div class="event-content">
                       <div class="event-header">
-                        <span class="event-id">#{{ event.id }}</span>
-                        <span v-if="event.completed" class="event-badge completed">Expédié</span>
-                        <span v-else class="event-badge pending">À expédier</span>
+                        <span class="event-id">#{{ String(event.id).padStart(5, '0') }}</span>
+                        <span class="event-badge" :class="getOrderStatusClass(event.statut)">{{ getOrderStatusLabel(event.statut) }}</span>
                       </div>
                       <div class="event-main">
                         <p class="event-partner">{{ event.partner }}</p>
@@ -319,23 +289,13 @@
                     <div class="event-actions">
                       <button 
                         class="action-btn"
-                        @click="viewDetails(event)"
+                        @click="viewOrderDetails(event)"
                         title="Voir détails"
                       >
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                           <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
                           <circle cx="12" cy="12" r="3"/>
                         </svg>
-                      </button>
-                      <button 
-                        v-if="!event.completed"
-                        class="action-btn primary"
-                        @click="markAsShipped(event)"
-                      >
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                          <path d="M20 6L9 17l-5-5"/>
-                        </svg>
-                        Expédier
                       </button>
                     </div>
                   </div>
@@ -360,11 +320,12 @@ export default {
     
     // États
     const events = ref([])
+    const clients = ref([])
+    const fournisseurs = ref([])
     const loading = ref(true)
     const error = ref(null)
     const currentDate = ref(new Date())
     const selectedDate = ref(null)
-    const viewMode = ref('month') // 'month' ou 'week'
     
     const weekDays = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim']
     
@@ -374,104 +335,100 @@ export default {
       error.value = null
       
       try {
-        // Pour l'instant, on utilise des données mockées
-        // TODO: Intégrer les vrais endpoints API
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        
-        // Données simulées
-        const today = new Date()
-        events.value = [
-          // Livraisons
-          {
-            id: '5001',
-            type: 'delivery',
-            partner: 'Durand SA',
-            items: '15 articles - Collection Été',
-            date: new Date(today.getFullYear(), today.getMonth(), 5),
-            completed: false
+        // Récupérer les livraisons
+        const livraisonsResponse = await fetch(import.meta.env.VITE_API_URL + "get_table?table=livraison", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
           },
-          {
-            id: '5002',
-            type: 'delivery',
-            partner: 'Bernard FR',
-            items: '8 articles - Accessoires',
-            date: new Date(today.getFullYear(), today.getMonth(), 8),
-            completed: false
+          credentials: 'include',
+        })
+
+        // Récupérer les commandes
+        const commandesResponse = await fetch(import.meta.env.VITE_API_URL + "get_table?table=commande", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
           },
-          {
-            id: '5003',
-            type: 'delivery',
-            partner: 'Martin & Cie',
-            items: '22 articles - Collection Printemps',
-            date: new Date(today.getFullYear(), today.getMonth(), 8),
-            completed: false
+          credentials: 'include',
+        })
+
+        // Récupérer les clients
+        const clientsResponse = await fetch(import.meta.env.VITE_API_URL + "get_table?table=client", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
           },
-          {
-            id: '5004',
-            type: 'delivery',
-            partner: 'Dupont SAS',
-            items: '5 articles - Nouveautés',
-            date: new Date(today.getFullYear(), today.getMonth(), 15),
-            completed: false
+          credentials: 'include',
+        })
+
+        // Récupérer les fournisseurs
+        const fournisseursResponse = await fetch(import.meta.env.VITE_API_URL + "get_table?table=fournisseur", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
           },
-          {
-            id: '5005',
-            type: 'delivery',
-            partner: 'Fashion Import',
-            items: '30 articles - Collection Hiver',
-            date: new Date(today.getFullYear(), today.getMonth(), 22),
-            completed: false
-          },
-          // Commandes à expédier
-          {
-            id: '00010',
-            type: 'order',
-            partner: 'Boutique Mode Paris',
-            amount: 1850.00,
-            date: new Date(today.getFullYear(), today.getMonth(), 3),
-            completed: false
-          },
-          {
-            id: '00011',
-            type: 'order',
-            partner: 'Fashion Store Lyon',
-            amount: 2340.00,
-            date: new Date(today.getFullYear(), today.getMonth(), 8),
-            completed: false
-          },
-          {
-            id: '00012',
-            type: 'order',
-            partner: 'Dupont SAS',
-            amount: 980.00,
-            date: new Date(today.getFullYear(), today.getMonth(), 12),
-            completed: false
-          },
-          {
-            id: '00013',
-            type: 'order',
-            partner: 'Durand SA',
-            amount: 3200.00,
-            date: new Date(today.getFullYear(), today.getMonth(), 20),
-            completed: false
-          },
-          {
-            id: '00014',
-            type: 'order',
-            partner: 'Martin & Cie',
-            amount: 1500.00,
-            date: new Date(today.getFullYear(), today.getMonth(), 20),
-            completed: false
-          },
-          {
-            id: '00015',
-            type: 'order',
-            partner: 'Style Boutique',
-            amount: 2800.00,
-            date: new Date(today.getFullYear(), today.getMonth(), 25),
-            completed: false
-          }
-        ]
+          credentials: 'include',
+        })
+
+        if (!livraisonsResponse.ok || !commandesResponse.ok || !clientsResponse.ok || !fournisseursResponse.ok) {
+          throw new Error('Erreur lors du chargement des données')
+        }
+
+        const livraisonsData = await livraisonsResponse.json()
+        const commandesData = await commandesResponse.json()
+        const clientsData = await clientsResponse.json()
+        const fournisseursData = await fournisseursResponse.json()
+
+        // Stocker les clients et fournisseurs
+        if (clientsData.success && clientsData.data) {
+          clients.value = clientsData.data
+        }
+
+        if (fournisseursData.success && fournisseursData.data) {
+          fournisseurs.value = fournisseursData.data
+        }
+
+        // Traiter les données
+        const allEvents = []
+
+        // Ajouter les livraisons
+        if (livraisonsData.success && livraisonsData.data) {
+          livraisonsData.data.forEach(livraison => {
+            const fournisseur = fournisseurs.value.find(f => f.id_fournisseur === livraison.id_fournisseur)
+            allEvents.push({
+              id: livraison.id_livraison,
+              type: 'delivery',
+              partner: fournisseur ? fournisseur.nom_entreprise : `Fournisseur #${livraison.id_fournisseur}`,
+              date: new Date(livraison.date_livraison),
+              completed: livraison.statut === 'completee',
+              statut: livraison.statut,
+              numero_livraison: livraison.numero_livraison,
+              numero_bon_livraison: livraison.numero_bon_livraison,
+              notes: livraison.notes,
+              rawData: livraison
+            })
+          })
+        }
+
+        // Ajouter les commandes
+        if (commandesData.success && commandesData.data) {
+          commandesData.data.forEach(commande => {
+            const client = clients.value.find(c => c.id_client === commande.id_client)
+            allEvents.push({
+              id: commande.id_commande,
+              type: 'order',
+              partner: client ? `${client.prénom} ${client.nom}` : `Client #${commande.id_client}`,
+              date: new Date(commande.date_commande),
+              amount: commande.montant_total,
+              completed: commande.statut === 'expedie',
+              statut: commande.statut,
+              rawData: commande
+            })
+          })
+        }
+
+        events.value = allEvents
       } catch (err) {
         console.error('Erreur lors du chargement:', err)
         error.value = 'Impossible de charger l\'agenda. Veuillez réessayer.'
@@ -594,7 +551,7 @@ export default {
     })
 
     const pendingOrders = computed(() => {
-      return events.value.filter(e => e.type === 'order' && !e.completed).length
+      return events.value.filter(e => e.type === 'order' && e.statut === 'attente').length
     })
 
     // Fonctions utilitaires
@@ -618,6 +575,36 @@ export default {
              d.getFullYear() === today.getFullYear()
     }
 
+    const getDeliveryStatusLabel = (status) => {
+      const labels = {
+        'attente': 'En attente',
+        'partielle': 'Partielle',
+        'completee': 'Complétée',
+        'annulee': 'Annulée'
+      }
+      return labels[status] || status
+    }
+
+    const getOrderStatusLabel = (status) => {
+      const labels = {
+        'attente': 'En attente',
+        'preparation': 'En préparation',
+        'expedie': 'Expédiée',
+        'annule': 'Annulée'
+      }
+      return labels[status] || status
+    }
+
+    const getOrderStatusClass = (status) => {
+      const classes = {
+        'attente': 'pending',
+        'preparation': 'progress',
+        'expedie': 'completed',
+        'annule': 'cancelled'
+      }
+      return classes[status] || 'pending'
+    }
+
     const previousMonth = () => {
       currentDate.value = new Date(currentDate.value.getFullYear(), currentDate.value.getMonth() - 1)
     }
@@ -638,38 +625,12 @@ export default {
       }
     }
 
-    const toggleViewMode = () => {
-      viewMode.value = viewMode.value === 'month' ? 'week' : 'month'
+    const viewDeliveryDetails = (event) => {
+      router.push('/reception')
     }
 
-    const viewDetails = (event) => {
-      if (event.type === 'delivery') {
-        router.push('/reception')
-      } else {
-        router.push(`/prepare`)
-      }
-    }
-
-    const markAsShipped = (event) => {
-      console.log('Marquer comme expédié:', event.id)
-      // TODO: Appeler l'API
-      event.completed = true
-    }
-
-    const markAsReceived = (event) => {
-      console.log('Marquer comme reçu:', event.id)
-      // TODO: Appeler l'API
-      event.completed = true
-    }
-
-    const addDelivery = () => {
-      console.log('Ajouter une livraison pour:', selectedDate.value)
-      // TODO: Ouvrir un modal ou rediriger
-    }
-
-    const addOrder = () => {
-      console.log('Planifier une expédition pour:', selectedDate.value)
-      // TODO: Ouvrir un modal ou rediriger
+    const viewOrderDetails = (event) => {
+      router.push(`/orders`)
     }
 
     // Charger les données au montage
@@ -683,7 +644,6 @@ export default {
       error,
       currentDate,
       selectedDate,
-      viewMode,
       weekDays,
       currentMonthLabel,
       calendarDays,
@@ -700,16 +660,15 @@ export default {
       formatDateKey,
       formatCurrency,
       isToday,
+      getDeliveryStatusLabel,
+      getOrderStatusLabel,
+      getOrderStatusClass,
       previousMonth,
       nextMonth,
       goToToday,
       selectDay,
-      toggleViewMode,
-      viewDetails,
-      markAsShipped,
-      markAsReceived,
-      addDelivery,
-      addOrder
+      viewDeliveryDetails,
+      viewOrderDetails
     }
   }
 }
@@ -869,7 +828,8 @@ export default {
   gap: 0.75rem;
 }
 
-.today-btn {
+.today-btn,
+.refresh-btn {
   background: #3B82F6;
   color: white;
   border: none;
@@ -884,37 +844,43 @@ export default {
   gap: 0.5rem;
 }
 
-.today-btn:hover {
+.today-btn:hover,
+.refresh-btn:hover {
   background: #2563EB;
 }
 
-.today-btn svg {
+.refresh-btn {
+  padding: 0.625rem;
+  background: #00B8D4;
+}
+
+.refresh-btn:hover {
+  background: #0891A6;
+}
+
+.refresh-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.today-btn svg,
+.refresh-btn svg {
   width: 16px;
   height: 16px;
   stroke-width: 2;
 }
 
-.view-mode-btn {
-  background: none;
-  border: 1px solid #E2E8F0;
-  color: #64748B;
-  border-radius: 6px;
-  padding: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-.view-mode-btn:hover,
-.view-mode-btn.active {
-  background: #F8FAFC;
-  border-color: #CBD5E1;
-  color: #334155;
-}
-
-.view-mode-btn svg {
-  width: 18px;
-  height: 18px;
-  stroke-width: 1.5;
+.animate-spin {
+  animation: spin 1s linear infinite;
 }
 
 /* LOADING & ERROR */
@@ -933,10 +899,6 @@ export default {
   border-radius: 50%;
   margin: 0 auto 1rem;
   animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
 }
 
 .error-icon {
@@ -1234,50 +1196,7 @@ export default {
 .empty-text {
   font-size: 16px;
   color: #64748B;
-  margin: 0 0 2rem 0;
-}
-
-.empty-actions {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.add-event-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  color: white;
-}
-
-.add-event-btn svg {
-  width: 18px;
-  height: 18px;
-  stroke-width: 1.5;
-}
-
-.add-event-btn.delivery {
-  background: #059669;
-}
-
-.add-event-btn.delivery:hover {
-  background: #047857;
-}
-
-.add-event-btn.order {
-  background: #2563EB;
-}
-
-.add-event-btn.order:hover {
-  background: #1D4ED8;
+  margin: 0;
 }
 
 /* LISTE DES ÉVÉNEMENTS */
@@ -1404,9 +1323,19 @@ export default {
   color: #92400E;
 }
 
+.event-badge.progress {
+  background: #DBEAFE;
+  color: #1E40AF;
+}
+
 .event-badge.completed {
   background: #D1FAE5;
   color: #047857;
+}
+
+.event-badge.cancelled {
+  background: #FEE2E2;
+  color: #DC2626;
 }
 
 .event-main {
@@ -1426,6 +1355,13 @@ export default {
   font-size: 13px;
   color: #64748B;
   margin: 0;
+}
+
+.event-notes {
+  font-size: 12px;
+  color: #94A3B8;
+  margin: 0;
+  font-style: italic;
 }
 
 .event-actions {
@@ -1454,40 +1390,6 @@ export default {
   width: 16px;
   height: 16px;
   stroke-width: 1.5;
-}
-
-.action-btn.primary {
-  background: #2563EB;
-  color: white;
-  border-color: #2563EB;
-  padding: 6px 16px;
-  font-size: 13px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.action-btn.primary:hover {
-  background: #1D4ED8;
-  border-color: #1D4ED8;
-}
-
-.action-btn.success {
-  background: #059669;
-  color: white;
-  border-color: #059669;
-  padding: 6px 16px;
-  font-size: 13px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.action-btn.success:hover {
-  background: #047857;
-  border-color: #047857;
 }
 
 /* ANIMATIONS */
@@ -1558,15 +1460,6 @@ export default {
     margin-top: 0.75rem;
     padding-top: 0.75rem;
     border-top: 1px solid #E2E8F0;
-  }
-  
-  .empty-actions {
-    flex-direction: column;
-  }
-  
-  .add-event-btn {
-    width: 100%;
-    justify-content: center;
   }
 }
 </style>
