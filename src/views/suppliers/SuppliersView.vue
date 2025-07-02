@@ -1,286 +1,908 @@
 <template>
-  <div class="supplier-detail-page">
-    <!-- En-tête avec boutons -->
+  <div class="suppliers-page">
+    <!-- En-tête avec bouton Nouveau fournisseur -->
     <div class="page-header">
       <div class="header-left">
-        <button class="back-button" @click="goBack">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <polyline points="15,18 9,12 15,6" />
-          </svg>
-          <span>Retour</span>
-        </button>
-        <h1 class="page-title">Détail du fournisseur</h1>
+        <h1 class="page-title">Gestion des fournisseurs</h1>
       </div>
-      <div class="header-actions">
-        <button class="print-button">
+      <div class="header-right">
+        <button class="new-supplier-button" @click="showNewSupplierModal = true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <polyline points="6,9 6,2 18,2 18,9" />
-            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
-            <rect x="6" y="14" width="12" height="8" />
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="16"/>
+            <line x1="8" y1="12" x2="16" y2="12"/>
           </svg>
-          <span>Imprimer</span>
-        </button>
-        <button class="edit-button">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-          </svg>
-          <span>Modifier</span>
+          <span>Nouveau fournisseur</span>
         </button>
       </div>
     </div>
 
-    <!-- Informations principales -->
-    <div class="info-section">
-      <div class="info-card">
-        <div class="supplier-header">
-          <div class="supplier-logo">B</div>
-          <div class="supplier-main">
-            <h2 class="supplier-name">{{ supplierData.name }}</h2>
-            <p class="supplier-since">Fournisseur actif depuis {{ supplierData.since }}</p>
-          </div>
+    <!-- Cartes statistiques -->
+    <div class="stats-section">
+      <div class="stat-card">
+        <div class="stat-icon active-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/>
+            <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/>
+            <path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/>
+            <path d="M10 6h4"/>
+            <path d="M10 10h4"/>
+            <path d="M10 14h4"/>
+            <path d="M10 18h4"/>
+          </svg>
         </div>
-
-        <div class="info-grid">
-          <div class="info-item">
-            <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-              <polyline points="22,6 12,13 2,6" />
-            </svg>
-            <div class="info-content">
-              <span class="info-label">EMAIL</span>
-              <span class="info-value">{{ supplierData.email }}</span>
-            </div>
-          </div>
-
-          <div class="info-item">
-            <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path
-                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-            </svg>
-            <div class="info-content">
-              <span class="info-label">TÉLÉPHONE</span>
-              <span class="info-value">{{ supplierData.phone }}</span>
-            </div>
-          </div>
-
-          <div class="info-item">
-            <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-              <circle cx="12" cy="10" r="3" />
-            </svg>
-            <div class="info-content">
-              <span class="info-label">ADRESSE</span>
-              <span class="info-value">{{ supplierData.address }}</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="contact-section">
-          <h3 class="section-title">Contact principal</h3>
-          <div class="contact-person">
-            <div class="contact-avatar">ML</div>
-            <div class="contact-info">
-              <p class="contact-name">{{ supplierData.primaryContact.name }}</p>
-              <p class="contact-role">{{ supplierData.primaryContact.title }}</p>
-            </div>
-          </div>
+        <div class="stat-content">
+          <p class="stat-label">Fournisseurs actifs</p>
+          <p class="stat-value">{{ activeSuppliers }}</p>
+          <p class="stat-trend">{{ percentageActive }}% du total</p>
         </div>
       </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon products-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+            <polyline points="3.27,6.96 12,12.01 20.73,6.96"/>
+            <line x1="12" y1="22.08" x2="12" y2="12"/>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Total fournisseurs</p>
+          <p class="stat-value">{{ totalSuppliers }}</p>
+          <p class="stat-trend">Base fournisseurs</p>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon quality-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="12,2 15,8.5 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 9,8.5"/>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Note moyenne</p>
+          <p class="stat-value">{{ averageRating }}/5</p>
+          <p class="stat-trend">Qualité globale</p>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon delivery-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <rect x="1" y="3" width="15" height="13"/>
+            <polygon points="16,3 19,7 19,13 16,13"/>
+            <circle cx="5.5" cy="18.5" r="2.5"/>
+            <circle cx="18.5" cy="18.5" r="2.5"/>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Délai moyen</p>
+          <p class="stat-value">{{ averageDelivery }}</p>
+          <p class="stat-trend">jours de livraison</p>
+        </div>
+      </div>
+    </div>
 
-      <!-- Statistiques -->
-      <div class="stats-card">
-        <h3 class="card-title">Statistiques</h3>
+    <!-- Filtres et recherche -->
+    <div class="filters-section">
+      <div class="filter-group">
+        <div class="search-container">
+          <input
+            v-model="searchQuery"
+            type="text"
+            placeholder="Rechercher un fournisseur..."
+            class="search-input"
+          />
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </div>
+        
+        <select v-model="filters.status" class="filter-select">
+          <option value="">Tous les statuts</option>
+          <option value="active">Actif</option>
+          <option value="inactive">Inactif</option>
+        </select>
+        
+        <select v-model="filters.sort" class="filter-select">
+          <option value="name">Trier par nom</option>
+          <option value="rating">Trier par note</option>
+          <option value="recent">Plus récents</option>
+        </select>
+        
+        <button class="action-button" @click="resetFilters">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <polyline points="1 4 1 10 7 10"/>
+            <polyline points="23 20 23 14 17 14"/>
+            <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+          </svg>
+          Réinitialiser
+        </button>
+        
+        <button class="export-button" @click="exportSuppliers">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7,10 12,15 17,10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Exporter
+        </button>
+      </div>
+    </div>
 
-        <div class="stats-grid">
-          <div class="stat-item">
-            <p class="stat-label">Produits fournis</p>
-            <p class="stat-value">{{ supplierData.stats.products }}</p>
-          </div>
-
-          <div class="stat-item">
-            <p class="stat-label">Livraisons totales</p>
-            <p class="stat-value">{{ supplierData.stats.deliveries }}</p>
-          </div>
-
-          <div class="stat-item">
-            <p class="stat-label">Commandes en cours</p>
-            <p class="stat-value">{{ supplierData.stats.currentOrders }}</p>
+    <!-- Tableau des fournisseurs -->
+    <div class="table-section">
+      <div class="table-card">
+        <div class="table-header">
+          <h3 class="table-title">Liste des fournisseurs</h3>
+          <div class="table-stats">
+            <span class="stat-item">
+              <span class="stat-label">Affichés:</span>
+              <span class="stat-value">{{ filteredSuppliers.length }}</span>
+            </span>
           </div>
         </div>
 
-        <div class="metrics-section">
-          <div class="metric-item">
-            <span class="metric-label">Délais SLA</span>
-            <span class="metric-value">{{ supplierData.metrics.slaAmount }}</span>
-          </div>
+        <!-- Loading State -->
+        <div v-if="loading" class="loading-container">
+          <div class="loader"></div>
+          <p>Chargement des fournisseurs...</p>
+        </div>
 
-          <div class="metric-item">
-            <span class="metric-label">Délai prévu</span>
-            <span class="metric-value">{{ supplierData.metrics.avgDelay }}</span>
-          </div>
+        <!-- Error State -->
+        <div v-else-if="error" class="error-container">
+          <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <p class="error-message">{{ error }}</p>
+          <button @click="fetchSuppliers" class="retry-button">Réessayer</button>
+        </div>
 
-          <div class="metric-item">
-            <span class="metric-label">Note qualité</span>
-            <div class="rating">
-              <span class="metric-value">{{ supplierData.metrics.rating }}</span>
-              <div class="stars">
-                <span v-for="i in 5" :key="i" class="star"
-                  :class="{ 'filled': i <= Math.floor(supplierData.metrics.rating) }">★</span>
+        <!-- Table Content -->
+        <div v-else class="table-container">
+          <table class="suppliers-table">
+            <thead>
+              <tr>
+                <th>Fournisseur</th>
+                <th>Contact</th>
+                <th>Localisation</th>
+                <th>Note qualité</th>
+                <th>Délai livraison</th>
+                <th>Statut</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="supplier in filteredSuppliers" :key="supplier.id_fournisseur">
+                <td>
+                  <div class="supplier-info">
+                    <div class="supplier-avatar" :style="{ backgroundColor: getAvatarColor(supplier.id_fournisseur) }">
+                      {{ getSupplierInitials(supplier) }}
+                    </div>
+                    <div class="supplier-details">
+                      <p class="supplier-name">{{ supplier.nom }}</p>
+                      <p class="supplier-id">ID #{{ String(supplier.id_fournisseur).padStart(4, '0') }}</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="contact-info">
+                  <p class="contact-person">{{ supplier.contact_prenom }} {{ supplier.contact_nom }}</p>
+                  <p class="contact-phone">{{ formatPhone(supplier.telephone) }}</p>
+                </td>
+                <td class="location-info">
+                  <p class="city">{{ supplier.ville }}</p>
+                  <p class="country">{{ supplier.pays }}</p>
+                </td>
+                <td class="rating-info">
+                  <div class="rating-display">
+                    <span class="rating-value">{{ supplier.note_qualite || 'N/A' }}</span>
+                    <div v-if="supplier.note_qualite" class="stars-mini">
+                      <span v-for="i in 5" :key="i" class="star"
+                        :class="{ 'filled': i <= Math.floor(parseFloat(supplier.note_qualite)) }">★</span>
+                    </div>
+                  </div>
+                </td>
+                <td class="delivery-info">
+                  {{ supplier.delai_livraison }} jours
+                </td>
+                <td>
+                  <span class="status-badge" :class="supplier.actif ? 'status-active' : 'status-inactive'">
+                    {{ supplier.actif ? 'Actif' : 'Inactif' }}
+                  </span>
+                </td>
+                <td class="actions">
+                  <button class="action-btn secondary" @click="viewSupplier(supplier.id_fournisseur)" title="Voir détails">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                      <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                  </button>
+                  <button class="action-btn secondary" @click="editSupplier(supplier.id_fournisseur)" title="Modifier">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+              <tr v-if="filteredSuppliers.length === 0 && !loading">
+                <td colspan="7" class="empty-message">
+                  Aucun fournisseur trouvé
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Nouveau fournisseur -->
+    <div v-if="showNewSupplierModal" class="modal-overlay" @click="closeModal">
+      <div class="modal-content modal-large" @click.stop>
+        <div class="modal-header">
+          <h3>Nouveau fournisseur</h3>
+          <button @click="closeModal" class="modal-close" :disabled="isSubmitting">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        
+        <form @submit.prevent="submitNewSupplier" class="supplier-form">
+          <div class="modal-body">
+            <!-- Section Entreprise -->
+            <div class="form-section">
+              <h4 class="section-title">Informations de l'entreprise</h4>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="nom" class="form-label required">Nom de l'entreprise</label>
+                  <input
+                    id="nom"
+                    v-model="newSupplier.nom"
+                    type="text"
+                    class="form-input"
+                    placeholder="Ex: Durand SA"
+                    required
+                    maxlength="50"
+                  />
+                </div>
+                
+                <div class="form-group">
+                  <label for="email" class="form-label required">Email professionnel</label>
+                  <input
+                    id="email"
+                    v-model="newSupplier.email"
+                    type="email"
+                    class="form-input"
+                    placeholder="contact@entreprise.com"
+                    required
+                  />
+                  <span v-if="errors.email" class="error-text">{{ errors.email }}</span>
+                </div>
+                
+                <div class="form-group">
+                  <label for="telephone" class="form-label required">Téléphone</label>
+                  <input
+                    id="telephone"
+                    v-model="newSupplier.telephone"
+                    type="tel"
+                    class="form-input"
+                    placeholder="0123456789"
+                    pattern="0[1-9][0-9]{8}"
+                    required
+                  />
+                  <span v-if="errors.telephone" class="error-text">{{ errors.telephone }}</span>
+                  <span v-else class="help-text">Format: 10 chiffres sans espaces</span>
+                </div>
+                
+                <div class="form-group">
+                  <label for="site_web" class="form-label">Site web</label>
+                  <input
+                    id="site_web"
+                    v-model="newSupplier.site_web"
+                    type="url"
+                    class="form-input"
+                    placeholder="https://www.exemple.com"
+                  />
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Onglets -->
-    <div class="tabs-section">
-      <div class="tabs-nav">
-        <button v-for="tab in tabs" :key="tab.id" class="tab-button" :class="{ 'active': activeTab === tab.id }"
-          @click="activeTab = tab.id">
-          {{ tab.label }}
-        </button>
-      </div>
-
-      <!-- Contenu des onglets -->
-      <div class="tab-content">
-        <!-- Onglet Produits -->
-        <div v-if="activeTab === 'products'" class="products-section">
-          <div class="table-header">
-            <h3 class="table-title">Produits fournis</h3>
-            <button class="export-button">
+            
+            <!-- Section Adresse -->
+            <div class="form-section">
+              <h4 class="section-title">Adresse</h4>
+              <div class="form-grid">
+                <div class="form-group col-span-2">
+                  <label for="adresse" class="form-label required">Adresse</label>
+                  <input
+                    id="adresse"
+                    v-model="newSupplier.adresse"
+                    type="text"
+                    class="form-input"
+                    placeholder="123 rue de la Paix"
+                    required
+                    maxlength="100"
+                  />
+                </div>
+                
+                <div class="form-group">
+                  <label for="code_postal" class="form-label required">Code postal</label>
+                  <input
+                    id="code_postal"
+                    v-model="newSupplier.code_postal"
+                    type="text"
+                    class="form-input"
+                    placeholder="75001"
+                    required
+                    pattern="[0-9]{5}"
+                  />
+                  <span v-if="errors.code_postal" class="error-text">{{ errors.code_postal }}</span>
+                </div>
+                
+                <div class="form-group">
+                  <label for="ville" class="form-label required">Ville</label>
+                  <input
+                    id="ville"
+                    v-model="newSupplier.ville"
+                    type="text"
+                    class="form-input"
+                    placeholder="Paris"
+                    required
+                  />
+                </div>
+                
+                <div class="form-group">
+                  <label for="pays" class="form-label required">Pays</label>
+                  <select
+                    id="pays"
+                    v-model="newSupplier.pays"
+                    class="form-input"
+                    required
+                  >
+                    <option value="">Sélectionner un pays</option>
+                    <option value="France">France</option>
+                    <option value="Belgique">Belgique</option>
+                    <option value="Suisse">Suisse</option>
+                    <option value="Luxembourg">Luxembourg</option>
+                    <option value="Allemagne">Allemagne</option>
+                    <option value="Espagne">Espagne</option>
+                    <option value="Italie">Italie</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Section Contact -->
+            <div class="form-section">
+              <h4 class="section-title">Contact principal</h4>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="contact_prenom" class="form-label required">Prénom du contact</label>
+                  <input
+                    id="contact_prenom"
+                    v-model="newSupplier.contact_prenom"
+                    type="text"
+                    class="form-input"
+                    placeholder="Marie"
+                    required
+                    maxlength="50"
+                  />
+                </div>
+                
+                <div class="form-group">
+                  <label for="contact_nom" class="form-label required">Nom du contact</label>
+                  <input
+                    id="contact_nom"
+                    v-model="newSupplier.contact_nom"
+                    type="text"
+                    class="form-input"
+                    placeholder="Dupont"
+                    required
+                    maxlength="50"
+                  />
+                </div>
+              </div>
+            </div>
+            
+            <!-- Section Commerciale -->
+            <div class="form-section">
+              <h4 class="section-title">Informations commerciales</h4>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="delai_livraison" class="form-label">Délai de livraison (jours)</label>
+                  <input
+                    id="delai_livraison"
+                    v-model.number="newSupplier.delai_livraison"
+                    type="number"
+                    class="form-input"
+                    placeholder="5"
+                    min="1"
+                    max="365"
+                  />
+                </div>
+                
+                <div class="form-group">
+                  <label for="conditions_paiement" class="form-label">Conditions de paiement</label>
+                  <select
+                    id="conditions_paiement"
+                    v-model="newSupplier.conditions_paiement"
+                    class="form-input"
+                  >
+                    <option value="">Sélectionner</option>
+                    <option value="Comptant">Comptant</option>
+                    <option value="30 jours">30 jours</option>
+                    <option value="45 jours">45 jours</option>
+                    <option value="60 jours">60 jours</option>
+                    <option value="90 jours">90 jours</option>
+                    <option value="Autre">Autre</option>
+                  </select>
+                </div>
+                
+                <div class="form-group">
+                  <label for="note_qualite" class="form-label">Note qualité initiale</label>
+                  <select
+                    id="note_qualite"
+                    v-model="newSupplier.note_qualite"
+                    class="form-input"
+                  >
+                    <option value="">Non évalué</option>
+                    <option value="1">1 - Médiocre</option>
+                    <option value="2">2 - Faible</option>
+                    <option value="3">3 - Correct</option>
+                    <option value="4">4 - Bon</option>
+                    <option value="5">5 - Excellent</option>
+                  </select>
+                </div>
+                
+                <div class="form-group">
+                  <label class="checkbox-label">
+                    <input
+                      v-model="newSupplier.actif"
+                      type="checkbox"
+                      class="checkbox-input"
+                    />
+                    <span>Fournisseur actif</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Messages d'erreur -->
+            <div v-if="globalError" class="error-banner">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="7,10 12,15 17,10" />
-                <line x1="12" y1="15" x2="12" y2="3" />
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
               </svg>
-              Exporter
+              <span>{{ globalError }}</span>
+            </div>
+            
+            <!-- Message de succès -->
+            <div v-if="successMessage" class="success-banner">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+              <span>{{ successMessage }}</span>
+            </div>
+          </div>
+          
+          <div class="modal-footer">
+            <button type="button" @click="closeModal" class="btn-cancel" :disabled="isSubmitting">
+              Annuler
+            </button>
+            <button type="submit" class="btn-submit" :disabled="isSubmitting">
+              <span v-if="!isSubmitting">Créer le fournisseur</span>
+              <span v-else class="loading-text">
+                <svg class="spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="32">
+                    <animate attributeName="stroke-dashoffset" dur="1s" repeatCount="indefinite" from="32" to="0"/>
+                  </circle>
+                </svg>
+                Création en cours...
+              </span>
             </button>
           </div>
-
-          <div class="table-container">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>RÉFÉRENCE</th>
-                  <th>PRODUIT</th>
-                  <th>CATÉGORIE</th>
-                  <th>PRIX UNITAIRE</th>
-                  <th>EN STOCK</th>
-                  <th>SEUIL</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="product in products" :key="product.reference">
-                  <td class="reference">{{ product.reference }}</td>
-                  <td>{{ product.name }}</td>
-                  <td>{{ product.category }}</td>
-                  <td class="price">{{ formatCurrency(product.unitPrice) }}</td>
-                  <td class="stock">{{ product.stock }}</td>
-                  <td class="threshold">{{ product.threshold }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Onglet Commandes -->
-        <div v-else-if="activeTab === 'orders'" class="placeholder-section">
-          <p>Section des commandes en cours de développement</p>
-        </div>
-
-        <!-- Onglet Livraisons -->
-        <div v-else-if="activeTab === 'deliveries'" class="placeholder-section">
-          <p>Section des livraisons en cours de développement</p>
-        </div>
+        </form>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 export default {
-  name: 'SupplierDetailView',
+  name: 'SuppliersView',
   setup() {
     const router = useRouter()
-    const activeTab = ref('products')
-
-    const supplierData = ref({
-      name: 'Bernard FR',
-      since: '2019',
-      email: 'contact@bernard-fr.com',
-      phone: '01 45 67 89 01',
-      address: '42 rue du Commerce, 75015 Paris',
-      primaryContact: {
-        name: 'Marie Lefevre',
-        title: 'Responsable commercial'
-      },
-      stats: {
-        products: 47,
-        deliveries: 128,
-        currentOrders: 3
-      },
-      metrics: {
-        slaAmount: '52 480 €',
-        avgDelay: '4,2 jours',
-        rating: 4.8
-      }
+    
+    // États réactifs
+    const suppliers = ref([])
+    const loading = ref(true)
+    const error = ref(null)
+    const searchQuery = ref('')
+    const showNewSupplierModal = ref(false)
+    const isSubmitting = ref(false)
+    const globalError = ref('')
+    const successMessage = ref('')
+    const errors = ref({})
+    
+    // Formulaire nouveau fournisseur
+    const newSupplier = ref({
+      nom: '',
+      email: '',
+      telephone: '',
+      adresse: '',
+      code_postal: '',
+      ville: '',
+      pays: 'France',
+      site_web: '',
+      contact_prenom: '',
+      contact_nom: '',
+      conditions_paiement: '',
+      delai_livraison: '',
+      note_qualite: '',
+      actif: true
+    })
+    
+    const filters = ref({
+      status: '',
+      sort: 'name'
     })
 
-    const tabs = ref([
-      { id: 'products', label: 'Produits' },
-      { id: 'orders', label: 'Commandes' },
-      { id: 'deliveries', label: 'Livraisons' }
-    ])
+    // Fonction pour récupérer les fournisseurs depuis l'API
+    const fetchSuppliers = async () => {
+      loading.value = true
+      error.value = null
+      
+      try {
+        const response = await fetch(import.meta.env.VITE_API_URL + "get_table?table=fournisseur", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          credentials: 'include',   
+      })
 
-    const products = ref([
-      {
-        reference: 'A1A',
-        name: 'Article A',
-        category: 'Catégorie 1',
-        unitPrice: 50.00,
-        stock: 20,
-        threshold: 10
-      },
-      {
-        reference: 'A3A',
-        name: 'Article C',
-        category: 'Catégorie 3',
-        unitPrice: 75.00,
-        stock: 18,
-        threshold: 10
+        if (!response.ok) {
+          throw new Error(`Erreur HTTP: ${response.status}`)
+        }
+
+        const data = await response.json()
+        
+        if (data.success && data.data) {
+          suppliers.value = data.data
+        } else {
+          throw new Error('Format de données invalide')
+        }
+      } catch (err) {
+        console.error('Erreur lors du chargement des fournisseurs:', err)
+        error.value = 'Impossible de charger les fournisseurs. Veuillez réessayer.'
+      } finally {
+        loading.value = false
       }
-    ])
-
-    const formatCurrency = (amount) => {
-      return new Intl.NumberFormat('fr-FR', {
-        style: 'currency',
-        currency: 'EUR'
-      }).format(amount)
     }
 
-    const goBack = () => {
-      router.push('/suppliers')
+    // Computed properties pour les statistiques
+    const totalSuppliers = computed(() => suppliers.value.length)
+    
+    const activeSuppliers = computed(() => {
+      return suppliers.value.filter(s => s.actif).length
+    })
+    
+    const percentageActive = computed(() => {
+      return totalSuppliers.value > 0 
+        ? Math.round((activeSuppliers.value / totalSuppliers.value) * 100)
+        : 0
+    })
+    
+    const averageRating = computed(() => {
+      const withRating = suppliers.value.filter(s => s.note_qualite)
+      if (withRating.length === 0) return 'N/A'
+      const sum = withRating.reduce((acc, s) => acc + parseFloat(s.note_qualite), 0)
+      return (sum / withRating.length).toFixed(1)
+    })
+    
+    const averageDelivery = computed(() => {
+      const withDelivery = suppliers.value.filter(s => s.delai_livraison)
+      if (withDelivery.length === 0) return 'N/A'
+      const sum = withDelivery.reduce((acc, s) => acc + parseInt(s.delai_livraison), 0)
+      return Math.round(sum / withDelivery.length)
+    })
+
+    // Fournisseurs filtrés
+    const filteredSuppliers = computed(() => {
+      let result = [...suppliers.value]
+
+      // Filtre par statut
+      if (filters.value.status) {
+        result = result.filter(supplier => {
+          if (filters.value.status === 'active') return supplier.actif
+          if (filters.value.status === 'inactive') return !supplier.actif
+          return true
+        })
+      }
+
+      // Filtre par recherche
+      if (searchQuery.value) {
+        const query = searchQuery.value.toLowerCase()
+        result = result.filter(supplier =>
+          supplier.nom.toLowerCase().includes(query) ||
+          supplier.ville.toLowerCase().includes(query) ||
+          supplier.pays.toLowerCase().includes(query) ||
+          supplier.id_fournisseur.toString().includes(query)
+        )
+      }
+
+      // Tri
+      switch (filters.value.sort) {
+        case 'name':
+          result.sort((a, b) => a.nom.localeCompare(b.nom))
+          break
+        case 'rating':
+          result.sort((a, b) => {
+            const ratingA = parseFloat(a.note_qualite) || 0
+            const ratingB = parseFloat(b.note_qualite) || 0
+            return ratingB - ratingA
+          })
+          break
+        case 'recent':
+          result.sort((a, b) => new Date(b.date_creation) - new Date(a.date_creation))
+          break
+      }
+
+      return result
+    })
+
+    // Fonctions utilitaires
+    const getSupplierInitials = (supplier) => {
+      const words = supplier.nom.split(' ')
+      return words.map(w => w[0]).join('').toUpperCase().substring(0, 2)
+    }
+
+    const formatPhone = (phone) => {
+      if (!phone) return 'Non renseigné'
+      const cleaned = phone.toString().replace(/\D/g, '')
+      if (cleaned.length === 10) {
+        return cleaned.replace(/(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/, '$1 $2 $3 $4 $5')
+      }
+      return phone
+    }
+
+    const getAvatarColor = (id) => {
+      const colors = ['#00B8D4', '#2563EB', '#059669', '#D97706', '#7C3AED', '#DC2626']
+      return colors[id % colors.length]
+    }
+
+    const resetFilters = () => {
+      searchQuery.value = ''
+      filters.value.status = ''
+      filters.value.sort = 'name'
+    }
+
+    const exportSuppliers = () => {
+      const csv = [
+        ['ID', 'Nom', 'Contact', 'Ville', 'Pays', 'Téléphone', 'Email', 'Note qualité', 'Délai livraison', 'Statut'],
+        ...suppliers.value.map(s => [
+          s.id_fournisseur,
+          s.nom,
+          `${s.contact_prenom} ${s.contact_nom}`,
+          s.ville,
+          s.pays,
+          s.telephone,
+          s.email,
+          s.note_qualite || 'N/A',
+          s.delai_livraison,
+          s.actif ? 'Actif' : 'Inactif'
+        ])
+      ].map(row => row.join(',')).join('\n')
+      
+      const blob = new Blob([csv], { type: 'text/csv' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = 'fournisseurs.csv'
+      a.click()
+      URL.revokeObjectURL(url)
+    }
+
+    const viewSupplier = (supplierId) => {
+      router.push(`/suppliers/${supplierId}`)
+    }
+
+    const editSupplier = (supplierId) => {
+      console.log('Modifier fournisseur:', supplierId)
+      // TODO: Redirection vers la page d'édition
+    }
+
+    // Charger les données au montage
+    onMounted(() => {
+      fetchSuppliers()
+    })
+
+    // Fonction pour réinitialiser le formulaire
+    const resetForm = () => {
+      newSupplier.value = {
+        nom: '',
+        email: '',
+        telephone: '',
+        adresse: '',
+        code_postal: '',
+        ville: '',
+        pays: 'France',
+        site_web: '',
+        contact_prenom: '',
+        contact_nom: '',
+        conditions_paiement: '',
+        delai_livraison: '',
+        note_qualite: '',
+        actif: true
+      }
+      errors.value = {}
+      globalError.value = ''
+      successMessage.value = ''
+    }
+
+    // Fermer la modale
+    const closeModal = () => {
+      if (!isSubmitting.value) {
+        showNewSupplierModal.value = false
+        resetForm()
+      }
+    }
+
+    // Valider le formulaire
+    const validateForm = () => {
+      const newErrors = {}
+      
+      // Validation du téléphone
+      const phoneRegex = /^0[1-9][0-9]{8}$/
+      if (!phoneRegex.test(newSupplier.value.telephone)) {
+        newErrors.telephone = 'Le numéro de téléphone doit être au format 0123456789'
+      }
+      
+      // Validation email
+      if (!newSupplier.value.email.includes('@')) {
+        newErrors.email = 'Email invalide'
+      }
+      
+      // Validation code postal
+      const postalCodeRegex = /^[0-9]{5}$/
+      if (!postalCodeRegex.test(newSupplier.value.code_postal)) {
+        newErrors.code_postal = 'Le code postal doit contenir 5 chiffres'
+      }
+      
+      errors.value = newErrors
+      return Object.keys(newErrors).length === 0
+    }
+
+    // Soumettre le nouveau fournisseur
+    const submitNewSupplier = async () => {
+      globalError.value = ''
+      successMessage.value = ''
+      
+      if (!validateForm()) {
+        globalError.value = 'Veuillez corriger les erreurs dans le formulaire'
+        return
+      }
+      
+      isSubmitting.value = true
+      
+      try {
+        // Créer un FormData pour l'envoi
+        const formData = new FormData()
+        
+        // Envoyer tous les champs selon la structure de la BDD
+        formData.append('nom', newSupplier.value.nom)
+        formData.append('contact_nom', newSupplier.value.contact_nom)
+        formData.append('contact_prenom', newSupplier.value.contact_prenom)
+        formData.append('email', newSupplier.value.email)
+        formData.append('telephone', newSupplier.value.telephone)
+        formData.append('adresse', newSupplier.value.adresse)
+        formData.append('ville', newSupplier.value.ville)
+        formData.append('code_postal', newSupplier.value.code_postal)
+        formData.append('pays', newSupplier.value.pays)
+        
+        // Champs optionnels
+        if (newSupplier.value.site_web) {
+          formData.append('site_web', newSupplier.value.site_web)
+        }
+        if (newSupplier.value.conditions_paiement) {
+          formData.append('conditions_paiement', newSupplier.value.conditions_paiement)
+        }
+        if (newSupplier.value.delai_livraison) {
+          formData.append('delai_livraison', newSupplier.value.delai_livraison)
+        }
+        if (newSupplier.value.note_qualite) {
+          formData.append('note_qualite', newSupplier.value.note_qualite)
+        }
+        formData.append('actif', newSupplier.value.actif ? 'true' : 'false')
+        
+        const response = await fetch(import.meta.env.VITE_API_URL + "new_fournisseur", {
+          method: "POST",
+          body: formData,
+          credentials: 'include',
+        })
+        
+        const data = await response.json()
+        
+        if (!response.ok) {
+          // Gérer les erreurs spécifiques
+          if (response.status === 409) {
+            globalError.value = 'Un fournisseur avec cet email existe déjà'
+          } else if (response.status === 400) {
+            globalError.value = data.message || 'Données invalides'
+          } else {
+            throw new Error(data.message || 'Erreur lors de la création')
+          }
+          return
+        }
+        
+        if (data.success) {
+          const successMsg = data.id 
+            ? `Fournisseur créé avec succès ! (ID: #${String(data.id).padStart(4, '0')})`
+            : 'Fournisseur créé avec succès !'
+          successMessage.value = successMsg
+          
+          // Attendre un peu avant de fermer et recharger
+          setTimeout(() => {
+            closeModal()
+            fetchSuppliers() // Recharger la liste
+          }, 1500)
+        } else {
+          throw new Error(data.message || 'Erreur lors de la création')
+        }
+      } catch (err) {
+        console.error('Erreur lors de la création:', err)
+        globalError.value = err.message || 'Une erreur est survenue lors de la création'
+      } finally {
+        isSubmitting.value = false
+      }
     }
 
     return {
-      activeTab,
-      supplierData,
-      tabs,
-      products,
-      formatCurrency,
-      goBack
+      suppliers,
+      loading,
+      error,
+      searchQuery,
+      showNewSupplierModal,
+      isSubmitting,
+      globalError,
+      successMessage,
+      errors,
+      newSupplier,
+      filters,
+      totalSuppliers,
+      activeSuppliers,
+      percentageActive,
+      averageRating,
+      averageDelivery,
+      filteredSuppliers,
+      fetchSuppliers,
+      getSupplierInitials,
+      formatPhone,
+      getAvatarColor,
+      resetFilters,
+      exportSuppliers,
+      viewSupplier,
+      editSupplier,
+      resetForm,
+      closeModal,
+      validateForm,
+      submitNewSupplier
     }
   }
 }
 </script>
 
 <style scoped>
-.supplier-detail-page {
+.suppliers-page {
   padding: 0;
   font-family: 'Inter', sans-serif;
 }
@@ -291,41 +913,6 @@ export default {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 2rem;
-  gap: 2rem;
-  flex-wrap: wrap;
-}
-
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.back-button {
-  background: white;
-  border: 1px solid #E2E8F0;
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
-  font-size: 14px;
-  font-weight: 500;
-  color: #64748B;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.back-button:hover {
-  background: #F8FAFC;
-  border-color: #CBD5E1;
-  color: #334155;
-}
-
-.back-button svg {
-  width: 16px;
-  height: 16px;
-  stroke-width: 2;
 }
 
 .page-title {
@@ -335,13 +922,188 @@ export default {
   margin: 0;
 }
 
-.header-actions {
+.new-supplier-button {
+  background: #00B8D4;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
   display: flex;
-  gap: 0.75rem;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 184, 212, 0.3);
+  font-size: 14px;
+  font-weight: 500;
 }
 
-.print-button,
-.edit-button {
+.new-supplier-button:hover {
+  background: #0891A6;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 184, 212, 0.4);
+}
+
+.new-supplier-button svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2;
+}
+
+/* STATISTIQUES */
+.stats-section {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid #F1F5F9;
+  transition: all 0.2s ease;
+}
+
+.stat-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stat-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.active-icon {
+  background: #F0FDF4;
+  color: #059669;
+}
+
+.products-icon {
+  background: #EFF6FF;
+  color: #2563EB;
+}
+
+.quality-icon {
+  background: #FEF3C7;
+  color: #D97706;
+}
+
+.delivery-icon {
+  background: #F3E8FF;
+  color: #7C3AED;
+}
+
+.stat-content {
+  flex: 1;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: #64748B;
+  margin: 0 0 4px 0;
+  font-weight: 500;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0;
+  line-height: 1;
+}
+
+.stat-trend {
+  font-size: 12px;
+  color: #059669;
+  margin: 4px 0 0 0;
+}
+
+/* FILTRES */
+.filters-section {
+  margin-bottom: 2rem;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.search-container {
+  position: relative;
+  flex: 1;
+  max-width: 300px;
+}
+
+.search-input {
+  width: 100%;
+  background: white;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  font-size: 14px;
+  color: #334155;
+  transition: all 0.2s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #00B8D4;
+  box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: #94A3B8;
+  stroke-width: 2;
+  pointer-events: none;
+}
+
+.filter-select {
+  background: white;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 14px;
+  color: #64748B;
+  min-width: 140px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: #00B8D4;
+  box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
+}
+
+.action-button,
+.export-button {
+  background: #3B82F6;
+  color: white;
   border: none;
   border-radius: 8px;
   padding: 0.75rem 1.5rem;
@@ -354,265 +1116,76 @@ export default {
   transition: all 0.2s ease;
 }
 
-.print-button {
-  background: white;
-  color: #64748B;
-  border: 1px solid #E2E8F0;
-}
-
-.print-button:hover {
-  background: #F8FAFC;
-  border-color: #CBD5E1;
-  color: #334155;
-}
-
-.edit-button {
-  background: #00B8D4;
-  color: white;
-  box-shadow: 0 2px 8px rgba(0, 184, 212, 0.3);
-}
-
-.edit-button:hover {
-  background: #0891A6;
+.action-button:hover,
+.export-button:hover {
+  background: #2563EB;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 184, 212, 0.4);
 }
 
-.print-button svg,
-.edit-button svg {
-  width: 18px;
-  height: 18px;
+.action-button svg,
+.export-button svg {
+  width: 16px;
+  height: 16px;
   stroke-width: 2;
 }
 
-/* SECTION INFO */
-.info-section {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 2rem;
-  margin-bottom: 2rem;
-}
-
-.info-card,
-.stats-card {
-  background: white;
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  border: 1px solid #F1F5F9;
-}
-
-.supplier-header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-.supplier-logo {
-  width: 60px;
-  height: 60px;
-  background: #3B82F6;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 24px;
-  font-weight: 700;
-  flex-shrink: 0;
-}
-
-.supplier-name {
-  font-size: 20px;
-  font-weight: 700;
-  color: #0F172A;
-  margin: 0 0 0.25rem 0;
-}
-
-.supplier-since {
-  font-size: 14px;
+/* LOADING & ERROR */
+.loading-container,
+.error-container {
+  text-align: center;
+  padding: 4rem 2rem;
   color: #64748B;
-  margin: 0;
 }
 
-.info-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  margin-bottom: 2rem;
-}
-
-.info-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-}
-
-.info-icon {
-  width: 18px;
-  height: 18px;
-  color: #64748B;
-  stroke-width: 2;
-  margin-top: 2px;
-  flex-shrink: 0;
-}
-
-.info-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.info-label {
-  font-size: 12px;
-  color: #64748B;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.info-value {
-  font-size: 14px;
-  color: #334155;
-  font-weight: 500;
-}
-
-/* CONTACT */
-.contact-section {
-  border-top: 1px solid #E2E8F0;
-  padding-top: 1.5rem;
-}
-
-.section-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #0F172A;
-  margin: 0 0 1rem 0;
-}
-
-.contact-person {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.contact-avatar {
+.loader {
   width: 40px;
   height: 40px;
-  background: #00B8D4;
+  border: 3px solid #F1F5F9;
+  border-top-color: #00B8D4;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  margin: 0 auto 1rem;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.error-icon {
+  width: 48px;
+  height: 48px;
+  color: #DC2626;
+  margin: 0 auto 1rem;
+}
+
+.error-message {
+  color: #DC2626;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.retry-button {
+  background: #00B8D4;
   color: white;
-  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1.5rem;
   font-size: 14px;
-  flex-shrink: 0;
-}
-
-.contact-name {
-  font-size: 14px;
-  font-weight: 600;
-  color: #0F172A;
-  margin: 0 0 0.25rem 0;
-}
-
-.contact-role {
-  font-size: 12px;
-  color: #64748B;
-  margin: 0;
-}
-
-/* STATISTIQUES */
-.card-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #0F172A;
-  margin: 0 0 1.5rem 0;
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.25rem;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid #E2E8F0;
-}
-
-.stat-item {
-  text-align: center;
-}
-
-.stat-label {
-  font-size: 12px;
-  color: #64748B;
   font-weight: 500;
-  margin: 0 0 0.5rem 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.stat-value {
-  font-size: 28px;
-  font-weight: 700;
-  color: #0F172A;
-  margin: 0;
-  line-height: 1;
+.retry-button:hover {
+  background: #0891A6;
 }
 
-.metrics-section {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+/* TABLEAU */
+.table-section {
+  margin-bottom: 2rem;
 }
 
-.metric-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.75rem 0;
-  border-bottom: 1px solid #F8FAFC;
-}
-
-.metric-item:last-child {
-  border-bottom: none;
-}
-
-.metric-label {
-  font-size: 14px;
-  color: #64748B;
-  font-weight: 500;
-}
-
-.metric-value {
-  font-size: 14px;
-  color: #0F172A;
-  font-weight: 600;
-}
-
-.rating {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.stars {
-  display: flex;
-  gap: 1px;
-}
-
-.star {
-  color: #E2E8F0;
-  font-size: 14px;
-}
-
-.star.filled {
-  color: #F59E0B;
-}
-
-/* ONGLETS */
-.tabs-section {
+.table-card {
   background: white;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
@@ -620,45 +1193,12 @@ export default {
   overflow: hidden;
 }
 
-.tabs-nav {
-  display: flex;
-  border-bottom: 1px solid #E2E8F0;
-  background: #F8FAFC;
-}
-
-.tab-button {
-  background: none;
-  border: none;
-  padding: 1rem 1.5rem;
-  font-size: 14px;
-  font-weight: 500;
-  color: #64748B;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border-bottom: 3px solid transparent;
-}
-
-.tab-button:hover {
-  color: #334155;
-  background: #F1F5F9;
-}
-
-.tab-button.active {
-  color: #00B8D4;
-  background: white;
-  border-bottom-color: #00B8D4;
-}
-
-.tab-content {
-  padding: 1.5rem;
-}
-
-/* TABLE */
 .table-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+  border-bottom: 1px solid #E2E8F0;
 }
 
 .table-title {
@@ -668,43 +1208,37 @@ export default {
   margin: 0;
 }
 
-.export-button {
-  background: white;
-  border: 1px solid #E2E8F0;
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
-  font-size: 14px;
-  font-weight: 500;
-  color: #64748B;
+.table-stats {
+  display: flex;
+  gap: 2rem;
+}
+
+.table-stats .stat-item {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  font-size: 14px;
 }
 
-.export-button:hover {
-  background: #F8FAFC;
-  border-color: #CBD5E1;
-  color: #334155;
+.table-stats .stat-label {
+  color: #64748B;
 }
 
-.export-button svg {
-  width: 16px;
-  height: 16px;
-  stroke-width: 2;
+.table-stats .stat-value {
+  font-weight: 600;
+  color: #0F172A;
 }
 
 .table-container {
   overflow-x: auto;
 }
 
-.data-table {
+.suppliers-table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.data-table th {
+.suppliers-table th {
   background: #F8FAFC;
   text-align: left;
   padding: 1rem;
@@ -716,100 +1250,536 @@ export default {
   border-bottom: 1px solid #E2E8F0;
 }
 
-.data-table td {
+.suppliers-table td {
   padding: 1rem;
   border-bottom: 1px solid #F1F5F9;
   font-size: 14px;
   color: #334155;
+  vertical-align: middle;
 }
 
-.data-table tbody tr:hover {
+.suppliers-table tbody tr:hover {
   background: #F8FAFC;
 }
 
-.data-table tbody tr:last-child td {
+.suppliers-table tbody tr:last-child td {
   border-bottom: none;
 }
 
-.reference {
+/* SUPPLIER INFO */
+.supplier-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.supplier-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.supplier-name {
+  font-weight: 600;
+  color: #0F172A;
+  margin: 0 0 0.25rem 0;
+  line-height: 1.2;
+}
+
+.supplier-id {
+  font-size: 12px;
+  color: #64748B;
+  margin: 0;
+}
+
+/* CONTACT INFO */
+.contact-person {
+  font-weight: 500;
+  color: #334155;
+  margin: 0 0 0.25rem 0;
+}
+
+.contact-phone {
+  font-size: 12px;
+  color: #64748B;
+  margin: 0;
+}
+
+/* LOCATION INFO */
+.city {
+  font-weight: 500;
+  color: #334155;
+  margin: 0 0 0.25rem 0;
+}
+
+.country {
+  font-size: 12px;
+  color: #64748B;
+  margin: 0;
+}
+
+/* RATING */
+.rating-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.rating-value {
   font-weight: 600;
   color: #0F172A;
 }
 
-.price,
-.stock,
-.threshold {
+.stars-mini {
+  display: flex;
+  gap: 1px;
+}
+
+.star {
+  color: #E2E8F0;
+  font-size: 12px;
+}
+
+.star.filled {
+  color: #F59E0B;
+}
+
+/* DELIVERY INFO */
+.delivery-info {
   font-weight: 600;
+  color: #0F172A;
   text-align: center;
 }
 
-.placeholder-section {
-  text-align: center;
-  padding: 3rem;
+/* STATUS */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.75rem;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.status-active {
+  background: #D1FAE5;
+  color: #047857;
+}
+
+.status-inactive {
+  background: #FEF2F2;
+  color: #DC2626;
+}
+
+/* ACTIONS */
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-btn {
+  background: none;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  padding: 6px;
   color: #64748B;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+  background: #F8FAFC;
+  border-color: #CBD5E1;
+  color: #334155;
+}
+
+.action-btn svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 1.5;
+}
+
+.empty-message {
+  text-align: center;
+  color: #64748B;
+  font-style: italic;
+  padding: 2rem;
+}
+
+/* MODAL */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.modal-large {
+  max-width: 800px;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.modal-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #0F172A;
+  margin: 0;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: #64748B;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.modal-close:hover:not(:disabled) {
+  background: #F1F5F9;
+  color: #334155;
+}
+
+.modal-close:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.modal-close svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2;
+}
+
+.modal-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+  max-height: calc(90vh - 180px);
+}
+
+/* FORMULAIRE */
+.supplier-form {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.form-section {
+  margin-bottom: 2rem;
+}
+
+.form-section:last-child {
+  margin-bottom: 0;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0F172A;
+  margin: 0 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group.col-span-2 {
+  grid-column: span 2;
+}
+
+.form-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #334155;
+}
+
+.form-label.required::after {
+  content: ' *';
+  color: #DC2626;
+}
+
+.form-input {
+  background: white;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 14px;
+  color: #0F172A;
+  transition: all 0.2s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #00B8D4;
+  box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
+}
+
+.form-input::placeholder {
+  color: #94A3B8;
+}
+
+.form-input:invalid:not(:focus) {
+  border-color: #DC2626;
+}
+
+.help-text {
+  font-size: 12px;
+  color: #64748B;
+  margin-top: -0.25rem;
+}
+
+.error-text {
+  font-size: 12px;
+  color: #DC2626;
+  margin-top: -0.25rem;
+  font-weight: 500;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 14px;
+  color: #334155;
+}
+
+.checkbox-input {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+/* MESSAGES */
+.error-banner,
+.success-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  font-size: 14px;
+}
+
+.error-banner {
+  background: #FEF2F2;
+  color: #DC2626;
+  border: 1px solid #FECACA;
+}
+
+.success-banner {
+  background: #F0FDF4;
+  color: #059669;
+  border: 1px solid #A7F3D0;
+}
+
+.error-banner svg,
+.success-banner svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* FOOTER */
+.modal-footer {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  padding: 1.5rem;
+  background: #F8FAFC;
+  border-top: 1px solid #E2E8F0;
+}
+
+.btn-cancel,
+.btn-submit {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-cancel {
+  background: white;
+  color: #64748B;
+  border: 1px solid #E2E8F0;
+}
+
+.btn-cancel:hover:not(:disabled) {
+  background: #F8FAFC;
+  border-color: #CBD5E1;
+  color: #334155;
+}
+
+.btn-submit {
+  background: #00B8D4;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 184, 212, 0.3);
+}
+
+.btn-submit:hover:not(:disabled) {
+  background: #0891A6;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 184, 212, 0.4);
+}
+
+.btn-cancel:disabled,
+.btn-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.loading-text {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  animation: spin 1s linear infinite;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+    margin: 1rem;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-group.col-span-2 {
+    grid-column: span 1;
+  }
+  
+  .modal-footer {
+    flex-direction: column-reverse;
+  }
+  
+  .btn-cancel,
+  .btn-submit {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 /* RESPONSIVE */
 @media (max-width: 1024px) {
-  .info-section {
-    grid-template-columns: 1fr;
+  .page-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
   }
-
-  .stats-grid {
-    grid-template-columns: repeat(3, 1fr);
+  
+  .new-supplier-button {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .stats-section {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .filter-group {
+    flex-direction: column;
+  }
+  
+  .search-container,
+  .filter-select,
+  .action-button,
+  .export-button {
+    width: 100%;
+    max-width: none;
   }
 }
 
 @media (max-width: 768px) {
-  .page-header {
-    flex-direction: column;
-    align-items: stretch;
+  .stats-section {
+    grid-template-columns: 1fr;
   }
-
-  .header-left {
+  
+  .table-header {
     flex-direction: column;
+    gap: 1rem;
     align-items: flex-start;
-    gap: 0.75rem;
   }
-
-  .header-actions {
-    justify-content: space-between;
-  }
-
-  .supplier-header {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-
-  .tabs-nav {
-    flex-wrap: wrap;
-  }
-
-  .tab-button {
-    flex: 1;
-    min-width: 100px;
-  }
-
-  .data-table {
+  
+  .suppliers-table {
     font-size: 12px;
   }
-
-  .data-table th,
-  .data-table td {
+  
+  .suppliers-table th,
+  .suppliers-table td {
     padding: 0.75rem 0.5rem;
+  }
+  
+  .actions {
+    flex-direction: column;
+    gap: 0.25rem;
   }
 }
 
 @media (max-width: 640px) {
-  .stats-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .data-table th:nth-child(3),
-  .data-table td:nth-child(3),
-  .data-table th:nth-child(4),
-  .data-table td:nth-child(4) {
+  .suppliers-table th:nth-child(3),
+  .suppliers-table td:nth-child(3),
+  .suppliers-table th:nth-child(4),
+  .suppliers-table td:nth-child(4),
+  .suppliers-table th:nth-child(5),
+  .suppliers-table td:nth-child(5) {
     display: none;
   }
 }
