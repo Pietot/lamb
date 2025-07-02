@@ -295,7 +295,8 @@
                     pattern="0[1-9][0-9]{8}"
                     required
                   />
-                  <span class="help-text">Format: 10 chiffres sans espaces</span>
+                  <span v-if="errors.telephone" class="error-text">{{ errors.telephone }}</span>
+                  <span v-else class="help-text">Format: 10 chiffres sans espaces</span>
                 </div>
                 
                 <div class="form-group">
@@ -339,6 +340,7 @@
                     required
                     pattern="[0-9]{5}"
                   />
+                  <span v-if="errors.code_postal" class="error-text">{{ errors.code_postal }}</span>
                 </div>
                 
                 <div class="form-group">
@@ -770,6 +772,12 @@ export default {
         newErrors.email = 'Email invalide'
       }
       
+      // Validation code postal
+      const postalCodeRegex = /^[0-9]{5}$/
+      if (!postalCodeRegex.test(newSupplier.value.code_postal)) {
+        newErrors.code_postal = 'Le code postal doit contenir 5 chiffres'
+      }
+      
       errors.value = newErrors
       return Object.keys(newErrors).length === 0
     }
@@ -790,20 +798,33 @@ export default {
         // Créer un FormData pour l'envoi
         const formData = new FormData()
         
-        // Adapter les champs pour l'API
+        // Envoyer tous les champs selon la structure de la BDD
         formData.append('nom', newSupplier.value.nom)
+        formData.append('contact_nom', newSupplier.value.contact_nom)
+        formData.append('contact_prenom', newSupplier.value.contact_prenom)
         formData.append('email', newSupplier.value.email)
         formData.append('telephone', newSupplier.value.telephone)
         formData.append('adresse', newSupplier.value.adresse)
+        formData.append('ville', newSupplier.value.ville)
+        formData.append('code_postal', newSupplier.value.code_postal)
+        formData.append('pays', newSupplier.value.pays)
         
-        // Ces champs sont attendus par l'API mais nous les adaptons
-        formData.append('prenom', newSupplier.value.contact_prenom)
-        formData.append('raison_sociale', newSupplier.value.nom) // On utilise le nom comme raison sociale
-        formData.append('siren', '123456789') // Valeur par défaut pour passer la validation
-        formData.append('siret', '12345678901234') // Valeur par défaut pour passer la validation
-        formData.append('fonction_contact', 'Contact commercial') // Valeur par défaut
+        // Champs optionnels
+        if (newSupplier.value.site_web) {
+          formData.append('site_web', newSupplier.value.site_web)
+        }
+        if (newSupplier.value.conditions_paiement) {
+          formData.append('conditions_paiement', newSupplier.value.conditions_paiement)
+        }
+        if (newSupplier.value.delai_livraison) {
+          formData.append('delai_livraison', newSupplier.value.delai_livraison)
+        }
+        if (newSupplier.value.note_qualite) {
+          formData.append('note_qualite', newSupplier.value.note_qualite)
+        }
+        formData.append('actif', newSupplier.value.actif ? 'true' : 'false')
         
-        const response = await fetch(import.meta.env.VITE_API_URL + "create_supplier", {
+        const response = await fetch(import.meta.env.VITE_API_URL + "new_fournisseur", {
           method: "POST",
           body: formData,
           credentials: 'include',
@@ -824,7 +845,10 @@ export default {
         }
         
         if (data.success) {
-          successMessage.value = 'Fournisseur créé avec succès !'
+          const successMsg = data.id 
+            ? `Fournisseur créé avec succès ! (ID: #${String(data.id).padStart(4, '0')})`
+            : 'Fournisseur créé avec succès !'
+          successMessage.value = successMsg
           
           // Attendre un peu avant de fermer et recharger
           setTimeout(() => {
@@ -1537,7 +1561,7 @@ export default {
   color: #94A3B8;
 }
 
-.form-input:invalid {
+.form-input:invalid:not(:focus) {
   border-color: #DC2626;
 }
 
@@ -1551,6 +1575,7 @@ export default {
   font-size: 12px;
   color: #DC2626;
   margin-top: -0.25rem;
+  font-weight: 500;
 }
 
 .checkbox-label {
