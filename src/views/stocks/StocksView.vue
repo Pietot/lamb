@@ -633,7 +633,7 @@ export default {
     const totalArticles = computed(() => filteredArticles.value.length)
 
     const lowStockCount = computed(() => {
-      return articles.value.filter(item => item.quantite_stock <= item.seuil_alerte).length
+      return filteredArticles.value.filter(item => item.quantite_stock <= item.seuil_alerte).length
     })
 
     // Watchers
