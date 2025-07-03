@@ -5,11 +5,13 @@
       <div class="kpi-card kpi-alert">
         <div class="kpi-icon alert-icon">
           <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2L1 21h22L12 2zm0 3.99L19.53 19H4.47L12 5.99zM11 16h2v2h-2v-2zm0-6h2v4h-2v-4z" />
+            <path
+              d="M12 2L1 21h22L12 2zm0 3.99L19.53 19H4.47L12 5.99zM11 16h2v2h-2v-2zm0-6h2v4h-2v-4z"
+            />
           </svg>
         </div>
         <div class="kpi-content">
-          <p class="kpi-label">Alertes<br>de stock</p>
+          <p class="kpi-label">Alertes<br />de stock</p>
           <p class="kpi-value">{{ stockAlerts }}</p>
         </div>
       </div>
@@ -17,7 +19,9 @@
       <div class="kpi-card kpi-orders">
         <div class="kpi-icon orders-icon">
           <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" />
+            <path
+              d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"
+            />
             <polyline points="14,2 14,8 20,8" />
             <line x1="16" y1="13" x2="8" y2="13" />
             <line x1="16" y1="17" x2="8" y2="17" />
@@ -25,7 +29,7 @@
           </svg>
         </div>
         <div class="kpi-content">
-          <p class="kpi-label">Commandes<br>en préparation</p>
+          <p class="kpi-label">Commandes<br />en préparation</p>
           <p class="kpi-value">{{ ordersInPreparation }}</p>
         </div>
       </div>
@@ -40,7 +44,7 @@
           </svg>
         </div>
         <div class="kpi-content">
-          <p class="kpi-label">Livraisons<br>à réceptionner</p>
+          <p class="kpi-label">Livraisons<br />à réceptionner</p>
           <p class="kpi-value">{{ deliveriesToReceive }}</p>
         </div>
       </div>
@@ -83,7 +87,9 @@
                 </td>
               </tr>
               <tr v-if="recentOrders.length === 0">
-                <td colspan="5" class="empty-message">Aucune commande récente</td>
+                <td colspan="100%" class="empty-message">
+                  Aucune commande récente
+                </td>
               </tr>
             </tbody>
           </table>
@@ -101,16 +107,25 @@
           </div>
           <div v-else-if="articlesError" class="error-container">
             <p class="error-message">{{ articlesError }}</p>
-            <button @click="fetchArticles" class="retry-button">Réessayer</button>
+            <button @click="fetchArticles" class="retry-button">
+              Réessayer
+            </button>
           </div>
           <div v-else class="alerts-container">
-            <div v-for="item in lowStockItems" :key="item.id_article" class="alert-item">
+            <div
+              v-for="item in lowStockItems"
+              :key="item.id_article"
+              class="alert-item"
+            >
               <div class="alert-icon-container">
                 <div class="alert-dot stock-alert"></div>
               </div>
               <div class="alert-content">
                 <p class="alert-title">{{ item.nom }}</p>
-                <p class="alert-description">Stock: {{ item.quantite_stock }} / Seuil: {{ item.seuil_alerte }}</p>
+                <p class="alert-description">
+                  Stock: {{ item.quantite_stock }} / Seuil:
+                  {{ item.seuil_alerte }}
+                </p>
               </div>
             </div>
             <div v-if="lowStockItems.length === 0" class="empty-message">
@@ -122,13 +137,18 @@
         <!-- Livraisons à réceptionner -->
         <div class="section-card">
           <h3 class="section-title">Livraisons à réceptionner</h3>
-          <div v-if="loadingDeliveries || loadingSuppliers" class="loading-container">
+          <div
+            v-if="loadingDeliveries || loadingSuppliers"
+            class="loading-container"
+          >
             <div class="loader"></div>
             <p>Chargement des livraisons...</p>
           </div>
           <div v-else-if="deliveriesError" class="error-container">
             <p class="error-message">{{ deliveriesError }}</p>
-            <button @click="fetchDeliveries" class="retry-button">Réessayer</button>
+            <button @click="fetchDeliveries" class="retry-button">
+              Réessayer
+            </button>
           </div>
           <div v-else class="table-container">
             <table class="data-table">
@@ -140,13 +160,18 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="delivery in pendingDeliveries" :key="delivery.id_livraison">
+                <tr
+                  v-for="delivery in pendingDeliveries"
+                  :key="delivery.id_livraison"
+                >
                   <td class="delivery-id">{{ delivery.numero_livraison }}</td>
                   <td>{{ getSupplierName(delivery.id_fournisseur) }}</td>
                   <td>{{ formatDateTime(delivery.date_livraison) }}</td>
                 </tr>
                 <tr v-if="pendingDeliveries.length === 0">
-                  <td colspan="3" class="empty-message">Aucune livraison en attente</td>
+                  <td colspan="100%" class="empty-message">
+                    Aucune livraison en attente
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -158,296 +183,352 @@
 </template>
 
 <script>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted } from "vue";
 
 export default {
-  name: 'DashboardView',
+  name: "DashboardView",
   setup() {
     // États réactifs
-    const orders = ref([])
-    const clients = ref([])
-    const articles = ref([])
-    const deliveries = ref([])
-    const suppliers = ref([])
-    const loadingOrders = ref(true)
-    const loadingClients = ref(true)
-    const loadingArticles = ref(true)
-    const loadingDeliveries = ref(true)
-    const loadingSuppliers = ref(true)
-    const ordersError = ref(null)
-    const clientsError = ref(null)
-    const articlesError = ref(null)
-    const deliveriesError = ref(null)
-    const suppliersError = ref(null)
+    const orders = ref([]);
+    const clients = ref([]);
+    const articles = ref([]);
+    const deliveries = ref([]);
+    const suppliers = ref([]);
+    const loadingOrders = ref(true);
+    const loadingClients = ref(true);
+    const loadingArticles = ref(true);
+    const loadingDeliveries = ref(true);
+    const loadingSuppliers = ref(true);
+    const ordersError = ref(null);
+    const clientsError = ref(null);
+    const articlesError = ref(null);
+    const deliveriesError = ref(null);
+    const suppliersError = ref(null);
 
     // Fonction pour récupérer les commandes
     const fetchOrders = async () => {
-      loadingOrders.value = true
-      ordersError.value = null
+      loadingOrders.value = true;
+      ordersError.value = null;
 
       try {
-        const response = await fetch(import.meta.env.VITE_API_URL + "get_table?table=commande", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          credentials: 'include',
-        })
+        const response = await fetch(
+          import.meta.env.VITE_API_URL + "get_table?table=commande",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            credentials: "include",
+          }
+        );
 
         if (!response.ok) {
-          throw new Error(`Erreur HTTP: ${response.status}`)
+          throw new Error(`Erreur HTTP: ${response.status}`);
         }
 
-        const data = await response.json()
-        
+        const data = await response.json();
+
         if (data.success && data.data) {
-          orders.value = data.data
+          orders.value = data.data;
         } else {
-          throw new Error('Format de données invalide')
+          throw new Error("Format de données invalide");
         }
       } catch (err) {
-        console.error('Erreur lors du chargement des commandes:', err)
-        ordersError.value = 'Impossible de charger les commandes.'
+        console.error("Erreur lors du chargement des commandes:", err);
+        ordersError.value = "Impossible de charger les commandes.";
       } finally {
-        loadingOrders.value = false
+        loadingOrders.value = false;
       }
-    }
+    };
 
     // Fonction pour récupérer les clients
     const fetchClients = async () => {
-      loadingClients.value = true
-      clientsError.value = null
+      loadingClients.value = true;
+      clientsError.value = null;
 
       try {
-        const response = await fetch(import.meta.env.VITE_API_URL + "get_table?table=client", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          credentials: 'include',
-        })
+        const response = await fetch(
+          import.meta.env.VITE_API_URL + "get_table?table=client",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            credentials: "include",
+          }
+        );
 
         if (!response.ok) {
-          throw new Error(`Erreur HTTP: ${response.status}`)
+          throw new Error(`Erreur HTTP: ${response.status}`);
         }
 
-        const data = await response.json()
-        
+        const data = await response.json();
+
         if (data.success && data.data) {
-          clients.value = data.data
+          clients.value = data.data;
         } else {
-          throw new Error('Format de données invalide')
+          throw new Error("Format de données invalide");
         }
       } catch (err) {
-        console.error('Erreur lors du chargement des clients:', err)
-        clientsError.value = 'Impossible de charger les clients.'
+        console.error("Erreur lors du chargement des clients:", err);
+        clientsError.value = "Impossible de charger les clients.";
       } finally {
-        loadingClients.value = false
+        loadingClients.value = false;
       }
-    }
+    };
 
     // Fonction pour récupérer les articles (pour les alertes de stock)
     const fetchArticles = async () => {
-      loadingArticles.value = true
-      articlesError.value = null
+      loadingArticles.value = true;
+      articlesError.value = null;
 
       try {
-        const response = await fetch(import.meta.env.VITE_API_URL + "get_table?table=article", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          credentials: 'include',
-        })
+        const response = await fetch(
+          import.meta.env.VITE_API_URL + "get_table?table=article",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            credentials: "include",
+          }
+        );
 
         if (!response.ok) {
-          throw new Error(`Erreur HTTP: ${response.status}`)
+          throw new Error(`Erreur HTTP: ${response.status}`);
         }
 
-        const data = await response.json()
-        
+        const data = await response.json();
+
         if (data.success && data.data) {
-          articles.value = data.data
+          articles.value = data.data;
         } else {
-          throw new Error('Format de données invalide')
+          throw new Error("Format de données invalide");
         }
       } catch (err) {
-        console.error('Erreur lors du chargement des articles:', err)
-        articlesError.value = 'Impossible de charger les articles.'
+        console.error("Erreur lors du chargement des articles:", err);
+        articlesError.value = "Impossible de charger les articles.";
       } finally {
-        loadingArticles.value = false
+        loadingArticles.value = false;
       }
-    }
+    };
 
     // Fonction pour récupérer les livraisons
     const fetchDeliveries = async () => {
-      loadingDeliveries.value = true
-      deliveriesError.value = null
+      loadingDeliveries.value = true;
+      deliveriesError.value = null;
 
       try {
-        const response = await fetch(import.meta.env.VITE_API_URL + "get_table?table=livraison", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          credentials: 'include',
-        })
+        const response = await fetch(
+          import.meta.env.VITE_API_URL + "get_table?table=livraison",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            credentials: "include",
+          }
+        );
 
         if (!response.ok) {
-          throw new Error(`Erreur HTTP: ${response.status}`)
+          throw new Error(`Erreur HTTP: ${response.status}`);
         }
 
-        const data = await response.json()
-        
+        const data = await response.json();
+
         if (data.success && data.data) {
-          deliveries.value = data.data
+          deliveries.value = data.data;
         } else {
-          throw new Error('Format de données invalide')
+          throw new Error("Format de données invalide");
         }
       } catch (err) {
-        console.error('Erreur lors du chargement des livraisons:', err)
-        deliveriesError.value = 'Impossible de charger les livraisons.'
+        console.error("Erreur lors du chargement des livraisons:", err);
+        deliveriesError.value = "Impossible de charger les livraisons.";
       } finally {
-        loadingDeliveries.value = false
+        loadingDeliveries.value = false;
       }
-    }
+    };
 
     // Fonction pour récupérer les fournisseurs
     const fetchSuppliers = async () => {
-      loadingSuppliers.value = true
-      suppliersError.value = null
+      loadingSuppliers.value = true;
+      suppliersError.value = null;
 
       try {
-        const response = await fetch(import.meta.env.VITE_API_URL + "get_table?table=fournisseur", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          credentials: 'include',
-        })
+        const response = await fetch(
+          import.meta.env.VITE_API_URL + "get_table?table=fournisseur",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            credentials: "include",
+          }
+        );
 
         if (!response.ok) {
-          throw new Error(`Erreur HTTP: ${response.status}`)
+          throw new Error(`Erreur HTTP: ${response.status}`);
         }
 
-        const data = await response.json()
-        
+        const data = await response.json();
+
         if (data.success && data.data) {
-          suppliers.value = data.data
+          suppliers.value = data.data;
         } else {
-          throw new Error('Format de données invalide')
+          throw new Error("Format de données invalide");
         }
       } catch (err) {
-        console.error('Erreur lors du chargement des fournisseurs:', err)
-        suppliersError.value = 'Impossible de charger les fournisseurs.'
+        console.error("Erreur lors du chargement des fournisseurs:", err);
+        suppliersError.value = "Impossible de charger les fournisseurs.";
       } finally {
-        loadingSuppliers.value = false
+        loadingSuppliers.value = false;
       }
-    }
+    };
 
     // Computed properties
     const recentOrders = computed(() => {
       // Trier par date décroissante et prendre les 5 dernières
       return orders.value
         .sort((a, b) => new Date(b.date_commande) - new Date(a.date_commande))
-        .slice(0, 5)
-    })
+        .slice(0, 5);
+    });
 
     const ordersInPreparation = computed(() => {
-      return orders.value.filter(order => order.statut === 'preparation').length
-    })
+      return orders.value.filter((order) => order.statut === "preparation")
+        .length;
+    });
 
     const deliveriesToReceive = computed(() => {
-      return deliveries.value.filter(delivery => delivery.statut === 'en_attente').length
-    })
+      return deliveries.value.filter(
+        (delivery) => delivery.statut === "en_attente"
+      ).length;
+    });
 
     const pendingDeliveries = computed(() => {
       // Récupérer les livraisons en attente, triées par date
       return deliveries.value
-        .filter(delivery => delivery.statut === 'en_attente')
+        .filter((delivery) => delivery.statut === "en_attente")
         .sort((a, b) => new Date(a.date_livraison) - new Date(b.date_livraison))
-        .slice(0, 5) // Limiter à 5 pour l'affichage
-    })
+        .slice(0, 5); // Limiter à 5 pour l'affichage
+    });
 
     const stockAlerts = computed(() => {
-      return articles.value.filter(article => article.quantite_stock <= article.seuil_alerte).length
-    })
+      return articles.value.filter(
+        (article) => article.quantite_stock <= article.seuil_alerte
+      ).length;
+    });
 
     const lowStockItems = computed(() => {
       // Récupérer les 5 premiers articles en alerte
       return articles.value
-        .filter(article => article.quantite_stock <= article.seuil_alerte)
-        .slice(0, 5)
-    })
+        .filter((article) => article.quantite_stock <= article.seuil_alerte)
+        .slice(0, 5);
+    });
 
     // Fonction pour obtenir le nom du client
     const getClientName = (clientId) => {
-      const client = clients.value.find(c => c.id_client === clientId)
+      const client = clients.value.find((c) => c.id_client === clientId);
       if (client) {
-        return client.raison_sociale || `${client.prénom} ${client.nom}` || `Client #${clientId}`
+        return (
+          client.raison_sociale ||
+          `${client.prénom} ${client.nom}` ||
+          `Client #${clientId}`
+        );
       }
-      return `Client #${clientId}`
-    }
+      return `Client #${clientId}`;
+    };
 
     // Fonction pour obtenir le nom du fournisseur
     const getSupplierName = (supplierId) => {
-      const supplier = suppliers.value.find(s => s.id_fournisseur === supplierId)
+      const supplier = suppliers.value.find(
+        (s) => s.id_fournisseur === supplierId
+      );
       if (supplier) {
-        return supplier.nom || supplier.raison_sociale || `Fournisseur #${supplierId}`
+        return (
+          supplier.nom ||
+          supplier.raison_sociale ||
+          `Fournisseur #${supplierId}`
+        );
       }
-      return `Fournisseur #${supplierId}`
-    }
+      return `Fournisseur #${supplierId}`;
+    };
 
     // Fonctions utilitaires
     const formatDate = (dateString) => {
-      const date = new Date(dateString)
-      const months = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.']
-      return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`
-    }
+      const date = new Date(dateString);
+      const months = [
+        "janv.",
+        "févr.",
+        "mars",
+        "avr.",
+        "mai",
+        "juin",
+        "juil.",
+        "août",
+        "sept.",
+        "oct.",
+        "nov.",
+        "déc.",
+      ];
+      return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+    };
 
     const formatDateTime = (dateString) => {
-      const date = new Date(dateString)
-      const months = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.']
-      const hours = date.getHours().toString().padStart(2, '0')
-      const minutes = date.getMinutes().toString().padStart(2, '0')
-      return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()} à ${hours}:${minutes}`
-    }
+      const date = new Date(dateString);
+      const months = [
+        "janv.",
+        "févr.",
+        "mars",
+        "avr.",
+        "mai",
+        "juin",
+        "juil.",
+        "août",
+        "sept.",
+        "oct.",
+        "nov.",
+        "déc.",
+      ];
+      const hours = date.getHours().toString().padStart(2, "0");
+      const minutes = date.getMinutes().toString().padStart(2, "0");
+      return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()} à ${hours}:${minutes}`;
+    };
 
     const formatCurrency = (amount) => {
-      return new Intl.NumberFormat('fr-FR', {
-        style: 'currency',
-        currency: 'EUR'
-      }).format(amount)
-    }
+      return new Intl.NumberFormat("fr-FR", {
+        style: "currency",
+        currency: "EUR",
+      }).format(amount);
+    };
 
     const getStatusClass = (status) => {
       const statusClasses = {
-        'preparation': 'status-preparing',
-        'expedie': 'status-shipped',
-        'attente': 'status-wait',
-        'annule': 'status-cancelled'
-      }
-      return statusClasses[status] || 'status-default'
-    }
+        preparation: "status-preparing",
+        expedie: "status-shipped",
+        attente: "status-wait",
+        annule: "status-cancelled",
+      };
+      return statusClasses[status] || "status-default";
+    };
 
     const getStatusLabel = (status) => {
       const statusLabels = {
-        'preparation': 'En préparation',
-        'expedie': 'Expédiée',
-        'attente': 'En attente',
-        'annule': 'Annulée'
-      }
-      return statusLabels[status] || status
-    }
+        preparation: "En préparation",
+        expedie: "Expédiée",
+        attente: "En attente",
+        annule: "Annulée",
+      };
+      return statusLabels[status] || status;
+    };
 
     // Charger les données au montage du composant
     onMounted(() => {
-      fetchOrders()
-      fetchClients()
-      fetchArticles()
-      fetchDeliveries()
-      fetchSuppliers()
-    })
+      fetchOrders();
+      fetchClients();
+      fetchArticles();
+      fetchDeliveries();
+      fetchSuppliers();
+    });
 
     return {
       orders,
@@ -482,16 +563,16 @@ export default {
       formatDateTime,
       formatCurrency,
       getStatusClass,
-      getStatusLabel
-    }
-  }
-}
+      getStatusLabel,
+    };
+  },
+};
 </script>
 
 <style scoped>
 .dashboard {
   padding: 0;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 /* SECTION KPI */
@@ -510,7 +591,7 @@ export default {
   align-items: center;
   gap: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  border: 1px solid #F1F5F9;
+  border: 1px solid #f1f5f9;
   transition: all 0.2s ease;
 }
 
@@ -535,17 +616,17 @@ export default {
 }
 
 .alert-icon {
-  background: #FEF2F2;
-  color: #DC2626;
+  background: #fef2f2;
+  color: #dc2626;
 }
 
 .orders-icon {
-  background: #EFF6FF;
-  color: #2563EB;
+  background: #eff6ff;
+  color: #2563eb;
 }
 
 .delivery-icon {
-  background: #F0FDF4;
+  background: #f0fdf4;
   color: #059669;
 }
 
@@ -555,7 +636,7 @@ export default {
 
 .kpi-label {
   font-size: 13px;
-  color: #64748B;
+  color: #64748b;
   margin: 0 0 4px 0;
   line-height: 1.3;
   font-weight: 500;
@@ -564,7 +645,7 @@ export default {
 .kpi-value {
   font-size: 28px;
   font-weight: 700;
-  color: #0F172A;
+  color: #0f172a;
   margin: 0;
   line-height: 1;
 }
@@ -587,7 +668,7 @@ export default {
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  border: 1px solid #F1F5F9;
+  border: 1px solid #f1f5f9;
 }
 
 .section-card.full-width {
@@ -597,7 +678,7 @@ export default {
 .section-title {
   font-size: 16px;
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
   margin: 0 0 1.5rem 0;
 }
 
@@ -606,7 +687,7 @@ export default {
 .error-container {
   text-align: center;
   padding: 2rem;
-  color: #64748B;
+  color: #64748b;
 }
 
 .loading-container {
@@ -620,8 +701,8 @@ export default {
 .loader {
   width: 40px;
   height: 40px;
-  border: 3px solid #F1F5F9;
-  border-top-color: #00B8D4;
+  border: 3px solid #f1f5f9;
+  border-top-color: #00b8d4;
   border-radius: 50%;
   margin: 0 auto 1rem;
   animation: spin 1s linear infinite;
@@ -634,12 +715,12 @@ export default {
 }
 
 .error-message {
-  color: #DC2626;
+  color: #dc2626;
   margin-bottom: 1rem;
 }
 
 .retry-button {
-  background: #00B8D4;
+  background: #00b8d4;
   color: white;
   border: none;
   border-radius: 6px;
@@ -651,7 +732,7 @@ export default {
 }
 
 .retry-button:hover {
-  background: #0891A6;
+  background: #0891a6;
 }
 
 /* TABLEAUX */
@@ -669,21 +750,21 @@ export default {
   padding: 8px 12px;
   font-size: 12px;
   font-weight: 600;
-  color: #64748B;
+  color: #64748b;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .data-table td {
   padding: 12px;
-  border-bottom: 1px solid #F1F5F9;
+  border-bottom: 1px solid #f1f5f9;
   font-size: 14px;
-  color: #334155;
+  color: black;
 }
 
 .data-table tbody tr:hover {
-  background-color: #F8FAFC;
+  background-color: #f8fafc;
 }
 
 .data-table tbody tr:last-child td {
@@ -693,12 +774,12 @@ export default {
 .order-id,
 .delivery-id {
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
 }
 
 .empty-message {
   text-align: center;
-  color: #64748B;
+  color: #64748b;
   font-style: italic;
   padding: 1rem;
 }
@@ -712,28 +793,28 @@ export default {
 }
 
 .status-preparing {
-  background: #EFF6FF;
-  color: #1D4ED8;
+  background: #eff6ff;
+  color: #1d4ed8;
 }
 
 .status-wait {
-  background: #FEF3C7;
-  color: #92400E;
+  background: #fef3c7;
+  color: #92400e;
 }
 
 .status-shipped {
-  background: #E0E7FF;
-  color: #4338CA;
+  background: #e0e7ff;
+  color: #4338ca;
 }
 
 .status-cancelled {
-  background: #FEF2F2;
-  color: #DC2626;
+  background: #fef2f2;
+  color: #dc2626;
 }
 
 .status-default {
-  background: #F1F5F9;
-  color: #64748B;
+  background: #f1f5f9;
+  color: #64748b;
 }
 
 /* ALERTES */
@@ -750,15 +831,15 @@ export default {
   align-items: center;
   gap: 12px;
   padding: 12px;
-  background: #F8FAFC;
+  background: #f8fafc;
   border-radius: 8px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #e2e8f0;
   transition: all 0.2s ease;
 }
 
 .alert-item:hover {
-  background: #F1F5F9;
-  border-color: #CBD5E1;
+  background: #f1f5f9;
+  border-color: #cbd5e1;
 }
 
 .alert-icon-container {
@@ -790,7 +871,7 @@ export default {
 }
 
 .stock-alert {
-  background: #EF4444;
+  background: #ef4444;
 }
 
 .alert-content {
@@ -800,13 +881,13 @@ export default {
 .alert-title {
   font-size: 14px;
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
   margin: 0 0 2px 0;
 }
 
 .alert-description {
   font-size: 12px;
-  color: #64748B;
+  color: #64748b;
   margin: 0;
 }
 

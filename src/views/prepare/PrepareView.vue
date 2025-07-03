@@ -10,9 +10,11 @@
       <div class="kpi-card kpi-urgent">
         <div class="kpi-icon urgent-icon">
           <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-            <line x1="12" y1="9" x2="12" y2="13"/>
-            <line x1="12" y1="17" x2="12.01" y2="17"/>
+            <path
+              d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+            />
+            <line x1="12" y1="9" x2="12" y2="13" />
+            <line x1="12" y1="17" x2="12.01" y2="17" />
           </svg>
         </div>
         <div class="kpi-content">
@@ -24,10 +26,12 @@
       <div class="kpi-card kpi-normal">
         <div class="kpi-icon normal-icon">
           <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-            <polyline points="14 2 14 8 20 8"/>
-            <line x1="16" y1="13" x2="8" y2="13"/>
-            <line x1="16" y1="17" x2="8" y2="17"/>
+            <path
+              d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+            />
+            <polyline points="14 2 14 8 20 8" />
+            <line x1="16" y1="13" x2="8" y2="13" />
+            <line x1="16" y1="17" x2="8" y2="17" />
           </svg>
         </div>
         <div class="kpi-content">
@@ -39,8 +43,8 @@
       <div class="kpi-card kpi-progress">
         <div class="kpi-icon progress-icon">
           <svg viewBox="0 0 24 24" fill="currentColor">
-            <circle cx="12" cy="12" r="10"/>
-            <polyline points="12 6 12 12 16 14"/>
+            <circle cx="12" cy="12" r="10" />
+            <polyline points="12 6 12 12 16 14" />
           </svg>
         </div>
         <div class="kpi-content">
@@ -50,33 +54,66 @@
       </div>
     </div>
 
-    <!-- Filtres simplifiés -->
+    <!-- Filtres -->
     <div class="filters-section">
       <div class="filter-group">
-        <select v-model="filterPriority" class="filter-select">
-          <option value="">Toutes les priorités</option>
-          <option value="urgent">Urgente</option>
-          <option value="normal">Normale</option>
-        </select>
-        
-        <select v-model="filterStatus" class="filter-select">
-          <option value="">Tous les statuts</option>
-          <option value="attente">En attente</option>
-          <option value="preparation">En préparation</option>
-        </select>
-
         <div class="search-container">
-          <input 
-            v-model="searchQuery" 
-            type="text" 
-            placeholder="Rechercher..."
+          <input
+            v-model="searchQuery"
+            type="text"
+            placeholder="Rechercher par numéro, fournisseur ou montant"
             class="search-input"
           />
-          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <svg
+            class="search-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+          >
             <circle cx="11" cy="11" r="8" />
             <line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg>
         </div>
+
+        <div class="filter-wrapper">
+          <select v-model="filterPriority" class="filter-select">
+            <option value="">Toutes les priorités</option>
+            <option value="urgent">Urgente</option>
+            <option value="normal">Normale</option>
+          </select>
+          <svg
+            class="filter-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+          >
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </div>
+
+        <div class="filter-wrapper">
+          <select v-model="filterStatus" class="filter-select">
+            <option value="">Tous les statuts</option>
+            <option value="attente">En attente</option>
+            <option value="preparation">En préparation</option>
+          </select>
+          <svg
+            class="filter-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+          >
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </div>
+
+        <button class="search-button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          Rechercher
+        </button>
       </div>
     </div>
 
@@ -85,7 +122,9 @@
       <div class="orders-card">
         <div class="orders-header">
           <h3 class="orders-title">File d'attente</h3>
-          <span class="orders-count">{{ filteredOrders.length }} commande(s)</span>
+          <span class="orders-count"
+            >{{ filteredOrders.length }} commande(s)</span
+          >
         </div>
 
         <div v-if="loading" class="loading-container">
@@ -103,35 +142,45 @@
             v-for="order in filteredOrders"
             :key="order.id_commande"
             class="order-item"
-            :class="{ 'urgent': isUrgent(order) }"
+            :class="{ urgent: isUrgent(order) }"
           >
             <div class="order-main">
               <div class="order-info">
-                <span class="order-id">#{{ String(order.id_commande).padStart(5, '0') }}</span>
-                <span class="order-client">{{ getClientName(order.id_client) }}</span>
-                <span class="order-date">{{ formatDate(order.date_commande) }}</span>
-                <span class="order-amount">{{ formatCurrency(order.montant_total) }}</span>
+                <span class="order-id"
+                  >#{{ String(order.id_commande).padStart(5, "0") }}</span
+                >
+                <span class="order-client">{{
+                  getClientName(order.id_client)
+                }}</span>
+                <span class="order-date">{{
+                  formatDate(order.date_commande)
+                }}</span>
+                <span class="order-amount">{{
+                  formatCurrency(order.montant_total)
+                }}</span>
               </div>
             </div>
-            
+
             <div class="order-right">
               <div class="order-badges">
-                <span v-if="isUrgent(order)" class="badge badge-urgent">Urgent</span>
+                <span v-if="isUrgent(order)" class="badge badge-urgent"
+                  >Urgent</span
+                >
                 <span class="badge" :class="getStatusClass(order.statut)">
                   {{ getStatusLabel(order.statut) }}
                 </span>
               </div>
-              
+
               <div class="order-actions">
-                <button 
+                <button
                   v-if="order.statut === 'attente'"
                   class="action-btn primary"
                   @click="startPreparation(order)"
                 >
                   Commencer
                 </button>
-                
-                <button 
+
+                <button
                   v-else-if="order.statut === 'preparation'"
                   class="action-btn success"
                   @click="completePreparation(order)"
@@ -139,26 +188,28 @@
                   Terminer
                 </button>
 
-                <button 
+                <button
                   class="action-btn icon-btn"
                   @click="viewOrder(order)"
                   title="Voir détails"
                 >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
                   </svg>
                 </button>
-                
-                <button 
+
+                <button
                   class="action-btn icon-btn"
                   @click="viewOrderContent(order)"
                   title="Voir contenu"
                 >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2"/>
-                    <line x1="9" y1="12" x2="15" y2="12"/>
-                    <line x1="9" y1="16" x2="15" y2="16"/>
+                    <path
+                      d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2"
+                    />
+                    <line x1="9" y1="12" x2="15" y2="12" />
+                    <line x1="9" y1="16" x2="15" y2="16" />
                   </svg>
                 </button>
               </div>
@@ -173,14 +224,18 @@
     </div>
 
     <!-- Modal Contenu de la commande -->
-    <div v-if="showContentModal" class="modal-overlay" @click="showContentModal = false">
+    <div
+      v-if="showContentModal"
+      class="modal-overlay"
+      @click="showContentModal = false"
+    >
       <div class="modal-content modal-details" @click.stop>
         <div class="modal-header">
           <h3>Contenu de la commande</h3>
           <button @click="showContentModal = false" class="modal-close">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <line x1="18" y1="6" x2="6" y2="18"/>
-              <line x1="6" y1="6" x2="18" y2="18"/>
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
         </div>
@@ -188,15 +243,21 @@
           <div class="order-summary">
             <div class="summary-item">
               <span class="summary-label">Commande:</span>
-              <span class="summary-value">#{{ String(selectedOrder.id_commande).padStart(5, '0') }}</span>
+              <span class="summary-value"
+                >#{{ String(selectedOrder.id_commande).padStart(5, "0") }}</span
+              >
             </div>
             <div class="summary-item">
               <span class="summary-label">Client:</span>
-              <span class="summary-value">{{ getClientName(selectedOrder.id_client) }}</span>
+              <span class="summary-value">{{
+                getClientName(selectedOrder.id_client)
+              }}</span>
             </div>
             <div class="summary-item">
               <span class="summary-label">Date:</span>
-              <span class="summary-value">{{ formatFullDate(selectedOrder.date_commande) }}</span>
+              <span class="summary-value">{{
+                formatFullDate(selectedOrder.date_commande)
+              }}</span>
             </div>
           </div>
 
@@ -207,14 +268,24 @@
               <p>Chargement des articles...</p>
             </div>
             <div v-else-if="orderArticles.length > 0" class="articles-list">
-              <div v-for="(article, index) in orderArticles" :key="index" class="article-item">
+              <div
+                v-for="(article, index) in orderArticles"
+                :key="index"
+                class="article-item"
+              >
                 <div class="article-info">
-                  <span class="article-name">{{ article.nom || `Article #${article.id_article}` }}</span>
-                  <span class="article-ref">Réf: {{ article.reference || 'N/A' }}</span>
+                  <span class="article-name">{{
+                    article.nom || `Article #${article.id_article}`
+                  }}</span>
+                  <span class="article-ref"
+                    >Réf: {{ article.reference || "N/A" }}</span
+                  >
                 </div>
                 <div class="article-quantity">
                   <span class="quantity-label">Quantité:</span>
-                  <span class="quantity-value">{{ article.quantite || 1 }}</span>
+                  <span class="quantity-value">{{
+                    article.quantite || 1
+                  }}</span>
                 </div>
               </div>
             </div>
@@ -226,7 +297,9 @@
           <div class="modal-footer">
             <div class="total-section">
               <span class="total-label">Total de la commande:</span>
-              <span class="total-value">{{ formatCurrency(selectedOrder.montant_total) }}</span>
+              <span class="total-value">{{
+                formatCurrency(selectedOrder.montant_total)
+              }}</span>
             </div>
           </div>
         </div>
@@ -234,34 +307,50 @@
     </div>
 
     <!-- Modal Confirmation terminer -->
-    <div v-if="showConfirmModal" class="modal-overlay" @click="showConfirmModal = false">
+    <div
+      v-if="showConfirmModal"
+      class="modal-overlay"
+      @click="showConfirmModal = false"
+    >
       <div class="modal-content modal-confirm" @click.stop>
         <div class="modal-header">
           <h3>Confirmer la fin de préparation</h3>
           <button @click="showConfirmModal = false" class="modal-close">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <line x1="18" y1="6" x2="6" y2="18"/>
-              <line x1="6" y1="6" x2="18" y2="18"/>
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
         </div>
         <div class="modal-body" v-if="orderToComplete">
           <div class="confirm-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
           <p class="confirm-message">
-            Êtes-vous sûr de vouloir marquer la commande <strong>#{{ String(orderToComplete.id_commande).padStart(5, '0') }}</strong> comme terminée ?
+            Êtes-vous sûr de vouloir marquer la commande
+            <strong
+              >#{{
+                String(orderToComplete.id_commande).padStart(5, "0")
+              }}</strong
+            >
+            comme terminée ?
           </p>
           <p class="confirm-submessage">
             Cette action changera le statut de la commande en "Expédiée".
           </p>
           <div class="modal-actions">
-            <button class="modal-btn secondary" @click="showConfirmModal = false">
+            <button
+              class="modal-btn secondary"
+              @click="showConfirmModal = false"
+            >
               Annuler
             </button>
-            <button class="modal-btn primary" @click="confirmCompletePreparation">
+            <button
+              class="modal-btn primary"
+              @click="confirmCompletePreparation"
+            >
               Confirmer
             </button>
           </div>
@@ -272,248 +361,305 @@
 </template>
 
 <script>
-import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed, onMounted } from "vue";
+import { useRouter } from "vue-router";
 
 export default {
-  name: 'PrepareView',
+  name: "PrepareView",
   setup() {
-    const router = useRouter()
-    
+    const router = useRouter();
+
     // États
-    const orders = ref([])
-    const clients = ref([])
-    const loading = ref(true)
-    const error = ref(null)
-    const searchQuery = ref('')
-    const filterPriority = ref('')
-    const filterStatus = ref('')
-    
+    const orders = ref([]);
+    const clients = ref([]);
+    const loading = ref(true);
+    const error = ref(null);
+    const searchQuery = ref("");
+    const filterPriority = ref("");
+    const filterStatus = ref("");
+
     // États pour les modales
-    const showContentModal = ref(false)
-    const showConfirmModal = ref(false)
-    const selectedOrder = ref(null)
-    const orderToComplete = ref(null)
-    const orderArticles = ref([])
-    const loadingArticles = ref(false)
+    const showContentModal = ref(false);
+    const showConfirmModal = ref(false);
+    const selectedOrder = ref(null);
+    const orderToComplete = ref(null);
+    const orderArticles = ref([]);
+    const loadingArticles = ref(false);
 
     // Fonction pour récupérer les données
     const fetchData = async () => {
-      loading.value = true
-      error.value = null
-      
+      loading.value = true;
+      error.value = null;
+
       try {
         // Récupérer les commandes
-        const ordersResponse = await fetch(import.meta.env.VITE_API_URL + "get_table?table=commande", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          credentials: 'include',
-        })
+        const ordersResponse = await fetch(
+          import.meta.env.VITE_API_URL + "get_table?table=commande",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            credentials: "include",
+          }
+        );
 
         // Récupérer les clients
-        const clientsResponse = await fetch(import.meta.env.VITE_API_URL + "get_table?table=client", {
-           method: "GET",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          credentials: 'include',
-        })
+        const clientsResponse = await fetch(
+          import.meta.env.VITE_API_URL + "get_table?table=client",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            credentials: "include",
+          }
+        );
 
         if (!ordersResponse.ok || !clientsResponse.ok) {
-          throw new Error('Erreur lors du chargement des données')
+          throw new Error("Erreur lors du chargement des données");
         }
 
-        const ordersData = await ordersResponse.json()
-        const clientsData = await clientsResponse.json()
-        
+        const ordersData = await ordersResponse.json();
+        const clientsData = await clientsResponse.json();
+
         if (ordersData.success && ordersData.data) {
           // Filtrer seulement les commandes en attente ou en préparation
-          orders.value = ordersData.data.filter(order => 
-            order.statut === 'attente' || order.statut === 'preparation'
-          )
+          orders.value = ordersData.data.filter(
+            (order) =>
+              order.statut === "attente" || order.statut === "preparation"
+          );
         }
 
         if (clientsData.success && clientsData.data) {
-          clients.value = clientsData.data
+          clients.value = clientsData.data;
         }
       } catch (err) {
-        console.error('Erreur lors du chargement:', err)
-        error.value = 'Impossible de charger les commandes.'
+        console.error("Erreur lors du chargement:", err);
+        error.value = "Impossible de charger les commandes.";
       } finally {
-        loading.value = false
+        loading.value = false;
       }
-    }
+    };
 
     // Computed properties
     const urgentCount = computed(() => {
-      return orders.value.filter(order => isUrgent(order)).length
-    })
+      return orders.value.filter((order) => isUrgent(order)).length;
+    });
 
     const totalPending = computed(() => {
-      return orders.value.filter(order => order.statut === 'attente').length
-    })
+      return orders.value.filter((order) => order.statut === "attente").length;
+    });
 
     const inProgressCount = computed(() => {
-      return orders.value.filter(order => order.statut === 'preparation').length
-    })
+      return orders.value.filter((order) => order.statut === "preparation")
+        .length;
+    });
 
     const filteredOrders = computed(() => {
-      let result = [...orders.value]
+      let result = [...orders.value];
 
       // Filtre par priorité
-      if (filterPriority.value === 'urgent') {
-        result = result.filter(order => isUrgent(order))
-      } else if (filterPriority.value === 'normal') {
-        result = result.filter(order => !isUrgent(order))
+      if (filterPriority.value === "urgent") {
+        result = result.filter((order) => isUrgent(order));
+      } else if (filterPriority.value === "normal") {
+        result = result.filter((order) => !isUrgent(order));
       }
 
       // Filtre par statut
       if (filterStatus.value) {
-        result = result.filter(order => order.statut === filterStatus.value)
+        result = result.filter((order) => order.statut === filterStatus.value);
       }
 
       // Filtre par recherche
       if (searchQuery.value) {
-        const query = searchQuery.value.toLowerCase()
-        result = result.filter(order => {
-          const client = getClient(order.id_client)
-          const clientName = client ? `${client.raison_sociale}`.toLowerCase() : ''
+        const query = searchQuery.value.toLowerCase();
+        result = result.filter((order) => {
+          const client = getClient(order.id_client);
+          const clientName = client
+            ? `${client.raison_sociale}`.toLowerCase()
+            : "";
           return (
             order.id_commande.toString().includes(query) ||
             clientName.includes(query)
-          )
-        })
+          );
+        });
       }
 
       // Trier par urgence puis par date
       return result.sort((a, b) => {
         if (isUrgent(a) !== isUrgent(b)) {
-          return isUrgent(a) ? -1 : 1
+          return isUrgent(a) ? -1 : 1;
         }
-        return new Date(a.date_commande) - new Date(b.date_commande)
-      })
-    })
+        return new Date(a.date_commande) - new Date(b.date_commande);
+      });
+    });
 
     // Fonctions utilitaires
     const getClient = (clientId) => {
-      return clients.value.find(client => client.id_client === clientId)
-    }
+      return clients.value.find((client) => client.id_client === clientId);
+    };
 
     const getClientName = (clientId) => {
-      const client = getClient(clientId)
-      return client ? `${client.raison_sociale}` : `Client #${clientId}`
-    }
+      const client = getClient(clientId);
+      return client ? `${client.raison_sociale}` : `Client #${clientId}`;
+    };
 
     const formatDate = (dateString) => {
-      const date = new Date(dateString)
-      const now = new Date()
-      const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24))
-      
-      if (diffDays === 0) return "Aujourd'hui"
-      if (diffDays === 1) return "Hier"
-      if (diffDays <= 7) return `Il y a ${diffDays} jours`
-      
-      const months = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.']
-      return `${date.getDate()} ${months[date.getMonth()]}`
-    }
+      const date = new Date(dateString);
+      const now = new Date();
+      const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+
+      if (diffDays === 0) return "Aujourd'hui";
+      if (diffDays === 1) return "Hier";
+      if (diffDays <= 7) return `Il y a ${diffDays} jours`;
+
+      const months = [
+        "janv.",
+        "févr.",
+        "mars",
+        "avr.",
+        "mai",
+        "juin",
+        "juil.",
+        "août",
+        "sept.",
+        "oct.",
+        "nov.",
+        "déc.",
+      ];
+      return `${date.getDate()} ${months[date.getMonth()]}`;
+    };
 
     const formatFullDate = (dateString) => {
-      const date = new Date(dateString)
-      const months = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre']
-      return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`
-    }
+      const date = new Date(dateString);
+      const months = [
+        "janvier",
+        "février",
+        "mars",
+        "avril",
+        "mai",
+        "juin",
+        "juillet",
+        "août",
+        "septembre",
+        "octobre",
+        "novembre",
+        "décembre",
+      ];
+      return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+    };
 
     const formatCurrency = (amount) => {
-      return new Intl.NumberFormat('fr-FR', {
-        style: 'currency',
-        currency: 'EUR'
-      }).format(amount)
-    }
+      return new Intl.NumberFormat("fr-FR", {
+        style: "currency",
+        currency: "EUR",
+      }).format(amount);
+    };
 
     const isUrgent = (order) => {
       // Considérer une commande comme urgente si elle date de plus de 3 jours
-      const orderDate = new Date(order.date_commande)
-      const now = new Date()
-      const diffDays = Math.floor((now - orderDate) / (1000 * 60 * 60 * 24))
-      return diffDays > 3
-    }
+      const orderDate = new Date(order.date_commande);
+      const now = new Date();
+      const diffDays = Math.floor((now - orderDate) / (1000 * 60 * 60 * 24));
+      return diffDays > 3;
+    };
 
     const getStatusClass = (status) => {
       const statusClasses = {
-        'attente': 'badge-waiting',
-        'preparation': 'badge-progress',
-        'expedie': 'badge-shipped'
-      }
-      return statusClasses[status] || 'badge-default'
-    }
+        attente: "badge-waiting",
+        preparation: "badge-progress",
+        expedie: "badge-shipped",
+      };
+      return statusClasses[status] || "badge-default";
+    };
 
     const getStatusLabel = (status) => {
       const statusLabels = {
-        'attente': 'En attente',
-        'preparation': 'En préparation',
-        'expedie': 'Expédiée'
-      }
-      return statusLabels[status] || status
-    }
+        attente: "En attente",
+        preparation: "En préparation",
+        expedie: "Expédiée",
+      };
+      return statusLabels[status] || status;
+    };
 
     const startPreparation = async (order) => {
       // TODO: Appeler l'API pour mettre à jour le statut
-      const index = orders.value.findIndex(o => o.id_commande === order.id_commande)
+      const index = orders.value.findIndex(
+        (o) => o.id_commande === order.id_commande
+      );
       if (index !== -1) {
-        orders.value[index].statut = 'preparation'
+        orders.value[index].statut = "preparation";
       }
-    }
+    };
 
     const completePreparation = async (order) => {
-      orderToComplete.value = order
-      showConfirmModal.value = true
-    }
+      orderToComplete.value = order;
+      showConfirmModal.value = true;
+    };
 
     const confirmCompletePreparation = async () => {
-      if (!orderToComplete.value) return
-      
+      if (!orderToComplete.value) return;
+
       // TODO: Appeler l'API pour mettre à jour le statut
-      const index = orders.value.findIndex(o => o.id_commande === orderToComplete.value.id_commande)
+      const index = orders.value.findIndex(
+        (o) => o.id_commande === orderToComplete.value.id_commande
+      );
       if (index !== -1) {
-        orders.value[index].statut = 'expedie'
+        orders.value[index].statut = "expedie";
         // Retirer de la liste après un court délai
         setTimeout(() => {
-          orders.value = orders.value.filter(o => o.id_commande !== orderToComplete.value.id_commande)
-        }, 500)
+          orders.value = orders.value.filter(
+            (o) => o.id_commande !== orderToComplete.value.id_commande
+          );
+        }, 500);
       }
-      
-      showConfirmModal.value = false
-      orderToComplete.value = null
-    }
+
+      showConfirmModal.value = false;
+      orderToComplete.value = null;
+    };
 
     const viewOrder = (order) => {
-      router.push(`/orders/${order.id_commande}`)
-    }
+      router.push(`/orders/${order.id_commande}`);
+    };
 
     const viewOrderContent = async (order) => {
-      selectedOrder.value = order
-      showContentModal.value = true
-      loadingArticles.value = true
-      orderArticles.value = []
-      
+      selectedOrder.value = order;
+      showContentModal.value = true;
+      loadingArticles.value = true;
+      orderArticles.value = [];
+
       // TODO: Récupérer les articles de la commande via l'API
       // Pour l'instant, on simule avec des données
       setTimeout(() => {
         orderArticles.value = [
-          { id_article: 1, nom: 'Robe d\'été fleurie', reference: 'REF-001', quantite: 2 },
-          { id_article: 2, nom: 'T-shirt basique blanc', reference: 'REF-002', quantite: 5 },
-          { id_article: 3, nom: 'Jean slim noir', reference: 'REF-003', quantite: 3 }
-        ]
-        loadingArticles.value = false
-      }, 1000)
-    }
+          {
+            id_article: 1,
+            nom: "Robe d'été fleurie",
+            reference: "REF-001",
+            quantite: 2,
+          },
+          {
+            id_article: 2,
+            nom: "T-shirt basique blanc",
+            reference: "REF-002",
+            quantite: 5,
+          },
+          {
+            id_article: 3,
+            nom: "Jean slim noir",
+            reference: "REF-003",
+            quantite: 3,
+          },
+        ];
+        loadingArticles.value = false;
+      }, 1000);
+    };
 
     // Charger les données au montage
     onMounted(() => {
-      fetchData()
-    })
+      fetchData();
+    });
 
     return {
       orders,
@@ -544,16 +690,16 @@ export default {
       completePreparation,
       confirmCompletePreparation,
       viewOrder,
-      viewOrderContent
-    }
-  }
-}
+      viewOrderContent,
+    };
+  },
+};
 </script>
 
 <style scoped>
 .prepare-page {
   padding: 0;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 /* EN-TÊTE */
@@ -564,7 +710,7 @@ export default {
 .page-title {
   font-size: 24px;
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
   margin: 0;
 }
 
@@ -584,7 +730,7 @@ export default {
   align-items: center;
   gap: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  border: 1px solid #F1F5F9;
+  border: 1px solid #f1f5f9;
   transition: all 0.2s ease;
 }
 
@@ -609,18 +755,18 @@ export default {
 }
 
 .urgent-icon {
-  background: #FEF2F2;
-  color: #DC2626;
+  background: #fef2f2;
+  color: #dc2626;
 }
 
 .normal-icon {
-  background: #EFF6FF;
-  color: #2563EB;
+  background: #eff6ff;
+  color: #2563eb;
 }
 
 .progress-icon {
-  background: #FEF3C7;
-  color: #D97706;
+  background: #fef3c7;
+  color: #d97706;
 }
 
 .kpi-content {
@@ -629,7 +775,7 @@ export default {
 
 .kpi-label {
   font-size: 13px;
-  color: #64748B;
+  color: #64748b;
   margin: 0 0 4px 0;
   font-weight: 500;
 }
@@ -637,7 +783,7 @@ export default {
 .kpi-value {
   font-size: 28px;
   font-weight: 700;
-  color: #0F172A;
+  color: #0f172a;
   margin: 0;
   line-height: 1;
 }
@@ -654,45 +800,20 @@ export default {
   flex-wrap: wrap;
 }
 
-.filter-select {
-  background: white;
-  border: 1px solid #E2E8F0;
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
-  font-size: 14px;
-  color: #64748B;
-  min-width: 140px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.filter-select:focus {
-  outline: none;
-  border-color: #00B8D4;
-  box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
-}
-
 .search-container {
   position: relative;
   flex: 1;
-  max-width: 300px;
 }
 
 .search-input {
   width: 100%;
   background: white;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
   padding: 0.75rem 1rem 0.75rem 2.5rem;
   font-size: 14px;
-  color: #334155;
+  color: black;
   transition: all 0.2s ease;
-}
-
-.search-input:focus {
-  outline: none;
-  border-color: #00B8D4;
-  box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
 }
 
 .search-icon {
@@ -702,9 +823,82 @@ export default {
   transform: translateY(-50%);
   width: 16px;
   height: 16px;
-  color: #94A3B8;
+  color: #94a3b8;
   stroke-width: 2;
   pointer-events: none;
+}
+
+.filter-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.filter-select {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding-top: 0.75rem;
+  padding-right: 2.5rem;
+  padding-bottom: 0.75rem;
+  padding-left: 1rem;
+  font-size: 14px;
+  color: #64748b;
+  min-width: 140px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-select:hover,
+.search-input:hover {
+  box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
+}
+
+.filter-select:focus,
+.search-input:focus {
+  outline: none;
+  border-color: #00b8d4;
+  box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
+}
+
+.filter-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.filter-icon {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translate(25%, -50%);
+  pointer-events: none;
+  height: 20px;
+}
+
+.search-button {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.search-button:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+.search-button svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2;
 }
 
 /* LOADING & ERROR */
@@ -712,30 +906,32 @@ export default {
 .error-container {
   text-align: center;
   padding: 3rem;
-  color: #64748B;
+  color: #64748b;
 }
 
 .loader {
   width: 40px;
   height: 40px;
-  border: 3px solid #F1F5F9;
-  border-top-color: #00B8D4;
+  border: 3px solid #f1f5f9;
+  border-top-color: #00b8d4;
   border-radius: 50%;
   margin: 0 auto 1rem;
   animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .error-message {
-  color: #DC2626;
+  color: #dc2626;
   margin-bottom: 1rem;
 }
 
 .retry-button {
-  background: #00B8D4;
+  background: #00b8d4;
   color: white;
   border: none;
   border-radius: 6px;
@@ -747,7 +943,7 @@ export default {
 }
 
 .retry-button:hover {
-  background: #0891A6;
+  background: #0891a6;
 }
 
 /* LISTE DES COMMANDES */
@@ -759,7 +955,7 @@ export default {
   background: white;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  border: 1px solid #F1F5F9;
+  border: 1px solid #f1f5f9;
   overflow: hidden;
 }
 
@@ -768,19 +964,19 @@ export default {
   align-items: center;
   justify-content: space-between;
   padding: 1.5rem;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .orders-title {
   font-size: 16px;
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
   margin: 0;
 }
 
 .orders-count {
   font-size: 14px;
-  color: #64748B;
+  color: #64748b;
 }
 
 .orders-list {
@@ -793,18 +989,18 @@ export default {
   align-items: center;
   justify-content: space-between;
   padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid #F1F5F9;
+  border-bottom: 1px solid #f1f5f9;
   transition: all 0.2s ease;
   gap: 2rem;
 }
 
 .order-item:hover {
-  background: #F8FAFC;
+  background: #f8fafc;
 }
 
 .order-item.urgent {
-  border-left: 4px solid #DC2626;
-  background: #FEF2F2;
+  border-left: 4px solid #dc2626;
+  background: #fef2f2;
 }
 
 .order-item:last-child {
@@ -832,24 +1028,24 @@ export default {
 
 .order-id {
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
   font-size: 14px;
 }
 
 .order-client {
   font-weight: 500;
-  color: #334155;
+  color: black;
   font-size: 14px;
 }
 
 .order-date {
   font-size: 13px;
-  color: #64748B;
+  color: #64748b;
 }
 
 .order-amount {
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
   font-size: 14px;
 }
 
@@ -869,22 +1065,22 @@ export default {
 }
 
 .badge-urgent {
-  background: #DC2626;
+  background: #dc2626;
   color: white;
 }
 
 .badge-waiting {
-  background: #FEF3C7;
-  color: #92400E;
+  background: #fef3c7;
+  color: #92400e;
 }
 
 .badge-progress {
-  background: #DBEAFE;
-  color: #1E40AF;
+  background: #dbeafe;
+  color: #1e40af;
 }
 
 .badge-shipped {
-  background: #D1FAE5;
+  background: #d1fae5;
   color: #047857;
 }
 
@@ -894,7 +1090,7 @@ export default {
   gap: 0.75rem;
   flex-shrink: 0;
   padding-left: 1rem;
-  border-left: 1px solid #E2E8F0;
+  border-left: 1px solid #e2e8f0;
   margin-left: 1rem;
 }
 
@@ -909,12 +1105,12 @@ export default {
 }
 
 .action-btn.primary {
-  background: #00B8D4;
+  background: #00b8d4;
   color: white;
 }
 
 .action-btn.primary:hover {
-  background: #0891A6;
+  background: #0891a6;
 }
 
 .action-btn.success {
@@ -928,8 +1124,8 @@ export default {
 
 .action-btn.icon-btn {
   background: white;
-  border: 1px solid #E2E8F0;
-  color: #64748B;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
   padding: 8px;
   display: flex;
   align-items: center;
@@ -939,9 +1135,9 @@ export default {
 }
 
 .action-btn.icon-btn:hover {
-  background: #F8FAFC;
-  border-color: #CBD5E1;
-  color: #334155;
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: black;
 }
 
 .action-btn.icon-btn svg {
@@ -952,7 +1148,7 @@ export default {
 
 .empty-message {
   text-align: center;
-  color: #64748B;
+  color: #64748b;
   font-style: italic;
   padding: 2rem;
 }
@@ -990,20 +1186,20 @@ export default {
   align-items: center;
   justify-content: space-between;
   padding: 1.5rem;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .modal-header h3 {
   font-size: 18px;
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
   margin: 0;
 }
 
 .modal-close {
   background: none;
   border: none;
-  color: #64748B;
+  color: #64748b;
   cursor: pointer;
   padding: 4px;
   border-radius: 4px;
@@ -1011,8 +1207,8 @@ export default {
 }
 
 .modal-close:hover {
-  background: #F1F5F9;
-  color: #334155;
+  background: #f1f5f9;
+  color: black;
 }
 
 .modal-close svg {
@@ -1029,7 +1225,7 @@ export default {
 
 /* MODAL CONTENU */
 .order-summary {
-  background: #F8FAFC;
+  background: #f8fafc;
   padding: 1rem;
   border-radius: 8px;
   margin-bottom: 1.5rem;
@@ -1044,13 +1240,13 @@ export default {
 
 .summary-label {
   font-size: 13px;
-  color: #64748B;
+  color: #64748b;
   font-weight: 500;
 }
 
 .summary-value {
   font-size: 14px;
-  color: #0F172A;
+  color: #0f172a;
   font-weight: 600;
 }
 
@@ -1061,17 +1257,17 @@ export default {
 .section-subtitle {
   font-size: 14px;
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
   margin: 0 0 1rem 0;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .small-loader {
   width: 24px;
   height: 24px;
-  border: 2px solid #F1F5F9;
-  border-top-color: #00B8D4;
+  border: 2px solid #f1f5f9;
+  border-top-color: #00b8d4;
   border-radius: 50%;
   margin: 0 auto 0.5rem;
   animation: spin 1s linear infinite;
@@ -1088,9 +1284,9 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem;
-  background: #F8FAFC;
+  background: #f8fafc;
   border-radius: 6px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #e2e8f0;
 }
 
 .article-info {
@@ -1102,12 +1298,12 @@ export default {
 .article-name {
   font-size: 14px;
   font-weight: 500;
-  color: #0F172A;
+  color: #0f172a;
 }
 
 .article-ref {
   font-size: 12px;
-  color: #64748B;
+  color: #64748b;
 }
 
 .article-quantity {
@@ -1118,26 +1314,26 @@ export default {
 
 .quantity-label {
   font-size: 12px;
-  color: #64748B;
+  color: #64748b;
 }
 
 .quantity-value {
   font-size: 16px;
   font-weight: 600;
-  color: #00B8D4;
+  color: #00b8d4;
 }
 
 .empty-articles {
   text-align: center;
   padding: 2rem;
-  color: #64748B;
+  color: #64748b;
   font-style: italic;
 }
 
 .modal-footer {
   padding: 1rem 1.5rem;
-  border-top: 1px solid #E2E8F0;
-  background: #F8FAFC;
+  border-top: 1px solid #e2e8f0;
+  background: #f8fafc;
 }
 
 .total-section {
@@ -1149,13 +1345,13 @@ export default {
 .total-label {
   font-size: 14px;
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
 }
 
 .total-value {
   font-size: 20px;
   font-weight: 700;
-  color: #00B8D4;
+  color: #00b8d4;
 }
 
 /* MODAL CONFIRMATION */
@@ -1175,18 +1371,18 @@ export default {
 .confirm-message {
   text-align: center;
   font-size: 16px;
-  color: #0F172A;
+  color: #0f172a;
   margin-bottom: 0.5rem;
 }
 
 .confirm-message strong {
-  color: #00B8D4;
+  color: #00b8d4;
 }
 
 .confirm-submessage {
   text-align: center;
   font-size: 14px;
-  color: #64748B;
+  color: #64748b;
   margin-bottom: 2rem;
 }
 
@@ -1208,22 +1404,30 @@ export default {
 }
 
 .modal-btn.primary {
-  background: #00B8D4;
+  background: #00b8d4;
   color: white;
 }
 
 .modal-btn.primary:hover {
-  background: #0891A6;
+  background: #0891a6;
 }
 
 .modal-btn.secondary {
-  background: #F1F5F9;
-  color: #64748B;
+  background: #f1f5f9;
+  color: #64748b;
 }
 
 .modal-btn.secondary:hover {
-  background: #E2E8F0;
-  color: #334155;
+  background: #e2e8f0;
+  color: black;
+}
+
+input:placeholder-shown {
+  text-overflow: ellipsis;
+}
+
+input:focus::placeholder {
+  color: transparent;
 }
 
 /* RESPONSIVE */
@@ -1249,46 +1453,46 @@ export default {
     align-items: stretch;
     gap: 1rem;
   }
-  
+
   .order-main {
     width: 100%;
   }
-  
+
   .order-info {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
   }
-  
+
   .order-right {
     width: 100%;
     flex-direction: column;
     align-items: stretch;
     gap: 1rem;
   }
-  
+
   .order-badges {
     justify-content: flex-start;
   }
-  
+
   .order-actions {
     justify-content: flex-end;
     padding-left: 0;
     border-left: none;
     margin-left: 0;
     padding-top: 0.75rem;
-    border-top: 1px solid #E2E8F0;
+    border-top: 1px solid #e2e8f0;
   }
-  
+
   .modal-content {
     width: 95%;
     margin: 1rem;
   }
-  
+
   .modal-actions {
     flex-direction: column;
   }
-  
+
   .modal-btn {
     width: 100%;
   }

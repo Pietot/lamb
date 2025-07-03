@@ -10,31 +10,39 @@
       <div class="kpi-card kpi-today">
         <div class="kpi-icon today-icon">
           <svg viewBox="0 0 24 24" fill="currentColor">
-            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-            <line x1="16" y1="2" x2="16" y2="6"/>
-            <line x1="8" y1="2" x2="8" y2="6"/>
-            <line x1="3" y1="10" x2="21" y2="10"/>
-            <circle cx="12" cy="16" r="1" fill="currentColor"/>
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+            <circle cx="12" cy="16" r="1" fill="currentColor" />
           </svg>
         </div>
         <div class="kpi-content">
           <p class="kpi-label">Aujourd'hui</p>
           <p class="kpi-value">{{ todayCount }}</p>
-          <p class="kpi-sublabel">{{ todayCount === 0 ? 'Aucun événement' : todayCount === 1 ? 'événement' : 'événements' }}</p>
+          <p class="kpi-sublabel">
+            {{
+              todayCount === 0
+                ? "Aucun événement"
+                : todayCount === 1
+                  ? "événement"
+                  : "événements"
+            }}
+          </p>
         </div>
       </div>
 
       <div class="kpi-card kpi-deliveries">
         <div class="kpi-icon deliveries-icon">
           <svg viewBox="0 0 24 24" fill="currentColor">
-            <rect x="1" y="3" width="15" height="13"/>
-            <polygon points="16,3 19,7 19,13 16,13"/>
-            <circle cx="5.5" cy="18.5" r="2.5"/>
-            <circle cx="18.5" cy="18.5" r="2.5"/>
+            <rect x="1" y="3" width="15" height="13" />
+            <polygon points="16,3 19,7 19,13 16,13" />
+            <circle cx="5.5" cy="18.5" r="2.5" />
+            <circle cx="18.5" cy="18.5" r="2.5" />
           </svg>
         </div>
         <div class="kpi-content">
-          <p class="kpi-label">Livraisons<br>ce mois</p>
+          <p class="kpi-label">Livraisons ce mois</p>
           <p class="kpi-value">{{ monthDeliveries }}</p>
           <p class="kpi-sublabel">{{ pendingDeliveries }} en attente</p>
         </div>
@@ -43,13 +51,15 @@
       <div class="kpi-card kpi-orders">
         <div class="kpi-icon orders-icon">
           <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
-            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
-            <path d="M16 10H8M16 14H8"/>
+            <path
+              d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"
+            />
+            <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
+            <path d="M16 10H8M16 14H8" />
           </svg>
         </div>
         <div class="kpi-content">
-          <p class="kpi-label">Commandes<br>ce mois</p>
+          <p class="kpi-label">Commandes ce mois</p>
           <p class="kpi-value">{{ monthOrders }}</p>
           <p class="kpi-sublabel">{{ pendingOrders }} à traiter</p>
         </div>
@@ -61,27 +71,34 @@
       <div class="nav-group">
         <button class="nav-btn" @click="previousMonth" title="Mois précédent">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <polyline points="15 18 9 12 15 6"/>
+            <polyline points="15 18 9 12 15 6" />
           </svg>
         </button>
         <h2 class="current-month">{{ currentMonthLabel }}</h2>
         <button class="nav-btn" @click="nextMonth" title="Mois suivant">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <polyline points="9 18 15 12 9 6"/>
+            <polyline points="9 18 15 12 9 6" />
           </svg>
         </button>
       </div>
       <div class="nav-actions">
         <button class="today-btn" @click="goToToday">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <circle cx="12" cy="12" r="10"/>
-            <polyline points="12 6 12 12 16 14"/>
+            <circle cx="12" cy="12" r="10" />
+            <polyline points="12 6 12 12 16 14" />
           </svg>
           Aujourd'hui
         </button>
         <button class="refresh-btn" @click="fetchData" :disabled="loading">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" :class="{ 'animate-spin': loading }">
-            <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            :class="{ 'animate-spin': loading }"
+          >
+            <path
+              d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"
+            />
           </svg>
         </button>
       </div>
@@ -96,10 +113,15 @@
         </div>
 
         <div v-else-if="error" class="error-container">
-          <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="12" y1="8" x2="12" y2="12"/>
-            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          <svg
+            class="error-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
           </svg>
           <p class="error-message">{{ error }}</p>
           <button @click="fetchData" class="retry-button">Réessayer</button>
@@ -123,9 +145,9 @@
                 'other-month': day.otherMonth,
                 'is-today': day.isToday,
                 'has-events': day.events.length > 0,
-                'selected': selectedDate && day.date === selectedDate,
+                selected: selectedDate && day.date === selectedDate,
                 'is-weekend': day.isWeekend,
-                'is-past': day.isPast && !day.isToday
+                'is-past': day.isPast && !day.isToday,
               }"
               @click="selectDay(day)"
             >
@@ -133,19 +155,19 @@
                 <span class="day-number">{{ day.number }}</span>
                 <span v-if="day.isToday" class="today-label">Aujourd'hui</span>
               </div>
-              
+
               <div v-if="day.events.length > 0" class="day-content">
                 <div class="event-summary">
                   <div v-if="day.deliveries > 0" class="summary-item delivery">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <rect x="1" y="3" width="15" height="13"/>
-                      <polygon points="16,3 19,7 19,13 16,13"/>
+                      <rect x="1" y="3" width="15" height="13" />
+                      <polygon points="16,3 19,7 19,13 16,13" />
                     </svg>
                     <span>{{ day.deliveries }}</span>
                   </div>
                   <div v-if="day.orders > 0" class="summary-item order">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <path d="M20 6L9 17l-5-5"/>
+                      <path d="M20 6L9 17l-5-5" />
                     </svg>
                     <span>{{ day.orders }}</span>
                   </div>
@@ -172,15 +194,23 @@
             <div class="header-left">
               <h3 class="details-title">{{ formatSelectedDate }}</h3>
               <p class="details-subtitle">
-                {{ selectedDayEvents.length === 0 ? 'Aucun événement' : 
-                   selectedDayEvents.length === 1 ? '1 événement' : 
-                   selectedDayEvents.length + ' événements' }}
+                {{
+                  selectedDayEvents.length === 0
+                    ? "Aucun événement"
+                    : selectedDayEvents.length === 1
+                      ? "1 événement"
+                      : selectedDayEvents.length + " événements"
+                }}
               </p>
             </div>
-            <button class="close-btn" @click="selectedDate = null" title="Fermer">
+            <button
+              class="close-btn"
+              @click="selectedDate = null"
+              title="Fermer"
+            >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <line x1="18" y1="6" x2="6" y2="18"/>
-                <line x1="6" y1="6" x2="18" y2="18"/>
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
               </svg>
             </button>
           </div>
@@ -190,10 +220,10 @@
             <div v-if="selectedDayEvents.length === 0" class="empty-state">
               <div class="empty-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                  <line x1="16" y1="2" x2="16" y2="6"/>
-                  <line x1="8" y1="2" x2="8" y2="6"/>
-                  <line x1="3" y1="10" x2="21" y2="10"/>
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
                 </svg>
               </div>
               <p class="empty-text">Aucun événement prévu ce jour</p>
@@ -204,49 +234,71 @@
               <div class="events-section" v-if="deliveryEvents.length > 0">
                 <h4 class="section-title">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <rect x="1" y="3" width="15" height="13"/>
-                    <polygon points="16,3 19,7 19,13 16,13"/>
+                    <rect x="1" y="3" width="15" height="13" />
+                    <polygon points="16,3 19,7 19,13 16,13" />
                   </svg>
                   Livraisons ({{ deliveryEvents.length }})
                 </h4>
                 <div class="section-events">
-                  <div 
-                    v-for="event in deliveryEvents" 
+                  <div
+                    v-for="event in deliveryEvents"
                     :key="event.id"
                     class="event-item delivery"
                     :class="{ completed: event.completed }"
                   >
                     <div class="event-icon">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <rect x="1" y="3" width="15" height="13"/>
-                        <polygon points="16,3 19,7 19,13 16,13"/>
-                        <circle cx="5.5" cy="18.5" r="2.5"/>
-                        <circle cx="18.5" cy="18.5" r="2.5"/>
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                      >
+                        <rect x="1" y="3" width="15" height="13" />
+                        <polygon points="16,3 19,7 19,13 16,13" />
+                        <circle cx="5.5" cy="18.5" r="2.5" />
+                        <circle cx="18.5" cy="18.5" r="2.5" />
                       </svg>
                     </div>
 
                     <div class="event-content">
                       <div class="event-header">
-                        <span class="event-id">{{ event.numero_livraison || '#' + event.id }}</span>
-                        <span v-if="event.completed" class="event-badge completed">{{ getDeliveryStatusLabel(event.statut) }}</span>
-                        <span v-else class="event-badge pending">{{ getDeliveryStatusLabel(event.statut) }}</span>
+                        <span class="event-id">{{
+                          event.numero_livraison || "#" + event.id
+                        }}</span>
+                        <span
+                          v-if="event.completed"
+                          class="event-badge completed"
+                          >{{ getDeliveryStatusLabel(event.statut) }}</span
+                        >
+                        <span v-else class="event-badge pending">{{
+                          getDeliveryStatusLabel(event.statut)
+                        }}</span>
                       </div>
                       <div class="event-main">
                         <p class="event-partner">{{ event.partner }}</p>
-                        <p class="event-info">Bon: {{ event.numero_bon_livraison || 'N/A' }}</p>
-                        <p v-if="event.notes" class="event-notes">{{ event.notes }}</p>
+                        <p class="event-info">
+                          Bon: {{ event.numero_bon_livraison || "N/A" }}
+                        </p>
+                        <p v-if="event.notes" class="event-notes">
+                          {{ event.notes }}
+                        </p>
                       </div>
                     </div>
 
                     <div class="event-actions">
-                      <button 
+                      <button
                         class="action-btn"
                         @click="viewDeliveryDetails(event)"
                         title="Voir détails"
                       >
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                          <circle cx="12" cy="12" r="3"/>
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                        >
+                          <path
+                            d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
+                          />
+                          <circle cx="12" cy="12" r="3" />
                         </svg>
                       </button>
                     </div>
@@ -257,44 +309,64 @@
               <div class="events-section" v-if="orderEvents.length > 0">
                 <h4 class="section-title">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
-                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+                    <path
+                      d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"
+                    />
+                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
                   </svg>
                   Commandes ({{ orderEvents.length }})
                 </h4>
                 <div class="section-events">
-                  <div 
-                    v-for="event in orderEvents" 
+                  <div
+                    v-for="event in orderEvents"
                     :key="event.id"
                     class="event-item order"
                     :class="{ completed: event.completed }"
                   >
                     <div class="event-icon">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path d="M20 6L9 17l-5-5"/>
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                      >
+                        <path d="M20 6L9 17l-5-5" />
                       </svg>
                     </div>
 
                     <div class="event-content">
                       <div class="event-header">
-                        <span class="event-id">#{{ String(event.id).padStart(5, '0') }}</span>
-                        <span class="event-badge" :class="getOrderStatusClass(event.statut)">{{ getOrderStatusLabel(event.statut) }}</span>
+                        <span class="event-id"
+                          >#{{ String(event.id).padStart(5, "0") }}</span
+                        >
+                        <span
+                          class="event-badge"
+                          :class="getOrderStatusClass(event.statut)"
+                          >{{ getOrderStatusLabel(event.statut) }}</span
+                        >
                       </div>
                       <div class="event-main">
                         <p class="event-partner">{{ event.partner }}</p>
-                        <p class="event-info">{{ formatCurrency(event.amount) }}</p>
+                        <p class="event-info">
+                          {{ formatCurrency(event.amount) }}
+                        </p>
                       </div>
                     </div>
 
                     <div class="event-actions">
-                      <button 
+                      <button
                         class="action-btn"
                         @click="viewOrderDetails(event)"
                         title="Voir détails"
                       >
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                          <circle cx="12" cy="12" r="3"/>
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                        >
+                          <path
+                            d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
+                          />
+                          <circle cx="12" cy="12" r="3" />
                         </svg>
                       </button>
                     </div>
@@ -310,181 +382,213 @@
 </template>
 
 <script>
-import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed, onMounted } from "vue";
+import { useRouter } from "vue-router";
 
 export default {
-  name: 'AgendaView',
+  name: "AgendaView",
   setup() {
-    const router = useRouter()
-    
+    const router = useRouter();
+
     // États
-    const events = ref([])
-    const clients = ref([])
-    const fournisseurs = ref([])
-    const loading = ref(true)
-    const error = ref(null)
-    const currentDate = ref(new Date())
-    const selectedDate = ref(null)
-    
-    const weekDays = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim']
-    
+    const events = ref([]);
+    const clients = ref([]);
+    const fournisseurs = ref([]);
+    const loading = ref(true);
+    const error = ref(null);
+    const currentDate = ref(new Date());
+    const selectedDate = ref(null);
+
+    const weekDays = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
+
     // Fonction pour récupérer les données
     const fetchData = async () => {
-      loading.value = true
-      error.value = null
-      
+      loading.value = true;
+      error.value = null;
+
       try {
         // Récupérer les livraisons
-        const livraisonsResponse = await fetch(import.meta.env.VITE_API_URL + "get_table?table=livraison", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          credentials: 'include',
-        })
+        const livraisonsResponse = await fetch(
+          import.meta.env.VITE_API_URL + "get_table?table=livraison",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            credentials: "include",
+          }
+        );
 
         // Récupérer les commandes
-        const commandesResponse = await fetch(import.meta.env.VITE_API_URL + "get_table?table=commande", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          credentials: 'include',
-        })
+        const commandesResponse = await fetch(
+          import.meta.env.VITE_API_URL + "get_table?table=commande",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            credentials: "include",
+          }
+        );
 
         // Récupérer les clients
-        const clientsResponse = await fetch(import.meta.env.VITE_API_URL + "get_table?table=client", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          credentials: 'include',
-        })
+        const clientsResponse = await fetch(
+          import.meta.env.VITE_API_URL + "get_table?table=client",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            credentials: "include",
+          }
+        );
 
         // Récupérer les fournisseurs
-        const fournisseursResponse = await fetch(import.meta.env.VITE_API_URL + "get_table?table=fournisseur", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          credentials: 'include',
-        })
+        const fournisseursResponse = await fetch(
+          import.meta.env.VITE_API_URL + "get_table?table=fournisseur",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            credentials: "include",
+          }
+        );
 
-        if (!livraisonsResponse.ok || !commandesResponse.ok || !clientsResponse.ok || !fournisseursResponse.ok) {
-          throw new Error('Erreur lors du chargement des données')
+        if (
+          !livraisonsResponse.ok ||
+          !commandesResponse.ok ||
+          !clientsResponse.ok ||
+          !fournisseursResponse.ok
+        ) {
+          throw new Error("Erreur lors du chargement des données");
         }
 
-        const livraisonsData = await livraisonsResponse.json()
-        const commandesData = await commandesResponse.json()
-        const clientsData = await clientsResponse.json()
-        const fournisseursData = await fournisseursResponse.json()
+        const livraisonsData = await livraisonsResponse.json();
+        const commandesData = await commandesResponse.json();
+        const clientsData = await clientsResponse.json();
+        const fournisseursData = await fournisseursResponse.json();
 
         // Stocker les clients et fournisseurs
         if (clientsData.success && clientsData.data) {
-          clients.value = clientsData.data
+          clients.value = clientsData.data;
         }
 
         if (fournisseursData.success && fournisseursData.data) {
-          fournisseurs.value = fournisseursData.data
+          fournisseurs.value = fournisseursData.data;
         }
 
         // Traiter les données
-        const allEvents = []
+        const allEvents = [];
 
         // Ajouter les livraisons
         if (livraisonsData.success && livraisonsData.data) {
-          livraisonsData.data.forEach(livraison => {
-            const fournisseur = fournisseurs.value.find(f => f.id_fournisseur === livraison.id_fournisseur)
+          livraisonsData.data.forEach((livraison) => {
+            const fournisseur = fournisseurs.value.find(
+              (f) => f.id_fournisseur === livraison.id_fournisseur
+            );
             allEvents.push({
               id: livraison.id_livraison,
-              type: 'delivery',
-              partner: fournisseur ? fournisseur.nom_entreprise : `Fournisseur #${livraison.id_fournisseur}`,
+              type: "delivery",
+              partner: fournisseur
+                ? fournisseur.nom_entreprise
+                : `Fournisseur #${livraison.id_fournisseur}`,
               date: new Date(livraison.date_livraison),
-              completed: livraison.statut === 'completee',
+              completed: livraison.statut === "completee",
               statut: livraison.statut,
               numero_livraison: livraison.numero_livraison,
               numero_bon_livraison: livraison.numero_bon_livraison,
               notes: livraison.notes,
-              rawData: livraison
-            })
-          })
+              rawData: livraison,
+            });
+          });
         }
 
         // Ajouter les commandes
         if (commandesData.success && commandesData.data) {
-          commandesData.data.forEach(commande => {
-            const client = clients.value.find(c => c.id_client === commande.id_client)
+          commandesData.data.forEach((commande) => {
+            const client = clients.value.find(
+              (c) => c.id_client === commande.id_client
+            );
             allEvents.push({
               id: commande.id_commande,
-              type: 'order',
-              partner: client ? `${client.prénom} ${client.nom}` : `Client #${commande.id_client}`,
+              type: "order",
+              partner: client
+                ? `${client.prénom} ${client.nom}`
+                : `Client #${commande.id_client}`,
               date: new Date(commande.date_commande),
               amount: commande.montant_total,
-              completed: commande.statut === 'expedie',
+              completed: commande.statut === "expedie",
               statut: commande.statut,
-              rawData: commande
-            })
-          })
+              rawData: commande,
+            });
+          });
         }
 
-        events.value = allEvents
+        events.value = allEvents;
       } catch (err) {
-        console.error('Erreur lors du chargement:', err)
-        error.value = 'Impossible de charger l\'agenda. Veuillez réessayer.'
+        console.error("Erreur lors du chargement:", err);
+        error.value = "Impossible de charger l'agenda. Veuillez réessayer.";
       } finally {
-        loading.value = false
+        loading.value = false;
       }
-    }
+    };
 
     // Computed properties
     const currentMonthLabel = computed(() => {
-      const months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 
-                     'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
-      return `${months[currentDate.value.getMonth()]} ${currentDate.value.getFullYear()}`
-    })
+      const months = [
+        "Janvier",
+        "Février",
+        "Mars",
+        "Avril",
+        "Mai",
+        "Juin",
+        "Juillet",
+        "Août",
+        "Septembre",
+        "Octobre",
+        "Novembre",
+        "Décembre",
+      ];
+      return `${months[currentDate.value.getMonth()]} ${currentDate.value.getFullYear()}`;
+    });
 
     const calendarDays = computed(() => {
-      const year = currentDate.value.getFullYear()
-      const month = currentDate.value.getMonth()
-      const firstDay = new Date(year, month, 1)
-      const lastDay = new Date(year, month + 1, 0)
-      const daysInMonth = lastDay.getDate()
-      
+      const year = currentDate.value.getFullYear();
+      const month = currentDate.value.getMonth();
+      const firstDay = new Date(year, month, 1);
+      const lastDay = new Date(year, month + 1, 0);
+      const daysInMonth = lastDay.getDate();
+
       // Ajuster pour commencer par lundi
-      let startingDayOfWeek = firstDay.getDay() - 1
-      if (startingDayOfWeek === -1) startingDayOfWeek = 6
-      
-      const days = []
-      
+      let startingDayOfWeek = firstDay.getDay() - 1;
+      if (startingDayOfWeek === -1) startingDayOfWeek = 6;
+
+      const days = [];
+
       // Jours du mois précédent
-      const prevMonthLastDay = new Date(year, month, 0).getDate()
+      const prevMonthLastDay = new Date(year, month, 0).getDate();
       for (let i = startingDayOfWeek - 1; i >= 0; i--) {
-        const date = new Date(year, month - 1, prevMonthLastDay - i)
-        days.push(createDayObject(date, true))
+        const date = new Date(year, month - 1, prevMonthLastDay - i);
+        days.push(createDayObject(date, true));
       }
-      
+
       // Jours du mois actuel
       for (let i = 1; i <= daysInMonth; i++) {
-        const date = new Date(year, month, i)
-        days.push(createDayObject(date, false))
+        const date = new Date(year, month, i);
+        days.push(createDayObject(date, false));
       }
-      
-      // Jours du mois suivant
-      const remainingDays = 42 - days.length // 6 semaines complètes
-      for (let i = 1; i <= remainingDays; i++) {
-        const date = new Date(year, month + 1, i)
-        days.push(createDayObject(date, true))
-      }
-      
-      return days
-    })
+
+      return days;
+    });
 
     const createDayObject = (date, otherMonth) => {
-      const dateKey = formatDateKey(date)
-      const dayEvents = events.value.filter(e => formatDateKey(e.date) === dateKey)
-      const dayOfWeek = date.getDay()
-      
+      const dateKey = formatDateKey(date);
+      const dayEvents = events.value.filter(
+        (e) => formatDateKey(e.date) === dateKey
+      );
+      const dayOfWeek = date.getDay();
+
       return {
         date: dateKey,
         number: date.getDate(),
@@ -493,150 +597,185 @@ export default {
         isWeekend: dayOfWeek === 0 || dayOfWeek === 6,
         isPast: date < new Date().setHours(0, 0, 0, 0),
         events: dayEvents,
-        deliveries: dayEvents.filter(e => e.type === 'delivery').length,
-        orders: dayEvents.filter(e => e.type === 'order').length
-      }
-    }
+        deliveries: dayEvents.filter((e) => e.type === "delivery").length,
+        orders: dayEvents.filter((e) => e.type === "order").length,
+      };
+    };
 
     const selectedDayEvents = computed(() => {
-      if (!selectedDate.value) return []
-      return events.value.filter(e => formatDateKey(e.date) === selectedDate.value)
-    })
+      if (!selectedDate.value) return [];
+      return events.value.filter(
+        (e) => formatDateKey(e.date) === selectedDate.value
+      );
+    });
 
     const deliveryEvents = computed(() => {
-      return selectedDayEvents.value.filter(e => e.type === 'delivery')
-    })
+      return selectedDayEvents.value.filter((e) => e.type === "delivery");
+    });
 
     const orderEvents = computed(() => {
-      return selectedDayEvents.value.filter(e => e.type === 'order')
-    })
+      return selectedDayEvents.value.filter((e) => e.type === "order");
+    });
 
     const formatSelectedDate = computed(() => {
-      if (!selectedDate.value) return ''
-      const [year, month, day] = selectedDate.value.split('-').map(Number)
-      const date = new Date(year, month - 1, day)
-      const days = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi']
-      const months = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 
-                     'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre']
-      return `${days[date.getDay()]} ${day} ${months[month - 1]} ${year}`
-    })
+      if (!selectedDate.value) return "";
+      const [year, month, day] = selectedDate.value.split("-").map(Number);
+      const date = new Date(year, month - 1, day);
+      const days = [
+        "Dimanche",
+        "Lundi",
+        "Mardi",
+        "Mercredi",
+        "Jeudi",
+        "Vendredi",
+        "Samedi",
+      ];
+      const months = [
+        "janvier",
+        "février",
+        "mars",
+        "avril",
+        "mai",
+        "juin",
+        "juillet",
+        "août",
+        "septembre",
+        "octobre",
+        "novembre",
+        "décembre",
+      ];
+      return `${days[date.getDay()]} ${day} ${months[month - 1]} ${year}`;
+    });
 
     const todayCount = computed(() => {
-      const today = formatDateKey(new Date())
-      return events.value.filter(e => formatDateKey(e.date) === today).length
-    })
+      const today = formatDateKey(new Date());
+      return events.value.filter((e) => formatDateKey(e.date) === today).length;
+    });
 
     const monthDeliveries = computed(() => {
-      const month = currentDate.value.getMonth()
-      const year = currentDate.value.getFullYear()
-      return events.value.filter(e => 
-        e.type === 'delivery' && 
-        e.date.getMonth() === month && 
-        e.date.getFullYear() === year
-      ).length
-    })
+      const month = currentDate.value.getMonth();
+      const year = currentDate.value.getFullYear();
+      return events.value.filter(
+        (e) =>
+          e.type === "delivery" &&
+          e.date.getMonth() === month &&
+          e.date.getFullYear() === year
+      ).length;
+    });
 
     const monthOrders = computed(() => {
-      const month = currentDate.value.getMonth()
-      const year = currentDate.value.getFullYear()
-      return events.value.filter(e => 
-        e.type === 'order' && 
-        e.date.getMonth() === month && 
-        e.date.getFullYear() === year
-      ).length
-    })
+      const month = currentDate.value.getMonth();
+      const year = currentDate.value.getFullYear();
+      return events.value.filter(
+        (e) =>
+          e.type === "order" &&
+          e.date.getMonth() === month &&
+          e.date.getFullYear() === year
+      ).length;
+    });
 
     const pendingDeliveries = computed(() => {
-      return events.value.filter(e => e.type === 'delivery' && !e.completed).length
-    })
+      return events.value.filter((e) => e.type === "delivery" && !e.completed)
+        .length;
+    });
 
     const pendingOrders = computed(() => {
-      return events.value.filter(e => e.type === 'order' && e.statut === 'attente').length
-    })
+      return events.value.filter(
+        (e) => e.type === "order" && e.statut === "attente"
+      ).length;
+    });
 
     // Fonctions utilitaires
     const formatDateKey = (date) => {
-      const d = new Date(date)
-      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
-    }
+      const d = new Date(date);
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    };
 
     const formatCurrency = (amount) => {
-      return new Intl.NumberFormat('fr-FR', {
-        style: 'currency',
-        currency: 'EUR'
-      }).format(amount)
-    }
+      return new Intl.NumberFormat("fr-FR", {
+        style: "currency",
+        currency: "EUR",
+      }).format(amount);
+    };
 
     const isToday = (date) => {
-      const today = new Date()
-      const d = new Date(date)
-      return d.getDate() === today.getDate() && 
-             d.getMonth() === today.getMonth() && 
-             d.getFullYear() === today.getFullYear()
-    }
+      const today = new Date();
+      const d = new Date(date);
+      return (
+        d.getDate() === today.getDate() &&
+        d.getMonth() === today.getMonth() &&
+        d.getFullYear() === today.getFullYear()
+      );
+    };
 
     const getDeliveryStatusLabel = (status) => {
       const labels = {
-        'attente': 'En attente',
-        'partielle': 'Partielle',
-        'completee': 'Complétée',
-        'annulee': 'Annulée'
-      }
-      return labels[status] || status
-    }
+        attente: "En attente",
+        partielle: "Partielle",
+        completee: "Complétée",
+        annulee: "Annulée",
+      };
+      return labels[status] || status;
+    };
 
     const getOrderStatusLabel = (status) => {
       const labels = {
-        'attente': 'En attente',
-        'preparation': 'En préparation',
-        'expedie': 'Expédiée',
-        'annule': 'Annulée'
-      }
-      return labels[status] || status
-    }
+        attente: "En attente",
+        preparation: "En préparation",
+        expedie: "Expédiée",
+        annule: "Annulée",
+      };
+      return labels[status] || status;
+    };
 
     const getOrderStatusClass = (status) => {
       const classes = {
-        'attente': 'pending',
-        'preparation': 'progress',
-        'expedie': 'completed',
-        'annule': 'cancelled'
-      }
-      return classes[status] || 'pending'
-    }
+        attente: "pending",
+        preparation: "progress",
+        expedie: "completed",
+        annule: "cancelled",
+      };
+      return classes[status] || "pending";
+    };
 
     const previousMonth = () => {
-      currentDate.value = new Date(currentDate.value.getFullYear(), currentDate.value.getMonth() - 1)
-    }
+      currentDate.value = new Date(
+        currentDate.value.getFullYear(),
+        currentDate.value.getMonth() - 1
+      );
+    };
 
     const nextMonth = () => {
-      currentDate.value = new Date(currentDate.value.getFullYear(), currentDate.value.getMonth() + 1)
-    }
+      currentDate.value = new Date(
+        currentDate.value.getFullYear(),
+        currentDate.value.getMonth() + 1
+      );
+    };
 
     const goToToday = () => {
-      currentDate.value = new Date()
-      const today = formatDateKey(new Date())
-      selectedDate.value = today
-    }
+      currentDate.value = new Date();
+      const today = formatDateKey(new Date());
+      selectedDate.value = today;
+    };
 
     const selectDay = (day) => {
       if (!day.otherMonth) {
-        selectedDate.value = day.date
+        selectedDate.value = day.date;
       }
-    }
+    };
 
     const viewDeliveryDetails = (event) => {
-      router.push('/reception')
-    }
+      router.push("/reception");
+    };
 
     const viewOrderDetails = (event) => {
-      router.push(`/orders`)
-    }
+      router.push(`/orders`);
+    };
 
     // Charger les données au montage
     onMounted(() => {
-      fetchData()
-    })
+      fetchData();
+    });
 
     return {
       events,
@@ -668,16 +807,16 @@ export default {
       goToToday,
       selectDay,
       viewDeliveryDetails,
-      viewOrderDetails
-    }
-  }
-}
+      viewOrderDetails,
+    };
+  },
+};
 </script>
 
 <style scoped>
 .agenda-page {
   padding: 0;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 /* EN-TÊTE */
@@ -688,7 +827,7 @@ export default {
 .page-title {
   font-size: 24px;
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
   margin: 0;
 }
 
@@ -708,7 +847,7 @@ export default {
   align-items: center;
   gap: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  border: 1px solid #F1F5F9;
+  border: 1px solid #f1f5f9;
   transition: all 0.2s ease;
 }
 
@@ -733,18 +872,18 @@ export default {
 }
 
 .today-icon {
-  background: #F3E8FF;
-  color: #7C3AED;
+  background: #f3e8ff;
+  color: #7c3aed;
 }
 
 .deliveries-icon {
-  background: #F0FDF4;
+  background: #f0fdf4;
   color: #059669;
 }
 
 .orders-icon {
-  background: #EFF6FF;
-  color: #2563EB;
+  background: #eff6ff;
+  color: #2563eb;
 }
 
 .kpi-content {
@@ -753,7 +892,7 @@ export default {
 
 .kpi-label {
   font-size: 13px;
-  color: #64748B;
+  color: #64748b;
   margin: 0 0 4px 0;
   line-height: 1.3;
   font-weight: 500;
@@ -762,14 +901,14 @@ export default {
 .kpi-value {
   font-size: 28px;
   font-weight: 700;
-  color: #0F172A;
+  color: #0f172a;
   margin: 0;
   line-height: 1;
 }
 
 .kpi-sublabel {
   font-size: 12px;
-  color: #94A3B8;
+  color: #94a3b8;
   margin: 4px 0 0 0;
 }
 
@@ -782,7 +921,7 @@ export default {
   background: white;
   padding: 1rem 1.5rem;
   border-radius: 12px;
-  border: 1px solid #F1F5F9;
+  border: 1px solid #f1f5f9;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
@@ -795,7 +934,7 @@ export default {
 .nav-btn {
   background: none;
   border: none;
-  color: #64748B;
+  color: #64748b;
   cursor: pointer;
   padding: 8px;
   border-radius: 6px;
@@ -803,8 +942,8 @@ export default {
 }
 
 .nav-btn:hover {
-  background: #F1F5F9;
-  color: #334155;
+  background: #f1f5f9;
+  color: black;
 }
 
 .nav-btn svg {
@@ -816,7 +955,7 @@ export default {
 .current-month {
   font-size: 20px;
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
   margin: 0;
   min-width: 200px;
   text-align: center;
@@ -830,7 +969,7 @@ export default {
 
 .today-btn,
 .refresh-btn {
-  background: #3B82F6;
+  background: #3b82f6;
   color: white;
   border: none;
   border-radius: 8px;
@@ -846,16 +985,16 @@ export default {
 
 .today-btn:hover,
 .refresh-btn:hover {
-  background: #2563EB;
+  background: #2563eb;
 }
 
 .refresh-btn {
   padding: 0.625rem;
-  background: #00B8D4;
+  background: #00b8d4;
 }
 
 .refresh-btn:hover {
-  background: #0891A6;
+  background: #0891a6;
 }
 
 .refresh-btn:disabled {
@@ -874,6 +1013,7 @@ export default {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -888,14 +1028,14 @@ export default {
 .error-container {
   text-align: center;
   padding: 4rem;
-  color: #64748B;
+  color: #64748b;
 }
 
 .loader {
   width: 40px;
   height: 40px;
-  border: 3px solid #F1F5F9;
-  border-top-color: #00B8D4;
+  border: 3px solid #f1f5f9;
+  border-top-color: #00b8d4;
   border-radius: 50%;
   margin: 0 auto 1rem;
   animation: spin 1s linear infinite;
@@ -904,18 +1044,18 @@ export default {
 .error-icon {
   width: 48px;
   height: 48px;
-  color: #DC2626;
+  color: #dc2626;
   margin: 0 auto 1rem;
 }
 
 .error-message {
-  color: #DC2626;
+  color: #dc2626;
   margin-bottom: 1rem;
   font-weight: 500;
 }
 
 .retry-button {
-  background: #00B8D4;
+  background: #00b8d4;
   color: white;
   border: none;
   border-radius: 6px;
@@ -927,7 +1067,7 @@ export default {
 }
 
 .retry-button:hover {
-  background: #0891A6;
+  background: #0891a6;
 }
 
 /* CALENDRIER */
@@ -939,7 +1079,7 @@ export default {
   background: white;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  border: 1px solid #F1F5F9;
+  border: 1px solid #f1f5f9;
   overflow: hidden;
   padding: 1.5rem;
 }
@@ -954,7 +1094,7 @@ export default {
   text-align: center;
   font-size: 12px;
   font-weight: 600;
-  color: #64748B;
+  color: #64748b;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   padding: 0.75rem 0;
@@ -968,8 +1108,8 @@ export default {
 
 .day-cell {
   aspect-ratio: 1;
-  background: #FAFBFC;
-  border: 1px solid #E2E8F0;
+  background: #fafbfc;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
   padding: 0.5rem;
   cursor: pointer;
@@ -981,8 +1121,8 @@ export default {
 }
 
 .day-cell:hover {
-  background: #F1F5F9;
-  border-color: #CBD5E1;
+  background: #f1f5f9;
+  border-color: #cbd5e1;
   transform: translateY(-2px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
@@ -998,16 +1138,16 @@ export default {
 }
 
 .day-cell.is-today {
-  background: #FEF3C7;
-  border-color: #FCD34D;
+  background: #fef3c7;
+  border-color: #fcd34d;
 }
 
 .day-cell.is-today:hover {
-  background: #FDE68A;
+  background: #fde68a;
 }
 
 .day-cell.is-weekend {
-  background: #F8FAFC;
+  background: #f8fafc;
 }
 
 .day-cell.is-past {
@@ -1019,13 +1159,13 @@ export default {
 }
 
 .day-cell.has-events:hover {
-  background: #E0F2FE;
-  border-color: #00B8D4;
+  background: #e0f2fe;
+  border-color: #00b8d4;
 }
 
 .day-cell.selected {
-  background: #E0F2FE;
-  border-color: #00B8D4;
+  background: #e0f2fe;
+  border-color: #00b8d4;
   box-shadow: 0 0 0 2px rgba(0, 184, 212, 0.2);
 }
 
@@ -1039,13 +1179,13 @@ export default {
 .day-number {
   font-size: 14px;
   font-weight: 500;
-  color: #0F172A;
+  color: #0f172a;
 }
 
 .today-label {
   font-size: 10px;
   font-weight: 600;
-  color: #D97706;
+  color: #d97706;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -1085,12 +1225,12 @@ export default {
 }
 
 .summary-item.order {
-  background: #2563EB;
+  background: #2563eb;
 }
 
 .more-indicator {
   font-size: 10px;
-  color: #64748B;
+  color: #64748b;
   text-align: center;
   margin-top: 2px;
 }
@@ -1105,7 +1245,7 @@ export default {
 .empty-dot {
   width: 4px;
   height: 4px;
-  background: #E2E8F0;
+  background: #e2e8f0;
   border-radius: 50%;
 }
 
@@ -1118,7 +1258,7 @@ export default {
   background: white;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  border: 1px solid #F1F5F9;
+  border: 1px solid #f1f5f9;
   overflow: hidden;
 }
 
@@ -1127,8 +1267,8 @@ export default {
   align-items: center;
   justify-content: space-between;
   padding: 1.5rem;
-  background: #F8FAFC;
-  border-bottom: 1px solid #E2E8F0;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .header-left {
@@ -1138,21 +1278,21 @@ export default {
 .details-title {
   font-size: 18px;
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
   margin: 0 0 0.25rem 0;
   text-transform: capitalize;
 }
 
 .details-subtitle {
   font-size: 14px;
-  color: #64748B;
+  color: #64748b;
   margin: 0;
 }
 
 .close-btn {
   background: none;
   border: none;
-  color: #64748B;
+  color: #64748b;
   cursor: pointer;
   padding: 8px;
   border-radius: 6px;
@@ -1160,8 +1300,8 @@ export default {
 }
 
 .close-btn:hover {
-  background: #E2E8F0;
-  color: #334155;
+  background: #e2e8f0;
+  color: black;
 }
 
 .close-btn svg {
@@ -1184,7 +1324,7 @@ export default {
   width: 64px;
   height: 64px;
   margin: 0 auto 1rem;
-  color: #CBD5E1;
+  color: #cbd5e1;
 }
 
 .empty-icon svg {
@@ -1195,7 +1335,7 @@ export default {
 
 .empty-text {
   font-size: 16px;
-  color: #64748B;
+  color: #64748b;
   margin: 0;
 }
 
@@ -1218,17 +1358,17 @@ export default {
   gap: 0.5rem;
   font-size: 14px;
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
   margin: 0;
   padding-bottom: 0.75rem;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .section-title svg {
   width: 18px;
   height: 18px;
   stroke-width: 1.5;
-  color: #64748B;
+  color: #64748b;
 }
 
 .section-events {
@@ -1243,7 +1383,7 @@ export default {
   gap: 1rem;
   padding: 1rem;
   border-radius: 8px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #e2e8f0;
   background: white;
   transition: all 0.2s ease;
 }
@@ -1255,7 +1395,7 @@ export default {
 
 .event-item.completed {
   opacity: 0.6;
-  background: #F8FAFC;
+  background: #f8fafc;
 }
 
 .event-item.delivery {
@@ -1263,7 +1403,7 @@ export default {
 }
 
 .event-item.order {
-  border-left: 4px solid #2563EB;
+  border-left: 4px solid #2563eb;
 }
 
 .event-icon {
@@ -1277,13 +1417,13 @@ export default {
 }
 
 .event-item.delivery .event-icon {
-  background: #F0FDF4;
+  background: #f0fdf4;
   color: #059669;
 }
 
 .event-item.order .event-icon {
-  background: #EFF6FF;
-  color: #2563EB;
+  background: #eff6ff;
+  color: #2563eb;
 }
 
 .event-icon svg {
@@ -1306,7 +1446,7 @@ export default {
 .event-id {
   font-size: 13px;
   font-weight: 600;
-  color: #64748B;
+  color: #64748b;
 }
 
 .event-badge {
@@ -1319,23 +1459,23 @@ export default {
 }
 
 .event-badge.pending {
-  background: #FEF3C7;
-  color: #92400E;
+  background: #fef3c7;
+  color: #92400e;
 }
 
 .event-badge.progress {
-  background: #DBEAFE;
-  color: #1E40AF;
+  background: #dbeafe;
+  color: #1e40af;
 }
 
 .event-badge.completed {
-  background: #D1FAE5;
+  background: #d1fae5;
   color: #047857;
 }
 
 .event-badge.cancelled {
-  background: #FEE2E2;
-  color: #DC2626;
+  background: #fee2e2;
+  color: #dc2626;
 }
 
 .event-main {
@@ -1347,19 +1487,19 @@ export default {
 .event-partner {
   font-size: 15px;
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
   margin: 0;
 }
 
 .event-info {
   font-size: 13px;
-  color: #64748B;
+  color: #64748b;
   margin: 0;
 }
 
 .event-notes {
   font-size: 12px;
-  color: #94A3B8;
+  color: #94a3b8;
   margin: 0;
   font-style: italic;
 }
@@ -1372,8 +1512,8 @@ export default {
 
 .action-btn {
   background: none;
-  border: 1px solid #E2E8F0;
-  color: #64748B;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
   padding: 6px;
   border-radius: 6px;
   cursor: pointer;
@@ -1381,9 +1521,9 @@ export default {
 }
 
 .action-btn:hover {
-  background: #F8FAFC;
-  border-color: #CBD5E1;
-  color: #334155;
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: black;
 }
 
 .action-btn svg {
@@ -1413,17 +1553,17 @@ export default {
   .kpi-section {
     grid-template-columns: 1fr;
   }
-  
+
   .calendar-navigation {
     flex-direction: column;
     gap: 1rem;
   }
-  
+
   .nav-group {
     width: 100%;
     justify-content: center;
   }
-  
+
   .nav-actions {
     width: 100%;
     justify-content: center;
@@ -1435,31 +1575,31 @@ export default {
     min-height: 70px;
     padding: 0.25rem;
   }
-  
+
   .day-number {
     font-size: 12px;
   }
-  
+
   .summary-item {
     font-size: 10px;
     padding: 1px 4px;
   }
-  
+
   .summary-item svg {
     width: 10px;
     height: 10px;
   }
-  
+
   .event-item {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .event-actions {
     justify-content: flex-end;
     margin-top: 0.75rem;
     padding-top: 0.75rem;
-    border-top: 1px solid #E2E8F0;
+    border-top: 1px solid #e2e8f0;
   }
 }
 </style>

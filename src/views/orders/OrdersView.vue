@@ -8,9 +8,9 @@
       <div class="header-right">
         <button class="create-button" @click="goToNewOrder">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="12" y1="8" x2="12" y2="16"/>
-            <line x1="8" y1="12" x2="16" y2="12"/>
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="16" />
+            <line x1="8" y1="12" x2="16" y2="12" />
           </svg>
           <span>Nouvelle commande</span>
         </button>
@@ -20,32 +20,69 @@
     <!-- Filtres -->
     <div class="filters-section">
       <div class="filter-group">
-        <select v-model="filters.clientId" class="filter-select">
-          <option value="">Tous les clients</option>
-          <option v-for="client in uniqueClients" :key="client.id_client" :value="client.id_client">
-            {{ getClientName(client.id_client) }}
-          </option>
-        </select>
-        
-        <select v-model="filters.status" class="filter-select">
-          <option value="">Tous les statuts</option>
-          <option value="attente">En attente</option>
-          <option value="preparation">En préparation</option>
-          <option value="expedie">Expédiée</option>
-        </select>
-        
         <div class="search-container">
-          <input 
-            v-model="searchQuery" 
-            type="text" 
-            placeholder="Rechercher par ID, client ou montant..."
+          <input
+            v-model="searchQuery"
+            type="text"
+            placeholder="Rechercher par numéro, client ou montant"
             class="search-input"
           />
-          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <circle cx="11" cy="11" r="8"/>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          <svg
+            class="search-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg>
         </div>
+
+        <div class="filter-wrapper">
+          <select v-model="filters.clientId" class="filter-select">
+            <option value="">Tous les clients</option>
+            <option
+              v-for="client in uniqueClients"
+              :key="client.id_client"
+              :value="client.id_client"
+            >
+              {{ getClientName(client.id_client) }}
+            </option>
+          </select>
+          <svg
+            class="filter-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+          >
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </div>
+
+        <div class="filter-wrapper">
+          <select v-model="filters.status" class="filter-select">
+            <option value="">Tous les statuts</option>
+            <option value="attente">En attente</option>
+            <option value="preparation">En préparation</option>
+            <option value="expedie">Expédiée</option>
+          </select>
+          <svg
+            class="filter-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+          >
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </div>
+
+        <button class="search-button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          Rechercher
+        </button>
       </div>
     </div>
 
@@ -69,22 +106,22 @@
             </span>
           </div>
         </div>
-        
+
         <div v-if="loading" class="loading-container">
           <div class="loader"></div>
           <p>Chargement des commandes...</p>
         </div>
-        
+
         <div v-else-if="error" class="error-container">
           <p class="error-message">{{ error }}</p>
           <button @click="fetchData" class="retry-button">Réessayer</button>
         </div>
-        
+
         <div v-else class="table-container">
           <table class="orders-table">
             <thead>
               <tr>
-                <th>Commande</th>
+                <th>N° Commande</th>
                 <th>Client</th>
                 <th>Date</th>
                 <th>Montant</th>
@@ -94,92 +131,115 @@
             </thead>
             <tbody>
               <tr v-for="order in paginatedOrders" :key="order.id_commande">
-                <td class="order-id">#{{ String(order.id_commande).padStart(5, '0') }}</td>
-                <td class="client-name">{{ getClientName(order.id_client) }}</td>
-                <td class="order-date">{{ formatDate(order.date_commande) }}</td>
-                <td class="order-amount">{{ formatCurrency(order.montant_total) }}</td>
+                <td class="order-id">
+                  #{{ String(order.id_commande).padStart(5, "0") }}
+                </td>
+                <td class="client-name">
+                  {{ getClientName(order.id_client) }}
+                </td>
+                <td class="order-date">
+                  {{ formatDate(order.date_commande) }}
+                </td>
+                <td class="order-amount">
+                  {{ formatCurrency(order.montant_total) }}
+                </td>
                 <td>
-                  <span class="status-badge" :class="getStatusClass(order.statut)">
+                  <span
+                    class="status-badge"
+                    :class="getStatusClass(order.statut)"
+                  >
                     {{ getStatusLabel(order.statut) }}
                   </span>
                 </td>
                 <td class="actions">
-                  <button 
+                  <button
                     class="action-btn"
                     @click="viewOrder(order)"
                     title="Voir les détails"
                   >
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                      <circle cx="12" cy="12" r="3"/>
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                      <circle cx="12" cy="12" r="3" />
                     </svg>
                   </button>
-                  <button 
+                  <button
                     class="action-btn"
                     @click="editOrder(order.id_commande)"
                     title="Modifier"
                   >
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                      <path
+                        d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+                      />
+                      <path
+                        d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
+                      />
                     </svg>
                   </button>
-                  <button 
+                  <button
                     class="action-btn"
                     @click="printOrder(order.id_commande)"
                     title="Imprimer"
                   >
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <polyline points="6 9 6 2 18 2 18 9"/>
-                      <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
-                      <rect x="6" y="14" width="12" height="8"/>
+                      <polyline points="6 9 6 2 18 2 18 9" />
+                      <path
+                        d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"
+                      />
+                      <rect x="6" y="14" width="12" height="8" />
                     </svg>
                   </button>
                 </td>
               </tr>
               <tr v-if="paginatedOrders.length === 0">
-                <td colspan="6" class="empty-message">Aucune commande trouvée</td>
+                <td colspan="100%" class="empty-message">
+                  Aucune commande trouvée
+                </td>
               </tr>
             </tbody>
           </table>
         </div>
 
         <!-- Pagination -->
-        <div v-if="!loading && !error && totalPages > 1" class="pagination-container">
+        <div
+          v-if="!loading && !error && totalPages > 1"
+          class="pagination-container"
+        >
           <div class="pagination-info">
-            Affichage {{ startIndex + 1 }}-{{ endIndex }} sur {{ filteredOrders.length }} commandes
+            Affichage {{ startIndex + 1 }}-{{ endIndex }} sur
+            {{ filteredOrders.length }} commandes
           </div>
           <div class="pagination-controls">
-            <button 
-              class="pagination-btn" 
+            <button
+              class="pagination-btn"
               @click="goToPage(currentPage - 1)"
               :disabled="currentPage === 1"
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <polyline points="15 18 9 12 15 6"/>
+                <polyline points="15 18 9 12 15 6" />
               </svg>
             </button>
-            
+
             <div class="page-numbers">
               <button
                 v-for="page in visiblePages"
                 :key="page"
                 class="page-number"
-                :class="{ 'active': page === currentPage }"
+                :class="{ active: page === currentPage }"
                 @click="goToPage(page)"
                 :disabled="page === '...'"
               >
                 {{ page }}
               </button>
             </div>
-            
-            <button 
-              class="pagination-btn" 
+
+            <button
+              class="pagination-btn"
               @click="goToPage(currentPage + 1)"
               :disabled="currentPage === totalPages"
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <polyline points="9 18 15 12 9 6"/>
+                <polyline points="9 18 15 12 9 6" />
               </svg>
             </button>
           </div>
@@ -188,14 +248,18 @@
     </div>
 
     <!-- Modal Voir détails -->
-    <div v-if="showDetailsModal" class="modal-overlay" @click="showDetailsModal = false">
+    <div
+      v-if="showDetailsModal"
+      class="modal-overlay"
+      @click="showDetailsModal = false"
+    >
       <div class="modal-content modal-details" @click.stop>
         <div class="modal-header">
           <h3>Détails de la commande</h3>
           <button @click="showDetailsModal = false" class="modal-close">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <line x1="18" y1="6" x2="6" y2="18"/>
-              <line x1="6" y1="6" x2="18" y2="18"/>
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
         </div>
@@ -205,16 +269,25 @@
               <h4 class="section-subtitle">Informations générales</h4>
               <div class="detail-row">
                 <span class="detail-label">N° Commande:</span>
-                <span class="detail-value">#{{ String(selectedOrder.id_commande).padStart(5, '0') }}</span>
+                <span class="detail-value"
+                  >#{{
+                    String(selectedOrder.id_commande).padStart(5, "0")
+                  }}</span
+                >
               </div>
               <div class="detail-row">
                 <span class="detail-label">Date:</span>
-                <span class="detail-value">{{ formatDate(selectedOrder.date_commande) }}</span>
+                <span class="detail-value">{{
+                  formatDate(selectedOrder.date_commande)
+                }}</span>
               </div>
               <div class="detail-row">
                 <span class="detail-label">Statut:</span>
                 <span class="detail-value">
-                  <span class="status-badge" :class="getStatusClass(selectedOrder.statut)">
+                  <span
+                    class="status-badge"
+                    :class="getStatusClass(selectedOrder.statut)"
+                  >
                     {{ getStatusLabel(selectedOrder.statut) }}
                   </span>
                 </span>
@@ -225,32 +298,46 @@
               <h4 class="section-subtitle">Informations client</h4>
               <div class="detail-row">
                 <span class="detail-label">Nom:</span>
-                <span class="detail-value">{{ getClientName(selectedOrder.id_client) }}</span>
+                <span class="detail-value">{{
+                  getClientName(selectedOrder.id_client)
+                }}</span>
               </div>
               <div v-if="getClient(selectedOrder.id_client)" class="detail-row">
                 <span class="detail-label">Email:</span>
-                <span class="detail-value">{{ getClient(selectedOrder.id_client).email }}</span>
+                <span class="detail-value">{{
+                  getClient(selectedOrder.id_client).email
+                }}</span>
               </div>
               <div v-if="getClient(selectedOrder.id_client)" class="detail-row">
                 <span class="detail-label">Téléphone:</span>
-                <span class="detail-value">{{ formatPhone(getClient(selectedOrder.id_client).telephone) }}</span>
+                <span class="detail-value">{{
+                  formatPhone(getClient(selectedOrder.id_client).telephone)
+                }}</span>
               </div>
             </div>
-            
+
             <div class="details-section full-width">
               <h4 class="section-subtitle">Informations financières</h4>
               <div class="detail-row">
                 <span class="detail-label">Montant total:</span>
-                <span class="detail-value amount">{{ formatCurrency(selectedOrder.montant_total) }}</span>
+                <span class="detail-value amount">{{
+                  formatCurrency(selectedOrder.montant_total)
+                }}</span>
               </div>
             </div>
           </div>
-          
+
           <div class="modal-actions">
-            <button class="modal-btn secondary" @click="showDetailsModal = false">
+            <button
+              class="modal-btn secondary"
+              @click="showDetailsModal = false"
+            >
               Fermer
             </button>
-            <button class="modal-btn primary" @click="editOrder(selectedOrder.id_commande)">
+            <button
+              class="modal-btn primary"
+              @click="editOrder(selectedOrder.id_commande)"
+            >
               Modifier la commande
             </button>
           </div>
@@ -261,272 +348,300 @@
 </template>
 
 <script>
-import { ref, computed, onMounted, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed, onMounted, watch } from "vue";
+import { useRouter } from "vue-router";
 
 export default {
-  name: 'OrdersView',
+  name: "OrdersView",
   setup() {
-    const router = useRouter()
-    const searchQuery = ref('')
-    const orders = ref([])
-    const clients = ref([])
-    const loading = ref(true)
-    const error = ref(null)
-    const currentPage = ref(1)
-    const itemsPerPage = 10
-    const showDetailsModal = ref(false)
-    const selectedOrder = ref(null)
-    
+    const router = useRouter();
+    const searchQuery = ref("");
+    const orders = ref([]);
+    const clients = ref([]);
+    const loading = ref(true);
+    const error = ref(null);
+    const currentPage = ref(1);
+    const itemsPerPage = 10;
+    const showDetailsModal = ref(false);
+    const selectedOrder = ref(null);
+
     const filters = ref({
-      clientId: '',
-      status: ''
-    })
+      clientId: "",
+      status: "",
+    });
 
     // Fonction pour récupérer les commandes et les clients
     const fetchData = async () => {
-      loading.value = true
-      error.value = null
-      
+      loading.value = true;
+      error.value = null;
+
       try {
         // Récupérer les commandes
-        const ordersResponse = await fetch(import.meta.env.VITE_API_URL + "get_table?table=commande", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          credentials: 'include',
-        })
+        const ordersResponse = await fetch(
+          import.meta.env.VITE_API_URL + "get_table?table=commande",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            credentials: "include",
+          }
+        );
 
         // Récupérer les clients
-        const clientsResponse = await fetch(import.meta.env.VITE_API_URL + "get_table?table=client", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          credentials: 'include',
-        })
+        const clientsResponse = await fetch(
+          import.meta.env.VITE_API_URL + "get_table?table=client",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            credentials: "include",
+          }
+        );
 
         if (!ordersResponse.ok || !clientsResponse.ok) {
-          throw new Error('Erreur lors du chargement des données')
+          throw new Error("Erreur lors du chargement des données");
         }
 
-        const ordersData = await ordersResponse.json()
-        const clientsData = await clientsResponse.json()
-        
+        const ordersData = await ordersResponse.json();
+        const clientsData = await clientsResponse.json();
+
         if (ordersData.success && ordersData.data) {
           // Trier les commandes par date décroissante
-          orders.value = ordersData.data.sort((a, b) => 
-            new Date(b.date_commande) - new Date(a.date_commande)
-          )
+          orders.value = ordersData.data.sort(
+            (a, b) => new Date(b.date_commande) - new Date(a.date_commande)
+          );
         }
 
         if (clientsData.success && clientsData.data) {
-          clients.value = clientsData.data
+          clients.value = clientsData.data;
         }
       } catch (err) {
-        console.error('Erreur lors du chargement:', err)
-        error.value = 'Impossible de charger les données. Veuillez réessayer.'
+        console.error("Erreur lors du chargement:", err);
+        error.value = "Impossible de charger les données. Veuillez réessayer.";
       } finally {
-        loading.value = false
+        loading.value = false;
       }
-    }
+    };
 
     // Computed properties
     const uniqueClients = computed(() => {
       return clients.value.sort((a, b) => {
-        const nameA = getFullName(a)
-        const nameB = getFullName(b)
-        return nameA.localeCompare(nameB)
-      })
-    })
+        const nameA = getFullName(a);
+        const nameB = getFullName(b);
+        return nameA.localeCompare(nameB);
+      });
+    });
 
     const filteredOrders = computed(() => {
-      let result = orders.value
+      let result = orders.value;
 
       // Filtre par client
       if (filters.value.clientId) {
-        result = result.filter(order => 
-          order.id_client == filters.value.clientId
-        )
+        result = result.filter(
+          (order) => order.id_client == filters.value.clientId
+        );
       }
 
       // Filtre par statut
       if (filters.value.status) {
-        result = result.filter(order => order.statut === filters.value.status)
+        result = result.filter(
+          (order) => order.statut === filters.value.status
+        );
       }
 
       // Filtre par recherche
       if (searchQuery.value) {
-        const query = searchQuery.value.toLowerCase()
-        result = result.filter(order => {
-          const client = getClient(order.id_client)
-          const clientName = client ? getFullName(client).toLowerCase() : ''
+        const query = searchQuery.value.toLowerCase();
+        result = result.filter((order) => {
+          const client = getClient(order.id_client);
+          const clientName = client ? getFullName(client).toLowerCase() : "";
           return (
-            order.id_commande.toString().includes(query) ||
+            order.id_commande.toString().padStart(5, "0").includes(query) ||
             clientName.includes(query) ||
             order.montant_total.toString().includes(query)
-          )
-        })
+          );
+        });
       }
 
-      return result
-    })
+      return result;
+    });
 
     // Pagination computed properties
     const totalPages = computed(() => {
-      return Math.ceil(filteredOrders.value.length / itemsPerPage)
-    })
+      return Math.ceil(filteredOrders.value.length / itemsPerPage);
+    });
 
     const startIndex = computed(() => {
-      return (currentPage.value - 1) * itemsPerPage
-    })
+      return (currentPage.value - 1) * itemsPerPage;
+    });
 
     const endIndex = computed(() => {
-      return Math.min(startIndex.value + itemsPerPage, filteredOrders.value.length)
-    })
+      return Math.min(
+        startIndex.value + itemsPerPage,
+        filteredOrders.value.length
+      );
+    });
 
     const paginatedOrders = computed(() => {
-      return filteredOrders.value.slice(startIndex.value, endIndex.value)
-    })
+      return filteredOrders.value.slice(startIndex.value, endIndex.value);
+    });
 
     const visiblePages = computed(() => {
-      const pages = []
-      const total = totalPages.value
-      const current = currentPage.value
+      const pages = [];
+      const total = totalPages.value;
+      const current = currentPage.value;
 
       if (total <= 7) {
         for (let i = 1; i <= total; i++) {
-          pages.push(i)
+          pages.push(i);
         }
       } else {
-        pages.push(1)
-        if (current > 3) pages.push('...')
-        
-        const start = Math.max(2, current - 1)
-        const end = Math.min(total - 1, current + 1)
-        
+        pages.push(1);
+        if (current > 3) pages.push("...");
+
+        const start = Math.max(2, current - 1);
+        const end = Math.min(total - 1, current + 1);
+
         for (let i = start; i <= end; i++) {
-          pages.push(i)
+          pages.push(i);
         }
-        
-        if (current < total - 2) pages.push('...')
-        pages.push(total)
+
+        if (current < total - 2) pages.push("...");
+        pages.push(total);
       }
 
-      return pages
-    })
+      return pages;
+    });
 
     const pendingCount = computed(() => {
-      return orders.value.filter(order => order.statut === 'attente').length
-    })
+      return orders.value.filter((order) => order.statut === "attente").length;
+    });
 
     const inProgressCount = computed(() => {
-      return orders.value.filter(order => order.statut === 'preparation').length
-    })
+      return orders.value.filter((order) => order.statut === "preparation")
+        .length;
+    });
 
     // Watchers
     watch([searchQuery, filters], () => {
-      currentPage.value = 1
-    })
+      currentPage.value = 1;
+    });
 
     // Fonctions utilitaires
     const getClient = (clientId) => {
-      return clients.value.find(client => client.id_client === clientId)
-    }
+      return clients.value.find((client) => client.id_client === clientId);
+    };
 
     const getFullName = (client) => {
-      if (!client) return ''
-      
+      if (!client) return "";
+
       // Si le client a une raison sociale, l'utiliser
       if (client.raison_sociale) {
-        return client.raison_sociale
+        return client.raison_sociale;
       }
-      
+
       // Sinon, combiner prénom et nom
-      const prenom = client.prénom || ''
-      const nom = client.nom || ''
-      return `${prenom} ${nom}`.trim()
-    }
+      const prenom = client.prénom || "";
+      const nom = client.nom || "";
+      return `${prenom} ${nom}`.trim();
+    };
 
     const getClientName = (clientId) => {
-      const client = getClient(clientId)
-      if (!client) return `Client #${clientId}`
-      
-      return getFullName(client) || `Client #${clientId}`
-    }
+      const client = getClient(clientId);
+      if (!client) return `Client #${clientId}`;
+
+      return getFullName(client) || `Client #${clientId}`;
+    };
 
     const formatDate = (dateString) => {
-      const date = new Date(dateString)
-      const months = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.']
-      return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`
-    }
+      const date = new Date(dateString);
+      const months = [
+        "janv.",
+        "févr.",
+        "mars",
+        "avr.",
+        "mai",
+        "juin",
+        "juil.",
+        "août",
+        "sept.",
+        "oct.",
+        "nov.",
+        "déc.",
+      ];
+      return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+    };
 
     const formatCurrency = (amount) => {
-      return new Intl.NumberFormat('fr-FR', {
-        style: 'currency',
-        currency: 'EUR'
-      }).format(amount)
-    }
+      return new Intl.NumberFormat("fr-FR", {
+        style: "currency",
+        currency: "EUR",
+      }).format(amount);
+    };
 
     const formatPhone = (phone) => {
-      if (!phone || phone === '32767') return 'Non renseigné'
-      
+      if (!phone || phone === "32767") return "Non renseigné";
+
       // Formater le numéro de téléphone français
-      const cleaned = phone.toString().replace(/\D/g, '')
+      const cleaned = phone.toString().replace(/\D/g, "");
       if (cleaned.length === 10) {
-        return cleaned.replace(/(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/, '$1 $2 $3 $4 $5')
+        return cleaned.replace(
+          /(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/,
+          "$1 $2 $3 $4 $5"
+        );
       }
-      return phone
-    }
+      return phone;
+    };
 
     const getStatusClass = (status) => {
       const statusClasses = {
-        'attente': 'status-pending',
-        'preparation': 'status-progress',
-        'expedie': 'status-shipped'
-      }
-      return statusClasses[status] || 'status-default'
-    }
+        attente: "status-pending",
+        preparation: "status-progress",
+        expedie: "status-shipped",
+      };
+      return statusClasses[status] || "status-default";
+    };
 
     const getStatusLabel = (status) => {
       const statusLabels = {
-        'attente': 'En attente',
-        'preparation': 'En préparation',
-        'expedie': 'Expédiée'
-      }
-      return statusLabels[status] || status
-    }
+        attente: "En attente",
+        preparation: "En préparation",
+        expedie: "Expédiée",
+      };
+      return statusLabels[status] || status;
+    };
 
     const goToPage = (page) => {
-      if (page !== '...' && page >= 1 && page <= totalPages.value) {
-        currentPage.value = page
+      if (page !== "..." && page >= 1 && page <= totalPages.value) {
+        currentPage.value = page;
       }
-    }
+    };
 
     const goToNewOrder = () => {
-      router.push('/orders/new')
-    }
+      router.push("/orders/new");
+    };
 
     const viewOrder = (order) => {
-      selectedOrder.value = order
-      showDetailsModal.value = true
-    }
+      selectedOrder.value = order;
+      showDetailsModal.value = true;
+    };
 
     const editOrder = (orderId) => {
-      showDetailsModal.value = false
-      router.push(`/orders/${orderId}/edit`)
-    }
+      showDetailsModal.value = false;
+      router.push(`/orders/${orderId}/edit`);
+    };
 
     const printOrder = (orderId) => {
-      console.log('Imprimer la commande:', orderId)
+      console.log("Imprimer la commande:", orderId);
       // TODO: Implémenter la fonction d'impression
-    }
+    };
 
     // Charger les données au montage
     onMounted(() => {
-      fetchData()
-    })
+      fetchData();
+    });
 
     return {
       searchQuery,
@@ -559,16 +674,16 @@ export default {
       viewOrder,
       editOrder,
       printOrder,
-      fetchData
-    }
-  }
-}
+      fetchData,
+    };
+  },
+};
 </script>
 
 <style scoped>
 .orders-page {
   padding: 0;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 /* EN-TÊTE */
@@ -582,12 +697,12 @@ export default {
 .page-title {
   font-size: 24px;
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
   margin: 0;
 }
 
 .create-button {
-  background: #00B8D4;
+  background: #00b8d4;
   color: white;
   border: none;
   border-radius: 8px;
@@ -603,7 +718,7 @@ export default {
 }
 
 .create-button:hover {
-  background: #0891A6;
+  background: #0891a6;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 184, 212, 0.4);
 }
@@ -628,47 +743,86 @@ export default {
 
 .filter-select {
   background: white;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
-  padding: 0.75rem 1rem;
+  padding-top: 0.75rem;
+  padding-right: 2.5rem;
+  padding-bottom: 0.75rem;
+  padding-left: 1rem;
   font-size: 14px;
-  color: #64748B;
+  color: #64748b;
   min-width: 140px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.filter-select:focus {
-  outline: none;
-  border-color: #00B8D4;
+.filter-select:hover,
+.search-input:hover {
   box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
+}
+
+.filter-select:focus,
+.search-input:focus {
+  outline: none;
+  border-color: #00b8d4;
+  box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
+}
+
+.filter-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.filter-icon {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translate(25%, -50%);
+  pointer-events: none;
+  height: 20px;
+}
+
+.search-button {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.search-button:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+.search-button svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2;
 }
 
 .search-container {
   position: relative;
   flex: 1;
-  max-width: 300px;
 }
 
 .search-input {
   width: 100%;
   background: white;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
   padding: 0.75rem 1rem 0.75rem 2.5rem;
   font-size: 14px;
-  color: #334155;
+  color: black;
   transition: all 0.2s ease;
-}
-
-.search-input:focus {
-  outline: none;
-  border-color: #00B8D4;
-  box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
-}
-
-.search-input::placeholder {
-  color: #94A3B8;
 }
 
 .search-icon {
@@ -678,7 +832,30 @@ export default {
   transform: translateY(-50%);
   width: 16px;
   height: 16px;
-  color: #94A3B8;
+  color: #94a3b8;
+  stroke-width: 2;
+  pointer-events: none;
+}
+
+.filter-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #00b8d4;
+  box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: #94a3b8;
   stroke-width: 2;
   pointer-events: none;
 }
@@ -688,30 +865,32 @@ export default {
 .error-container {
   text-align: center;
   padding: 3rem;
-  color: #64748B;
+  color: #64748b;
 }
 
 .loader {
   width: 40px;
   height: 40px;
-  border: 3px solid #F1F5F9;
-  border-top-color: #00B8D4;
+  border: 3px solid #f1f5f9;
+  border-top-color: #00b8d4;
   border-radius: 50%;
   margin: 0 auto 1rem;
   animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .error-message {
-  color: #DC2626;
+  color: #dc2626;
   margin-bottom: 1rem;
 }
 
 .retry-button {
-  background: #00B8D4;
+  background: #00b8d4;
   color: white;
   border: none;
   border-radius: 6px;
@@ -723,7 +902,7 @@ export default {
 }
 
 .retry-button:hover {
-  background: #0891A6;
+  background: #0891a6;
 }
 
 /* TABLEAU */
@@ -735,7 +914,7 @@ export default {
   background: white;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  border: 1px solid #F1F5F9;
+  border: 1px solid #f1f5f9;
   overflow: hidden;
 }
 
@@ -744,13 +923,13 @@ export default {
   align-items: center;
   justify-content: space-between;
   padding: 1.5rem;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .table-title {
   font-size: 16px;
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
   margin: 0;
 }
 
@@ -767,20 +946,20 @@ export default {
 }
 
 .stat-label {
-  color: #64748B;
+  color: #64748b;
 }
 
 .stat-value {
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
 }
 
 .stat-value.pending {
-  color: #F59E0B;
+  color: #f59e0b;
 }
 
 .stat-value.progress {
-  color: #3B82F6;
+  color: #3b82f6;
 }
 
 .table-container {
@@ -793,27 +972,27 @@ export default {
 }
 
 .orders-table th {
-  background: #F8FAFC;
+  background: #f8fafc;
   text-align: left;
   padding: 1rem;
   font-size: 12px;
   font-weight: 600;
-  color: #64748B;
+  color: #64748b;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .orders-table td {
   padding: 1rem;
-  border-bottom: 1px solid #F1F5F9;
+  border-bottom: 1px solid #f1f5f9;
   font-size: 14px;
-  color: #334155;
+  color: black;
   vertical-align: middle;
 }
 
 .orders-table tbody tr:hover {
-  background: #F8FAFC;
+  background: #f8fafc;
 }
 
 .orders-table tbody tr:last-child td {
@@ -822,27 +1001,27 @@ export default {
 
 .order-id {
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
 }
 
 .client-name {
   font-weight: 500;
-  color: #334155;
+  color: black;
 }
 
 .order-date {
-  color: #64748B;
+  color: #64748b;
   font-size: 13px;
 }
 
 .order-amount {
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
 }
 
 .empty-message {
   text-align: center;
-  color: #64748B;
+  color: #64748b;
   font-style: italic;
   padding: 2rem;
 }
@@ -860,23 +1039,23 @@ export default {
 }
 
 .status-pending {
-  background: #FEF3C7;
-  color: #92400E;
+  background: #fef3c7;
+  color: #92400e;
 }
 
 .status-progress {
-  background: #DBEAFE;
-  color: #1E40AF;
+  background: #dbeafe;
+  color: #1e40af;
 }
 
 .status-shipped {
-  background: #D1FAE5;
+  background: #d1fae5;
   color: #047857;
 }
 
 .status-default {
-  background: #F1F5F9;
-  color: #64748B;
+  background: #f1f5f9;
+  color: #64748b;
 }
 
 /* ACTIONS */
@@ -887,18 +1066,18 @@ export default {
 
 .action-btn {
   background: none;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #e2e8f0;
   border-radius: 6px;
   padding: 6px;
-  color: #64748B;
+  color: #64748b;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .action-btn:hover {
-  background: #F8FAFC;
-  border-color: #CBD5E1;
-  color: #334155;
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: black;
 }
 
 .action-btn svg {
@@ -913,13 +1092,13 @@ export default {
   align-items: center;
   justify-content: space-between;
   padding: 1rem 1.5rem;
-  border-top: 1px solid #E2E8F0;
-  background: #F8FAFC;
+  border-top: 1px solid #e2e8f0;
+  background: #f8fafc;
 }
 
 .pagination-info {
   font-size: 14px;
-  color: #64748B;
+  color: #64748b;
 }
 
 .pagination-controls {
@@ -930,10 +1109,10 @@ export default {
 
 .pagination-btn {
   background: white;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #e2e8f0;
   border-radius: 6px;
   padding: 6px 10px;
-  color: #64748B;
+  color: #64748b;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
@@ -942,9 +1121,9 @@ export default {
 }
 
 .pagination-btn:hover:not(:disabled) {
-  background: #F8FAFC;
-  border-color: #CBD5E1;
-  color: #334155;
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: black;
 }
 
 .pagination-btn:disabled {
@@ -968,9 +1147,9 @@ export default {
   min-width: 32px;
   height: 32px;
   background: white;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #e2e8f0;
   border-radius: 6px;
-  color: #64748B;
+  color: #64748b;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -981,20 +1160,20 @@ export default {
 }
 
 .page-number:hover:not(:disabled):not(.active) {
-  background: #F8FAFC;
-  border-color: #CBD5E1;
-  color: #334155;
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: black;
 }
 
 .page-number.active {
-  background: #00B8D4;
-  border-color: #00B8D4;
+  background: #00b8d4;
+  border-color: #00b8d4;
   color: white;
 }
 
 .page-number:disabled {
   cursor: default;
-  color: #CBD5E1;
+  color: #cbd5e1;
 }
 
 /* MODAL */
@@ -1026,20 +1205,20 @@ export default {
   align-items: center;
   justify-content: space-between;
   padding: 1.5rem;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .modal-header h3 {
   font-size: 18px;
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
   margin: 0;
 }
 
 .modal-close {
   background: none;
   border: none;
-  color: #64748B;
+  color: #64748b;
   cursor: pointer;
   padding: 4px;
   border-radius: 4px;
@@ -1047,8 +1226,8 @@ export default {
 }
 
 .modal-close:hover {
-  background: #F1F5F9;
-  color: #334155;
+  background: #f1f5f9;
+  color: black;
 }
 
 .modal-close svg {
@@ -1059,7 +1238,7 @@ export default {
 
 .modal-body {
   padding: 1.5rem;
-  color: #64748B;
+  color: #64748b;
   overflow-y: auto;
   max-height: calc(90vh - 80px);
 }
@@ -1073,7 +1252,7 @@ export default {
 }
 
 .details-section {
-  background: #F8FAFC;
+  background: #f8fafc;
   padding: 1.5rem;
   border-radius: 8px;
 }
@@ -1085,10 +1264,10 @@ export default {
 .section-subtitle {
   font-size: 14px;
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
   margin: 0 0 1rem 0;
   padding-bottom: 0.75rem;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .detail-row {
@@ -1096,7 +1275,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem 0;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .detail-row:last-child {
@@ -1105,20 +1284,20 @@ export default {
 
 .detail-label {
   font-size: 13px;
-  color: #64748B;
+  color: #64748b;
   font-weight: 500;
 }
 
 .detail-value {
   font-size: 14px;
-  color: #0F172A;
+  color: #0f172a;
   font-weight: 600;
   text-align: right;
 }
 
 .detail-value.amount {
   font-size: 16px;
-  color: #00B8D4;
+  color: #00b8d4;
 }
 
 .modal-actions {
@@ -1126,7 +1305,7 @@ export default {
   gap: 1rem;
   justify-content: flex-end;
   padding-top: 1.5rem;
-  border-top: 1px solid #E2E8F0;
+  border-top: 1px solid #e2e8f0;
 }
 
 .modal-btn {
@@ -1140,22 +1319,30 @@ export default {
 }
 
 .modal-btn.primary {
-  background: #00B8D4;
+  background: #00b8d4;
   color: white;
 }
 
 .modal-btn.primary:hover {
-  background: #0891A6;
+  background: #0891a6;
 }
 
 .modal-btn.secondary {
-  background: #F1F5F9;
-  color: #64748B;
+  background: #f1f5f9;
+  color: #64748b;
 }
 
 .modal-btn.secondary:hover {
-  background: #E2E8F0;
-  color: #334155;
+  background: #e2e8f0;
+  color: black;
+}
+
+input:placeholder-shown {
+  text-overflow: ellipsis;
+}
+
+input:focus::placeholder {
+  color: transparent;
 }
 
 /* RESPONSIVE */
@@ -1165,33 +1352,34 @@ export default {
     gap: 1rem;
     align-items: stretch;
   }
-  
+
   .create-button {
     width: 100%;
     justify-content: center;
   }
-  
+
   .filter-group {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
+  .search-input,
   .filter-select,
-  .search-container {
-    max-width: none;
+  .search-button {
+    width: 100%;
   }
-  
+
   .table-header {
     flex-direction: column;
     gap: 1rem;
     align-items: flex-start;
   }
-  
+
   .table-stats {
     width: 100%;
     justify-content: space-between;
   }
-  
+
   .details-grid {
     grid-template-columns: 1fr;
   }
@@ -1201,40 +1389,40 @@ export default {
   .orders-table {
     font-size: 12px;
   }
-  
+
   .orders-table th,
   .orders-table td {
     padding: 0.75rem 0.5rem;
   }
-  
+
   .status-badge {
     font-size: 10px;
     padding: 0.25rem 0.5rem;
   }
-  
+
   .actions {
     flex-direction: column;
     gap: 0.25rem;
   }
-  
+
   .action-btn {
     padding: 4px;
   }
-  
+
   .action-btn svg {
     width: 14px;
     height: 14px;
   }
-  
+
   .pagination-container {
     flex-direction: column;
     gap: 1rem;
   }
-  
+
   .modal-actions {
     flex-direction: column;
   }
-  
+
   .modal-btn {
     width: 100%;
   }
@@ -1245,7 +1433,7 @@ export default {
   .orders-table td:nth-child(4) {
     display: none;
   }
-  
+
   .orders-table th:last-child,
   .orders-table td:last-child {
     display: none;

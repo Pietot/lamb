@@ -8,9 +8,9 @@
       <div class="header-right">
         <button class="new-client-button" @click="showNewClientModal = true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="12" y1="8" x2="12" y2="16"/>
-            <line x1="8" y1="12" x2="16" y2="12"/>
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="16" />
+            <line x1="8" y1="12" x2="16" y2="12" />
           </svg>
           <span>Nouveau client</span>
         </button>
@@ -22,10 +22,10 @@
       <div class="stat-card">
         <div class="stat-icon active-icon">
           <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
           </svg>
         </div>
         <div class="stat-content">
@@ -34,12 +34,12 @@
           <p class="stat-trend">{{ percentageChange }}% ce mois</p>
         </div>
       </div>
-      
+
       <div class="stat-card">
         <div class="stat-icon new-icon">
           <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-            <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+            <path d="M12 2L2 7l10 5 10-5-10-5z" />
+            <path d="M2 17l10 5 10-5M2 12l10 5 10-5" />
           </svg>
         </div>
         <div class="stat-content">
@@ -48,12 +48,12 @@
           <p class="stat-trend">Croissance active</p>
         </div>
       </div>
-      
+
       <div class="stat-card">
         <div class="stat-icon location-icon">
           <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-            <circle cx="12" cy="10" r="3"/>
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+            <circle cx="12" cy="10" r="3" />
           </svg>
         </div>
         <div class="stat-content">
@@ -62,12 +62,12 @@
           <p class="stat-trend">Présence nationale</p>
         </div>
       </div>
-      
+
       <div class="stat-card">
         <div class="stat-icon email-icon">
           <svg viewBox="0 0 24 24" fill="currentColor">
-            <rect x="2" y="4" width="20" height="16" rx="2"/>
-            <path d="m22 7-10 5L2 7"/>
+            <rect x="2" y="4" width="20" height="16" rx="2" />
+            <path d="m22 7-10 5L2 7" />
           </svg>
         </div>
         <div class="stat-content">
@@ -85,40 +85,49 @@
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="Rechercher un client..."
+            placeholder="Rechercher par ID, client, raison social ou secteur d'activité"
             class="search-input"
           />
-          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <circle cx="11" cy="11" r="8"/>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          <svg
+            class="search-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg>
         </div>
-        
+
         <select v-model="filters.city" class="filter-select">
           <option value="">Toutes les villes</option>
-          <option v-for="city in availableCities" :key="city" :value="city">{{ city }}</option>
+          <option v-for="city in availableCities" :key="city" :value="city">
+            {{ city }}
+          </option>
         </select>
-        
+
         <select v-model="filters.sort" class="filter-select">
           <option value="name">Trier par nom</option>
           <option value="recent">Plus récents</option>
           <option value="id">Par ID</option>
         </select>
-        
+
         <button class="action-button" @click="resetFilters">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <polyline points="1 4 1 10 7 10"/>
-            <polyline points="23 20 23 14 17 14"/>
-            <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+            <polyline points="1 4 1 10 7 10" />
+            <polyline points="23 20 23 14 17 14" />
+            <path
+              d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"
+            />
           </svg>
           Réinitialiser
         </button>
-        
+
         <button class="export-button" @click="exportClients">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="7,10 12,15 17,10"/>
-            <line x1="12" y1="15" x2="12" y2="3"/>
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7,10 12,15 17,10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
           </svg>
           Exporter
         </button>
@@ -146,10 +155,15 @@
 
         <!-- Error State -->
         <div v-else-if="error" class="error-container">
-          <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="12" y1="8" x2="12" y2="12"/>
-            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          <svg
+            class="error-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
           </svg>
           <p class="error-message">{{ error }}</p>
           <button @click="fetchClients" class="retry-button">Réessayer</button>
@@ -160,8 +174,11 @@
           <table class="clients-table">
             <thead>
               <tr>
+                <th>ID</th>
                 <th>Client</th>
-                <th>Contact</th>
+                <th>Raison Social</th>
+                <th>Secteur d'activité</th>
+                <th>Email</th>
                 <th>Ville</th>
                 <th>Téléphone</th>
                 <th>Actions</th>
@@ -169,16 +186,33 @@
             </thead>
             <tbody>
               <tr v-for="client in filteredClients" :key="client.id_client">
+                <td class="client-id">
+                  <p class="client-id-text">{{ client.id_client }}</p>
+                </td>
                 <td>
                   <div class="client-info">
-                    <div class="client-avatar" :style="{ backgroundColor: getAvatarColor(client.id_client) }">
+                    <div
+                      class="client-avatar"
+                      :style="{
+                        backgroundColor: getAvatarColor(client.id_client),
+                      }"
+                    >
                       {{ getClientInitials(client) }}
                     </div>
                     <div class="client-details">
-                      <p class="client-name">{{ client.contact_principal || client.raison_sociale }}</p>
-                      <p class="client-id">ID #{{ client.id_client }}</p>
+                      <p class="client-name">
+                        {{ client.contact_principal || client.raison_sociale }}
+                      </p>
                     </div>
                   </div>
+                </td>
+                <td class="company-name">
+                  <p class="company-name-text">{{ client.raison_sociale }}</p>
+                </td>
+                <td class="sector-info">
+                  <p class="sector-text">
+                    {{ client.secteur_activite || "Non renseigné" }}
+                  </p>
                 </td>
                 <td class="contact-info">
                   <p class="contact-email">{{ client.email }}</p>
@@ -190,22 +224,34 @@
                   {{ formatPhone(client.telephone) }}
                 </td>
                 <td class="actions">
-                  <button class="action-btn secondary" @click="viewClient(client.id_client)" title="Voir détails">
+                  <button
+                    class="action-btn secondary"
+                    @click="viewClient(client.id_client)"
+                    title="Voir détails"
+                  >
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                      <circle cx="12" cy="12" r="3"/>
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                      <circle cx="12" cy="12" r="3" />
                     </svg>
                   </button>
-                  <button class="action-btn secondary" @click="editClient(client.id_client)" title="Modifier">
+                  <button
+                    class="action-btn secondary"
+                    @click="editClient(client.id_client)"
+                    title="Modifier"
+                  >
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                      <path
+                        d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+                      />
+                      <path
+                        d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
+                      />
                     </svg>
                   </button>
                 </td>
               </tr>
               <tr v-if="filteredClients.length === 0 && !loading">
-                <td colspan="5" class="empty-message">
+                <td colspan="100%" class="empty-message">
                   Aucun client trouvé
                 </td>
               </tr>
@@ -216,14 +262,18 @@
     </div>
 
     <!-- Modal Nouveau client -->
-    <div v-if="showNewClientModal" class="modal-overlay" @click="showNewClientModal = false">
+    <div
+      v-if="showNewClientModal"
+      class="modal-overlay"
+      @click="showNewClientModal = false"
+    >
       <div class="modal-content modal-form" @click.stop>
         <div class="modal-header">
           <h3>Nouveau client</h3>
           <button @click="showNewClientModal = false" class="modal-close">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <line x1="18" y1="6" x2="6" y2="18"/>
-              <line x1="6" y1="6" x2="18" y2="18"/>
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
         </div>
@@ -233,9 +283,11 @@
               <!-- Informations entreprise -->
               <div class="form-section">
                 <h4 class="form-section-title">Informations entreprise</h4>
-                
+
                 <div class="form-group">
-                  <label for="raison_sociale" class="form-label">Raison sociale <span class="required">*</span></label>
+                  <label for="raison_sociale" class="form-label"
+                    >Raison sociale <span class="required">*</span></label
+                  >
                   <input
                     id="raison_sociale"
                     v-model="newClientForm.raison_sociale"
@@ -248,7 +300,9 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="nom_commercial" class="form-label">Nom commercial</label>
+                  <label for="nom_commercial" class="form-label"
+                    >Nom commercial</label
+                  >
                   <input
                     id="nom_commercial"
                     v-model="newClientForm.nom_commercial"
@@ -260,7 +314,9 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="secteur_activite" class="form-label">Secteur d'activité</label>
+                  <label for="secteur_activite" class="form-label"
+                    >Secteur d'activité</label
+                  >
                   <input
                     id="secteur_activite"
                     v-model="newClientForm.secteur_activite"
@@ -272,7 +328,9 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="siret" class="form-label">SIRET <span class="required">*</span></label>
+                  <label for="siret" class="form-label"
+                    >SIRET <span class="required">*</span></label
+                  >
                   <input
                     id="siret"
                     v-model="newClientForm.siret"
@@ -290,9 +348,11 @@
               <!-- Informations contact -->
               <div class="form-section">
                 <h4 class="form-section-title">Contact</h4>
-                
+
                 <div class="form-group">
-                  <label for="contact_principal" class="form-label">Contact principal <span class="required">*</span></label>
+                  <label for="contact_principal" class="form-label"
+                    >Contact principal <span class="required">*</span></label
+                  >
                   <input
                     id="contact_principal"
                     v-model="newClientForm.contact_principal"
@@ -305,7 +365,9 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="email" class="form-label">Email <span class="required">*</span></label>
+                  <label for="email" class="form-label"
+                    >Email <span class="required">*</span></label
+                  >
                   <input
                     id="email"
                     v-model="newClientForm.email"
@@ -317,7 +379,9 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="telephone" class="form-label">Téléphone <span class="required">*</span></label>
+                  <label for="telephone" class="form-label"
+                    >Téléphone <span class="required">*</span></label
+                  >
                   <input
                     id="telephone"
                     v-model="newClientForm.telephone"
@@ -334,9 +398,11 @@
               <!-- Adresse -->
               <div class="form-section full-width">
                 <h4 class="form-section-title">Adresse</h4>
-                
+
                 <div class="form-group">
-                  <label for="adresse" class="form-label">Adresse <span class="required">*</span></label>
+                  <label for="adresse" class="form-label"
+                    >Adresse <span class="required">*</span></label
+                  >
                   <input
                     id="adresse"
                     v-model="newClientForm.adresse"
@@ -350,7 +416,9 @@
 
                 <div class="form-row">
                   <div class="form-group">
-                    <label for="code_postal" class="form-label">Code postal <span class="required">*</span></label>
+                    <label for="code_postal" class="form-label"
+                      >Code postal <span class="required">*</span></label
+                    >
                     <input
                       id="code_postal"
                       v-model="newClientForm.code_postal"
@@ -364,8 +432,10 @@
                     <p class="form-hint">5 chiffres</p>
                   </div>
 
-                  <div class="form-group" style="flex: 2;">
-                    <label for="ville" class="form-label">Ville <span class="required">*</span></label>
+                  <div class="form-group" style="flex: 2">
+                    <label for="ville" class="form-label"
+                      >Ville <span class="required">*</span></label
+                    >
                     <input
                       id="ville"
                       v-model="newClientForm.ville"
@@ -382,25 +452,50 @@
 
             <!-- Messages d'erreur -->
             <div v-if="formError" class="form-error">
-              <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <circle cx="12" cy="12" r="10"/>
-                <line x1="12" y1="8" x2="12" y2="12"/>
-                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              <svg
+                class="error-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
               </svg>
               {{ formError }}
             </div>
 
             <!-- Actions -->
             <div class="modal-actions">
-              <button type="button" class="modal-btn secondary" @click="showNewClientModal = false">
+              <button
+                type="button"
+                class="modal-btn secondary"
+                @click="showNewClientModal = false"
+              >
                 Annuler
               </button>
-              <button type="submit" class="modal-btn primary" :disabled="submitting">
+              <button
+                type="submit"
+                class="modal-btn primary"
+                :disabled="submitting"
+              >
                 <span v-if="!submitting">Créer le client</span>
                 <span v-else class="loading-text">
                   <svg class="spinner" viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" opacity="0.25"/>
-                    <path d="M12 2a10 10 0 0 1 0 20" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      stroke-width="4"
+                      opacity="0.25"
+                    />
+                    <path
+                      d="M12 2a10 10 0 0 1 0 20"
+                      stroke="currentColor"
+                      stroke-width="4"
+                      stroke-linecap="round"
+                    />
                   </svg>
                   Création...
                 </span>
@@ -412,14 +507,18 @@
     </div>
 
     <!-- Modal Détails client -->
-    <div v-if="showDetailsModal" class="modal-overlay" @click="showDetailsModal = false">
+    <div
+      v-if="showDetailsModal"
+      class="modal-overlay"
+      @click="showDetailsModal = false"
+    >
       <div class="modal-content modal-details" @click.stop>
         <div class="modal-header">
           <h3>Détails du client</h3>
           <button @click="showDetailsModal = false" class="modal-close">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <line x1="18" y1="6" x2="6" y2="18"/>
-              <line x1="6" y1="6" x2="18" y2="18"/>
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
         </div>
@@ -429,27 +528,41 @@
               <h4 class="section-subtitle">Informations personnelles</h4>
               <div class="detail-row">
                 <span class="detail-label">ID Client:</span>
-                <span class="detail-value">#{{ String(selectedClient.id_client).padStart(4, '0') }}</span>
+                <span class="detail-value"
+                  >#{{
+                    String(selectedClient.id_client).padStart(4, "0")
+                  }}</span
+                >
               </div>
               <div class="detail-row">
                 <span class="detail-label">Nom:</span>
-                <span class="detail-value">{{ selectedClient.contact_principal }}</span>
+                <span class="detail-value">{{
+                  selectedClient.contact_principal
+                }}</span>
               </div>
               <div class="detail-row">
                 <span class="detail-label">Raison sociale:</span>
-                <span class="detail-value">{{ selectedClient.raison_sociale }}</span>
+                <span class="detail-value">{{
+                  selectedClient.raison_sociale
+                }}</span>
               </div>
               <div class="detail-row" v-if="selectedClient.nom_commercial">
                 <span class="detail-label">Nom commercial:</span>
-                <span class="detail-value">{{ selectedClient.nom_commercial }}</span>
+                <span class="detail-value">{{
+                  selectedClient.nom_commercial
+                }}</span>
               </div>
               <div class="detail-row" v-if="selectedClient.secteur_activite">
                 <span class="detail-label">Secteur d'activité:</span>
-                <span class="detail-value">{{ selectedClient.secteur_activite }}</span>
+                <span class="detail-value">{{
+                  selectedClient.secteur_activite
+                }}</span>
               </div>
               <div class="detail-row">
                 <span class="detail-label">Date d'inscription:</span>
-                <span class="detail-value">{{ new Date().toLocaleDateString('fr-FR') }}</span>
+                <span class="detail-value">{{
+                  new Date().toLocaleDateString("fr-FR")
+                }}</span>
               </div>
             </div>
 
@@ -461,7 +574,9 @@
               </div>
               <div class="detail-row">
                 <span class="detail-label">Téléphone:</span>
-                <span class="detail-value">{{ formatPhone(selectedClient.telephone) }}</span>
+                <span class="detail-value">{{
+                  formatPhone(selectedClient.telephone)
+                }}</span>
               </div>
               <div class="detail-row">
                 <span class="detail-label">Adresse:</span>
@@ -469,10 +584,13 @@
               </div>
               <div class="detail-row">
                 <span class="detail-label">Code postal / Ville:</span>
-                <span class="detail-value">{{ selectedClient.code_postal }} {{ selectedClient.ville }}</span>
+                <span class="detail-value"
+                  >{{ selectedClient.code_postal }}
+                  {{ selectedClient.ville }}</span
+                >
               </div>
             </div>
-            
+
             <div class="details-section full-width">
               <h4 class="section-subtitle">Statistiques client</h4>
               <div class="detail-row">
@@ -481,24 +599,45 @@
               </div>
               <div class="detail-row">
                 <span class="detail-label">Date de création:</span>
-                <span class="detail-value">{{ selectedClient.date_creation ? new Date(selectedClient.date_creation).toLocaleDateString('fr-FR') : 'Non renseignée' }}</span>
+                <span class="detail-value">{{
+                  selectedClient.date_creation
+                    ? new Date(selectedClient.date_creation).toLocaleDateString(
+                        "fr-FR"
+                      )
+                    : "Non renseignée"
+                }}</span>
               </div>
               <div class="detail-row">
                 <span class="detail-label">Nombre de commandes:</span>
-                <span class="detail-value">{{ Math.floor(Math.random() * 20) + 1 }}</span>
+                <span class="detail-value">{{
+                  Math.floor(Math.random() * 20) + 1
+                }}</span>
               </div>
               <div class="detail-row">
                 <span class="detail-label">Chiffre d'affaires total:</span>
-                <span class="detail-value amount">{{ formatCurrency(Math.random() * 50000) }}</span>
+                <span class="detail-value amount">{{
+                  formatCurrency(Math.random() * 50000)
+                }}</span>
               </div>
             </div>
           </div>
-          
+
           <div class="modal-actions">
-            <button class="modal-btn secondary" @click="showDetailsModal = false">
+            <button
+              class="modal-btn secondary"
+              @click="showDetailsModal = false"
+            >
               Fermer
             </button>
-            <button class="modal-btn primary" @click="() => { showDetailsModal = false; editClient(selectedClient.id_client); }">
+            <button
+              class="modal-btn primary"
+              @click="
+                () => {
+                  showDetailsModal = false;
+                  editClient(selectedClient.id_client);
+                }
+              "
+            >
               Modifier le client
             </button>
           </div>
@@ -507,28 +646,44 @@
     </div>
 
     <!-- Modal Modifier client -->
-    <div v-if="showEditModal" class="modal-overlay" @click="showEditModal = false">
+    <div
+      v-if="showEditModal"
+      class="modal-overlay"
+      @click="showEditModal = false"
+    >
       <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3>Modifier le client</h3>
           <button @click="showEditModal = false" class="modal-close">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <line x1="18" y1="6" x2="6" y2="18"/>
-              <line x1="6" y1="6" x2="18" y2="18"/>
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
         </div>
         <div class="modal-body">
           <div class="todo-message">
-            <svg class="todo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-              <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+            <svg
+              class="todo-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+            >
+              <path d="M12 2L2 7l10 5 10-5-10-5z" />
+              <path d="M2 17l10 5 10-5M2 12l10 5 10-5" />
             </svg>
             <h4>Fonctionnalité en cours de développement</h4>
-            <p>La modification des informations client sera bientôt disponible.</p>
+            <p>
+              La modification des informations client sera bientôt disponible.
+            </p>
             <div class="client-preview" v-if="selectedClient">
-              <p><strong>Client sélectionné:</strong> {{ selectedClient.raison_sociale }}</p>
-              <p><strong>Contact:</strong> {{ selectedClient.contact_principal }}</p>
+              <p>
+                <strong>Client sélectionné:</strong>
+                {{ selectedClient.raison_sociale }}
+              </p>
+              <p>
+                <strong>Contact:</strong> {{ selectedClient.contact_principal }}
+              </p>
               <p><strong>Email:</strong> {{ selectedClient.email }}</p>
             </div>
           </div>
@@ -544,197 +699,243 @@
 </template>
 
 <script>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch } from "vue";
 
 export default {
-  name: 'ClientsView',
+  name: "ClientsView",
   setup() {
     // États réactifs
-    const clients = ref([])
-    const loading = ref(true)
-    const error = ref(null)
-    const searchQuery = ref('')
-    const showNewClientModal = ref(false)
-    const showDetailsModal = ref(false)
-    const showEditModal = ref(false)
-    const selectedClient = ref(null)
-    const submitting = ref(false)
-    const formError = ref('')
-    
+    const clients = ref([]);
+    const loading = ref(true);
+    const error = ref(null);
+    const searchQuery = ref("");
+    const showNewClientModal = ref(false);
+    const showDetailsModal = ref(false);
+    const showEditModal = ref(false);
+    const selectedClient = ref(null);
+    const submitting = ref(false);
+    const formError = ref("");
+
     // Formulaire nouveau client
     const newClientForm = ref({
-      raison_sociale: '',
-      nom_commercial: '',
-      email: '',
-      telephone: '',
-      adresse: '',
-      code_postal: '',
-      ville: '',
-      siret: '',
-      secteur_activite: '',
-      contact_principal: ''
-    })
-    
+      raison_sociale: "",
+      nom_commercial: "",
+      email: "",
+      telephone: "",
+      adresse: "",
+      code_postal: "",
+      ville: "",
+      siret: "",
+      secteur_activite: "",
+      contact_principal: "",
+    });
+
     const filters = ref({
-      city: '',
-      sort: 'name'
-    })
+      city: "",
+      sort: "name",
+    });
 
     // Fonction pour récupérer les clients depuis l'API
     const fetchClients = async () => {
-      loading.value = true
-      error.value = null
-      
+      loading.value = true;
+      error.value = null;
+
       try {
-        const response = await fetch(import.meta.env.VITE_API_URL + "get_table?table=client", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          credentials: 'include',  
-        })
+        const response = await fetch(
+          import.meta.env.VITE_API_URL + "get_table?table=client",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            credentials: "include",
+          }
+        );
 
         if (!response.ok) {
-          throw new Error(`Erreur HTTP: ${response.status}`)
+          throw new Error(`Erreur HTTP: ${response.status}`);
         }
 
-        const data = await response.json()
-        
+        const data = await response.json();
+
         if (data.success && data.data) {
-          clients.value = data.data
+          clients.value = data.data;
         } else {
-          throw new Error('Format de données invalide')
+          throw new Error("Format de données invalide");
         }
       } catch (err) {
-        console.error('Erreur lors du chargement des clients:', err)
-        error.value = 'Impossible de charger les clients. Veuillez réessayer.'
+        console.error("Erreur lors du chargement des clients:", err);
+        error.value = "Impossible de charger les clients. Veuillez réessayer.";
       } finally {
-        loading.value = false
+        loading.value = false;
       }
-    }
+    };
 
     // Computed properties pour les statistiques
-    const totalClients = computed(() => clients.value.length)
-    
+    const totalClients = computed(() => clients.value.length);
+
     const percentageChange = computed(() => {
       // Simulé pour l'instant
-      return '+12'
-    })
-    
+      return "+12";
+    });
+
     const newThisMonth = computed(() => {
       // Simulé pour l'instant
-      return Math.floor(clients.value.length * 0.15)
-    })
+      return Math.floor(clients.value.length * 0.15);
+    });
 
     const uniqueCities = computed(() => {
-      const cities = new Set(clients.value.map(client => client.ville).filter(ville => ville))
-      return cities.size
-    })
+      const cities = new Set(
+        clients.value.map((client) => client.ville).filter((ville) => ville)
+      );
+      return cities.size;
+    });
 
     const validEmails = computed(() => {
-      const valid = clients.value.filter(client => client.email && client.email.includes('@')).length
-      return clients.value.length > 0 ? Math.round((valid / clients.value.length) * 100) : 100
-    })
+      const valid = clients.value.filter(
+        (client) => client.email && client.email.includes("@")
+      ).length;
+      return clients.value.length > 0
+        ? Math.round((valid / clients.value.length) * 100)
+        : 100;
+    });
 
     // Villes disponibles pour le filtre
     const availableCities = computed(() => {
-      const cities = new Set(clients.value.map(client => client.ville).filter(ville => ville))
-      return Array.from(cities).sort()
-    })
+      const cities = new Set(
+        clients.value.map((client) => client.ville).filter((ville) => ville)
+      );
+      return Array.from(cities).sort();
+    });
 
     // Clients filtrés
     const filteredClients = computed(() => {
-      let result = [...clients.value]
+      let result = [...clients.value];
 
       // Filtre par ville
       if (filters.value.city) {
-        result = result.filter(client => client.ville === filters.value.city)
+        result = result.filter((client) => client.ville === filters.value.city);
       }
 
       // Filtre par recherche
       if (searchQuery.value) {
-        const query = searchQuery.value.toLowerCase()
-        result = result.filter(client => {
-          const contactName = client.contact_principal ? client.contact_principal.toLowerCase() : ''
-          const raisonSociale = client.raison_sociale ? client.raison_sociale.toLowerCase() : ''
+        const query = searchQuery.value.toLowerCase();
+        result = result.filter((client) => {
+          const contactName = client.contact_principal
+            ? client.contact_principal.toLowerCase()
+            : "";
+          const raisonSociale = client.raison_sociale
+            ? client.raison_sociale.toLowerCase()
+            : "";
+          const secteurActivite = client.secteur_activite
+            ? client.secteur_activite.toLowerCase()
+            : "";
           return (
+            client.id_client.toString().includes(query) ||
             contactName.includes(query) ||
             raisonSociale.includes(query) ||
-            client.email.toLowerCase().includes(query) ||
-            client.id_client.toString().includes(query)
-          )
-        })
+            secteurActivite.includes(query) ||
+            client.email.toLowerCase().includes(query)
+          );
+        });
       }
 
       // Tri
       switch (filters.value.sort) {
-        case 'name':
-          result.sort((a, b) => (a.raison_sociale || '').localeCompare(b.raison_sociale || ''))
-          break
-        case 'recent':
-          result.sort((a, b) => b.id_client - a.id_client)
-          break
-        case 'id':
-          result.sort((a, b) => a.id_client - b.id_client)
-          break
+        case "name":
+          result.sort((a, b) =>
+            (a.raison_sociale || "").localeCompare(b.raison_sociale || "")
+          );
+          break;
+        case "recent":
+          result.sort((a, b) => b.id_client - a.id_client);
+          break;
+        case "id":
+          result.sort((a, b) => a.id_client - b.id_client);
+          break;
       }
 
-      return result
-    })
+      return result;
+    });
 
     // Fonctions utilitaires
     const getClientInitials = (client) => {
       if (client.contact_principal) {
-        const parts = client.contact_principal.split(' ')
-        const firstInitial = parts[0] ? parts[0][0].toUpperCase() : ''
-        const lastInitial = parts.length > 1 && parts[parts.length - 1] ? parts[parts.length - 1][0].toUpperCase() : ''
-        return firstInitial + lastInitial
+        const parts = client.contact_principal.split(" ");
+        const firstInitial = parts[0] ? parts[0][0].toUpperCase() : "";
+        const lastInitial =
+          parts.length > 1 && parts[parts.length - 1]
+            ? parts[parts.length - 1][0].toUpperCase()
+            : "";
+        return firstInitial + lastInitial;
       }
-      return '??'
-    }
+      return "??";
+    };
 
     const getCityFromAddress = (client) => {
-      return client.ville || 'Non renseigné'
-    }
+      return client.ville || "Non renseigné";
+    };
 
     const formatPhone = (phone) => {
-      if (!phone || phone === '32767') return 'Non renseigné'
-      
+      if (!phone || phone === "32767") return "Non renseigné";
+
       // Formater le numéro de téléphone français
-      const cleaned = phone.toString().replace(/\D/g, '')
+      const cleaned = phone.toString().replace(/\D/g, "");
       if (cleaned.length === 10) {
-        return cleaned.replace(/(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/, '$1 $2 $3 $4 $5')
+        return cleaned.replace(
+          /(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/,
+          "$1 $2 $3 $4 $5"
+        );
       }
-      return phone
-    }
+      return phone;
+    };
 
     const getAvatarColor = (id) => {
-      const colors = ['#00B8D4', '#2563EB', '#059669', '#D97706', '#7C3AED', '#DC2626']
-      return colors[id % colors.length]
-    }
+      const colors = [
+        "#00B8D4",
+        "#2563EB",
+        "#059669",
+        "#D97706",
+        "#7C3AED",
+        "#DC2626",
+      ];
+      return colors[id % colors.length];
+    };
 
     const formatCurrency = (amount) => {
-      return new Intl.NumberFormat('fr-FR', {
-        style: 'currency',
-        currency: 'EUR'
-      }).format(amount)
-    }
+      return new Intl.NumberFormat("fr-FR", {
+        style: "currency",
+        currency: "EUR",
+      }).format(amount);
+    };
 
     const resetFilters = () => {
-      searchQuery.value = ''
-      filters.value.city = ''
-      filters.value.sort = 'name'
-    }
+      searchQuery.value = "";
+      filters.value.city = "";
+      filters.value.sort = "name";
+    };
 
     const exportClients = () => {
       // Fonction d'export
-      console.log('Export des clients...')
+      console.log("Export des clients...");
       const csv = [
-        ['ID', 'Raison sociale', 'Nom commercial', 'Contact principal', 'Email', 'Téléphone', 'Adresse', 'Code postal', 'Ville', 'SIRET', 'Secteur activité'],
-        ...clients.value.map(c => [
+        [
+          "ID",
+          "Raison sociale",
+          "Nom commercial",
+          "Contact principal",
+          "Email",
+          "Téléphone",
+          "Adresse",
+          "Code postal",
+          "Ville",
+          "SIRET",
+          "Secteur activité",
+        ],
+        ...clients.value.map((c) => [
           c.id_client,
           c.raison_sociale,
-          c.nom_commercial || '',
+          c.nom_commercial || "",
           c.contact_principal,
           c.email,
           c.telephone,
@@ -742,107 +943,115 @@ export default {
           c.code_postal,
           c.ville,
           c.siret,
-          c.secteur_activite || ''
-        ])
-      ].map(row => row.join(',')).join('\n')
-      
-      const blob = new Blob([csv], { type: 'text/csv' })
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = 'clients.csv'
-      a.click()
-      URL.revokeObjectURL(url)
-    }
+          c.secteur_activite || "",
+        ]),
+      ]
+        .map((row) => row.join(","))
+        .join("\n");
+
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "clients.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    };
 
     const viewClient = (clientId) => {
-      const client = clients.value.find(c => c.id_client === clientId)
+      const client = clients.value.find((c) => c.id_client === clientId);
       if (client) {
-        selectedClient.value = client
-        showDetailsModal.value = true
+        selectedClient.value = client;
+        showDetailsModal.value = true;
       }
-    }
+    };
 
     const editClient = (clientId) => {
-      const client = clients.value.find(c => c.id_client === clientId)
+      const client = clients.value.find((c) => c.id_client === clientId);
       if (client) {
-        selectedClient.value = client
-        showEditModal.value = true
+        selectedClient.value = client;
+        showEditModal.value = true;
       }
-    }
+    };
 
     // Fonction pour créer un nouveau client
     const handleSubmitNewClient = async () => {
-      formError.value = ''
-      submitting.value = true
+      formError.value = "";
+      submitting.value = true;
 
       try {
         // Créer les données du formulaire
-        const formData = new URLSearchParams()
-        Object.keys(newClientForm.value).forEach(key => {
-          formData.append(key, newClientForm.value[key])
-        })
+        const formData = new URLSearchParams();
+        Object.keys(newClientForm.value).forEach((key) => {
+          formData.append(key, newClientForm.value[key]);
+        });
 
-        const response = await fetch(import.meta.env.VITE_API_URL + "new_client", {
-          method: "POST",
-          body: formData,
-          credentials: 'include',
-        })
+        const response = await fetch(
+          import.meta.env.VITE_API_URL + "new_client",
+          {
+            method: "POST",
+            body: formData,
+            credentials: "include",
+          }
+        );
 
-        const data = await response.json()
+        const data = await response.json();
 
         if (!response.ok) {
           if (response.status === 409) {
-            throw new Error('Cet email est déjà utilisé')
+            throw new Error("Cet email est déjà utilisé");
           } else if (response.status === 400) {
-            throw new Error(data.message || 'Veuillez vérifier tous les champs')
+            throw new Error(
+              data.message || "Veuillez vérifier tous les champs"
+            );
           } else {
-            throw new Error(data.message || 'Une erreur est survenue')
+            throw new Error(data.message || "Une erreur est survenue");
           }
         }
 
         if (data.success) {
           // Réinitialiser le formulaire
-          Object.keys(newClientForm.value).forEach(key => {
-            newClientForm.value[key] = ''
-          })
-          
+          Object.keys(newClientForm.value).forEach((key) => {
+            newClientForm.value[key] = "";
+          });
+
           // Fermer la modale
-          showNewClientModal.value = false
-          
+          showNewClientModal.value = false;
+
           // Recharger la liste des clients
-          await fetchClients()
-          
+          await fetchClients();
+
           // Message de succès (vous pouvez implémenter un système de toast si vous voulez)
-          console.log('Client créé avec succès')
+          console.log("Client créé avec succès");
         }
       } catch (err) {
-        console.error('Erreur lors de la création du client:', err)
-        formError.value = err.message || 'Impossible de créer le client. Veuillez réessayer.'
+        console.error("Erreur lors de la création du client:", err);
+        formError.value =
+          err.message || "Impossible de créer le client. Veuillez réessayer.";
       } finally {
-        submitting.value = false
+        submitting.value = false;
       }
-    }
+    };
 
     // Réinitialiser le formulaire quand on ferme la modale
     const resetNewClientForm = () => {
-      Object.keys(newClientForm.value).forEach(key => {
-        newClientForm.value[key] = ''
-      })
-      formError.value = ''
-    }
+      Object.keys(newClientForm.value).forEach((key) => {
+        newClientForm.value[key] = "";
+      });
+      formError.value = "";
+    };
 
     // Watcher pour réinitialiser le formulaire quand on ferme la modale
     watch(showNewClientModal, (newValue) => {
       if (!newValue) {
-        resetNewClientForm()
+        resetNewClientForm();
       }
-    })
+    });
 
     // Charger les données au montage
     onMounted(() => {
-      fetchClients()
-    })
+      fetchClients();
+    });
 
     return {
       clients,
@@ -875,16 +1084,16 @@ export default {
       viewClient,
       editClient,
       handleSubmitNewClient,
-      resetNewClientForm
-    }
-  }
-}
+      resetNewClientForm,
+    };
+  },
+};
 </script>
 
 <style scoped>
 .clients-page {
   padding: 0;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 /* EN-TÊTE */
@@ -898,12 +1107,12 @@ export default {
 .page-title {
   font-size: 24px;
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
   margin: 0;
 }
 
 .new-client-button {
-  background: #00B8D4;
+  background: #00b8d4;
   color: white;
   border: none;
   border-radius: 8px;
@@ -919,7 +1128,7 @@ export default {
 }
 
 .new-client-button:hover {
-  background: #0891A6;
+  background: #0891a6;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 184, 212, 0.4);
 }
@@ -946,7 +1155,7 @@ export default {
   align-items: center;
   gap: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  border: 1px solid #F1F5F9;
+  border: 1px solid #f1f5f9;
   transition: all 0.2s ease;
 }
 
@@ -971,23 +1180,23 @@ export default {
 }
 
 .active-icon {
-  background: #F0FDF4;
+  background: #f0fdf4;
   color: #059669;
 }
 
 .new-icon {
-  background: #EFF6FF;
-  color: #2563EB;
+  background: #eff6ff;
+  color: #2563eb;
 }
 
 .location-icon {
-  background: #FEF3C7;
-  color: #D97706;
+  background: #fef3c7;
+  color: #d97706;
 }
 
 .email-icon {
-  background: #F3E8FF;
-  color: #7C3AED;
+  background: #f3e8ff;
+  color: #7c3aed;
 }
 
 .stat-content {
@@ -996,7 +1205,7 @@ export default {
 
 .stat-label {
   font-size: 13px;
-  color: #64748B;
+  color: #64748b;
   margin: 0 0 4px 0;
   font-weight: 500;
 }
@@ -1004,7 +1213,7 @@ export default {
 .stat-value {
   font-size: 28px;
   font-weight: 700;
-  color: #0F172A;
+  color: #0f172a;
   margin: 0;
   line-height: 1;
 }
@@ -1030,24 +1239,17 @@ export default {
 .search-container {
   position: relative;
   flex: 1;
-  max-width: 300px;
 }
 
 .search-input {
   width: 100%;
   background: white;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
   padding: 0.75rem 1rem 0.75rem 2.5rem;
   font-size: 14px;
-  color: #334155;
+  color: black;
   transition: all 0.2s ease;
-}
-
-.search-input:focus {
-  outline: none;
-  border-color: #00B8D4;
-  box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
 }
 
 .search-icon {
@@ -1057,32 +1259,61 @@ export default {
   transform: translateY(-50%);
   width: 16px;
   height: 16px;
-  color: #94A3B8;
+  color: #94a3b8;
   stroke-width: 2;
   pointer-events: none;
 }
 
+.filter-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
 .filter-select {
   background: white;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
-  padding: 0.75rem 1rem;
+  padding-top: 0.75rem;
+  padding-right: 2.5rem;
+  padding-bottom: 0.75rem;
+  padding-left: 1rem;
   font-size: 14px;
-  color: #64748B;
+  color: #64748b;
   min-width: 140px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.filter-select:focus {
-  outline: none;
-  border-color: #00B8D4;
+.filter-select:hover,
+.search-input:hover {
   box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
 }
 
-.action-button,
+.filter-select:focus,
+.search-input:focus {
+  outline: none;
+  border-color: #00b8d4;
+  box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
+}
+
+.filter-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.filter-icon {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translate(25%, -50%);
+  pointer-events: none;
+  height: 20px;
+}
+
+.search-button,
 .export-button {
-  background: #3B82F6;
+  background: #3b82f6;
   color: white;
   border: none;
   border-radius: 8px;
@@ -1096,13 +1327,13 @@ export default {
   transition: all 0.2s ease;
 }
 
-.action-button:hover,
+.search-button:hover,
 .export-button:hover {
-  background: #2563EB;
+  background: #2563eb;
   transform: translateY(-1px);
 }
 
-.action-button svg,
+.search-button svg,
 .export-button svg {
   width: 16px;
   height: 16px;
@@ -1114,38 +1345,40 @@ export default {
 .error-container {
   text-align: center;
   padding: 4rem 2rem;
-  color: #64748B;
+  color: #64748b;
 }
 
 .loader {
   width: 40px;
   height: 40px;
-  border: 3px solid #F1F5F9;
-  border-top-color: #00B8D4;
+  border: 3px solid #f1f5f9;
+  border-top-color: #00b8d4;
   border-radius: 50%;
   margin: 0 auto 1rem;
   animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .error-icon {
   width: 48px;
   height: 48px;
-  color: #DC2626;
+  color: #dc2626;
   margin: 0 auto 1rem;
 }
 
 .error-message {
-  color: #DC2626;
+  color: #dc2626;
   margin-bottom: 1rem;
   font-weight: 500;
 }
 
 .retry-button {
-  background: #00B8D4;
+  background: #00b8d4;
   color: white;
   border: none;
   border-radius: 6px;
@@ -1157,7 +1390,7 @@ export default {
 }
 
 .retry-button:hover {
-  background: #0891A6;
+  background: #0891a6;
 }
 
 /* TABLEAU */
@@ -1169,7 +1402,7 @@ export default {
   background: white;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  border: 1px solid #F1F5F9;
+  border: 1px solid #f1f5f9;
   overflow: hidden;
 }
 
@@ -1178,13 +1411,13 @@ export default {
   align-items: center;
   justify-content: space-between;
   padding: 1.5rem;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .table-title {
   font-size: 16px;
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
   margin: 0;
 }
 
@@ -1201,12 +1434,12 @@ export default {
 }
 
 .table-stats .stat-label {
-  color: #64748B;
+  color: #64748b;
 }
 
 .table-stats .stat-value {
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
 }
 
 .table-container {
@@ -1219,27 +1452,27 @@ export default {
 }
 
 .clients-table th {
-  background: #F8FAFC;
+  background: #f8fafc;
   text-align: left;
   padding: 1rem;
   font-size: 12px;
   font-weight: 600;
-  color: #64748B;
+  color: #64748b;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .clients-table td {
   padding: 1rem;
-  border-bottom: 1px solid #F1F5F9;
+  border-bottom: 1px solid #f1f5f9;
   font-size: 14px;
-  color: #334155;
+  color: black;
   vertical-align: middle;
 }
 
 .clients-table tbody tr:hover {
-  background: #F8FAFC;
+  background: #f8fafc;
 }
 
 .clients-table tbody tr:last-child td {
@@ -1268,33 +1501,33 @@ export default {
 
 .client-name {
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
   margin: 0 0 0.25rem 0;
   line-height: 1.2;
 }
 
 .client-id {
   font-size: 12px;
-  color: #64748B;
+  color: #64748b;
   margin: 0;
 }
 
 /* CONTACT INFO */
 .contact-email {
   font-weight: 500;
-  color: #334155;
+  color: black;
   margin: 0;
 }
 
 .address-info,
 .phone-info {
-  color: #64748B;
+  color: #64748b;
   font-size: 14px;
 }
 
 .empty-message {
   text-align: center;
-  color: #64748B;
+  color: #64748b;
   font-style: italic;
   padding: 2rem;
 }
@@ -1305,20 +1538,49 @@ export default {
   gap: 0.5rem;
 }
 
+.action-button,
+.export-button {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-button:hover,
+.export-button:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+.action-button svg,
+.export-button svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2;
+}
+
 .action-btn {
   background: none;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #e2e8f0;
   border-radius: 6px;
   padding: 6px;
-  color: #64748B;
+  color: #64748b;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .action-btn:hover {
-  background: #F8FAFC;
-  border-color: #CBD5E1;
-  color: #334155;
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: black;
 }
 
 .action-btn svg {
@@ -1356,20 +1618,20 @@ export default {
   align-items: center;
   justify-content: space-between;
   padding: 1.5rem;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .modal-header h3 {
   font-size: 18px;
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
   margin: 0;
 }
 
 .modal-close {
   background: none;
   border: none;
-  color: #64748B;
+  color: #64748b;
   cursor: pointer;
   padding: 4px;
   border-radius: 4px;
@@ -1377,8 +1639,8 @@ export default {
 }
 
 .modal-close:hover {
-  background: #F1F5F9;
-  color: #334155;
+  background: #f1f5f9;
+  color: black;
 }
 
 .modal-close svg {
@@ -1390,7 +1652,7 @@ export default {
 .modal-body {
   padding: 1.5rem;
   text-align: center;
-  color: #64748B;
+  color: #64748b;
   overflow-y: auto;
   max-height: calc(90vh - 120px);
 }
@@ -1409,7 +1671,7 @@ export default {
 }
 
 .details-section {
-  background: #F8FAFC;
+  background: #f8fafc;
   padding: 1.5rem;
   border-radius: 8px;
 }
@@ -1421,10 +1683,10 @@ export default {
 .section-subtitle {
   font-size: 14px;
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
   margin: 0 0 1rem 0;
   padding-bottom: 0.75rem;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .detail-row {
@@ -1432,7 +1694,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem 0;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .detail-row:last-child {
@@ -1441,20 +1703,20 @@ export default {
 
 .detail-label {
   font-size: 13px;
-  color: #64748B;
+  color: #64748b;
   font-weight: 500;
 }
 
 .detail-value {
   font-size: 14px;
-  color: #0F172A;
+  color: #0f172a;
   font-weight: 600;
   text-align: right;
 }
 
 .detail-value.amount {
   font-size: 16px;
-  color: #00B8D4;
+  color: #00b8d4;
 }
 
 .modal-actions {
@@ -1462,7 +1724,7 @@ export default {
   gap: 1rem;
   justify-content: flex-end;
   padding-top: 1.5rem;
-  border-top: 1px solid #E2E8F0;
+  border-top: 1px solid #e2e8f0;
 }
 
 .modal-btn {
@@ -1476,22 +1738,22 @@ export default {
 }
 
 .modal-btn.primary {
-  background: #00B8D4;
+  background: #00b8d4;
   color: white;
 }
 
 .modal-btn.primary:hover {
-  background: #0891A6;
+  background: #0891a6;
 }
 
 .modal-btn.secondary {
-  background: #F1F5F9;
-  color: #64748B;
+  background: #f1f5f9;
+  color: #64748b;
 }
 
 .modal-btn.secondary:hover {
-  background: #E2E8F0;
-  color: #334155;
+  background: #e2e8f0;
+  color: black;
 }
 
 /* TODO MESSAGE */
@@ -1503,7 +1765,7 @@ export default {
 .todo-icon {
   width: 64px;
   height: 64px;
-  color: #00B8D4;
+  color: #00b8d4;
   margin: 0 auto 1.5rem;
   stroke-width: 1.5;
 }
@@ -1511,17 +1773,17 @@ export default {
 .todo-message h4 {
   font-size: 18px;
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
   margin: 0 0 0.5rem 0;
 }
 
 .todo-message p {
-  color: #64748B;
+  color: #64748b;
   margin: 0 0 2rem 0;
 }
 
 .client-preview {
-  background: #F8FAFC;
+  background: #f8fafc;
   padding: 1rem;
   border-radius: 8px;
   text-align: left;
@@ -1530,11 +1792,11 @@ export default {
 .client-preview p {
   margin: 0.5rem 0;
   font-size: 14px;
-  color: #334155;
+  color: black;
 }
 
 .client-preview strong {
-  color: #0F172A;
+  color: #0f172a;
 }
 
 /* FORMULAIRE */
@@ -1566,10 +1828,10 @@ export default {
 .form-section-title {
   font-size: 16px;
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
   margin: 0 0 0.5rem 0;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .form-row {
@@ -1587,43 +1849,43 @@ export default {
 .form-label {
   font-size: 14px;
   font-weight: 500;
-  color: #334155;
+  color: black;
 }
 
 .form-label .required {
-  color: #DC2626;
+  color: #dc2626;
 }
 
 .form-input {
   background: white;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #e2e8f0;
   border-radius: 6px;
   padding: 0.75rem 1rem;
   font-size: 14px;
-  color: #0F172A;
+  color: #0f172a;
   transition: all 0.2s ease;
   width: 100%;
 }
 
 .form-input:focus {
   outline: none;
-  border-color: #00B8D4;
+  border-color: #00b8d4;
   box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
 }
 
 .form-input::placeholder {
-  color: #94A3B8;
+  color: #94a3b8;
 }
 
 .form-hint {
   font-size: 12px;
-  color: #64748B;
+  color: #64748b;
   margin: 0;
 }
 
 .form-error {
-  background: #FEF2F2;
-  color: #DC2626;
+  background: #fef2f2;
+  color: #dc2626;
   padding: 1rem;
   border-radius: 8px;
   display: flex;
@@ -1651,6 +1913,14 @@ export default {
   animation: spin 1s linear infinite;
 }
 
+input:placeholder-shown {
+  text-overflow: ellipsis;
+}
+
+input:focus::placeholder {
+  color: transparent;
+}
+
 /* RESPONSIVE */
 @media (max-width: 1024px) {
   .page-header {
@@ -1658,20 +1928,20 @@ export default {
     gap: 1rem;
     align-items: stretch;
   }
-  
+
   .new-client-button {
     width: 100%;
     justify-content: center;
   }
-  
+
   .stats-section {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .filter-group {
     flex-direction: column;
   }
-  
+
   .search-container,
   .filter-select,
   .action-button,
@@ -1679,11 +1949,11 @@ export default {
     width: 100%;
     max-width: none;
   }
-  
+
   .details-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .form-grid {
     grid-template-columns: 1fr;
   }
@@ -1693,40 +1963,40 @@ export default {
   .stats-section {
     grid-template-columns: 1fr;
   }
-  
+
   .table-header {
     flex-direction: column;
     gap: 1rem;
     align-items: flex-start;
   }
-  
+
   .clients-table {
     font-size: 12px;
   }
-  
+
   .clients-table th,
   .clients-table td {
     padding: 0.75rem 0.5rem;
   }
-  
+
   .actions {
     flex-direction: column;
     gap: 0.25rem;
   }
-  
+
   .modal-content {
     width: 95%;
     margin: 1rem;
   }
-  
+
   .modal-actions {
     flex-direction: column;
   }
-  
+
   .modal-btn {
     width: 100%;
   }
-  
+
   .form-row {
     grid-template-columns: 1fr;
   }
