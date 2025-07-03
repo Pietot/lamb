@@ -171,7 +171,7 @@
           <h3 class="table-title">Liste des fournisseurs</h3>
           <div class="table-stats">
             <span class="stat-item">
-              <span class="stat-label">Affichés:</span>
+              <span class="stat-label">Affichés :</span>
               <span class="stat-value">{{ filteredSuppliers.length }}</span>
             </span>
           </div>
@@ -235,9 +235,8 @@
                     <div class="supplier-details">
                       <p class="supplier-name">{{ supplier.nom }}</p>
                       <p class="supplier-id">
-                        ID #{{
-                          String(supplier.id_fournisseur).padStart(4, "0")
-                        }}
+                        ID :
+                        {{ String(supplier.id_fournisseur) }}
                       </p>
                     </div>
                   </div>
@@ -263,13 +262,17 @@
                       <span
                         v-for="i in 5"
                         :key="i"
-                        class="star"
-                        :class="{
-                          filled:
-                            i <= Math.floor(parseFloat(supplier.note_qualite)),
+                        class="star-container"
+                        :style="{
+                          '--fill-width': getStarFillWidth(
+                            i,
+                            parseFloat(supplier.note_qualite)
+                          ),
                         }"
-                        >★</span
                       >
+                        <span class="star-background">★</span>
+                        <span class="star-fill">★</span>
+                      </span>
                     </div>
                   </div>
                 </td>
@@ -1068,7 +1071,7 @@ export default {
 
         if (data.success) {
           const successMsg = data.id
-            ? `Fournisseur créé avec succès ! (ID: #${String(data.id).padStart(4, "0")})`
+            ? `Fournisseur créé avec succès ! (ID : ${String(data.id)})`
             : "Fournisseur créé avec succès !";
           successMessage.value = successMsg;
 
@@ -1120,6 +1123,12 @@ export default {
       validateForm,
       submitNewSupplier,
     };
+  },
+  methods: {
+    getStarFillWidth(starIndex, rating) {
+      const fillPercentage = Math.min(Math.max(rating - (starIndex - 1), 0), 1);
+      return `${fillPercentage * 100}%`;
+    },
   },
 };
 </script>
@@ -1198,6 +1207,10 @@ export default {
   transform: translateY(-2px);
 }
 
+.stat-content .stat-value {
+  font-size: 28px;
+}
+
 .stat-icon {
   width: 48px;
   height: 48px;
@@ -1240,12 +1253,10 @@ export default {
 .stat-label {
   font-size: 13px;
   color: #64748b;
-  margin: 0 0 4px 0;
   font-weight: 500;
 }
 
 .stat-value {
-  font-size: 28px;
   font-weight: 700;
   color: #0f172a;
   margin: 0;
@@ -1590,13 +1601,23 @@ export default {
   gap: 1px;
 }
 
-.star {
-  color: #e2e8f0;
+.star-container {
+  position: relative;
+  display: inline-block;
   font-size: 12px;
 }
 
-.star.filled {
+.star-background {
+  color: #e2e8f0;
+}
+
+.star-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
   color: #f59e0b;
+  overflow: hidden;
+  width: var(--fill-width, 0%);
 }
 
 /* DELIVERY INFO */

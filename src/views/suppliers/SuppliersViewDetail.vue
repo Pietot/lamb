@@ -186,18 +186,24 @@
             <div class="stat-item">
               <p class="stat-label">Note qualité</p>
               <div class="rating-display">
-                <p class="stat-value">{{ supplier.note_qualite || "N/A" }}</p>
-                <div v-if="supplier.note_qualite" class="stars">
+                <span class="rating-value">{{
+                  supplier.note_qualite || "N/A"
+                }}</span>
+                <div v-if="supplier.note_qualite" class="stars-mini">
                   <span
                     v-for="i in 5"
                     :key="i"
-                    class="star"
-                    :class="{
-                      filled:
-                        i <= Math.floor(parseFloat(supplier.note_qualite)),
+                    class="star-container"
+                    :style="{
+                      '--fill-width': getStarFillWidth(
+                        i,
+                        parseFloat(supplier.note_qualite)
+                      ),
                     }"
-                    >★</span
                   >
+                    <span class="star-background">★</span>
+                    <span class="star-fill">★</span>
+                  </span>
                 </div>
               </div>
             </div>
@@ -212,7 +218,7 @@
             <div class="stat-item">
               <p class="stat-label">ID Fournisseur</p>
               <p class="stat-value">
-                #{{ String(supplier.id_fournisseur).padStart(4, "0") }}
+                {{ supplier.id_fournisseur }}
               </p>
             </div>
           </div>
@@ -413,7 +419,7 @@ export default {
 
     // Fonction pour récupérer les informations du fournisseur
     const fetchSupplier = async () => {
-      console.log("fetchSupplier appelé avec ID:", supplierId.value);
+      console.log("fetchSupplier appelé avec ID :", supplierId.value);
       loading.value = true;
       error.value = null;
 
@@ -612,7 +618,7 @@ export default {
       console.log("Component mounted");
       console.log("Route params:", route.params);
       console.log("Route query:", route.query);
-      console.log("Supplier ID:", supplierId.value);
+      console.log("Supplier ID :", supplierId.value);
 
       // Pour le développement, on peut charger le premier fournisseur si pas d'ID
       if (!supplierId.value) {
@@ -692,6 +698,12 @@ export default {
       editSupplier,
       exportProducts,
     };
+  },
+  methods: {
+    getStarFillWidth(starIndex, rating) {
+      const fillPercentage = Math.min(Math.max(rating - (starIndex - 1), 0), 1);
+      return `${fillPercentage * 100}%`;
+    },
   },
 };
 </script>
@@ -1088,27 +1100,6 @@ export default {
   color: #64748b;
 }
 
-.rating-display {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.stars {
-  display: flex;
-  gap: 1px;
-}
-
-.star {
-  color: #e2e8f0;
-  font-size: 14px;
-}
-
-.star.filled {
-  color: #f59e0b;
-}
-
 .metrics-section {
   display: flex;
   flex-direction: column;
@@ -1138,6 +1129,43 @@ export default {
   color: #0f172a;
   font-weight: 600;
   text-align: right;
+}
+
+/* RATING */
+.rating-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.rating-value {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.stars-mini {
+  display: flex;
+  gap: 1px;
+}
+
+.star-container {
+  position: relative;
+  display: inline-block;
+  font-size: 12px;
+}
+
+.star-background {
+  color: #e2e8f0;
+}
+
+.star-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: #f59e0b;
+  overflow: hidden;
+  width: var(--fill-width, 0%);
 }
 
 /* STATS SUPPLÉMENTAIRES */

@@ -141,7 +141,7 @@
           <h3 class="table-title">Liste des clients</h3>
           <div class="table-stats">
             <span class="stat-item">
-              <span class="stat-label">Affichés:</span>
+              <span class="stat-label">Affichés :</span>
               <span class="stat-value">{{ filteredClients.length }}</span>
             </span>
           </div>
@@ -527,39 +527,35 @@
             <div class="details-section">
               <h4 class="section-subtitle">Informations personnelles</h4>
               <div class="detail-row">
-                <span class="detail-label">ID Client:</span>
-                <span class="detail-value"
-                  >#{{
-                    String(selectedClient.id_client).padStart(4, "0")
-                  }}</span
-                >
+                <span class="detail-label">ID Client :</span>
+                <span class="detail-value">{{ selectedClient.id_client }}</span>
               </div>
               <div class="detail-row">
-                <span class="detail-label">Nom:</span>
+                <span class="detail-label">Nom :</span>
                 <span class="detail-value">{{
                   selectedClient.contact_principal
                 }}</span>
               </div>
               <div class="detail-row">
-                <span class="detail-label">Raison sociale:</span>
+                <span class="detail-label">Raison sociale :</span>
                 <span class="detail-value">{{
                   selectedClient.raison_sociale
                 }}</span>
               </div>
               <div class="detail-row" v-if="selectedClient.nom_commercial">
-                <span class="detail-label">Nom commercial:</span>
+                <span class="detail-label">Nom commercial :</span>
                 <span class="detail-value">{{
                   selectedClient.nom_commercial
                 }}</span>
               </div>
               <div class="detail-row" v-if="selectedClient.secteur_activite">
-                <span class="detail-label">Secteur d'activité:</span>
+                <span class="detail-label">Secteur d'activité :</span>
                 <span class="detail-value">{{
                   selectedClient.secteur_activite
                 }}</span>
               </div>
               <div class="detail-row">
-                <span class="detail-label">Date d'inscription:</span>
+                <span class="detail-label">Date d'inscription :</span>
                 <span class="detail-value">{{
                   new Date().toLocaleDateString("fr-FR")
                 }}</span>
@@ -569,21 +565,21 @@
             <div class="details-section">
               <h4 class="section-subtitle">Informations de contact</h4>
               <div class="detail-row">
-                <span class="detail-label">Email:</span>
+                <span class="detail-label">Email :</span>
                 <span class="detail-value">{{ selectedClient.email }}</span>
               </div>
               <div class="detail-row">
-                <span class="detail-label">Téléphone:</span>
+                <span class="detail-label">Téléphone :</span>
                 <span class="detail-value">{{
                   formatPhone(selectedClient.telephone)
                 }}</span>
               </div>
               <div class="detail-row">
-                <span class="detail-label">Adresse:</span>
+                <span class="detail-label">Adresse :</span>
                 <span class="detail-value">{{ selectedClient.adresse }}</span>
               </div>
               <div class="detail-row">
-                <span class="detail-label">Code postal / Ville:</span>
+                <span class="detail-label">Code postal / Ville :</span>
                 <span class="detail-value"
                   >{{ selectedClient.code_postal }}
                   {{ selectedClient.ville }}</span
@@ -594,11 +590,11 @@
             <div class="details-section full-width">
               <h4 class="section-subtitle">Statistiques client</h4>
               <div class="detail-row">
-                <span class="detail-label">SIRET:</span>
+                <span class="detail-label">SIRET :</span>
                 <span class="detail-value">{{ selectedClient.siret }}</span>
               </div>
               <div class="detail-row">
-                <span class="detail-label">Date de création:</span>
+                <span class="detail-label">Date de création :</span>
                 <span class="detail-value">{{
                   selectedClient.date_creation
                     ? new Date(selectedClient.date_creation).toLocaleDateString(
@@ -608,13 +604,13 @@
                 }}</span>
               </div>
               <div class="detail-row">
-                <span class="detail-label">Nombre de commandes:</span>
+                <span class="detail-label">Nombre de commandes :</span>
                 <span class="detail-value">{{
                   Math.floor(Math.random() * 20) + 1
                 }}</span>
               </div>
               <div class="detail-row">
-                <span class="detail-label">Chiffre d'affaires total:</span>
+                <span class="detail-label">Chiffre d'affaires total :</span>
                 <span class="detail-value amount">{{
                   formatCurrency(Math.random() * 50000)
                 }}</span>
@@ -1164,6 +1160,10 @@ export default {
   transform: translateY(-2px);
 }
 
+.stat-content .stat-value {
+  font-size: 28px;
+}
+
 .stat-icon {
   width: 48px;
   height: 48px;
@@ -1206,12 +1206,10 @@ export default {
 .stat-label {
   font-size: 13px;
   color: #64748b;
-  margin: 0 0 4px 0;
   font-weight: 500;
 }
 
 .stat-value {
-  font-size: 28px;
   font-weight: 700;
   color: #0f172a;
   margin: 0;
@@ -1426,20 +1424,11 @@ export default {
   gap: 2rem;
 }
 
-.table-stats .stat-item {
+.stat-item {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   font-size: 14px;
-}
-
-.table-stats .stat-label {
-  color: #64748b;
-}
-
-.table-stats .stat-value {
-  font-weight: 600;
-  color: #0f172a;
 }
 
 .table-container {

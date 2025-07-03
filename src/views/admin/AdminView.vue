@@ -40,7 +40,7 @@
               <input
                 v-model="userSearch"
                 type="text"
-                placeholder="Rechercher un utilisateur..."
+                placeholder="Rechercher par ID, nom, prénom ou email"
                 class="search-input"
               />
               <svg
@@ -92,7 +92,7 @@
                           <p class="user-name">
                             {{ user.prenom }} {{ user.nom }}
                           </p>
-                          <p class="user-id">ID #{{ user.id_utilisateur }}</p>
+                          <p class="user-id">ID : {{ user.id_utilisateur }}</p>
                         </div>
                       </div>
                     </td>
@@ -434,13 +434,13 @@
               </div>
             </div>
             <div class="detail-row">
-              <span class="detail-label">ID Utilisateur:</span>
-              <span class="detail-value"
-                >#{{ selectedUser.id_utilisateur }}</span
-              >
+              <span class="detail-label">ID Utilisateur :</span>
+              <span class="detail-value">{{
+                selectedUser.id_utilisateur
+              }}</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">Rôle actuel:</span>
+              <span class="detail-label">Rôle actuel :</span>
               <span class="detail-value">
                 <span
                   class="role-badge"
@@ -679,10 +679,12 @@ export default {
     const filteredUsers = computed(() => {
       if (!userSearch.value) return users.value;
       const search = userSearch.value.toLowerCase();
+      const fullName = (user) =>
+        `${user.prenom.toLowerCase()} ${user.nom.toLowerCase()}`;
       return users.value.filter(
         (user) =>
-          user.nom.toLowerCase().includes(search) ||
-          user.prenom.toLowerCase().includes(search) ||
+          user.id_utilisateur.toString().includes(search) ||
+          fullName(user).includes(search) ||
           user.email.toLowerCase().includes(search)
       );
     });
@@ -961,7 +963,6 @@ export default {
 
 .search-container {
   position: relative;
-  max-width: 400px;
 }
 
 .search-input {
@@ -1180,6 +1181,8 @@ export default {
 }
 
 .role-card {
+  display: flex;
+  flex-direction: column;
   background: white;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
@@ -1276,7 +1279,9 @@ export default {
 }
 
 .role-actions {
-  margin-top: 1rem;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
 }
 
 .role-edit-button {

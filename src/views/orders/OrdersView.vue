@@ -93,15 +93,15 @@
           <h3 class="table-title">Liste des commandes</h3>
           <div class="table-stats">
             <span class="stat-item">
-              <span class="stat-label">Total:</span>
+              <span class="stat-label">Total :</span>
               <span class="stat-value">{{ filteredOrders.length }}</span>
             </span>
             <span class="stat-item">
-              <span class="stat-label">En attente:</span>
+              <span class="stat-label">En attente :</span>
               <span class="stat-value pending">{{ pendingCount }}</span>
             </span>
             <span class="stat-item">
-              <span class="stat-label">En préparation:</span>
+              <span class="stat-label">En préparation :</span>
               <span class="stat-value progress">{{ inProgressCount }}</span>
             </span>
           </div>
@@ -268,7 +268,7 @@
             <div class="details-section">
               <h4 class="section-subtitle">Informations générales</h4>
               <div class="detail-row">
-                <span class="detail-label">N° Commande:</span>
+                <span class="detail-label">N° Commande :</span>
                 <span class="detail-value"
                   >#{{
                     String(selectedOrder.id_commande).padStart(5, "0")
@@ -276,13 +276,13 @@
                 >
               </div>
               <div class="detail-row">
-                <span class="detail-label">Date:</span>
+                <span class="detail-label">Date :</span>
                 <span class="detail-value">{{
                   formatDate(selectedOrder.date_commande)
                 }}</span>
               </div>
               <div class="detail-row">
-                <span class="detail-label">Statut:</span>
+                <span class="detail-label">Statut :</span>
                 <span class="detail-value">
                   <span
                     class="status-badge"
@@ -297,19 +297,19 @@
             <div class="details-section">
               <h4 class="section-subtitle">Informations client</h4>
               <div class="detail-row">
-                <span class="detail-label">Nom:</span>
+                <span class="detail-label">Nom :</span>
                 <span class="detail-value">{{
                   getClientName(selectedOrder.id_client)
                 }}</span>
               </div>
               <div v-if="getClient(selectedOrder.id_client)" class="detail-row">
-                <span class="detail-label">Email:</span>
+                <span class="detail-label">Email :</span>
                 <span class="detail-value">{{
                   getClient(selectedOrder.id_client).email
                 }}</span>
               </div>
               <div v-if="getClient(selectedOrder.id_client)" class="detail-row">
-                <span class="detail-label">Téléphone:</span>
+                <span class="detail-label">Téléphone :</span>
                 <span class="detail-value">{{
                   formatPhone(getClient(selectedOrder.id_client).telephone)
                 }}</span>
@@ -319,7 +319,7 @@
             <div class="details-section full-width">
               <h4 class="section-subtitle">Informations financières</h4>
               <div class="detail-row">
-                <span class="detail-label">Montant total:</span>
+                <span class="detail-label">Montant total :</span>
                 <span class="detail-value amount">{{
                   formatCurrency(selectedOrder.montant_total)
                 }}</span>

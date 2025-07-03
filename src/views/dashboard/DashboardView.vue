@@ -637,7 +637,6 @@ export default {
 .kpi-label {
   font-size: 13px;
   color: #64748b;
-  margin: 0 0 4px 0;
   line-height: 1.3;
   font-weight: 500;
 }

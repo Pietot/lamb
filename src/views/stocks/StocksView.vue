@@ -90,11 +90,11 @@
           <h3 class="table-title">Articles en stock</h3>
           <div class="table-stats">
             <span class="stat-item">
-              <span class="stat-label">Total articles:</span>
+              <span class="stat-label">Total articles :</span>
               <span class="stat-value">{{ totalArticles }}</span>
             </span>
             <span class="stat-item">
-              <span class="stat-label">Stock faible:</span>
+              <span class="stat-label">Stock faible :</span>
               <span class="stat-value low">{{ lowStockCount }}</span>
             </span>
           </div>
@@ -478,23 +478,23 @@
             <div class="details-section">
               <h4 class="section-subtitle">Informations générales</h4>
               <div class="detail-row">
-                <span class="detail-label">Référence:</span>
+                <span class="detail-label">Référence :</span>
                 <span class="detail-value">{{
                   selectedArticle.reference || "#" + selectedArticle.id_article
                 }}</span>
               </div>
               <div class="detail-row">
-                <span class="detail-label">Nom:</span>
+                <span class="detail-label">Nom :</span>
                 <span class="detail-value">{{ selectedArticle.nom }}</span>
               </div>
               <div class="detail-row">
-                <span class="detail-label">Description:</span>
+                <span class="detail-label">Description :</span>
                 <span class="detail-value">{{
                   selectedArticle.description
                 }}</span>
               </div>
               <div class="detail-row">
-                <span class="detail-label">Catégorie:</span>
+                <span class="detail-label">Catégorie :</span>
                 <span class="detail-value">{{
                   getCategoryName(selectedArticle.id_categorie)
                 }}</span>
@@ -504,7 +504,7 @@
             <div class="details-section">
               <h4 class="section-subtitle">Informations de stock</h4>
               <div class="detail-row">
-                <span class="detail-label">Quantité en stock:</span>
+                <span class="detail-label">Quantité en stock :</span>
                 <span class="detail-value">
                   <span
                     class="stock-badge"
@@ -519,13 +519,13 @@
                 </span>
               </div>
               <div class="detail-row">
-                <span class="detail-label">Seuil d'alerte:</span>
+                <span class="detail-label">Seuil d'alerte :</span>
                 <span class="detail-value">{{
                   selectedArticle.seuil_alerte
                 }}</span>
               </div>
               <div class="detail-row">
-                <span class="detail-label">Statut:</span>
+                <span class="detail-label">Statut :</span>
                 <span class="detail-value">
                   <span
                     v-if="
@@ -546,13 +546,13 @@
             <div class="details-section full-width">
               <h4 class="section-subtitle">Informations commerciales</h4>
               <div class="detail-row">
-                <span class="detail-label">Prix d'achat:</span>
+                <span class="detail-label">Prix d'achat :</span>
                 <span class="detail-value">{{
                   formatCurrency(selectedArticle.prix_achat)
                 }}</span>
               </div>
               <div class="detail-row">
-                <span class="detail-label">Valeur du stock:</span>
+                <span class="detail-label">Valeur du stock :</span>
                 <span class="detail-value">{{
                   formatCurrency(
                     selectedArticle.prix_achat * selectedArticle.quantite_stock
@@ -560,13 +560,13 @@
                 }}</span>
               </div>
               <div class="detail-row">
-                <span class="detail-label">Fournisseur principal:</span>
+                <span class="detail-label">Fournisseur principal :</span>
                 <span class="detail-value">{{
                   getSupplierName(selectedArticle.id_fournisseur_principal)
                 }}</span>
               </div>
               <div class="detail-row">
-                <span class="detail-label">Référence fournisseur:</span>
+                <span class="detail-label">Référence fournisseur :</span>
                 <span class="detail-value">{{
                   selectedArticle.reference_fournisseur || "N/A"
                 }}</span>

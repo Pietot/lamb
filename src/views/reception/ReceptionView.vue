@@ -138,11 +138,11 @@
           <h3 class="section-title">Livraisons à réceptionner</h3>
           <div class="table-stats">
             <span class="stat-item">
-              <span class="stat-label">En attente:</span>
+              <span class="stat-label">En attente :</span>
               <span class="stat-value">{{ pendingCount }}</span>
             </span>
             <span class="stat-item">
-              <span class="stat-label">Problèmes:</span>
+              <span class="stat-label">Problèmes :</span>
               <span class="stat-value low">{{ problemCount }}</span>
             </span>
           </div>
@@ -228,7 +228,7 @@
           <h3 class="section-title">Historique des livraisons</h3>
           <div class="table-stats">
             <span class="stat-item">
-              <span class="stat-label">Total:</span>
+              <span class="stat-label">Total :</span>
               <span class="stat-value">{{ deliveryHistory.length }}</span>
             </span>
           </div>
@@ -529,6 +529,16 @@ export default {
   gap: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   border: 1px solid #f1f5f9;
+  transition: all 0.2s ease;
+}
+
+.stat-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.stat-content .stat-value {
+  font-size: 28px;
 }
 
 .stat-icon {
@@ -753,10 +763,6 @@ export default {
   align-items: center;
   gap: 0.5rem;
   font-size: 14px;
-}
-
-.stat-label {
-  color: #64748b;
 }
 
 .stat-value {
