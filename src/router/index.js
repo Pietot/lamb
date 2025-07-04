@@ -53,14 +53,14 @@ const router = createRouter({
       meta: { requiresAuth: true, layout: "main" },
     },
     {
-      path: '/suppliers',
-      name: 'Suppliers',
+      path: "/suppliers",
+      name: "Suppliers",
       component: () => import("@/views/suppliers/SuppliersView.vue"),
       meta: { requiresAuth: true, layout: "main" },
     },
     {
-      path: '/suppliers/:id',
-      name: 'SupplierDetail',
+      path: "/suppliers/:id",
+      name: "SupplierDetail",
       component: () => import("@/views/suppliers/SuppliersViewDetail.vue"),
       meta: { requiresAuth: true, layout: "main" },
     },
@@ -75,6 +75,12 @@ const router = createRouter({
       name: "NotFound",
       component: () => import("@/views/errors/NotFound.vue"),
     },
+    {
+      path: "/blackjack",
+      name: "Blackjack",
+      component: () => import("@/views/BlackjackView.vue"),
+      meta: { layout: "main", requiresKonami: true },
+    },
   ],
 });
 
@@ -85,7 +91,12 @@ router.beforeEach(async (to, from, next) => {
     next("/login");
   } else if (to.meta.requiresGuest && authStore.isAuthenticated) {
     next("/");
-  } else if (!router.hasRoute(to.name)) {
+  } else if (
+    to.meta.requiresKonami &&
+    localStorage.getItem("konamiUnlocked") !== "true"
+  ) {
+    next("/errors");
+  } else if (to.matched.length === 0) {
     next("/errors");
   } else {
     next();
