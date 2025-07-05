@@ -206,6 +206,7 @@
           <table class="suppliers-table">
             <thead>
               <tr>
+                <th>ID</th>
                 <th>Fournisseur</th>
                 <th>Contact</th>
                 <th>Localisation</th>
@@ -220,24 +221,25 @@
                 v-for="supplier in filteredSuppliers"
                 :key="supplier.id_fournisseur"
               >
-                <td>
-                  <div class="supplier-info">
-                    <div
-                      class="supplier-avatar"
-                      :style="{
-                        backgroundColor: getAvatarColor(
-                          supplier.id_fournisseur,
-                        ),
-                      }"
-                    >
-                      {{ getSupplierInitials(supplier) }}
+                <td class="supplier-id">
+                  <p class="supplier-id-text">{{ supplier.id_fournisseur }}</p>
+                </td>
+                <td class="supplier-info">
+                  <div class="supplier-profile">
+                    <div class="supplier-avatar-container">
+                      <div
+                        class="supplier-avatar"
+                        :style="{
+                          backgroundColor: getAvatarColor(
+                            supplier.id_fournisseur
+                          ),
+                        }"
+                      >
+                        {{ getSupplierInitials(supplier) }}
+                      </div>
                     </div>
                     <div class="supplier-details">
                       <p class="supplier-name">{{ supplier.nom }}</p>
-                      <p class="supplier-id">
-                        ID :
-                        {{ String(supplier.id_fournisseur) }}
-                      </p>
                     </div>
                   </div>
                 </td>
@@ -853,7 +855,7 @@ export default {
 
     // Fonctions utilitaires
     const getSupplierInitials = (supplier) => {
-      const words = supplier.nom.split(" ");
+      const words = supplier.nom.split(/[\s\-&]+/);
       return words
         .map((w) => w[0])
         .join("")
@@ -1493,12 +1495,12 @@ export default {
 
 .suppliers-table {
   width: 100%;
-  border-collapse: collapse;
+  min-width: max-content;
+  text-align: center;
 }
 
 .suppliers-table th {
   background: #f8fafc;
-  text-align: left;
   padding: 1rem;
   font-size: 12px;
   font-weight: 600;
@@ -1525,10 +1527,17 @@ export default {
 }
 
 /* SUPPLIER INFO */
-.supplier-info {
+.supplier-profile {
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: 0.75rem;
+}
+
+.supplier-avatar-container {
+  display: flex;
+  width: 35%;
+  justify-content: flex-end;
 }
 
 .supplier-avatar {
@@ -1542,6 +1551,19 @@ export default {
   font-weight: 600;
   font-size: 14px;
   flex-shrink: 0;
+}
+
+.supplier-avatar.large {
+  width: 64px;
+  height: 64px;
+  font-size: 20px;
+}
+
+.supplier-details {
+  width: 65%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .supplier-name {
@@ -1607,6 +1629,13 @@ export default {
   font-size: 12px;
 }
 
+.star-container span {
+  font-size: 1rem;
+  -webkit-user-drag: none;
+  -moz-user-drag: none;
+  -ms-user-drag: none;
+}
+
 .star-background {
   color: #e2e8f0;
 }
@@ -1651,7 +1680,8 @@ export default {
 /* ACTIONS */
 .actions {
   display: flex;
-  gap: 0.5rem;
+  justify-content: center;
+  gap: 1.5rem;
 }
 
 .action-button,
@@ -2041,6 +2071,7 @@ input:focus::placeholder {
 
   .filter-group {
     flex-direction: column;
+    align-items: stretch;
   }
 
   .search-container,
@@ -2067,25 +2098,8 @@ input:focus::placeholder {
     font-size: 12px;
   }
 
-  .suppliers-table th,
-  .suppliers-table td {
-    padding: 0.75rem 0.5rem;
-  }
-
   .actions {
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-}
-
-@media (max-width: 640px) {
-  .suppliers-table th:nth-child(3),
-  .suppliers-table td:nth-child(3),
-  .suppliers-table th:nth-child(4),
-  .suppliers-table td:nth-child(4),
-  .suppliers-table th:nth-child(5),
-  .suppliers-table td:nth-child(5) {
-    display: none;
+    gap: 0.5rem;
   }
 }
 </style>
