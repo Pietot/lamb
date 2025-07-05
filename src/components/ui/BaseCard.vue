@@ -6,27 +6,28 @@
 
 <script>
 export default {
-  name: 'BaseCard',
+  name: "BaseCard",
   props: {
     padding: {
       type: String,
-      default: 'md',
-      validator: (value) => ['none', 'sm', 'md', 'lg'].includes(value)
-    }
+      default: "md",
+      validator: (value) => ["none", "sm", "md", "lg"].includes(value),
+    },
   },
   computed: {
     cardClasses() {
-      const baseClasses = 'bg-white rounded-lg shadow-md border border-gray-200'
-      
+      const baseClasses =
+        "bg-white rounded-lg shadow-md border border-gray-200";
+
       const paddingClasses = {
-        none: '',
-        sm: 'p-4',
-        md: 'p-6',
-        lg: 'p-8',
-      }
-      
-      return [baseClasses, paddingClasses[this.padding]].join(' ')
-    }
-  }
-}
+        none: "",
+        sm: "p-4",
+        md: "p-6",
+        lg: "p-8",
+      };
+
+      return [baseClasses, paddingClasses[this.padding]].join(" ");
+    },
+  },
+};
 </script>

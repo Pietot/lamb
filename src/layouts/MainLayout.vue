@@ -1,11 +1,19 @@
 <template>
-  <div class="app-layout" @touchstart="handleTouchStart" @touchmove="handleTouchMove" @touchend="handleTouchEnd">
+  <div
+    class="app-layout"
+    @touchstart="handleTouchStart"
+    @touchmove="handleTouchMove"
+    @touchend="handleTouchEnd"
+  >
     <!-- Overlay pour mobile -->
     <div v-if="sidebarOpen" class="sidebar-overlay" @click="closeSidebar"></div>
 
     <!-- Sidebar -->
-    <aside class="sidebar" :class="{ 'sidebar-open': sidebarOpen, 'sidebar-dragging': isDragging }"
-      :style="`translateX(${sidebarTransform}px)`">
+    <aside
+      class="sidebar"
+      :class="{ 'sidebar-open': sidebarOpen, 'sidebar-dragging': isDragging }"
+      :style="`translateX(${sidebarTransform}px)`"
+    >
       <!-- Logo LAMB Solutions -->
       <div class="sidebar-header">
         <div class="logo-container">
@@ -24,8 +32,14 @@
 
       <!-- Navigation Menu -->
       <nav class="sidebar-nav">
-        <router-link v-for="item in menuItems" :key="item.name" :to="item.to" class="nav-link"
-          :class="{ 'nav-link-active': $route.name === item.name }" @click="closeSidebar">
+        <router-link
+          v-for="item in menuItems"
+          :key="item.name"
+          :to="item.to"
+          class="nav-link"
+          :class="{ 'nav-link-active': $route.name === item.name }"
+          @click="closeSidebar"
+        >
           <div class="nav-icon">
             <component :is="item.icon" />
           </div>
@@ -43,11 +57,15 @@
             <p class="user-name">{{ authStore.user?.name }}</p>
             <p class="user-role">{{ userRoleLabel }}</p>
           </div>
-          <button @click="handleLogout" class="logout-button" title="Se déconnecter">
+          <button
+            @click="handleLogout"
+            class="logout-button"
+            title="Se déconnecter"
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path d="M9 21H5a2 2 0 0 1-2 2V5a2 2 0 0 1 2-2h4" />
-              <polyline points="16,17 21,12 16,7" />
-              <line x1="21" y1="12" x2="9" y2="12" />
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16,17 21,12 16,7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
             </svg>
           </button>
         </div>
@@ -80,9 +98,9 @@
 </template>
 
 <script>
-import { computed, ref } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
+import { computed, ref } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { useAuthStore } from "@/stores/auth";
 
 // Icônes SVG comme composants
 const DashboardIcon = {
@@ -91,8 +109,8 @@ const DashboardIcon = {
       <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
       <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
     </svg>
-  `
-}
+  `,
+};
 
 const StocksIcon = {
   template: `
@@ -101,8 +119,8 @@ const StocksIcon = {
       <polyline points="3.27,6.96 12,12.01 20.73,6.96"/>
       <line x1="12" y1="22.08" x2="12" y2="12"/>
     </svg>
-  `
-}
+  `,
+};
 
 const OrdersIcon = {
   template: `
@@ -111,8 +129,8 @@ const OrdersIcon = {
       <circle cx="20" cy="21" r="1"/>
       <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
     </svg>
-  `
-}
+  `,
+};
 
 const PrepareIcon = {
   template: `
@@ -121,8 +139,8 @@ const PrepareIcon = {
       <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
       <path d="M9 14l2 2 4-4"/>
     </svg>
-  `
-}
+  `,
+};
 
 const ReceptionIcon = {
   template: `
@@ -132,8 +150,8 @@ const ReceptionIcon = {
       <circle cx="5.5" cy="18.5" r="2.5"/>
       <circle cx="18.5" cy="18.5" r="2.5"/>
     </svg>
-  `
-}
+  `,
+};
 
 const ClientsIcon = {
   template: `
@@ -143,8 +161,8 @@ const ClientsIcon = {
       <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
       <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
     </svg>
-  `
-}
+  `,
+};
 
 const SuppliersIcon = {
   template: `
@@ -157,8 +175,8 @@ const SuppliersIcon = {
       <path d="M10 14h4"/>
       <path d="M10 18h4"/>
     </svg>
-  `
-}
+  `,
+};
 
 const AdminIcon = {
   template: `
@@ -166,11 +184,11 @@ const AdminIcon = {
       <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
       <circle cx="12" cy="12" r="3"/>
     </svg>
-  `
-}
+  `,
+};
 
 export default {
-  name: 'MainLayout',
+  name: "MainLayout",
   components: {
     DashboardIcon,
     StocksIcon,
@@ -179,171 +197,175 @@ export default {
     ReceptionIcon,
     ClientsIcon,
     SuppliersIcon,
-    AdminIcon
+    AdminIcon,
   },
   setup() {
-    const router = useRouter()
-    const route = useRoute()
-    const authStore = useAuthStore()
-    const sidebarOpen = ref(false)
-    const sidebarTransform = ref(0)
-    const isDragging = ref(false)
-    const startX = ref(0)
-    const currentX = ref(0)
+    const router = useRouter();
+    const route = useRoute();
+    const authStore = useAuthStore();
+    const sidebarOpen = ref(false);
+    const sidebarTransform = ref(0);
+    const isDragging = ref(false);
+    const startX = ref(0);
+    const currentX = ref(0);
 
     const menuItems = [
       {
-        name: 'Dashboard',
-        label: 'Tableau de bord',
-        to: '/',
-        icon: 'DashboardIcon'
+        name: "Dashboard",
+        label: "Tableau de bord",
+        to: "/",
+        icon: "DashboardIcon",
       },
       {
-        name: 'Stocks',
-        label: 'Gestion des stocks',
-        to: '/stocks',
-        icon: 'StocksIcon'
+        name: "Stocks",
+        label: "Gestion des stocks",
+        to: "/stocks",
+        icon: "StocksIcon",
       },
       {
-        name: 'Orders',
-        label: 'Gestion des commandes',
-        to: '/orders',
-        icon: 'OrdersIcon'
+        name: "Orders",
+        label: "Gestion des commandes",
+        to: "/orders",
+        icon: "OrdersIcon",
       },
       {
-        name: 'Prepare',
-        label: 'Commandes à préparer',
-        to: '/prepare',
-        icon: 'PrepareIcon'
+        name: "Prepare",
+        label: "Commandes à préparer",
+        to: "/prepare",
+        icon: "PrepareIcon",
       },
       {
-        name: 'Reception',
-        label: 'Réception fournisseur',
-        to: '/reception',
-        icon: 'ReceptionIcon'
+        name: "Reception",
+        label: "Réception fournisseur",
+        to: "/reception",
+        icon: "ReceptionIcon",
       },
       {
-        name: 'Agenda',
-        label: 'Agenda',
-        to: '/agenda',
-        icon: 'AgendaIcon'
+        name: "Agenda",
+        label: "Agenda",
+        to: "/agenda",
+        icon: "AgendaIcon",
       },
       {
-        name: 'Clients',
-        label: 'Clients',
-        to: '/clients',
-        icon: 'ClientsIcon'
+        name: "Clients",
+        label: "Clients",
+        to: "/clients",
+        icon: "ClientsIcon",
       },
       {
-        name: 'Suppliers',
-        label: 'Fournisseurs',
-        to: '/suppliers',
-        icon: 'SuppliersIcon'
+        name: "Suppliers",
+        label: "Fournisseurs",
+        to: "/suppliers",
+        icon: "SuppliersIcon",
       },
       {
-        name: 'Admin',
-        label: 'Admin',
-        to: '/admin',
-        icon: 'AdminIcon'
-      }
-    ]
+        name: "Admin",
+        label: "Admin",
+        to: "/admin",
+        icon: "AdminIcon",
+      },
+    ];
 
     const pageTitle = computed(() => {
-      const currentItem = menuItems.find(item => item.name === route.name)
-      return currentItem?.label || 'Tableau de bord'
-    })
+      const currentItem = menuItems.find((item) => item.name === route.name);
+      return currentItem?.label || "Tableau de bord";
+    });
 
     const userInitials = computed(() => {
-      const name = authStore.user?.name || 'User'
-      return name.split(' ').map(n => n[0]).join('').toUpperCase()
-    })
+      const name = authStore.user?.name || "User";
+      return name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase();
+    });
 
     const userRoleLabel = computed(() => {
-      const role = authStore.user?.role || 'user'
+      const role = authStore.user?.role || "user";
       const roleLabels = {
-        admin: 'Administrateur',
-        manager: 'Gestionnaire',
-        commercial: 'Commercial',
-        support: 'Support'
-      }
-      return roleLabels[role] || 'Utilisateur'
-    })
+        admin: "Administrateur",
+        manager: "Gestionnaire",
+        commercial: "Commercial",
+        support: "Support",
+      };
+      return roleLabels[role] || "Utilisateur";
+    });
 
     const handleLogout = () => {
-      authStore.logout()
-      router.push('/login')
-    }
+      authStore.logout();
+      router.push("/login");
+    };
 
     const toggleSidebar = () => {
-      sidebarOpen.value = !sidebarOpen.value
-    }
+      sidebarOpen.value = !sidebarOpen.value;
+    };
 
     const closeSidebar = () => {
-      sidebarOpen.value = false
-      sidebarTransform.value = 0
-      isDragging.value = false
-    }
+      sidebarOpen.value = false;
+      sidebarTransform.value = 0;
+      isDragging.value = false;
+    };
 
     // Gestion des gestes tactiles
     const handleTouchStart = (e) => {
-      if (window.innerWidth > 768) return
+      if (window.innerWidth > 768) return;
 
-      startX.value = e.touches[0].clientX
-      currentX.value = startX.value
-      isDragging.value = true
-    }
+      startX.value = e.touches[0].clientX;
+      currentX.value = startX.value;
+      isDragging.value = true;
+    };
 
     const handleTouchMove = (e) => {
-      if (!isDragging.value || window.innerWidth > 768) return
+      if (!isDragging.value || window.innerWidth > 768) return;
 
-      currentX.value = e.touches[0].clientX
-      const deltaX = currentX.value - startX.value
+      currentX.value = e.touches[0].clientX;
+      const deltaX = currentX.value - startX.value;
 
       if (sidebarOpen.value) {
         // Sidebar ouverte, on peut la fermer en swipant vers la gauche
         if (deltaX < 0) {
-          const progress = Math.max(0, Math.min(1, Math.abs(deltaX) / 260))
-          sidebarTransform.value = -progress * 280
+          const progress = Math.max(0, Math.min(1, Math.abs(deltaX) / 260));
+          sidebarTransform.value = -progress * 280;
         }
       } else {
         // Sidebar fermée, on peut l'ouvrir en swipant vers la droite depuis le bord gauche
         if (startX.value < window.innerWidth / 3 && deltaX > 0) {
-          const progress = Math.max(0, Math.min(1, deltaX / 260))
-          sidebarTransform.value = progress * 280 - 280
+          const progress = Math.max(0, Math.min(1, deltaX / 260));
+          sidebarTransform.value = progress * 280 - 280;
         }
       }
-    }
+    };
 
     const handleTouchEnd = () => {
-      if (!isDragging.value || window.innerWidth > 768) return
+      if (!isDragging.value || window.innerWidth > 768) return;
 
-      const deltaX = currentX.value - startX.value
+      const deltaX = currentX.value - startX.value;
       // Seuil pour déclencher l'ouverture/fermeture
-      const threshold = 30
+      const threshold = 30;
 
       if (sidebarOpen.value) {
         // Sidebar ouverte
         if (Math.abs(deltaX) > threshold && deltaX < 0) {
           // Fermer la sidebar
-          closeSidebar()
+          closeSidebar();
         } else {
           // Revenir à l'état ouvert
-          sidebarTransform.value = 0
+          sidebarTransform.value = 0;
         }
       } else {
         // Sidebar fermée
         if (startX.value < window.innerWidth / 3 && deltaX > threshold) {
           // Ouvrir la sidebar
-          sidebarOpen.value = true
-          sidebarTransform.value = 0
+          sidebarOpen.value = true;
+          sidebarTransform.value = 0;
         } else {
           // Revenir à l'état fermé
-          sidebarTransform.value = 0
+          sidebarTransform.value = 0;
         }
       }
 
-      isDragging.value = false
-    }
+      isDragging.value = false;
+    };
 
     return {
       authStore,
@@ -359,18 +381,18 @@ export default {
       isDragging,
       handleTouchStart,
       handleTouchMove,
-      handleTouchEnd
-    }
-  }
-}
+      handleTouchEnd,
+    };
+  },
+};
 </script>
 
 <style scoped>
 .app-layout {
   display: flex;
   height: 100vh;
-  background: #F8FAFC;
-  font-family: 'Inter', sans-serif;
+  background: #f8fafc;
+  font-family: "Inter", sans-serif;
   position: relative;
 }
 
@@ -389,7 +411,7 @@ export default {
 /* SIDEBAR */
 .sidebar {
   width: 260px;
-  background: #0A2540;
+  background: #0a2540;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -411,7 +433,7 @@ export default {
 .logo-icon {
   width: 40px;
   height: 40px;
-  background: #00B8D4;
+  background: #00b8d4;
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -461,8 +483,8 @@ export default {
 
 .nav-link-active {
   background: rgba(0, 184, 212, 0.1);
-  color: #00B8D4;
-  border-right-color: #00B8D4;
+  color: #00b8d4;
+  border-right-color: #00b8d4;
 }
 
 .nav-icon {
@@ -499,7 +521,7 @@ export default {
 .user-avatar {
   width: 40px;
   height: 40px;
-  background: #00B8D4;
+  background: #00b8d4;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -577,7 +599,7 @@ export default {
 
 .main-header {
   background: white;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid #e2e8f0;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
@@ -592,14 +614,14 @@ export default {
 .page-title {
   font-size: 20px;
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
   margin: 0;
 }
 
 .menu-toggle {
   background: none;
   border: none;
-  color: #0F172A;
+  color: #0f172a;
   cursor: pointer;
   border-radius: 6px;
   display: flex;
@@ -625,7 +647,7 @@ export default {
   flex: 1;
   overflow: auto;
   padding: 1.5rem;
-  background: #F8FAFC;
+  background: #f8fafc;
 }
 
 /* RESPONSIVE */

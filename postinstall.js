@@ -37,9 +37,7 @@ if (!existsSync(apiEnvPath)) {
 }
 
 const envLocalPath = join(__dirname, ".env.local");
-const envLocalLines = [
-  "VITE_API_URL=http://localhost/lamb/api/",
-];
+const envLocalLines = ["VITE_API_URL=http://localhost/lamb/api/"];
 const envLocalContent = envLocalLines.join("\n");
 if (!existsSync(envLocalPath)) {
   writeFileSync(envLocalPath, envLocalContent);
@@ -53,7 +51,11 @@ const envProdLines = ["VITE_API_URL=https://lamb.com/api/"];
 const envProdContent = envProdLines.join("\n");
 if (!existsSync(envProdPath)) {
   writeFileSync(envProdPath, envProdContent);
-  console.log(`${BLUE}.env.production.local created with default values.${RESET}`);
+  console.log(
+    `${BLUE}.env.production.local created with default values.${RESET}`
+  );
 } else {
-  console.log(`${GREEN}.env.production.local already exists. Skipping creation.${RESET}`);
+  console.log(
+    `${GREEN}.env.production.local already exists. Skipping creation.${RESET}`
+  );
 }

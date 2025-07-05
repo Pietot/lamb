@@ -3,8 +3,12 @@
     <div class="error-container">
       <div class="error-icon">
         <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="16" cy="16" id="BG" r="16" style="fill:#D72828;" />
-          <path d="M14.5,25h3v-3h-3V25z M14.5,6v13h3V6H14.5z" id="Exclamatory_x5F_Sign" style="fill:#E6E6E6;" />
+          <circle cx="16" cy="16" id="BG" r="16" style="fill: #d72828" />
+          <path
+            d="M14.5,25h3v-3h-3V25z M14.5,6v13h3V6H14.5z"
+            id="Exclamatory_x5F_Sign"
+            style="fill: #e6e6e6"
+          />
         </svg>
       </div>
 
@@ -27,7 +31,9 @@
 
         <button class="btn-secondary" @click="goBack">
           <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+            <path
+              d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+            />
           </svg>
           Page précédente
         </button>
@@ -39,7 +45,9 @@
           <a href="/" class="suggestion-card">
             <div class="suggestion-icon orders-icon">
               <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" />
+                <path
+                  d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"
+                />
               </svg>
             </div>
             <div class="suggestion-content">
@@ -52,7 +60,8 @@
             <div class="suggestion-icon delivery-icon">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path
-                  d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" />
+                  d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"
+                />
               </svg>
             </div>
             <div class="suggestion-content">
@@ -64,7 +73,9 @@
           <a href="/orders" class="suggestion-card">
             <div class="suggestion-icon alert-icon">
               <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" />
+                <path
+                  d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"
+                />
                 <polyline points="14,2 14,8 20,8" />
                 <line x1="16" y1="13" x2="8" y2="13" />
                 <line x1="16" y1="17" x2="8" y2="17" />
@@ -98,16 +109,16 @@
 
 <script>
 export default {
-  name: 'Error404Page',
+  name: "Error404Page",
   methods: {
     goHome() {
-      this.$router.push('/');
+      this.$router.push("/");
     },
     goBack() {
       window.history.back();
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -116,8 +127,8 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #F8FAFC;
-  font-family: 'Inter', sans-serif;
+  background: #f8fafc;
+  font-family: "Inter", sans-serif;
   padding: 2rem;
 }
 
@@ -131,12 +142,12 @@ export default {
   width: 80px;
   height: 80px;
   margin: 0 auto 2rem;
-  background: #FEF2F2;
+  background: #fef2f2;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #DC2626;
+  color: #dc2626;
 }
 
 .error-icon svg {
@@ -147,7 +158,7 @@ export default {
 .error-code {
   font-size: 8rem;
   font-weight: 900;
-  color: #0F172A;
+  color: #0f172a;
   line-height: 1;
   margin-bottom: 1rem;
   text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -160,13 +171,13 @@ export default {
 .error-title {
   font-size: 2rem;
   font-weight: 700;
-  color: #0F172A;
+  color: #0f172a;
   margin: 0 0 1rem 0;
 }
 
 .error-description {
   font-size: 1.125rem;
-  color: #64748B;
+  color: #64748b;
   margin: 0;
   line-height: 1.6;
 }
@@ -195,26 +206,26 @@ export default {
 }
 
 .btn-primary {
-  background: #2563EB;
+  background: #2563eb;
   color: white;
 }
 
 .btn-primary:hover {
-  background: #1D4ED8;
+  background: #1d4ed8;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 }
 
 .btn-secondary {
   background: white;
-  color: #64748B;
-  border: 1px solid #E2E8F0;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
 }
 
 .btn-secondary:hover {
-  background: #F8FAFC;
-  color: #0F172A;
-  border-color: #CBD5E1;
+  background: #f8fafc;
+  color: #0f172a;
+  border-color: #cbd5e1;
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -229,13 +240,13 @@ export default {
   border-radius: 12px;
   padding: 2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  border: 1px solid #F1F5F9;
+  border: 1px solid #f1f5f9;
 }
 
 .suggestions-title {
   font-size: 1.125rem;
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
   margin: 0 0 1.5rem 0;
 }
 
@@ -250,16 +261,16 @@ export default {
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  background: #F8FAFC;
+  background: #f8fafc;
   border-radius: 8px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #e2e8f0;
   text-decoration: none;
   transition: all 0.2s ease;
 }
 
 .suggestion-card:hover {
-  background: #F1F5F9;
-  border-color: #CBD5E1;
+  background: #f1f5f9;
+  border-color: #cbd5e1;
   transform: translateY(-1px);
 }
 
@@ -279,23 +290,23 @@ export default {
 }
 
 .alert-icon {
-  background: #FEF2F2;
-  color: #DC2626;
+  background: #fef2f2;
+  color: #dc2626;
 }
 
 .orders-icon {
-  background: #EFF6FF;
-  color: #2563EB;
+  background: #eff6ff;
+  color: #2563eb;
 }
 
 .delivery-icon {
-  background: #F0FDF4;
+  background: #f0fdf4;
   color: #059669;
 }
 
 .alerts-icon {
-  background: #FFFBEB;
-  color: #D97706;
+  background: #fffbeb;
+  color: #d97706;
 }
 
 .suggestion-content {
@@ -306,13 +317,13 @@ export default {
 .suggestion-label {
   font-size: 0.875rem;
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
   margin: 0 0 0.25rem 0;
 }
 
 .suggestion-desc {
   font-size: 0.75rem;
-  color: #64748B;
+  color: #64748b;
   margin: 0;
 }
 

@@ -34,7 +34,13 @@
                   <circle cx="12" cy="7" r="4" />
                 </svg>
               </div>
-              <input v-model="credentials.login" type="text" placeholder="Login" class="form-input" required />
+              <input
+                v-model="credentials.login"
+                type="text"
+                placeholder="Login"
+                class="form-input"
+                required
+              />
             </div>
           </div>
 
@@ -48,14 +54,19 @@
                   <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                 </svg>
               </div>
-              <input v-model="credentials.password" type="password" placeholder="Mot de passe" class="form-input"
-                required />
+              <input
+                v-model="credentials.password"
+                type="password"
+                placeholder="Mot de passe"
+                class="form-input"
+                required
+              />
             </div>
           </div>
 
           <!-- Bouton LOGIN -->
           <button type="submit" :disabled="isLoading" class="login-button">
-            {{ isLoading ? 'CONNEXION...' : 'LOGIN' }}
+            {{ isLoading ? "CONNEXION..." : "LOGIN" }}
           </button>
         </form>
 
@@ -74,62 +85,62 @@
 </template>
 
 <script>
-import { ref, reactive } from 'vue'
-import { useRouter } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
+import { ref, reactive } from "vue";
+import { useRouter } from "vue-router";
+import { useAuthStore } from "@/stores/auth";
 
 export default {
-  name: 'LoginView',
+  name: "LoginView",
   setup() {
-    const router = useRouter()
-    const authStore = useAuthStore()
+    const router = useRouter();
+    const authStore = useAuthStore();
 
-    const isLoading = ref(false)
-    const error = ref('')
+    const isLoading = ref(false);
+    const error = ref("");
     const credentials = reactive({
-      login: '',
-      password: ''
-    })
+      login: "",
+      password: "",
+    });
 
     const handleLogin = async () => {
-      error.value = ''
+      error.value = "";
 
       if (!credentials.login || !credentials.password) {
-        error.value = 'Veuillez remplir tous les champs'
-        return
+        error.value = "Veuillez remplir tous les champs";
+        return;
       }
 
-      isLoading.value = true
+      isLoading.value = true;
 
       try {
-        await authStore.login(credentials)
-        router.push('/')
+        await authStore.login(credentials);
+        router.push("/");
       } catch (err) {
-        error.value = err.message
+        error.value = err.message;
       } finally {
-        isLoading.value = false
+        isLoading.value = false;
       }
-    }
+    };
 
     return {
       credentials,
       error,
       isLoading,
-      handleLogin
-    }
-  }
-}
+      handleLogin,
+    };
+  },
+};
 </script>
 
 <style scoped>
 .login-page {
   min-height: 100vh;
-  background: #00B8D4;
+  background: #00b8d4;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   overflow: hidden;
 }
 
@@ -187,7 +198,6 @@ export default {
 }
 
 @keyframes float {
-
   0%,
   100% {
     transform: translateY(0px) rotate(0deg);
@@ -282,43 +292,43 @@ export default {
 .input-icon svg {
   width: 20px;
   height: 20px;
-  color: #6B7280;
+  color: #6b7280;
   stroke-width: 1.5;
 }
 
 .form-input {
   width: 100%;
-  background: #F9FAFB;
-  border: 2px solid #F3F4F6;
+  background: #f9fafb;
+  border: 2px solid #f3f4f6;
   border-radius: 12px;
   padding: 16px 16px 16px 50px;
   font-size: 14px;
   font-weight: 500;
-  color: #1F2937;
+  color: #1f2937;
   transition: all 0.2s ease;
 }
 
 .form-input::placeholder {
-  color: #9CA3AF;
+  color: #9ca3af;
   font-weight: 400;
   letter-spacing: 0.5px;
 }
 
 .form-input:focus {
   outline: none;
-  border-color: #00B8D4;
+  border-color: #00b8d4;
   background: white;
   box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
 }
 
-.form-input:focus+.input-icon svg {
-  color: #00B8D4;
+.form-input:focus + .input-icon svg {
+  color: #00b8d4;
 }
 
 /* BOUTON LOGIN */
 .login-button {
   width: 100%;
-  background: #00B8D4;
+  background: #00b8d4;
   color: white;
   border: none;
   border-radius: 12px;
@@ -332,7 +342,7 @@ export default {
 }
 
 .login-button:hover:not(:disabled) {
-  background: #0891A6;
+  background: #0891a6;
   transform: translateY(-1px);
   box-shadow: 0 8px 20px rgba(0, 184, 212, 0.3);
 }
@@ -353,7 +363,7 @@ export default {
 }
 
 .forgot-link {
-  color: #6B7280;
+  color: #6b7280;
   text-decoration: none;
   font-size: 14px;
   font-weight: 500;
@@ -361,7 +371,7 @@ export default {
 }
 
 .forgot-link:hover {
-  color: #00B8D4;
+  color: #00b8d4;
   text-decoration: underline;
 }
 

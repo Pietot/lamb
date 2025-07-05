@@ -6,7 +6,10 @@
         <h1 class="page-title">Réception des livraisons</h1>
       </div>
       <div class="header-right">
-        <button class="new-delivery-button" @click="showNewDeliveryModal = true">
+        <button
+          class="new-delivery-button"
+          @click="showNewDeliveryModal = true"
+        >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <circle cx="12" cy="12" r="10" />
             <line x1="12" y1="8" x2="12" y2="16" />
@@ -29,7 +32,7 @@
           </svg>
         </div>
         <div class="stat-content">
-          <p class="stat-label">Livraisons<br>à réceptionner</p>
+          <p class="stat-label">Livraisons<br />à réceptionner</p>
           <p class="stat-value">3</p>
         </div>
       </div>
@@ -38,11 +41,12 @@
         <div class="stat-icon check-icon">
           <svg viewBox="0 0 24 24" fill="currentColor">
             <path
-              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+            />
           </svg>
         </div>
         <div class="stat-content">
-          <p class="stat-label">Réceptionnées<br>ce mois</p>
+          <p class="stat-label">Réceptionnées ce mois</p>
           <p class="stat-value">12</p>
         </div>
       </div>
@@ -50,11 +54,13 @@
       <div class="stat-card">
         <div class="stat-icon warning-icon">
           <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2L1 21h22L12 2zm0 3.99L19.53 19H4.47L12 5.99zM11 16h2v2h-2v-2zm0-6h2v4h-2v-4z" />
+            <path
+              d="M12 2L1 21h22L12 2zm0 3.99L19.53 19H4.47L12 5.99zM11 16h2v2h-2v-2zm0-6h2v4h-2v-4z"
+            />
           </svg>
         </div>
         <div class="stat-content">
-          <p class="stat-label">Problèmes<br>signalés</p>
+          <p class="stat-label">Problèmes<br />signalés</p>
           <p class="stat-value">1</p>
         </div>
       </div>
@@ -64,26 +70,64 @@
     <div class="filters-section">
       <div class="filter-group">
         <div class="search-container">
-          <input v-model="searchQuery" type="text" placeholder="Rechercher une livraison..." class="search-input" />
-          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <input
+            v-model="searchQuery"
+            type="text"
+            placeholder="Rechercher par ID, référence ou fournisseur"
+            class="search-input"
+          />
+          <svg
+            class="search-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+          >
             <circle cx="11" cy="11" r="8" />
             <line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg>
         </div>
 
-        <select v-model="filters.supplier" class="filter-select">
-          <option value="">Tous les fournisseurs</option>
-          <option value="Durand SA">Durand SA</option>
-          <option value="Bernard FR">Bernard FR</option>
-          <option value="Martin SA">Martin SA</option>
-        </select>
+        <div class="filter-wrapper">
+          <select v-model="filters.supplier" class="filter-select">
+            <option value="">Tous les fournisseurs</option>
+            <option value="Durand SA">Durand SA</option>
+            <option value="Bernard FR">Bernard FR</option>
+            <option value="Martin SA">Martin SA</option>
+          </select>
+          <svg
+            class="filter-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+          >
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </div>
 
-        <select v-model="filters.status" class="filter-select">
-          <option value="">Tous les statuts</option>
-          <option value="En attente">En attente</option>
-          <option value="Problème">Problème</option>
-          <option value="Réceptionnée">Réceptionnée</option>
-        </select>
+        <div class="filter-wrapper">
+          <select v-model="filters.status" class="filter-select">
+            <option value="">Tous les statuts</option>
+            <option value="En attente">En attente</option>
+            <option value="Problème">Problème</option>
+            <option value="Réceptionnée">Réceptionnée</option>
+          </select>
+          <svg
+            class="filter-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+          >
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </div>
+
+        <button class="search-button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          Rechercher
+        </button>
       </div>
     </div>
 
@@ -92,14 +136,14 @@
       <div class="section-card">
         <div class="section-header">
           <h3 class="section-title">Livraisons à réceptionner</h3>
-          <div class="section-stats">
+          <div class="table-stats">
             <span class="stat-item">
-              <span class="stat-label">En attente:</span>
+              <span class="stat-label">En attente :</span>
               <span class="stat-value">{{ pendingCount }}</span>
             </span>
             <span class="stat-item">
-              <span class="stat-label">Problèmes:</span>
-              <span class="stat-value problem">{{ problemCount }}</span>
+              <span class="stat-label">Problèmes :</span>
+              <span class="stat-value low">{{ problemCount }}</span>
             </span>
           </div>
         </div>
@@ -119,10 +163,12 @@
             </thead>
             <tbody>
               <tr v-for="delivery in filteredDeliveries" :key="delivery.id">
-                <td class="delivery-id">#{{ delivery.id }}</td>
+                <td class="delivery-id">{{ delivery.id }}</td>
                 <td>
                   <div class="supplier-info">
-                    <div class="supplier-avatar">{{ getSupplierInitials(delivery.supplier) }}</div>
+                    <div class="supplier-avatar">
+                      {{ getSupplierInitials(delivery.supplier) }}
+                    </div>
                     <span>{{ delivery.supplier }}</span>
                   </div>
                 </td>
@@ -130,20 +176,33 @@
                 <td class="order-reference">{{ delivery.orderRef }}</td>
                 <td class="articles-count">{{ delivery.articlesCount }}</td>
                 <td>
-                  <span class="status-badge" :class="getStatusClass(delivery.status)">
+                  <span
+                    class="status-badge"
+                    :class="getStatusClass(delivery.status)"
+                  >
                     {{ delivery.status }}
                   </span>
                 </td>
                 <td class="actions">
-                  <button v-if="delivery.status === 'En attente'" class="action-btn primary"
-                    @click="receiveDelivery(delivery.id)">
+                  <button
+                    v-if="delivery.status === 'En attente'"
+                    class="action-btn primary"
+                    @click="receiveDelivery(delivery.id)"
+                  >
                     Réceptionner
                   </button>
-                  <button v-if="delivery.status === 'Problème'" class="action-btn danger"
-                    @click="reportProblem(delivery.id)">
+                  <button
+                    v-if="delivery.status === 'Problème'"
+                    class="action-btn danger"
+                    @click="reportProblem(delivery.id)"
+                  >
                     Signaler
                   </button>
-                  <button class="action-btn secondary" @click="viewDetails(delivery.id)" title="Voir détails">
+                  <button
+                    class="action-btn secondary"
+                    @click="viewDetails(delivery.id)"
+                    title="Voir détails"
+                  >
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                       <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                       <circle cx="12" cy="12" r="3" />
@@ -152,6 +211,11 @@
                 </td>
               </tr>
             </tbody>
+            <tr v-if="filteredDeliveries.length === 0">
+              <td colspan="100%" class="empty-message">
+                Aucune livraison trouvée
+              </td>
+            </tr>
           </table>
         </div>
       </div>
@@ -162,9 +226,9 @@
       <div class="section-card">
         <div class="section-header">
           <h3 class="section-title">Historique des livraisons</h3>
-          <div class="section-stats">
+          <div class="table-stats">
             <span class="stat-item">
-              <span class="stat-label">Total:</span>
+              <span class="stat-label">Total :</span>
               <span class="stat-value">{{ deliveryHistory.length }}</span>
             </span>
           </div>
@@ -185,7 +249,7 @@
             </thead>
             <tbody>
               <tr v-for="item in deliveryHistory" :key="item.id">
-                <td class="delivery-id">#{{ item.id }}</td>
+                <td class="delivery-id">{{ item.id }}</td>
                 <td>{{ item.supplier }}</td>
                 <td class="delivery-date">{{ item.receptionDate }}</td>
                 <td class="order-reference">{{ item.orderRef }}</td>
@@ -196,7 +260,11 @@
                   </span>
                 </td>
                 <td class="actions">
-                  <button class="action-btn secondary" @click="viewDeliveryDetails(item.id)" title="Voir détails">
+                  <button
+                    class="action-btn secondary"
+                    @click="viewDeliveryDetails(item.id)"
+                    title="Voir détails"
+                  >
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                       <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                       <circle cx="12" cy="12" r="3" />
@@ -211,7 +279,11 @@
     </div>
 
     <!-- Modal Nouvelle livraison (placeholder) -->
-    <div v-if="showNewDeliveryModal" class="modal-overlay" @click="showNewDeliveryModal = false">
+    <div
+      v-if="showNewDeliveryModal"
+      class="modal-overlay"
+      @click="showNewDeliveryModal = false"
+    >
       <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3>Enregistrer une livraison</h3>
@@ -231,131 +303,145 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue'
+import { ref, computed } from "vue";
 
 export default {
-  name: 'ReceptionView',
+  name: "ReceptionView",
   setup() {
-    const searchQuery = ref('')
-    const showNewDeliveryModal = ref(false)
+    const searchQuery = ref("");
+    const showNewDeliveryModal = ref(false);
 
     const filters = ref({
-      supplier: '',
-      status: ''
-    })
+      supplier: "",
+      status: "",
+    });
 
     const deliveries = ref([
       {
-        id: '5003',
-        supplier: 'Durand SA',
-        expectedDate: '6 mai 2023',
-        orderRef: 'CMD-1205',
+        id: "5003",
+        supplier: "Durand SA",
+        expectedDate: "6 mai 2023",
+        orderRef: "CMD-1205",
         articlesCount: 8,
-        status: 'En attente'
+        status: "En attente",
       },
       {
-        id: '5002',
-        supplier: 'Bernard FR',
-        expectedDate: '6 mai 2023',
-        orderRef: 'CMD-1273',
+        id: "5002",
+        supplier: "Bernard FR",
+        expectedDate: "6 mai 2023",
+        orderRef: "CMD-1273",
         articlesCount: 5,
-        status: 'En attente'
+        status: "En attente",
       },
       {
-        id: '5001',
-        supplier: 'Bernard FR',
-        expectedDate: '3 mai 2023',
-        orderRef: 'CMD-1254',
+        id: "5001",
+        supplier: "Bernard FR",
+        expectedDate: "3 mai 2023",
+        orderRef: "CMD-1254",
         articlesCount: 3,
-        status: 'Problème'
-      }
-    ])
+        status: "Problème",
+      },
+    ]);
 
     const deliveryHistory = ref([
       {
-        id: '4998',
-        supplier: 'Martin SA',
-        receptionDate: '2 mai 2023',
-        orderRef: 'CMD-1201',
-        receivedBy: 'Jean Dupont',
-        status: 'Réceptionnée'
+        id: "4998",
+        supplier: "Martin SA",
+        receptionDate: "2 mai 2023",
+        orderRef: "CMD-1201",
+        receivedBy: "Jean Dupont",
+        status: "Réceptionnée",
       },
       {
-        id: '4997',
-        supplier: 'Durand SA',
-        receptionDate: '1 mai 2023',
-        orderRef: 'CMD-1198',
-        receivedBy: 'Marie Martin',
-        status: 'Réceptionnée'
+        id: "4997",
+        supplier: "Durand SA",
+        receptionDate: "1 mai 2023",
+        orderRef: "CMD-1198",
+        receivedBy: "Marie Martin",
+        status: "Réceptionnée",
       },
       {
-        id: '4996',
-        supplier: 'Bernard FR',
-        receptionDate: '29 avr 2023',
-        orderRef: 'CMD-1195',
-        receivedBy: 'Pierre Leroy',
-        status: 'Réceptionnée'
-      }
-    ])
+        id: "4996",
+        supplier: "Bernard FR",
+        receptionDate: "29 avr 2023",
+        orderRef: "CMD-1195",
+        receivedBy: "Pierre Leroy",
+        status: "Réceptionnée",
+      },
+    ]);
 
     const filteredDeliveries = computed(() => {
-      let result = deliveries.value
+      let result = deliveries.value;
 
       if (filters.value.supplier) {
-        result = result.filter(delivery => delivery.supplier === filters.value.supplier)
+        result = result.filter(
+          (delivery) => delivery.supplier === filters.value.supplier
+        );
       }
 
       if (filters.value.status) {
-        result = result.filter(delivery => delivery.status === filters.value.status)
+        result = result.filter(
+          (delivery) => delivery.status === filters.value.status
+        );
       }
 
       if (searchQuery.value) {
-        result = result.filter(delivery =>
-          delivery.id.includes(searchQuery.value) ||
-          delivery.supplier.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-          delivery.orderRef.toLowerCase().includes(searchQuery.value.toLowerCase())
-        )
+        result = result.filter(
+          (delivery) =>
+            delivery.id.includes(searchQuery.value) ||
+            delivery.supplier
+              .toLowerCase()
+              .includes(searchQuery.value.toLowerCase()) ||
+            delivery.orderRef
+              .toLowerCase()
+              .includes(searchQuery.value.toLowerCase())
+        );
       }
 
-      return result
-    })
+      return result;
+    });
 
     const pendingCount = computed(() => {
-      return deliveries.value.filter(d => d.status === 'En attente').length
-    })
+      return deliveries.value.filter((d) => d.status === "En attente").length;
+    });
 
     const problemCount = computed(() => {
-      return deliveries.value.filter(d => d.status === 'Problème').length
-    })
+      return deliveries.value.filter((d) => d.status === "Problème").length;
+    });
 
     const getSupplierInitials = (name) => {
-      return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2)
-    }
+      return name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+        .substring(0, 2);
+    };
 
     const getStatusClass = (status) => {
       const statusClasses = {
-        'En attente': 'status-pending',
-        'Problème': 'status-problem',
-        'Réceptionnée': 'status-received'
-      }
-      return statusClasses[status] || 'status-default'
-    }
+        "En attente": "status-pending",
+        Problème: "status-problem",
+        Réceptionnée: "status-received",
+      };
+      return statusClasses[status] || "status-default";
+    };
 
     const receiveDelivery = (deliveryId) => {
-      console.log('Réceptionner livraison:', deliveryId)
-    }
+      console.log("Réceptionner livraison:", deliveryId);
+    };
 
     const reportProblem = (deliveryId) => {
-      console.log('Signaler problème:', deliveryId)
-    }
+      console.log("Signaler problème:", deliveryId);
+    };
 
     const viewDetails = (deliveryId) => {
-      console.log('Voir détails:', deliveryId)
-    }
+      console.log("Voir détails:", deliveryId);
+    };
 
     const viewDeliveryDetails = (deliveryId) => {
-      console.log('Voir détails livraison:', deliveryId)
-    }
+      console.log("Voir détails livraison:", deliveryId);
+    };
 
     return {
       searchQuery,
@@ -371,16 +457,16 @@ export default {
       receiveDelivery,
       reportProblem,
       viewDetails,
-      viewDeliveryDetails
-    }
-  }
-}
+      viewDeliveryDetails,
+    };
+  },
+};
 </script>
 
 <style scoped>
 .reception-page {
   padding: 0;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 /* EN-TÊTE */
@@ -394,12 +480,12 @@ export default {
 .page-title {
   font-size: 24px;
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
   margin: 0;
 }
 
 .new-delivery-button {
-  background: #00B8D4;
+  background: #00b8d4;
   color: white;
   border: none;
   border-radius: 8px;
@@ -415,7 +501,7 @@ export default {
 }
 
 .new-delivery-button:hover {
-  background: #0891A6;
+  background: #0891a6;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 184, 212, 0.4);
 }
@@ -442,7 +528,17 @@ export default {
   align-items: center;
   gap: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  border: 1px solid #F1F5F9;
+  border: 1px solid #f1f5f9;
+  transition: all 0.2s ease;
+}
+
+.stat-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.stat-content .stat-value {
+  font-size: 28px;
 }
 
 .stat-icon {
@@ -461,18 +557,18 @@ export default {
 }
 
 .truck-icon {
-  background: #F0FDF4;
+  background: #f0fdf4;
   color: #059669;
 }
 
 .check-icon {
-  background: #EFF6FF;
-  color: #2563EB;
+  background: #eff6ff;
+  color: #2563eb;
 }
 
 .warning-icon {
-  background: #FFFBEB;
-  color: #D97706;
+  background: #fffbeb;
+  color: #d97706;
 }
 
 .stat-content {
@@ -481,17 +577,9 @@ export default {
 
 .stat-label {
   font-size: 13px;
-  color: #64748B;
+  color: #64748b;
   line-height: 1.3;
   font-weight: 500;
-}
-
-.stat-value {
-  font-size: 28px;
-  font-weight: 700;
-  color: #0F172A;
-  margin: 0;
-  line-height: 1;
 }
 
 /* FILTRES */
@@ -509,24 +597,17 @@ export default {
 .search-container {
   position: relative;
   flex: 1;
-  max-width: 300px;
 }
 
 .search-input {
   width: 100%;
   background: white;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
   padding: 0.75rem 1rem 0.75rem 2.5rem;
   font-size: 14px;
-  color: #334155;
+  color: black;
   transition: all 0.2s ease;
-}
-
-.search-input:focus {
-  outline: none;
-  border-color: #00B8D4;
-  box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
 }
 
 .search-icon {
@@ -536,27 +617,82 @@ export default {
   transform: translateY(-50%);
   width: 16px;
   height: 16px;
-  color: #94A3B8;
+  color: #94a3b8;
   stroke-width: 2;
   pointer-events: none;
 }
 
+.filter-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
 .filter-select {
   background: white;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
-  padding: 0.75rem 1rem;
+  padding-top: 0.75rem;
+  padding-right: 2.5rem;
+  padding-bottom: 0.75rem;
+  padding-left: 1rem;
   font-size: 14px;
-  color: #64748B;
+  color: #64748b;
   min-width: 140px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.filter-select:focus {
-  outline: none;
-  border-color: #00B8D4;
+.filter-select:hover,
+.search-input:hover {
   box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
+}
+
+.filter-select:focus,
+.search-input:focus {
+  outline: none;
+  border-color: #00b8d4;
+  box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
+}
+
+.filter-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.filter-icon {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translate(25%, -50%);
+  pointer-events: none;
+  height: 20px;
+}
+
+.search-button {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.search-button:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+.search-button svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2;
 }
 
 /* SECTIONS */
@@ -569,7 +705,7 @@ export default {
   background: white;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  border: 1px solid #F1F5F9;
+  border: 1px solid #f1f5f9;
   overflow: hidden;
 }
 
@@ -578,42 +714,66 @@ export default {
   align-items: center;
   justify-content: space-between;
   padding: 1.5rem;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .section-title {
   font-size: 16px;
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
   margin: 0;
 }
 
-.section-stats {
+/* TABLEAUX */
+/* TABLEAU */
+.table-section {
+  margin-bottom: 2rem;
+}
+
+.table-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f1f5f9;
+  overflow: hidden;
+}
+
+.table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.table-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0;
+}
+
+.table-stats {
   display: flex;
   gap: 2rem;
 }
 
-.section-stats .stat-item {
+.stat-item {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   font-size: 14px;
 }
 
-.section-stats .stat-label {
-  color: #64748B;
-}
-
-.section-stats .stat-value {
+.stat-value {
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
 }
 
-.section-stats .stat-value.problem {
-  color: #DC2626;
+.stat-value.low {
+  color: #dc2626;
 }
 
-/* TABLEAUX */
 .table-container {
   overflow-x: auto;
 }
@@ -626,29 +786,29 @@ export default {
 
 .deliveries-table th,
 .history-table th {
-  background: #F8FAFC;
+  background: #f8fafc;
   text-align: left;
   padding: 1rem;
   font-size: 12px;
   font-weight: 600;
-  color: #64748B;
+  color: #64748b;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .deliveries-table td,
 .history-table td {
   padding: 1rem;
-  border-bottom: 1px solid #F1F5F9;
+  border-bottom: 1px solid #f1f5f9;
   font-size: 14px;
-  color: #334155;
+  color: black;
   vertical-align: middle;
 }
 
 .deliveries-table tbody tr:hover,
 .history-table tbody tr:hover {
-  background: #F8FAFC;
+  background: #f8fafc;
 }
 
 .deliveries-table tbody tr:last-child td,
@@ -657,8 +817,7 @@ export default {
 }
 
 .delivery-id {
-  font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
 }
 
 .supplier-info {
@@ -670,7 +829,7 @@ export default {
 .supplier-avatar {
   width: 32px;
   height: 32px;
-  background: #3B82F6;
+  background: #3b82f6;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -682,13 +841,13 @@ export default {
 }
 
 .delivery-date {
-  color: #64748B;
+  color: #64748b;
   font-size: 13px;
 }
 
 .order-reference {
   font-weight: 500;
-  color: #3B82F6;
+  color: #3b82f6;
   cursor: pointer;
 }
 
@@ -698,8 +857,15 @@ export default {
 
 .articles-count {
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
   text-align: center;
+}
+
+.empty-message {
+  text-align: center;
+  color: #64748b;
+  font-style: italic;
+  padding: 1rem;
 }
 
 /* BADGES DE STATUT */
@@ -714,17 +880,17 @@ export default {
 }
 
 .status-pending {
-  background: #FEF3C7;
-  color: #92400E;
+  background: #fef3c7;
+  color: #92400e;
 }
 
 .status-problem {
-  background: #FEF2F2;
-  color: #DC2626;
+  background: #fef2f2;
+  color: #dc2626;
 }
 
 .status-received {
-  background: #D1FAE5;
+  background: #d1fae5;
   color: #047857;
 }
 
@@ -745,34 +911,34 @@ export default {
 }
 
 .action-btn.primary {
-  background: #00B8D4;
+  background: #00b8d4;
   color: white;
 }
 
 .action-btn.primary:hover {
-  background: #0891A6;
+  background: #0891a6;
 }
 
 .action-btn.danger {
-  background: #DC2626;
+  background: #dc2626;
   color: white;
 }
 
 .action-btn.danger:hover {
-  background: #B91C1C;
+  background: #b91c1c;
 }
 
 .action-btn.secondary {
   background: none;
-  border: 1px solid #E2E8F0;
-  color: #64748B;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
   padding: 6px;
 }
 
 .action-btn.secondary:hover {
-  background: #F8FAFC;
-  border-color: #CBD5E1;
-  color: #334155;
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: black;
 }
 
 .action-btn.secondary svg {
@@ -810,20 +976,20 @@ export default {
   align-items: center;
   justify-content: space-between;
   padding: 1.5rem;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .modal-header h3 {
   font-size: 18px;
   font-weight: 600;
-  color: #0F172A;
+  color: #0f172a;
   margin: 0;
 }
 
 .modal-close {
   background: none;
   border: none;
-  color: #64748B;
+  color: #64748b;
   cursor: pointer;
   padding: 4px;
   border-radius: 4px;
@@ -831,8 +997,8 @@ export default {
 }
 
 .modal-close:hover {
-  background: #F1F5F9;
-  color: #334155;
+  background: #f1f5f9;
+  color: black;
 }
 
 .modal-close svg {
@@ -844,7 +1010,15 @@ export default {
 .modal-body {
   padding: 1.5rem;
   text-align: center;
-  color: #64748B;
+  color: #64748b;
+}
+
+input:placeholder-shown {
+  text-overflow: ellipsis;
+}
+
+input:focus::placeholder {
+  color: transparent;
 }
 
 /* RESPONSIVE */
