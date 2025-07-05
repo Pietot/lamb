@@ -33,7 +33,7 @@
       <!-- Navigation Menu -->
       <nav class="sidebar-nav">
         <router-link
-          v-for="item in menuItems"
+          v-for="item in filteredMenuItems"
           :key="item.name"
           :to="item.to"
           class="nav-link"
@@ -164,6 +164,17 @@ const ClientsIcon = {
   `,
 };
 
+const AgendaIcon = {
+  template: `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+      <line x1="16" y1="2" x2="16" y2="6"/>
+      <line x1="8" y1="2" x2="8" y2="6"/>
+      <line x1="3" y1="10" x2="21" y2="10"/>
+    </svg>
+  `,
+};
+
 const SuppliersIcon = {
   template: `
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -196,6 +207,7 @@ export default {
     PrepareIcon,
     ReceptionIcon,
     ClientsIcon,
+    AgendaIcon,
     SuppliersIcon,
     AdminIcon,
   },
@@ -209,65 +221,90 @@ export default {
     const startX = ref(0);
     const currentX = ref(0);
 
-    const menuItems = [
+    // Tous les éléments du menu avec leurs rôles autorisés
+    const allMenuItems = [
       {
         name: "Dashboard",
         label: "Tableau de bord",
         to: "/",
         icon: "DashboardIcon",
+        allowedRoles: [1, 2, 3] // 1=admin, 2=gestionnaire, 3=preparateur
       },
       {
         name: "Stocks",
         label: "Gestion des stocks",
         to: "/stocks",
         icon: "StocksIcon",
+        allowedRoles: [1, 2] // admin et gestionnaire
       },
       {
         name: "Orders",
         label: "Gestion des commandes",
         to: "/orders",
         icon: "OrdersIcon",
+        allowedRoles: [1, 2] // admin et gestionnaire
       },
       {
         name: "Prepare",
         label: "Commandes à préparer",
         to: "/prepare",
         icon: "PrepareIcon",
+        allowedRoles: [1, 2, 3] // tous
       },
       {
         name: "Reception",
         label: "Réception fournisseur",
         to: "/reception",
         icon: "ReceptionIcon",
+        allowedRoles: [1, 2, 3] // tous
       },
       {
         name: "Agenda",
         label: "Agenda",
         to: "/agenda",
         icon: "AgendaIcon",
+        allowedRoles: [1, 2, 3] // tous
       },
       {
         name: "Clients",
         label: "Clients",
         to: "/clients",
         icon: "ClientsIcon",
+        allowedRoles: [1, 2] // admin et gestionnaire
       },
       {
         name: "Suppliers",
         label: "Fournisseurs",
         to: "/suppliers",
         icon: "SuppliersIcon",
+        allowedRoles: [1, 2] // admin et gestionnaire
       },
       {
         name: "Admin",
         label: "Admin",
         to: "/admin",
         icon: "AdminIcon",
+        allowedRoles: [1] // admin seulement
       },
     ];
 
+    // Filtrer les éléments du menu selon le rôle de l'utilisateur
+    const filteredMenuItems = computed(() => {
+      const userRole = authStore.user?.role;
+      
+      // Si pas de rôle, ne rien afficher
+      if (!userRole) return [];
+      
+      return allMenuItems.filter(item => {
+        // Si pas de restriction de rôle, afficher pour tous
+        if (!item.allowedRoles) return true;
+        // Sinon, vérifier si le rôle de l'utilisateur est autorisé
+        return item.allowedRoles.includes(userRole);
+      });
+    });
+
     const pageTitle = computed(() => {
-      const currentItem = menuItems.find((item) => item.name === route.name);
+      const currentItem = allMenuItems.find((item) => item.name === route.name);
       return currentItem?.label || "Tableau de bord";
     });
 
@@ -284,7 +321,8 @@ export default {
       const role = authStore.user?.role || "user";
       const roleLabels = {
         admin: "Administrateur",
-        manager: "Gestionnaire",
+        gestionnaire: "Gestionnaire",
+        preparateur: "Préparateur",
         commercial: "Commercial",
         support: "Support",
       };
@@ -369,7 +407,7 @@ export default {
 
     return {
       authStore,
-      menuItems,
+      filteredMenuItems,
       pageTitle,
       userInitials,
       userRoleLabel,
