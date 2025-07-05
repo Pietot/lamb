@@ -658,8 +658,8 @@ export default {
 }
 
 .dashboard-bottom {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-wrap: wrap;
   gap: 1.5rem;
 }
 
@@ -902,19 +902,13 @@ export default {
   }
 }
 
-@media (max-width: 640px) {
-  .kpi-card {
-    padding: 1rem;
+@media (max-width: 1110px) {
+  .dashboard-bottom {
+    flex-wrap: wrap;
   }
 
   .section-card {
-    padding: 1rem;
-  }
-
-  .data-table th,
-  .data-table td {
-    padding: 1rem;
-    font-size: 12px;
+    width: 100%;
   }
 }
 </style>

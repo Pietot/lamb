@@ -2071,6 +2071,7 @@ input:focus::placeholder {
 
   .filter-group {
     flex-direction: column;
+    align-items: stretch;
   }
 
   .search-container,
@@ -2097,25 +2098,8 @@ input:focus::placeholder {
     font-size: 12px;
   }
 
-  .suppliers-table th,
-  .suppliers-table td {
-    padding: 0.75rem 0.5rem;
-  }
-
   .actions {
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-}
-
-@media (max-width: 640px) {
-  .suppliers-table th:nth-child(3),
-  .suppliers-table td:nth-child(3),
-  .suppliers-table th:nth-child(4),
-  .suppliers-table td:nth-child(4),
-  .suppliers-table th:nth-child(5),
-  .suppliers-table td:nth-child(5) {
-    display: none;
+    gap: 0.5rem;
   }
 }
 </style>

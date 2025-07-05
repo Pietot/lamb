@@ -1429,23 +1429,11 @@ export default {
   .data-table {
     font-size: 12px;
   }
-
-  .data-table th,
-  .data-table td {
-    padding: 0.75rem 0.5rem;
-  }
 }
 
 @media (max-width: 640px) {
   .stats-grid {
     grid-template-columns: 1fr;
-  }
-
-  .data-table th:nth-child(3),
-  .data-table td:nth-child(3),
-  .data-table th:nth-child(4),
-  .data-table td:nth-child(4) {
-    display: none;
   }
 }
 

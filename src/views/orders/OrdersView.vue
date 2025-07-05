@@ -1391,19 +1391,13 @@ input:focus::placeholder {
     font-size: 12px;
   }
 
-  .orders-table th,
-  .orders-table td {
-    padding: 0.75rem 0.5rem;
-  }
-
   .status-badge {
     font-size: 10px;
     padding: 0.25rem 0.5rem;
   }
 
   .actions {
-    flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.5rem;
   }
 
   .action-btn {
@@ -1411,8 +1405,8 @@ input:focus::placeholder {
   }
 
   .action-btn svg {
-    width: 14px;
-    height: 14px;
+    width: 20px;
+    height: 20px;
   }
 
   .pagination-container {
@@ -1426,18 +1420,6 @@ input:focus::placeholder {
 
   .modal-btn {
     width: 100%;
-  }
-}
-
-@media (max-width: 640px) {
-  .orders-table th:nth-child(4),
-  .orders-table td:nth-child(4) {
-    display: none;
-  }
-
-  .orders-table th:last-child,
-  .orders-table td:last-child {
-    display: none;
   }
 }
 </style>

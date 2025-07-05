@@ -1894,24 +1894,8 @@ input:focus::placeholder {
     font-size: 12px;
   }
 
-  .stocks-table th,
-  .stocks-table td {
-    padding: 0.75rem 0.5rem;
-  }
-
-  .stocks-table th:nth-child(3),
-  .stocks-table td:nth-child(3) {
-    display: none;
-  }
-
   .actions {
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .stocks-table th:last-child,
-  .stocks-table td:last-child {
-    display: none;
+    gap: 0.5rem;
   }
 
   .pagination-container {

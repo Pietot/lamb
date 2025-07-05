@@ -1097,6 +1097,7 @@ input:focus::placeholder {
 
   .filter-group {
     flex-direction: column;
+    align-items: stretch;
   }
 
   .search-container,
@@ -1123,16 +1124,14 @@ input:focus::placeholder {
     font-size: 12px;
   }
 
-  .deliveries-table th,
-  .deliveries-table td,
-  .history-table th,
-  .history-table td {
-    padding: 0.75rem 0.5rem;
+  .search-input,
+  .filter-select,
+  .search-button {
+    width: 100%;
   }
 
   .actions {
-    flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.5rem;
   }
 
   .action-btn {

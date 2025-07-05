@@ -195,9 +195,7 @@
                       <div
                         class="client-avatar"
                         :style="{
-                          backgroundColor: getAvatarColor(
-                            client.id_client
-                          ),
+                          backgroundColor: getAvatarColor(client.id_client),
                         }"
                       >
                         {{ getClientInitials(client) }}
@@ -1986,14 +1984,8 @@ input:focus::placeholder {
     font-size: 12px;
   }
 
-  .clients-table th,
-  .clients-table td {
-    padding: 0.75rem 0.5rem;
-  }
-
   .actions {
-    flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.5rem;
   }
 
   .modal-content {
@@ -2011,15 +2003,6 @@ input:focus::placeholder {
 
   .form-row {
     grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 640px) {
-  .clients-table th:nth-child(3),
-  .clients-table td:nth-child(3),
-  .clients-table th:nth-child(4),
-  .clients-table td:nth-child(4) {
-    display: none;
   }
 }
 </style>

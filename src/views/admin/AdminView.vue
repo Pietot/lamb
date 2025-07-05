@@ -1656,14 +1656,8 @@ input:focus::placeholder {
     font-size: 12px;
   }
 
-  .data-table th,
-  .data-table td {
-    padding: 0.75rem 0.5rem;
-  }
-
   .actions {
-    flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.5rem;
   }
 
   .action-btn {
@@ -1671,8 +1665,8 @@ input:focus::placeholder {
   }
 
   .action-btn svg {
-    width: 14px;
-    height: 14px;
+    width: 20px;
+    height: 20px;
   }
 
   .roles-grid {
@@ -1686,13 +1680,6 @@ input:focus::placeholder {
   .modal-btn {
     width: 100%;
     justify-content: center;
-  }
-}
-
-@media (max-width: 640px) {
-  .data-table th:nth-child(3),
-  .data-table td:nth-child(3) {
-    display: none;
   }
 }
 </style>
