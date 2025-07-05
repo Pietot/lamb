@@ -375,13 +375,13 @@ export default {
 
       if (filters.value.supplier) {
         result = result.filter(
-          (delivery) => delivery.supplier === filters.value.supplier
+          (delivery) => delivery.supplier === filters.value.supplier,
         );
       }
 
       if (filters.value.status) {
         result = result.filter(
-          (delivery) => delivery.status === filters.value.status
+          (delivery) => delivery.status === filters.value.status,
         );
       }
 
@@ -394,7 +394,7 @@ export default {
               .includes(searchQuery.value.toLowerCase()) ||
             delivery.orderRef
               .toLowerCase()
-              .includes(searchQuery.value.toLowerCase())
+              .includes(searchQuery.value.toLowerCase()),
         );
       }
 

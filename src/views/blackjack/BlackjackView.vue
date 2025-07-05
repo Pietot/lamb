@@ -1,50 +1,73 @@
 <template>
-  <div class="flex flex-col items-center justify-center bg-bleu-profond rounded-lg p-2" style="height: -webkit-fill-available;">
-    <BaseCard class="w-full max-w-2xl h-fit max-h-screen overflow-y-auto" padding="sm">
+  <div
+    class="flex flex-col items-center justify-center bg-bleu-profond rounded-lg p-2"
+    style="height: -webkit-fill-available"
+  >
+    <BaseCard
+      class="w-full max-w-2xl h-fit max-h-screen overflow-y-auto"
+      padding="sm"
+    >
       <div class="text-center mb-4">
         <h2 class="text-2xl sm:text-3xl font-bold text-turquoise mb-2">
           🃏 Blackjack Casino 🃏
         </h2>
-        <div class="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-3 py-1 rounded-full inline-block font-bold text-sm sm:text-lg">
+        <div
+          class="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-3 py-1 rounded-full inline-block font-bold text-sm sm:text-lg"
+        >
           💰 {{ playerChips }} Points
         </div>
       </div>
 
       <!-- Écran de démarrage -->
-      <div v-if="gameState === 'start'" class="flex flex-col items-center space-y-3">
+      <div
+        v-if="gameState === 'start'"
+        class="flex flex-col items-center space-y-3"
+      >
         <div class="text-center mb-2">
           <p class="text-lg sm:text-xl">Bienvenue au Blackjack Casino !</p>
-          <p class="text-xs sm:text-sm opacity-75">Rapprochez-vous de 21 sans dépasser</p>
+          <p class="text-xs sm:text-sm opacity-75">
+            Rapprochez-vous de 21 sans dépasser
+          </p>
         </div>
-        <button class="btn-primary text-lg sm:text-xl px-6 py-3" @click="startGame">
+        <button
+          class="btn-primary text-lg sm:text-xl px-6 py-3"
+          @click="startGame"
+        >
           🎮 Nouvelle Partie
         </button>
       </div>
 
       <!-- Écran de pari -->
-      <div v-else-if="gameState === 'betting'" class="flex flex-col items-center space-y-3">
+      <div
+        v-else-if="gameState === 'betting'"
+        class="flex flex-col items-center space-y-3"
+      >
         <div class="text-black text-center mb-2">
           <p class="text-lg sm:text-xl">Placez votre mise</p>
-          <p class="text-xs sm:text-sm opacity-75">Choisissez le montant que vous voulez parier</p>
+          <p class="text-xs sm:text-sm opacity-75">
+            Choisissez le montant que vous voulez parier
+          </p>
         </div>
-        
+
         <div class="bg-black bg-opacity-30 p-3 rounded-lg w-full">
           <div class="text-white text-center mb-3">
             <span class="text-sm sm:text-lg">Mise actuelle: </span>
-            <span class="text-lg sm:text-2xl font-bold text-yellow-400">{{ currentBet }} points</span>
+            <span class="text-lg sm:text-2xl font-bold text-yellow-400"
+              >{{ currentBet }} points</span
+            >
           </div>
-          
+
           <div class="grid grid-cols-3 gap-2 mb-3">
-            <button 
-              v-for="amount in betAmounts" 
+            <button
+              v-for="amount in betAmounts"
               :key="amount"
               @click="setBet(amount)"
               :disabled="amount > playerChips"
               :class="[
                 'px-2 py-2 rounded-lg font-bold transition-all text-sm',
-                amount <= playerChips 
-                  ? 'bg-turquoise hover:bg-turquoise-dark text-white hover:scale-105' 
-                  : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                amount <= playerChips
+                  ? 'bg-turquoise hover:bg-turquoise-dark text-white hover:scale-105'
+                  : 'bg-gray-600 text-gray-400 cursor-not-allowed',
               ]"
             >
               {{ amount }}
@@ -52,14 +75,14 @@
           </div>
 
           <div class="flex justify-center">
-            <button 
-              @click="dealCards" 
+            <button
+              @click="dealCards"
               :disabled="currentBet === 0"
               :class="[
                 'px-4 py-2 rounded-lg font-bold transition-all text-sm',
-                currentBet > 0 
-                  ? 'bg-green-600 hover:bg-green-700 text-white hover:scale-105' 
-                  : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                currentBet > 0
+                  ? 'bg-green-600 hover:bg-green-700 text-white hover:scale-105'
+                  : 'bg-gray-600 text-gray-400 cursor-not-allowed',
               ]"
             >
               ✅ Miser {{ currentBet }} points
@@ -69,21 +92,33 @@
       </div>
 
       <!-- Jeu en cours -->
-      <div v-else-if="gameState === 'playing' || gameState === 'dealer' || gameState === 'end'">
+      <div
+        v-else-if="
+          gameState === 'playing' ||
+          gameState === 'dealer' ||
+          gameState === 'end'
+        "
+      >
         <!-- Informations de la partie -->
         <div class="bg-black bg-opacity-30 p-2 rounded-lg mb-3">
           <div class="grid grid-cols-3 gap-2 text-white text-center">
             <div>
               <div class="text-xs opacity-75">Mise</div>
-              <div class="text-sm sm:text-xl font-bold text-yellow-400">{{ currentBet }}</div>
+              <div class="text-sm sm:text-xl font-bold text-yellow-400">
+                {{ currentBet }}
+              </div>
             </div>
             <div>
               <div class="text-xs opacity-75">Gagnées</div>
-              <div class="text-sm sm:text-xl font-bold text-green-400">{{ gamesWon }}</div>
+              <div class="text-sm sm:text-xl font-bold text-green-400">
+                {{ gamesWon }}
+              </div>
             </div>
             <div>
               <div class="text-xs opacity-75">Perdues</div>
-              <div class="text-sm sm:text-xl font-bold text-red-400">{{ gamesLost }}</div>
+              <div class="text-sm sm:text-xl font-bold text-red-400">
+                {{ gamesLost }}
+              </div>
             </div>
           </div>
         </div>
@@ -92,10 +127,10 @@
         <div class="mb-3">
           <div class="text-center mb-2">
             <div class="text-sm sm:text-lg font-bold text-gray mb-1">
-              🎩 Croupier {{ showDealerTotal ? `(${dealerTotal})` : '' }}
+              🎩 Croupier {{ showDealerTotal ? `(${dealerTotal})` : "" }}
             </div>
             <div class="text-xs text-gray-300">
-              {{ showDealerTotal ? getDealerStatus() : 'Carte cachée' }}
+              {{ showDealerTotal ? getDealerStatus() : "Carte cachée" }}
             </div>
           </div>
           <div class="flex flex-wrap justify-center gap-1">
@@ -104,11 +139,11 @@
               :key="'d' + i"
               :class="[
                 'card-container transition-all duration-300',
-                i === 0 || showDealerTotal ? 'card-revealed' : 'card-hidden'
+                i === 0 || showDealerTotal ? 'card-revealed' : 'card-hidden',
               ]"
             >
               <div class="card">
-                {{ i === 0 || showDealerTotal ? cardToString(card) : '🂠' }}
+                {{ i === 0 || showDealerTotal ? cardToString(card) : "🂠" }}
               </div>
             </div>
           </div>
@@ -139,16 +174,14 @@
 
         <!-- Actions du joueur -->
         <div v-if="gameState === 'playing'" class="flex justify-center gap-3">
-          <button 
-            class="btn-action btn-hit" 
+          <button
+            class="btn-action btn-hit"
             @click="hit"
             :disabled="playerTotal >= 21"
           >
             🎯 Tirer
           </button>
-          <button class="btn-action btn-stand" @click="stand">
-            ✋ Rester
-          </button>
+          <button class="btn-action btn-stand" @click="stand">✋ Rester</button>
         </div>
 
         <!-- Message du croupier -->
@@ -157,9 +190,15 @@
         </div>
 
         <!-- Résultat final -->
-        <div v-else-if="gameState === 'end'" class="flex flex-col items-center space-y-3">
+        <div
+          v-else-if="gameState === 'end'"
+          class="flex flex-col items-center space-y-3"
+        >
           <div class="text-center">
-            <div class="text-lg sm:text-2xl font-bold mb-1" :class="resultClass">
+            <div
+              class="text-lg sm:text-2xl font-bold mb-1"
+              :class="resultClass"
+            >
               {{ resultMessage }}
             </div>
             <div class="text-sm sm:text-lg text-gray">
@@ -173,7 +212,10 @@
       </div>
 
       <!-- Message si plus de points -->
-      <div v-if="playerChips === 0 && gameState === 'start'" class="text-center mt-3">
+      <div
+        v-if="playerChips === 0 && gameState === 'start'"
+        class="text-center mt-3"
+      >
         <div class="text-red-400 text-lg font-bold mb-2">
           😱 Plus de points !
         </div>
@@ -229,7 +271,7 @@ export default {
       gamesWon: 0,
       gamesLost: 0,
       winLossMessage: "",
-      resultClass: ""
+      resultClass: "",
     };
   },
   computed: {
@@ -244,11 +286,11 @@ export default {
     cardToString(card) {
       return card.value + card.suit;
     },
-    
+
     startGame() {
       if (this.playerChips === 0) {
-          this.resetChips();
-          return;
+        this.resetChips();
+        return;
       }
       this.gameState = "betting";
       this.currentBet = 0;
@@ -265,11 +307,11 @@ export default {
 
     dealCards() {
       if (this.currentBet === 0) return;
-      
+
       this.playerHand = [getRandomCard(), getRandomCard()];
       this.dealerHand = [getRandomCard(), getRandomCard()];
       this.gameState = "playing";
-      
+
       // Vérifier blackjack naturel
       if (this.playerTotal === 21) {
         this.checkForBlackjack();
@@ -278,9 +320,17 @@ export default {
 
     checkForBlackjack() {
       if (this.playerTotal === 21 && this.dealerTotal === 21) {
-        this.endGame("Égalité ! Blackjack des deux côtés", "text-yellow-400", "Votre mise est rendue");
+        this.endGame(
+          "Égalité ! Blackjack des deux côtés",
+          "text-yellow-400",
+          "Votre mise est rendue",
+        );
       } else if (this.playerTotal === 21) {
-        this.endGame("🎉 BLACKJACK ! 🎉", "text-yellow-400", `Vous gagnez ${Math.floor(this.currentBet * 1.5)} points (1.5x)`);
+        this.endGame(
+          "🎉 BLACKJACK ! 🎉",
+          "text-yellow-400",
+          `Vous gagnez ${Math.floor(this.currentBet * 1.5)} points (1.5x)`,
+        );
         this.playerChips += Math.floor(this.currentBet * 1.5);
         this.gamesWon++;
       } else {
@@ -291,7 +341,11 @@ export default {
     hit() {
       this.playerHand.push(getRandomCard());
       if (this.playerTotal > 21) {
-        this.endGame("💥 Perdu ! Vous avez dépassé 21", "text-red-400", `Vous perdez ${this.currentBet} points`);
+        this.endGame(
+          "💥 Perdu ! Vous avez dépassé 21",
+          "text-red-400",
+          `Vous perdez ${this.currentBet} points`,
+        );
         this.playerChips -= this.currentBet;
         this.gamesLost++;
       } else if (this.playerTotal === 21) {
@@ -317,21 +371,37 @@ export default {
     checkWinner() {
       const player = this.playerTotal;
       const dealer = this.dealerTotal;
-      
+
       if (dealer > 21) {
-        this.endGame("🎉 Gagné ! Le croupier a dépassé 21", "text-green-400", `Vous gagnez ${this.currentBet} points`);
+        this.endGame(
+          "🎉 Gagné ! Le croupier a dépassé 21",
+          "text-green-400",
+          `Vous gagnez ${this.currentBet} points`,
+        );
         this.playerChips += this.currentBet;
         this.gamesWon++;
       } else if (player > dealer) {
-        this.endGame("🎉 Gagné ! Votre main est plus forte", "text-green-400", `Vous gagnez ${this.currentBet} points`);
+        this.endGame(
+          "🎉 Gagné ! Votre main est plus forte",
+          "text-green-400",
+          `Vous gagnez ${this.currentBet} points`,
+        );
         this.playerChips += this.currentBet;
         this.gamesWon++;
       } else if (player < dealer) {
-        this.endGame("😔 Perdu ! Le croupier a une main plus forte", "text-red-400", `Vous perdez ${this.currentBet} points`);
+        this.endGame(
+          "😔 Perdu ! Le croupier a une main plus forte",
+          "text-red-400",
+          `Vous perdez ${this.currentBet} points`,
+        );
         this.playerChips -= this.currentBet;
         this.gamesLost++;
       } else {
-        this.endGame("🤝 Égalité !", "text-yellow-400", "Votre mise est rendue");
+        this.endGame(
+          "🤝 Égalité !",
+          "text-yellow-400",
+          "Votre mise est rendue",
+        );
       }
     },
 
@@ -361,15 +431,15 @@ export default {
       this.playerChips = 10;
       this.gamesWon = 0;
       this.gamesLost = 0;
-    }
+    },
   },
-  
+
   beforeRouteLeave(to, from, next) {
-    localStorage.setItem('konamiUnlocked', 'false');
+    localStorage.setItem("konamiUnlocked", "false");
     next();
   },
   beforeUnmount() {
-    localStorage.setItem('konamiUnlocked', 'false');
+    localStorage.setItem("konamiUnlocked", "false");
   },
 };
 
@@ -384,9 +454,17 @@ document.addEventListener("keydown", function (e) {
 <style scoped>
 .bg-bleu-profond {
   background-color: var(--color-bleu-profond);
-  background-image: 
-    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(255, 192, 203, 0.15) 0%, transparent 50%);
+  background-image:
+    radial-gradient(
+      circle at 20% 80%,
+      rgba(120, 119, 198, 0.3) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(255, 192, 203, 0.15) 0%,
+      transparent 50%
+    );
 }
 
 .card-container {
@@ -401,7 +479,9 @@ document.addEventListener("keydown", function (e) {
   font-size: 0.875rem;
   font-weight: bold;
   text-align: center;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
   min-width: 35px;
   min-height: 50px;
   display: flex;
@@ -457,7 +537,9 @@ document.addEventListener("keydown", function (e) {
   border-radius: 0.5rem;
   transition: all 0.2s;
   transform: scale(1);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
   border: none;
   cursor: pointer;
 }
@@ -473,7 +555,9 @@ document.addEventListener("keydown", function (e) {
   border-radius: 0.5rem;
   transition: all 0.2s;
   transform: scale(1);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
   color: white;
   border: none;
   cursor: pointer;
@@ -517,11 +601,12 @@ document.addEventListener("keydown", function (e) {
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
-    opacity: .5;
+    opacity: 0.5;
   }
 }
 </style>

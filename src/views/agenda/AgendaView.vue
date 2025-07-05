@@ -416,7 +416,7 @@ export default {
               "Content-Type": "application/x-www-form-urlencoded",
             },
             credentials: "include",
-          }
+          },
         );
 
         // Récupérer les commandes
@@ -428,7 +428,7 @@ export default {
               "Content-Type": "application/x-www-form-urlencoded",
             },
             credentials: "include",
-          }
+          },
         );
 
         // Récupérer les clients
@@ -440,7 +440,7 @@ export default {
               "Content-Type": "application/x-www-form-urlencoded",
             },
             credentials: "include",
-          }
+          },
         );
 
         // Récupérer les fournisseurs
@@ -452,7 +452,7 @@ export default {
               "Content-Type": "application/x-www-form-urlencoded",
             },
             credentials: "include",
-          }
+          },
         );
 
         if (
@@ -485,7 +485,7 @@ export default {
         if (livraisonsData.success && livraisonsData.data) {
           livraisonsData.data.forEach((livraison) => {
             const fournisseur = fournisseurs.value.find(
-              (f) => f.id_fournisseur === livraison.id_fournisseur
+              (f) => f.id_fournisseur === livraison.id_fournisseur,
             );
             allEvents.push({
               id: livraison.id_livraison,
@@ -508,7 +508,7 @@ export default {
         if (commandesData.success && commandesData.data) {
           commandesData.data.forEach((commande) => {
             const client = clients.value.find(
-              (c) => c.id_client === commande.id_client
+              (c) => c.id_client === commande.id_client,
             );
             allEvents.push({
               id: commande.id_commande,
@@ -585,7 +585,7 @@ export default {
     const createDayObject = (date, otherMonth) => {
       const dateKey = formatDateKey(date);
       const dayEvents = events.value.filter(
-        (e) => formatDateKey(e.date) === dateKey
+        (e) => formatDateKey(e.date) === dateKey,
       );
       const dayOfWeek = date.getDay();
 
@@ -605,7 +605,7 @@ export default {
     const selectedDayEvents = computed(() => {
       if (!selectedDate.value) return [];
       return events.value.filter(
-        (e) => formatDateKey(e.date) === selectedDate.value
+        (e) => formatDateKey(e.date) === selectedDate.value,
       );
     });
 
@@ -659,7 +659,7 @@ export default {
         (e) =>
           e.type === "delivery" &&
           e.date.getMonth() === month &&
-          e.date.getFullYear() === year
+          e.date.getFullYear() === year,
       ).length;
     });
 
@@ -670,7 +670,7 @@ export default {
         (e) =>
           e.type === "order" &&
           e.date.getMonth() === month &&
-          e.date.getFullYear() === year
+          e.date.getFullYear() === year,
       ).length;
     });
 
@@ -681,7 +681,7 @@ export default {
 
     const pendingOrders = computed(() => {
       return events.value.filter(
-        (e) => e.type === "order" && e.statut === "attente"
+        (e) => e.type === "order" && e.statut === "attente",
       ).length;
     });
 
@@ -741,14 +741,14 @@ export default {
     const previousMonth = () => {
       currentDate.value = new Date(
         currentDate.value.getFullYear(),
-        currentDate.value.getMonth() - 1
+        currentDate.value.getMonth() - 1,
       );
     };
 
     const nextMonth = () => {
       currentDate.value = new Date(
         currentDate.value.getFullYear(),
-        currentDate.value.getMonth() + 1
+        currentDate.value.getMonth() + 1,
       );
     };
 
