@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import router from "@/router";
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
@@ -42,8 +43,9 @@ export const useAuthStore = defineStore("auth", {
       this.user = null;
       this.isAuthenticated = false;
       localStorage.removeItem("user");
-      if (window.location.pathname !== "/login") {
-        window.location.href = "/login";
+      
+      if (router.currentRoute.value.name !== 'Login') {
+        router.push({ name: 'Login' });
       }
     },
 
@@ -54,30 +56,41 @@ export const useAuthStore = defineStore("auth", {
         this.isAuthenticated = valid;
         return valid;
       } else {
-        this.logout();
+        this.user = null;
+        this.isAuthenticated = false;
+        localStorage.removeItem("user");
         return false;
       }
     },
 
     async verifyUser() {
-      // Vérifie la session côté back
-      const response = await fetch(
-        import.meta.env.VITE_API_URL + "verify_user",
-        {
-          method: "GET",
-          credentials: "include",
-        },
-      );
+      try {
+        const response = await fetch(
+          import.meta.env.VITE_API_URL + "verify_user",
+          {
+            method: "GET",
+            credentials: "include",
+          },
+        );
 
-      const result = await response.json();
+        const result = await response.json();
 
-      if (result.success) {
-        this.user = result.user;
-        this.isAuthenticated = true;
-        localStorage.setItem("user", JSON.stringify(result.user));
-        return true;
-      } else {
-        this.logout();
+        if (result.success) {
+          this.user = result.user;
+          this.isAuthenticated = true;
+          localStorage.setItem("user", JSON.stringify(result.user));
+          return true;
+        } else {
+          this.user = null;
+          this.isAuthenticated = false;
+          localStorage.removeItem("user");
+          return false;
+        }
+      } catch (error) {
+        console.error("Erreur lors de la vérification:", error);
+        this.user = null;
+        this.isAuthenticated = false;
+        localStorage.removeItem("user");
         return false;
       }
     },
