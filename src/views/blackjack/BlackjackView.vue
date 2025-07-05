@@ -372,6 +372,13 @@ export default {
     localStorage.setItem('konamiUnlocked', 'false');
   },
 };
+
+document.addEventListener("keydown", function (e) {
+  if (e.key === "Escape") {
+    localStorage.setItem("konamiUnlocked", "false");
+    window.history.back();
+  }
+});
 </script>
 
 <style scoped>
