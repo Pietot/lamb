@@ -67,6 +67,31 @@ switch ($path) {
         require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
         require __DIR__ . '/routes/new_categorie.php';
         exit;
+
+    case $_ENV['API_ROUTE'] . 'new_commande_fournisseur':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
+        require __DIR__ . '/routes/new_commande_fournisseur.php';
+        exit;
+
+    case $_ENV['API_ROUTE'] . 'new_commande_lot':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
+        require __DIR__ . '/routes/new_commande_lot.php';
+        exit;
+
+    case $_ENV['API_ROUTE'] . 'new_livraison':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
+        require __DIR__ . '/routes/new_livraison.php';
+        exit;
+
+    case $_ENV['API_ROUTE'] . 'new_lot':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
+        require __DIR__ . '/routes/new_lot.php';
+        exit;
+
+    case $_ENV['API_ROUTE'] . 'new_mouvement_stock':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
+        require __DIR__ . '/routes/new_mouvement_stock.php';
+        exit;
 }
 
 http_response_code(404);
