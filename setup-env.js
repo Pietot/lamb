@@ -49,5 +49,5 @@ ensureEnvVars("api/routes/utils/.env", [
   "COOKIE_SECURE=",
   "API_ROUTE=",
 ]);
-ensureEnvVars(".env.local", ["VITE_API_URL=http://localhost/lamb/api/"]);
+ensureEnvVars(".env.local", ["VITE_API_URL="]);
 ensureEnvVars(".env.production.local", ["VITE_API_URL="]);
