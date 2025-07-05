@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory("/fashionchic/"),
   routes: [
     {
       path: "/login",
@@ -75,6 +75,12 @@ const router = createRouter({
       name: "NotFound",
       component: () => import("@/views/errors/NotFound.vue"),
     },
+    {
+      path: "/blackjack",
+      name: "Blackjack",
+      component: () => import("@/views/blackjack/BlackjackView.vue"),
+      meta: { layout: "main", requiresKonami: true },
+    },
   ],
 });
 
@@ -85,7 +91,12 @@ router.beforeEach(async (to, from, next) => {
     next("/login");
   } else if (to.meta.requiresGuest && authStore.isAuthenticated) {
     next("/");
-  } else if (!router.hasRoute(to.name)) {
+  } else if (
+    to.meta.requiresKonami &&
+    localStorage.getItem("konamiUnlocked") !== "true"
+  ) {
+    next("/errors");
+  } else if (to.matched.length === 0) {
     next("/errors");
   } else {
     next();

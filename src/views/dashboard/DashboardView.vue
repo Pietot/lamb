@@ -220,7 +220,7 @@ export default {
               "Content-Type": "application/x-www-form-urlencoded",
             },
             credentials: "include",
-          }
+          },
         );
 
         if (!response.ok) {
@@ -256,7 +256,7 @@ export default {
               "Content-Type": "application/x-www-form-urlencoded",
             },
             credentials: "include",
-          }
+          },
         );
 
         if (!response.ok) {
@@ -292,7 +292,7 @@ export default {
               "Content-Type": "application/x-www-form-urlencoded",
             },
             credentials: "include",
-          }
+          },
         );
 
         if (!response.ok) {
@@ -328,7 +328,7 @@ export default {
               "Content-Type": "application/x-www-form-urlencoded",
             },
             credentials: "include",
-          }
+          },
         );
 
         if (!response.ok) {
@@ -364,7 +364,7 @@ export default {
               "Content-Type": "application/x-www-form-urlencoded",
             },
             credentials: "include",
-          }
+          },
         );
 
         if (!response.ok) {
@@ -401,7 +401,7 @@ export default {
 
     const deliveriesToReceive = computed(() => {
       return deliveries.value.filter(
-        (delivery) => delivery.statut === "en_attente"
+        (delivery) => delivery.statut === "en_attente",
       ).length;
     });
 
@@ -415,7 +415,7 @@ export default {
 
     const stockAlerts = computed(() => {
       return articles.value.filter(
-        (article) => article.quantite_stock <= article.seuil_alerte
+        (article) => article.quantite_stock <= article.seuil_alerte,
       ).length;
     });
 
@@ -442,7 +442,7 @@ export default {
     // Fonction pour obtenir le nom du fournisseur
     const getSupplierName = (supplierId) => {
       const supplier = suppliers.value.find(
-        (s) => s.id_fournisseur === supplierId
+        (s) => s.id_fournisseur === supplierId,
       );
       if (supplier) {
         return (

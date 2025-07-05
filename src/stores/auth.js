@@ -66,7 +66,7 @@ export const useAuthStore = defineStore("auth", {
         {
           method: "GET",
           credentials: "include",
-        }
+        },
       );
 
       const result = await response.json();

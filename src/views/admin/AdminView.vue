@@ -205,7 +205,7 @@
                   <li
                     v-for="permission in getRolePermissions(role.id_role).slice(
                       0,
-                      3
+                      3,
                     )"
                     :key="permission"
                   >
@@ -567,7 +567,7 @@ export default {
               "Content-Type": "application/x-www-form-urlencoded",
             },
             credentials: "include",
-          }
+          },
         );
 
         // Récupérer les rôles
@@ -579,7 +579,7 @@ export default {
               "Content-Type": "application/x-www-form-urlencoded",
             },
             credentials: "include",
-          }
+          },
         );
 
         if (!usersResponse.ok || !rolesResponse.ok) {
@@ -629,14 +629,14 @@ export default {
             },
             credentials: "include",
             body: formData.toString(),
-          }
+          },
         );
 
         const data = await response.json();
 
         if (!response.ok || !data.success) {
           throw new Error(
-            data.message || "Erreur lors de la création de l'utilisateur"
+            data.message || "Erreur lors de la création de l'utilisateur",
           );
         }
 
@@ -672,7 +672,7 @@ export default {
     const deleteUser = (user) => {
       if (
         confirm(
-          `Êtes-vous sûr de vouloir supprimer l'utilisateur ${user.prenom} ${user.nom} ?`
+          `Êtes-vous sûr de vouloir supprimer l'utilisateur ${user.prenom} ${user.nom} ?`,
         )
       ) {
         console.log("Supprimer utilisateur:", user.id_utilisateur);
@@ -690,7 +690,7 @@ export default {
         (user) =>
           user.id_utilisateur.toString().includes(search) ||
           fullName(user).includes(search) ||
-          user.email.toLowerCase().includes(search)
+          user.email.toLowerCase().includes(search),
       );
     });
 

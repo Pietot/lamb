@@ -401,7 +401,7 @@ export default {
               "Content-Type": "application/x-www-form-urlencoded",
             },
             credentials: "include",
-          }
+          },
         );
 
         // Récupérer les clients
@@ -413,7 +413,7 @@ export default {
               "Content-Type": "application/x-www-form-urlencoded",
             },
             credentials: "include",
-          }
+          },
         );
 
         if (!ordersResponse.ok || !clientsResponse.ok) {
@@ -427,7 +427,7 @@ export default {
           // Filtrer seulement les commandes en attente ou en préparation
           orders.value = ordersData.data.filter(
             (order) =>
-              order.statut === "attente" || order.statut === "preparation"
+              order.statut === "attente" || order.statut === "preparation",
           );
         }
 
@@ -586,7 +586,7 @@ export default {
     const startPreparation = async (order) => {
       // TODO: Appeler l'API pour mettre à jour le statut
       const index = orders.value.findIndex(
-        (o) => o.id_commande === order.id_commande
+        (o) => o.id_commande === order.id_commande,
       );
       if (index !== -1) {
         orders.value[index].statut = "preparation";
@@ -603,14 +603,14 @@ export default {
 
       // TODO: Appeler l'API pour mettre à jour le statut
       const index = orders.value.findIndex(
-        (o) => o.id_commande === orderToComplete.value.id_commande
+        (o) => o.id_commande === orderToComplete.value.id_commande,
       );
       if (index !== -1) {
         orders.value[index].statut = "expedie";
         // Retirer de la liste après un court délai
         setTimeout(() => {
           orders.value = orders.value.filter(
-            (o) => o.id_commande !== orderToComplete.value.id_commande
+            (o) => o.id_commande !== orderToComplete.value.id_commande,
           );
         }, 500);
       }

@@ -268,7 +268,7 @@
                         :style="{
                           '--fill-width': getStarFillWidth(
                             i,
-                            parseFloat(supplier.note_qualite)
+                            parseFloat(supplier.note_qualite),
                           ),
                         }"
                       >
@@ -746,7 +746,7 @@ export default {
               "Content-Type": "application/x-www-form-urlencoded",
             },
             credentials: "include",
-          }
+          },
         );
 
         if (!response.ok) {
@@ -787,7 +787,7 @@ export default {
       if (withRating.length === 0) return "N/A";
       const sum = withRating.reduce(
         (acc, s) => acc + parseFloat(s.note_qualite),
-        0
+        0,
       );
       return (sum / withRating.length).toFixed(1);
     });
@@ -797,7 +797,7 @@ export default {
       if (withDelivery.length === 0) return "N/A";
       const sum = withDelivery.reduce(
         (acc, s) => acc + parseInt(s.delai_livraison),
-        0
+        0,
       );
       return Math.round(sum / withDelivery.length);
     });
@@ -827,7 +827,7 @@ export default {
             fullName(supplier).includes(query) ||
             supplier.nom.toLowerCase().includes(query) ||
             supplier.ville.toLowerCase().includes(query) ||
-            supplier.pays.toLowerCase().includes(query)
+            supplier.pays.toLowerCase().includes(query),
         );
       }
 
@@ -845,7 +845,7 @@ export default {
           break;
         case "recent":
           result.sort(
-            (a, b) => new Date(b.date_creation) - new Date(a.date_creation)
+            (a, b) => new Date(b.date_creation) - new Date(a.date_creation),
           );
           break;
       }
@@ -869,7 +869,7 @@ export default {
       if (cleaned.length === 10) {
         return cleaned.replace(
           /(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/,
-          "$1 $2 $3 $4 $5"
+          "$1 $2 $3 $4 $5",
         );
       }
       return phone;
@@ -1037,7 +1037,7 @@ export default {
         if (newSupplier.value.conditions_paiement) {
           formData.append(
             "conditions_paiement",
-            newSupplier.value.conditions_paiement
+            newSupplier.value.conditions_paiement,
           );
         }
         if (newSupplier.value.delai_livraison) {
@@ -1054,7 +1054,7 @@ export default {
             method: "POST",
             body: formData,
             credentials: "include",
-          }
+          },
         );
 
         const data = await response.json();

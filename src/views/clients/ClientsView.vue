@@ -598,7 +598,7 @@
                 <span class="detail-value">{{
                   selectedClient.date_creation
                     ? new Date(selectedClient.date_creation).toLocaleDateString(
-                        "fr-FR"
+                        "fr-FR",
                       )
                     : "Non renseignée"
                 }}</span>
@@ -745,7 +745,7 @@ export default {
               "Content-Type": "application/x-www-form-urlencoded",
             },
             credentials: "include",
-          }
+          },
         );
 
         if (!response.ok) {
@@ -782,14 +782,14 @@ export default {
 
     const uniqueCities = computed(() => {
       const cities = new Set(
-        clients.value.map((client) => client.ville).filter((ville) => ville)
+        clients.value.map((client) => client.ville).filter((ville) => ville),
       );
       return cities.size;
     });
 
     const validEmails = computed(() => {
       const valid = clients.value.filter(
-        (client) => client.email && client.email.includes("@")
+        (client) => client.email && client.email.includes("@"),
       ).length;
       return clients.value.length > 0
         ? Math.round((valid / clients.value.length) * 100)
@@ -799,7 +799,7 @@ export default {
     // Villes disponibles pour le filtre
     const availableCities = computed(() => {
       const cities = new Set(
-        clients.value.map((client) => client.ville).filter((ville) => ville)
+        clients.value.map((client) => client.ville).filter((ville) => ville),
       );
       return Array.from(cities).sort();
     });
@@ -840,7 +840,7 @@ export default {
       switch (filters.value.sort) {
         case "name":
           result.sort((a, b) =>
-            (a.raison_sociale || "").localeCompare(b.raison_sociale || "")
+            (a.raison_sociale || "").localeCompare(b.raison_sociale || ""),
           );
           break;
         case "recent":
@@ -880,7 +880,7 @@ export default {
       if (cleaned.length === 10) {
         return cleaned.replace(
           /(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/,
-          "$1 $2 $3 $4 $5"
+          "$1 $2 $3 $4 $5",
         );
       }
       return phone;
@@ -988,7 +988,7 @@ export default {
             method: "POST",
             body: formData,
             credentials: "include",
-          }
+          },
         );
 
         const data = await response.json();
@@ -998,7 +998,7 @@ export default {
             throw new Error("Cet email est déjà utilisé");
           } else if (response.status === 400) {
             throw new Error(
-              data.message || "Veuillez vérifier tous les champs"
+              data.message || "Veuillez vérifier tous les champs",
             );
           } else {
             throw new Error(data.message || "Une erreur est survenue");

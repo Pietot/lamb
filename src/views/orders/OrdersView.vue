@@ -385,7 +385,7 @@ export default {
               "Content-Type": "application/x-www-form-urlencoded",
             },
             credentials: "include",
-          }
+          },
         );
 
         // Récupérer les clients
@@ -397,7 +397,7 @@ export default {
               "Content-Type": "application/x-www-form-urlencoded",
             },
             credentials: "include",
-          }
+          },
         );
 
         if (!ordersResponse.ok || !clientsResponse.ok) {
@@ -410,7 +410,7 @@ export default {
         if (ordersData.success && ordersData.data) {
           // Trier les commandes par date décroissante
           orders.value = ordersData.data.sort(
-            (a, b) => new Date(b.date_commande) - new Date(a.date_commande)
+            (a, b) => new Date(b.date_commande) - new Date(a.date_commande),
           );
         }
 
@@ -440,14 +440,14 @@ export default {
       // Filtre par client
       if (filters.value.clientId) {
         result = result.filter(
-          (order) => order.id_client == filters.value.clientId
+          (order) => order.id_client == filters.value.clientId,
         );
       }
 
       // Filtre par statut
       if (filters.value.status) {
         result = result.filter(
-          (order) => order.statut === filters.value.status
+          (order) => order.statut === filters.value.status,
         );
       }
 
@@ -480,7 +480,7 @@ export default {
     const endIndex = computed(() => {
       return Math.min(
         startIndex.value + itemsPerPage,
-        filteredOrders.value.length
+        filteredOrders.value.length,
       );
     });
 
@@ -589,7 +589,7 @@ export default {
       if (cleaned.length === 10) {
         return cleaned.replace(
           /(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/,
-          "$1 $2 $3 $4 $5"
+          "$1 $2 $3 $4 $5",
         );
       }
       return phone;

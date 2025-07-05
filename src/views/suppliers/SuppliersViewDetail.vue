@@ -197,7 +197,7 @@
                     :style="{
                       '--fill-width': getStarFillWidth(
                         i,
-                        parseFloat(supplier.note_qualite)
+                        parseFloat(supplier.note_qualite),
                       ),
                     }"
                   >
@@ -426,7 +426,7 @@ export default {
       try {
         console.log(
           "API URL:",
-          import.meta.env.VITE_API_URL + "get_table?table=fournisseur"
+          import.meta.env.VITE_API_URL + "get_table?table=fournisseur",
         );
         const response = await fetch(
           import.meta.env.VITE_API_URL + "get_table?table=fournisseur",
@@ -436,7 +436,7 @@ export default {
               "Content-Type": "application/x-www-form-urlencoded",
             },
             credentials: "include",
-          }
+          },
         );
 
         console.log("Response status:", response.status);
@@ -450,7 +450,7 @@ export default {
         if (data.success && data.data) {
           // Trouver le fournisseur par ID
           const foundSupplier = data.data.find(
-            (f) => f.id_fournisseur == supplierId.value
+            (f) => f.id_fournisseur == supplierId.value,
           );
           if (foundSupplier) {
             supplier.value = foundSupplier;
@@ -482,7 +482,7 @@ export default {
               "Content-Type": "application/x-www-form-urlencoded",
             },
             credentials: "include",
-          }
+          },
         );
 
         if (!response.ok) {
@@ -523,7 +523,7 @@ export default {
       if (cleaned.length === 10) {
         return cleaned.replace(
           /(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/,
-          "$1 $2 $3 $4 $5"
+          "$1 $2 $3 $4 $5",
         );
       }
       return phone;
@@ -623,7 +623,7 @@ export default {
       // Pour le développement, on peut charger le premier fournisseur si pas d'ID
       if (!supplierId.value) {
         console.warn(
-          "Pas d'ID fournisseur trouvé, chargement du premier fournisseur"
+          "Pas d'ID fournisseur trouvé, chargement du premier fournisseur",
         );
         // Charger quand même les données pour récupérer le premier fournisseur
         fetchAllSuppliers();
@@ -647,7 +647,7 @@ export default {
               "Content-Type": "application/x-www-form-urlencoded",
             },
             credentials: "include",
-          }
+          },
         );
 
         if (!response.ok) {

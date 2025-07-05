@@ -548,7 +548,7 @@
                 <span class="detail-label">Valeur du stock :</span>
                 <span class="detail-value">{{
                   formatCurrency(
-                    selectedArticle.prix_achat * selectedArticle.quantite_stock
+                    selectedArticle.prix_achat * selectedArticle.quantite_stock,
                   )
                 }}</span>
               </div>
@@ -681,7 +681,7 @@ export default {
               "Content-Type": "application/x-www-form-urlencoded",
             },
             credentials: "include",
-          }
+          },
         );
 
         if (!response.ok) {
@@ -714,7 +714,7 @@ export default {
               "Content-Type": "application/x-www-form-urlencoded",
             },
             credentials: "include",
-          }
+          },
         );
 
         if (!response.ok) {
@@ -744,25 +744,25 @@ export default {
             article.description.toLowerCase().includes(query) ||
             (article.reference &&
               article.reference.toLowerCase().includes(query)) ||
-            article.id_article.toString().includes(query)
+            article.id_article.toString().includes(query),
         );
       }
 
       // Filtre par catégorie
       if (filters.category) {
         result = result.filter(
-          (article) => article.id_categorie == filters.category
+          (article) => article.id_categorie == filters.category,
         );
       }
 
       // Filtre par statut de stock
       if (filters.stockStatus === "low") {
         result = result.filter(
-          (article) => article.quantite_stock <= article.seuil_alerte
+          (article) => article.quantite_stock <= article.seuil_alerte,
         );
       } else if (filters.stockStatus === "normal") {
         result = result.filter(
-          (article) => article.quantite_stock > article.seuil_alerte
+          (article) => article.quantite_stock > article.seuil_alerte,
         );
       }
 
@@ -781,7 +781,7 @@ export default {
     const endIndex = computed(() => {
       return Math.min(
         startIndex.value + itemsPerPage,
-        filteredArticles.value.length
+        filteredArticles.value.length,
       );
     });
 
@@ -820,7 +820,7 @@ export default {
 
     const lowStockCount = computed(() => {
       return filteredArticles.value.filter(
-        (item) => item.quantite_stock <= item.seuil_alerte
+        (item) => item.quantite_stock <= item.seuil_alerte,
       ).length;
     });
 
@@ -836,7 +836,7 @@ export default {
 
     const getSupplierName = (supplierId) => {
       const supplier = suppliers.value.find(
-        (s) => s.id_fournisseur === supplierId
+        (s) => s.id_fournisseur === supplierId,
       );
       if (supplier) {
         return (
@@ -958,7 +958,7 @@ export default {
       formData.append("id_fournisseur", newArticle.id_fournisseur);
       formData.append(
         "reference_fournisseur",
-        newArticle.reference_fournisseur
+        newArticle.reference_fournisseur,
       );
       formData.append("prix_achat", newArticle.prix_achat);
 
@@ -969,7 +969,7 @@ export default {
             method: "POST",
             body: formData,
             credentials: "include",
-          }
+          },
         );
 
         const data = await response.json();

@@ -28,11 +28,11 @@ const backendEnvContent = backendEnvLines.join("\n");
 if (!existsSync(apiEnvPath)) {
   writeFileSync(apiEnvPath, backendEnvContent);
   console.log(
-    `${BLUE}api/routes/utils/.env created with default values.${RESET}`
+    `${BLUE}api/routes/utils/.env created with default values.${RESET}`,
   );
 } else {
   console.log(
-    `${GREEN}api/routes/utils/.env already exists. Skipping creation.${RESET}`
+    `${GREEN}api/routes/utils/.env already exists. Skipping creation.${RESET}`,
   );
 }
 
@@ -52,10 +52,10 @@ const envProdContent = envProdLines.join("\n");
 if (!existsSync(envProdPath)) {
   writeFileSync(envProdPath, envProdContent);
   console.log(
-    `${BLUE}.env.production.local created with default values.${RESET}`
+    `${BLUE}.env.production.local created with default values.${RESET}`,
   );
 } else {
   console.log(
-    `${GREEN}.env.production.local already exists. Skipping creation.${RESET}`
+    `${GREEN}.env.production.local already exists. Skipping creation.${RESET}`,
   );
 }
