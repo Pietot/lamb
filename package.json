@@ -8,7 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "postinstall": "node postinstall.js",
-    "setup-env": "node setup-env.js"
+    "setup-env": "node setup-env.js",
+    "pretty": "prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,json,vue}\""
   },
   "dependencies": {
     "@vueuse/core": "^10.11.1",
