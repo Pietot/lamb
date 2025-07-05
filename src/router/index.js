@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory('/fashionchic/'),
   routes: [
     {
       path: "/login",
@@ -78,7 +78,7 @@ const router = createRouter({
     {
       path: "/blackjack",
       name: "Blackjack",
-      component: () => import("@/views/BlackjackView.vue"),
+      component: () => import("@/views/blackjack/BlackjackView.vue"),
       meta: { layout: "main", requiresKonami: true },
     },
   ],
