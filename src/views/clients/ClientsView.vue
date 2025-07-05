@@ -189,20 +189,20 @@
                 <td class="client-id">
                   <p class="client-id-text">{{ client.id_client }}</p>
                 </td>
-                <td>
-                  <div class="client-info">
-                    <div
-                      class="client-avatar"
-                      :style="{
-                        backgroundColor: getAvatarColor(client.id_client),
-                      }"
-                    >
-                      {{ getClientInitials(client) }}
+                <td class="client-info">
+                  <div class="client-profile">
+                    <div class="client-avatar-container">
+                      <div
+                        class="client-avatar"
+                        :style="{
+                          backgroundColor: getAvatarColor(client.id_client),
+                        }"
+                      >
+                        {{ getClientInitials(client) }}
+                      </div>
                     </div>
                     <div class="client-details">
-                      <p class="client-name">
-                        {{ client.contact_principal || client.raison_sociale }}
-                      </p>
+                      <p class="client-name">{{ client.contact_principal }}</p>
                     </div>
                   </div>
                 </td>
@@ -1437,12 +1437,12 @@ export default {
 
 .clients-table {
   width: 100%;
-  border-collapse: collapse;
+  min-width: max-content;
+  text-align: center;
 }
 
 .clients-table th {
   background: #f8fafc;
-  text-align: left;
   padding: 1rem;
   font-size: 12px;
   font-weight: 600;
@@ -1469,10 +1469,17 @@ export default {
 }
 
 /* CLIENT INFO */
-.client-info {
+.client-profile {
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: 0.75rem;
+}
+
+.client-avatar-container {
+  display: flex;
+  width: 40%;
+  justify-content: flex-end;
 }
 
 .client-avatar {
@@ -1486,6 +1493,19 @@ export default {
   font-weight: 600;
   font-size: 14px;
   flex-shrink: 0;
+}
+
+.client-avatar.large {
+  width: 64px;
+  height: 64px;
+  font-size: 20px;
+}
+
+.client-details {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .client-name {
@@ -1524,7 +1544,8 @@ export default {
 /* ACTIONS */
 .actions {
   display: flex;
-  gap: 0.5rem;
+  justify-content: center;
+  gap: 1.5rem;
 }
 
 .action-button,
@@ -1963,14 +1984,8 @@ input:focus::placeholder {
     font-size: 12px;
   }
 
-  .clients-table th,
-  .clients-table td {
-    padding: 0.75rem 0.5rem;
-  }
-
   .actions {
-    flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.5rem;
   }
 
   .modal-content {
@@ -1988,15 +2003,6 @@ input:focus::placeholder {
 
   .form-row {
     grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 640px) {
-  .clients-table th:nth-child(3),
-  .clients-table td:nth-child(3),
-  .clients-table th:nth-child(4),
-  .clients-table td:nth-child(4) {
-    display: none;
   }
 }
 </style>

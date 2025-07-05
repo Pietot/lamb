@@ -139,7 +139,7 @@ CREATE TABLE IF NOT EXISTS `client` (
   `siret` varchar(14) DEFAULT NULL,
   `secteur_activite` varchar(100) DEFAULT NULL,
   `contact_principal` varchar(100) DEFAULT NULL,
-  `date_creation` date DEFAULT curdate(),
+  `date_creation` datetime DEFAULT current_timestamp(),
   PRIMARY KEY (`id_client`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -163,7 +163,7 @@ INSERT INTO `client` (`id_client`, `raison_sociale`, `nom_commercial`, `email`, 
 DROP TABLE IF EXISTS `commande`;
 CREATE TABLE IF NOT EXISTS `commande` (
   `id_commande` int(11) NOT NULL AUTO_INCREMENT,
-  `date_commande` date DEFAULT NULL,
+  `date_commande` datetime DEFAULT NULL,
   `statut` varchar(11) NOT NULL,
   `montant_total` decimal(10,2) DEFAULT NULL,
   `id_client` int(11) NOT NULL,
@@ -197,7 +197,7 @@ CREATE TABLE IF NOT EXISTS `commande_fournisseur` (
   `numero_commande` varchar(50) NOT NULL,
   `id_fournisseur` int(11) NOT NULL,
   `date_commande` datetime NOT NULL DEFAULT current_timestamp(),
-  `date_livraison_prevue` date DEFAULT NULL,
+  `date_livraison_prevue` datetime DEFAULT NULL,
   `statut` enum('brouillon','envoyee','confirmee','livraison_partielle','livree','annulee') DEFAULT 'brouillon',
   `montant_ht` decimal(10,2) DEFAULT 0.00,
   `montant_tva` decimal(10,2) DEFAULT 0.00,
@@ -343,7 +343,7 @@ CREATE TABLE IF NOT EXISTS `lot` (
   `id_lot` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(50) DEFAULT NULL,
   `description` varchar(50) DEFAULT NULL,
-  `date_creation` date DEFAULT NULL,
+  `date_creation` datetime DEFAULT NULL,
   `quantite_stock` int(11) DEFAULT NULL,
   `seuil_alerte` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_lot`)

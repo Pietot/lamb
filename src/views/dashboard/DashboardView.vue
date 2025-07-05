@@ -4,14 +4,15 @@
     <div class="kpi-section">
       <div class="kpi-card kpi-alert">
         <div class="kpi-icon alert-icon">
-          <svg viewBox="0 0 24 24" fill="currentColor">
+          <svg viewBox="0 0 512 512">
             <path
-              d="M12 2L1 21h22L12 2zm0 3.99L19.53 19H4.47L12 5.99zM11 16h2v2h-2v-2zm0-6h2v4h-2v-4z"
+              fill="currentColor"
+              d="M34.5 420.4c-1.6 2.8-2.5 6-2.5 9.3c0 10.2 8.2 18.4 18.4 18.4l411.2 0c10.2 0 18.4-8.2 18.4-18.4c0-3.3-.9-6.4-2.5-9.3L276.5 75.8C272.2 68.5 264.4 64 256 64s-16.2 4.5-20.5 11.8L34.5 420.4zM6.9 404.2l201-344.6C217.9 42.5 236.2 32 256 32s38.1 10.5 48.1 27.6l201 344.6c4.5 7.7 6.9 16.5 6.9 25.4c0 27.8-22.6 50.4-50.4 50.4L50.4 480C22.6 480 0 457.4 0 429.6c0-8.9 2.4-17.7 6.9-25.4zM256 160c8.8 0 16 7.2 16 16l0 128c0 8.8-7.2 16-16 16s-16-7.2-16-16l0-128c0-8.8 7.2-16 16-16zM232 384a24 24 0 1 1 48 0 24 24 0 1 1 -48 0z"
             />
           </svg>
         </div>
         <div class="kpi-content">
-          <p class="kpi-label">Alertes<br />de stock</p>
+          <p class="kpi-label">Alertes de stock</p>
           <p class="kpi-value">{{ stockAlerts }}</p>
         </div>
       </div>
@@ -29,7 +30,7 @@
           </svg>
         </div>
         <div class="kpi-content">
-          <p class="kpi-label">Commandes<br />en préparation</p>
+          <p class="kpi-label">Commandes en préparation</p>
           <p class="kpi-value">{{ ordersInPreparation }}</p>
         </div>
       </div>
@@ -44,7 +45,7 @@
           </svg>
         </div>
         <div class="kpi-content">
-          <p class="kpi-label">Livraisons<br />à réceptionner</p>
+          <p class="kpi-label">Livraisons à réceptionner</p>
           <p class="kpi-value">{{ deliveriesToReceive }}</p>
         </div>
       </div>
@@ -657,8 +658,8 @@ export default {
 }
 
 .dashboard-bottom {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-wrap: wrap;
   gap: 1.5rem;
 }
 
@@ -741,11 +742,11 @@ export default {
 
 .data-table {
   width: 100%;
-  border-collapse: collapse;
+  min-width: max-content;
+  text-align: center;
 }
 
 .data-table th {
-  text-align: left;
   padding: 8px 12px;
   font-size: 12px;
   font-weight: 600;
@@ -756,7 +757,7 @@ export default {
 }
 
 .data-table td {
-  padding: 12px;
+  padding: 1rem;
   border-bottom: 1px solid #f1f5f9;
   font-size: 14px;
   color: black;
@@ -829,7 +830,7 @@ export default {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px;
+  padding: 1rem;
   background: #f8fafc;
   border-radius: 8px;
   border: 1px solid #e2e8f0;
@@ -901,19 +902,13 @@ export default {
   }
 }
 
-@media (max-width: 640px) {
-  .kpi-card {
-    padding: 1rem;
+@media (max-width: 1110px) {
+  .dashboard-bottom {
+    flex-wrap: wrap;
   }
 
   .section-card {
-    padding: 1rem;
-  }
-
-  .data-table th,
-  .data-table td {
-    padding: 8px;
-    font-size: 12px;
+    width: 100%;
   }
 }
 </style>

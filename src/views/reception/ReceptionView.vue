@@ -32,7 +32,7 @@
           </svg>
         </div>
         <div class="stat-content">
-          <p class="stat-label">Livraisons<br />à réceptionner</p>
+          <p class="stat-label">Livraisons à réceptionner</p>
           <p class="stat-value">3</p>
         </div>
       </div>
@@ -53,14 +53,15 @@
 
       <div class="stat-card">
         <div class="stat-icon warning-icon">
-          <svg viewBox="0 0 24 24" fill="currentColor">
+          <svg viewBox="0 0 512 512">
             <path
-              d="M12 2L1 21h22L12 2zm0 3.99L19.53 19H4.47L12 5.99zM11 16h2v2h-2v-2zm0-6h2v4h-2v-4z"
+              fill="currentColor"
+              d="M34.5 420.4c-1.6 2.8-2.5 6-2.5 9.3c0 10.2 8.2 18.4 18.4 18.4l411.2 0c10.2 0 18.4-8.2 18.4-18.4c0-3.3-.9-6.4-2.5-9.3L276.5 75.8C272.2 68.5 264.4 64 256 64s-16.2 4.5-20.5 11.8L34.5 420.4zM6.9 404.2l201-344.6C217.9 42.5 236.2 32 256 32s38.1 10.5 48.1 27.6l201 344.6c4.5 7.7 6.9 16.5 6.9 25.4c0 27.8-22.6 50.4-50.4 50.4L50.4 480C22.6 480 0 457.4 0 429.6c0-8.9 2.4-17.7 6.9-25.4zM256 160c8.8 0 16 7.2 16 16l0 128c0 8.8-7.2 16-16 16s-16-7.2-16-16l0-128c0-8.8 7.2-16 16-16zM232 384a24 24 0 1 1 48 0 24 24 0 1 1 -48 0z"
             />
           </svg>
         </div>
         <div class="stat-content">
-          <p class="stat-label">Problèmes<br />signalés</p>
+          <p class="stat-label">Problèmes signalés</p>
           <p class="stat-value">1</p>
         </div>
       </div>
@@ -164,12 +165,16 @@
             <tbody>
               <tr v-for="delivery in filteredDeliveries" :key="delivery.id">
                 <td class="delivery-id">{{ delivery.id }}</td>
-                <td>
-                  <div class="supplier-info">
-                    <div class="supplier-avatar">
-                      {{ getSupplierInitials(delivery.supplier) }}
+                <td class="supplier-info">
+                  <div class="supplier-profile">
+                    <div class="supplier-avatar-container">
+                      <div class="supplier-avatar">
+                        {{ getSupplierInitials(delivery.supplier) }}
+                      </div>
                     </div>
-                    <span>{{ delivery.supplier }}</span>
+                    <div class="supplier-details">
+                      <p class="supplier-name">{{ delivery.supplier }}</p>
+                    </div>
                   </div>
                 </td>
                 <td class="delivery-date">{{ delivery.expectedDate }}</td>
@@ -186,17 +191,27 @@
                 <td class="actions">
                   <button
                     v-if="delivery.status === 'En attente'"
-                    class="action-btn primary"
+                    class="action-btn success"
                     @click="receiveDelivery(delivery.id)"
                   >
-                    Réceptionner
+                    <svg viewBox="0 0 448 512">
+                      <path
+                        d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"
+                        fill="currentColor"
+                      />
+                    </svg>
                   </button>
                   <button
                     v-if="delivery.status === 'Problème'"
                     class="action-btn danger"
                     @click="reportProblem(delivery.id)"
                   >
-                    Signaler
+                    <svg viewBox="0 0 512 512">
+                      <path
+                        fill="currentColor"
+                        d="M34.5 420.4c-1.6 2.8-2.5 6-2.5 9.3c0 10.2 8.2 18.4 18.4 18.4l411.2 0c10.2 0 18.4-8.2 18.4-18.4c0-3.3-.9-6.4-2.5-9.3L276.5 75.8C272.2 68.5 264.4 64 256 64s-16.2 4.5-20.5 11.8L34.5 420.4zM6.9 404.2l201-344.6C217.9 42.5 236.2 32 256 32s38.1 10.5 48.1 27.6l201 344.6c4.5 7.7 6.9 16.5 6.9 25.4c0 27.8-22.6 50.4-50.4 50.4L50.4 480C22.6 480 0 457.4 0 429.6c0-8.9 2.4-17.7 6.9-25.4zM256 160c8.8 0 16 7.2 16 16l0 128c0 8.8-7.2 16-16 16s-16-7.2-16-16l0-128c0-8.8 7.2-16 16-16zM232 384a24 24 0 1 1 48 0 24 24 0 1 1 -48 0z"
+                      />
+                    </svg>
                   </button>
                   <button
                     class="action-btn secondary"
@@ -736,6 +751,7 @@ export default {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   border: 1px solid #f1f5f9;
   overflow: hidden;
+  text-align: center;
 }
 
 .table-header {
@@ -781,13 +797,13 @@ export default {
 .deliveries-table,
 .history-table {
   width: 100%;
-  border-collapse: collapse;
+  min-width: max-content;
+  text-align: center;
 }
 
 .deliveries-table th,
 .history-table th {
   background: #f8fafc;
-  text-align: left;
   padding: 1rem;
   font-size: 12px;
   font-weight: 600;
@@ -820,10 +836,16 @@ export default {
   color: #0f172a;
 }
 
-.supplier-info {
+.supplier-profile {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+}
+
+.supplier-avatar-container {
+  display: flex;
+  width: 40%;
+  justify-content: flex-end;
 }
 
 .supplier-avatar {
@@ -838,6 +860,19 @@ export default {
   font-weight: 600;
   font-size: 12px;
   flex-shrink: 0;
+}
+
+.supplier-avatar.large {
+  width: 64px;
+  height: 64px;
+  font-size: 20px;
+}
+
+.supplier-details {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .delivery-date {
@@ -897,42 +932,64 @@ export default {
 /* ACTIONS */
 .actions {
   display: flex;
-  gap: 0.5rem;
+  justify-content: center;
+  gap: 1.5rem;
 }
 
 .action-btn {
-  border: none;
+  border: solid 1px;
   border-radius: 6px;
   padding: 0.5rem 1rem;
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
+  padding: 6px;
   transition: all 0.2s ease;
 }
 
-.action-btn.primary {
-  background: #00b8d4;
-  color: white;
+.action-btn.success {
+  background: none;
+  border-color: #10b981;
+  color: #10b981;
+  transition: all 0.2s ease;
 }
 
-.action-btn.primary:hover {
-  background: #0891a6;
+.action-btn.success:hover {
+  background: #10b981;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.action-btn.success:active {
+  background: #059669;
+  border-color: #059669;
+  color: white;
 }
 
 .action-btn.danger {
-  background: #dc2626;
-  color: white;
+  background: none;
+  border-color: #dc2626;
+  color: #dc2626;
+  transition: all 0.2s ease;
 }
 
 .action-btn.danger:hover {
+  background: #dc2626;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.action-btn.danger:active {
   background: #b91c1c;
+  border-color: #b91c1c;
+  color: white;
+  transform: translateY(0);
 }
 
 .action-btn.secondary {
   background: none;
-  border: 1px solid #e2e8f0;
+  border-color: #e2e8f0;
   color: #64748b;
-  padding: 6px;
 }
 
 .action-btn.secondary:hover {
@@ -941,7 +998,7 @@ export default {
   color: black;
 }
 
-.action-btn.secondary svg {
+.action-btn svg {
   width: 16px;
   height: 16px;
   stroke-width: 1.5;
@@ -1040,6 +1097,7 @@ input:focus::placeholder {
 
   .filter-group {
     flex-direction: column;
+    align-items: stretch;
   }
 
   .search-container,
@@ -1066,16 +1124,14 @@ input:focus::placeholder {
     font-size: 12px;
   }
 
-  .deliveries-table th,
-  .deliveries-table td,
-  .history-table th,
-  .history-table td {
-    padding: 0.75rem 0.5rem;
+  .search-input,
+  .filter-select,
+  .search-button {
+    width: 100%;
   }
 
   .actions {
-    flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.5rem;
   }
 
   .action-btn {
