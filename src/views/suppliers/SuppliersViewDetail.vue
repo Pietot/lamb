@@ -1080,14 +1080,13 @@ export default {
 }
 
 .stat-label {
-  font-size: 12px;
+  font-size: 1rem;
   color: #64748b;
   font-weight: 500;
   margin: 0 0 0.5rem 0;
 }
 
 .stat-value {
-  font-size: 28px;
   font-weight: 700;
   color: #0f172a;
   margin: 0;
@@ -1103,7 +1102,6 @@ export default {
 .metrics-section {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
 }
 
 .metric-item {
@@ -1111,7 +1109,6 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem 0;
-  border-bottom: 1px solid #f8fafc;
 }
 
 .metric-item:last-child {
@@ -1134,9 +1131,9 @@ export default {
 /* RATING */
 .rating-display {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.25rem;
+  justify-content: center;
+  gap: 1rem;
 }
 
 .rating-value {
@@ -1153,6 +1150,13 @@ export default {
   position: relative;
   display: inline-block;
   font-size: 12px;
+}
+
+.star-container span {
+  font-size: 1.25rem;
+  -webkit-user-drag: none;
+  -moz-user-drag: none;
+  -ms-user-drag: none;
 }
 
 .star-background {
@@ -1185,7 +1189,6 @@ export default {
 .mini-stats {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 0.75rem;
 }
 
 .mini-stat {
@@ -1296,12 +1299,12 @@ export default {
 
 .data-table {
   width: 100%;
-  border-collapse: collapse;
+  min-width: max-content;
+  text-align: center;
 }
 
 .data-table th {
   background: #f8fafc;
-  text-align: left;
   padding: 1rem;
   font-size: 12px;
   font-weight: 600;
@@ -1342,7 +1345,8 @@ export default {
   color: #dc2626;
   background: #fef2f2;
   padding: 0.25rem 0.5rem;
-  border-radius: 4px;
+  border-radius: 1rem;
+  background-clip: content-box;
 }
 
 .empty-state {

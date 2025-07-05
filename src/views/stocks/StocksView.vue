@@ -506,14 +506,7 @@
               <div class="detail-row">
                 <span class="detail-label">Quantité en stock :</span>
                 <span class="detail-value">
-                  <span
-                    class="stock-badge"
-                    :class="{
-                      low:
-                        selectedArticle.quantite_stock <=
-                        selectedArticle.seuil_alerte,
-                    }"
-                  >
+                  <span class="stock-badge">
                     {{ selectedArticle.quantite_stock }}
                   </span>
                 </span>
@@ -1299,6 +1292,7 @@ export default {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   border: 1px solid #f1f5f9;
   overflow: hidden;
+  text-align: center;
 }
 
 .table-header {
@@ -1347,12 +1341,11 @@ export default {
 
 .stocks-table {
   width: 100%;
-  border-collapse: collapse;
+  min-width: max-content;
 }
 
 .stocks-table th {
   background: #f8fafc;
-  text-align: left;
   padding: 1rem;
   font-size: 12px;
   font-weight: 600;
@@ -1440,7 +1433,8 @@ export default {
 
 .actions {
   display: flex;
-  gap: 0.5rem;
+  justify-content: center;
+  gap: 1.5rem;
 }
 
 .action-btn {

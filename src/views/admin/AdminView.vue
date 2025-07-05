@@ -70,6 +70,7 @@
               <table class="data-table">
                 <thead>
                   <tr>
+                    <th>ID</th>
                     <th>UTILISATEUR</th>
                     <th>EMAIL</th>
                     <th>RÔLE</th>
@@ -78,21 +79,25 @@
                 </thead>
                 <tbody>
                   <tr v-for="user in filteredUsers" :key="user.id_utilisateur">
+                    <td class="user-id">{{ user.id_utilisateur }}</td>
                     <td class="user-info">
                       <div class="user-profile">
-                        <div
-                          class="user-avatar"
-                          :style="{
-                            backgroundColor: getUserColor(user.id_utilisateur),
-                          }"
-                        >
-                          {{ getInitials(user) }}
+                        <div class="user-avatar-container">
+                          <div
+                            class="user-avatar"
+                            :style="{
+                              backgroundColor: getUserColor(
+                                user.id_utilisateur
+                              ),
+                            }"
+                          >
+                            {{ getInitials(user) }}
+                          </div>
                         </div>
                         <div class="user-details">
                           <p class="user-name">
                             {{ user.prenom }} {{ user.nom }}
                           </p>
-                          <p class="user-id">ID : {{ user.id_utilisateur }}</p>
                         </div>
                       </div>
                     </td>
@@ -1007,12 +1012,12 @@ export default {
 
 .data-table {
   width: 100%;
-  border-collapse: collapse;
+  min-width: max-content;
+  text-align: center;
 }
 
 .data-table th {
   background: #f8fafc;
-  text-align: left;
   padding: 1rem;
   font-size: 12px;
   font-weight: 600;
@@ -1048,8 +1053,15 @@ export default {
 /* PROFIL UTILISATEUR */
 .user-profile {
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: 0.75rem;
+}
+
+.user-avatar-container {
+  display: flex;
+  width: 45%;
+  justify-content: flex-end;
 }
 
 .user-avatar {
@@ -1069,6 +1081,13 @@ export default {
   width: 64px;
   height: 64px;
   font-size: 20px;
+}
+
+.user-details {
+  width: 55%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .user-name {
@@ -1126,7 +1145,8 @@ export default {
 /* ACTIONS */
 .actions {
   display: flex;
-  gap: 0.5rem;
+  justify-content: center;
+  gap: 1.5rem;
 }
 
 .action-btn {
@@ -1146,25 +1166,41 @@ export default {
 }
 
 .action-btn.primary {
-  background: #00b8d4;
-  color: white;
+  background: none;
   border-color: #00b8d4;
+  color: #00b8d4;
+  transition: all 0.2s ease;
 }
 
 .action-btn.primary:hover {
+  background: #00b8d4;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.action-btn.primary:active {
   background: #0891a6;
   border-color: #0891a6;
+  color: white;
 }
 
 .action-btn.danger {
-  background: #fee2e2;
+  background: none;
+  border-color: #dc2626;
   color: #dc2626;
-  border-color: #fecaca;
+  transition: all 0.2s ease;
 }
 
 .action-btn.danger:hover {
-  background: #fca5a5;
-  border-color: #f87171;
+  background: #dc2626;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.action-btn.danger:active {
+  background: #b91c1c;
+  border-color: #b91c1c;
+  color: white;
 }
 
 .action-btn svg {

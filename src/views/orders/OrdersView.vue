@@ -916,6 +916,7 @@ export default {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   border: 1px solid #f1f5f9;
   overflow: hidden;
+  text-align: center;
 }
 
 .table-header {
@@ -968,12 +969,11 @@ export default {
 
 .orders-table {
   width: 100%;
-  border-collapse: collapse;
+  min-width: max-content;
 }
 
 .orders-table th {
   background: #f8fafc;
-  text-align: left;
   padding: 1rem;
   font-size: 12px;
   font-weight: 600;
@@ -1061,7 +1061,8 @@ export default {
 /* ACTIONS */
 .actions {
   display: flex;
-  gap: 0.5rem;
+  justify-content: center;
+  gap: 1.5rem;
 }
 
 .action-btn {
