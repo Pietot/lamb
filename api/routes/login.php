@@ -26,7 +26,7 @@ try {
             ]
         ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Nom d\u2019utilisateur ou mot de passe incorrect.'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        echo json_encode(['success' => false, 'message' => 'Nom d\'utilisateur ou mot de passe incorrect.'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     }
 } catch (Exception $e) {
     http_response_code(500);
