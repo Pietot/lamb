@@ -31,7 +31,7 @@ try {
     $stmt->bindValue(':quantite', $quantite);
     $stmt->execute();
     http_response_code(201);
-    echo json_encode(['success' => true, 'message' => 'Article créé avec succès'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    echo json_encode(['success' => true, 'message' => 'Article lot créé avec succès'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => 'Erreur du serveur'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);

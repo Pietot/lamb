@@ -9,27 +9,25 @@ try {
         exit;
     }
 
-    $id_lot = htmlspecialchars(trim($_POST['id_lot'] ?? ''));
     $nom = htmlspecialchars(trim($_POST['nom'] ?? ''));
     $description = htmlspecialchars(trim($_POST['description'] ?? ''));
     $date_creation = htmlspecialchars(trim($_POST['date_creation'] ?? ''));
     $quantite_stock = htmlspecialchars(trim($_POST['quantite_stock'] ?? ''));
     $seuil_alerte = htmlspecialchars(trim($_POST['seuil_alerte'] ?? ''));
 
-    if (empty($id_lot) || empty($nom) || empty($description) || empty($date_creation) || empty($quantite_stock) || empty($seuil_alerte)) {
+    if (empty($nom) || empty($description) || empty($date_creation) || empty($quantite_stock) || empty($seuil_alerte)) {
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Champs manquants'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
     }
 
-    if (!is_numeric($id_lot) || strlen($nom) > 50 || strlen($description) > 200 || !strtotime($date_creation) || !is_numeric($quantite_stock) || $quantite_stock < 0 || !is_numeric($seuil_alerte) || $seuil_alerte < 0) {
+    if (strlen($nom) > 50 || strlen($description) > 200 || !strtotime($date_creation) || !is_numeric($quantite_stock) || $quantite_stock < 0 || !is_numeric($seuil_alerte) || $seuil_alerte < 0) {
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Champs invalides'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
     }
 
-    $stmt = $pdo->prepare('INSERT INTO lot (id_lot, nom, description, date_creation, quantite_stock, seuil_alerte) VALUES (:id_lot, :nom, :description, :date_creation, :quantite_stock, :seuil_alerte)');
-    $stmt->bindValue(':id_lot', $id_lot);
+    $stmt = $pdo->prepare('INSERT INTO lot (nom, description, date_creation, quantite_stock, seuil_alerte) VALUES (:nom, :description, :date_creation, :quantite_stock, :seuil_alerte)');
     $stmt->bindValue(':nom', $nom);
     $stmt->bindValue(':description', $description);
     $stmt->bindValue(':date_creation', date('Y-m-d H:i:s', strtotime($date_creation)));
