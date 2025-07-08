@@ -151,6 +151,65 @@ switch ($path) {
         require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
         require __DIR__ . '/routes/update_mouvement_stock.php';
         exit;
+    case $_ENV['API_ROUTE'] . 'delete_user':
+        require_auth([ADMIN_ROLE]);
+        require __DIR__ . '/routes/delete_user.php';
+        exit;
+
+    case $_ENV['API_ROUTE'] . 'delete_client':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
+        require __DIR__ . '/routes/delete_client.php';
+        exit;
+
+    case $_ENV['API_ROUTE'] . 'delete_article':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
+        require __DIR__ . '/routes/delete_article.php';
+        exit;
+
+    case $_ENV['API_ROUTE'] . 'delete_commande':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
+        require __DIR__ . '/routes/delete_commande.php';
+        exit;
+
+    case $_ENV['API_ROUTE'] . 'delete_fournisseur':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
+        require __DIR__ . '/routes/delete_fournisseur.php';
+        exit;
+
+    case $_ENV['API_ROUTE'] . 'delete_article_lot':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
+        require __DIR__ . '/routes/delete_article_lot.php';
+        exit;
+
+    case $_ENV['API_ROUTE'] . 'delete_categorie':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
+        require __DIR__ . '/routes/delete_categorie.php';
+        exit;
+
+    case $_ENV['API_ROUTE'] . 'delete_commande_fournisseur':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
+        require __DIR__ . '/routes/delete_commande_fournisseur.php';
+        exit;
+
+    case $_ENV['API_ROUTE'] . 'delete_commande_lot':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
+        require __DIR__ . '/routes/delete_commande_lot.php';
+        exit;
+
+    case $_ENV['API_ROUTE'] . 'delete_livraison':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
+        require __DIR__ . '/routes/delete_livraison.php';
+        exit;
+
+    case $_ENV['API_ROUTE'] . 'delete_lot':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
+        require __DIR__ . '/routes/delete_lot.php';
+        exit;
+
+    case $_ENV['API_ROUTE'] . 'delete_mouvement_stock':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
+        require __DIR__ . '/routes/delete_mouvement_stock.php';
+        exit;
 }
 
 http_response_code(404);

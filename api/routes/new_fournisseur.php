@@ -18,7 +18,7 @@ try {
     $ville = htmlspecialchars(trim($_POST['ville'] ?? ''));
     $code_postal = htmlspecialchars(trim($_POST['code_postal'] ?? ''));
     $pays = htmlspecialchars(trim($_POST['pays'] ?? ''));
-    
+
     // Champs optionnels
     $site_web = htmlspecialchars(trim($_POST['site_web'] ?? ''));
     $conditions_paiement = htmlspecialchars(trim($_POST['conditions_paiement'] ?? ''));
@@ -27,17 +27,21 @@ try {
     $actif = isset($_POST['actif']) && $_POST['actif'] === 'true' ? 1 : 0;
 
     // Validation des champs requis
-    if (empty($nom) || empty($contact_nom) || empty($contact_prenom) || empty($email) || 
-        empty($telephone) || empty($adresse) || empty($ville) || empty($code_postal) || empty($pays)) {
+    if (
+        empty($nom) || empty($contact_nom) || empty($contact_prenom) || empty($email) ||
+        empty($telephone) || empty($adresse) || empty($ville) || empty($code_postal) || empty($pays)
+    ) {
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Champs manquants'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
     }
 
     // Validation des longueurs et formats
-    if (strlen($nom) > 100 || strlen($contact_nom) > 50 || strlen($contact_prenom) > 50 || 
-        !verifyPhoneNumber($telephone) || !filter_var($email, FILTER_VALIDATE_EMAIL) || 
-        strlen($adresse) > 255 || !verifyPostalCode($code_postal)) {
+    if (
+        strlen($nom) > 100 || strlen($contact_nom) > 50 || strlen($contact_prenom) > 50 ||
+        !verifyPhoneNumber($telephone) || !filter_var($email, FILTER_VALIDATE_EMAIL) ||
+        strlen($adresse) > 255 || !verifyPostalCode($code_postal)
+    ) {
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Champs invalides'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
@@ -74,7 +78,7 @@ try {
             NOW(), NOW()
         )
     ');
-    
+
     $stmt->bindValue(':nom', $nom);
     $stmt->bindValue(':contact_nom', $contact_nom);
     $stmt->bindValue(':contact_prenom', $contact_prenom);
@@ -89,18 +93,17 @@ try {
     $stmt->bindValue(':delai_livraison', $delai_livraison);
     $stmt->bindValue(':note_qualite', $note_qualite);
     $stmt->bindValue(':actif', $actif);
-    
+
     $stmt->execute();
-    
+
     $newId = $pdo->lastInsertId();
-    
+
     http_response_code(201);
     echo json_encode([
-        'success' => true, 
+        'success' => true,
         'message' => 'Fournisseur créé avec succès',
         'id' => intval($newId)
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-    
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => "Erreur du serveur"], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
@@ -116,4 +119,3 @@ function verifyPostalCode($postalCode): bool
 {
     return preg_match('/^[0-9]{5}$/', $postalCode);
 }
-?>
