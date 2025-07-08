@@ -92,6 +92,65 @@ switch ($path) {
         require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
         require __DIR__ . '/routes/new_mouvement_stock.php';
         exit;
+    case $_ENV['API_ROUTE'] . 'update_user':
+        require_auth([ADMIN_ROLE]);
+        require __DIR__ . '/routes/update_user.php';
+        exit;
+
+    case $_ENV['API_ROUTE'] . 'update_client':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
+        require __DIR__ . '/routes/update_client.php';
+        exit;
+
+    case $_ENV['API_ROUTE'] . 'update_article':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
+        require __DIR__ . '/routes/update_article.php';
+        exit;
+
+    case $_ENV['API_ROUTE'] . 'update_commande':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
+        require __DIR__ . '/routes/update_commande.php';
+        exit;
+
+    case $_ENV['API_ROUTE'] . 'update_fournisseur':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
+        require __DIR__ . '/routes/update_fournisseur.php';
+        exit;
+
+    case $_ENV['API_ROUTE'] . 'update_article_lot':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
+        require __DIR__ . '/routes/update_article_lot.php';
+        exit;
+
+    case $_ENV['API_ROUTE'] . 'update_categorie':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
+        require __DIR__ . '/routes/update_categorie.php';
+        exit;
+
+    case $_ENV['API_ROUTE'] . 'update_commande_fournisseur':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
+        require __DIR__ . '/routes/update_commande_fournisseur.php';
+        exit;
+
+    case $_ENV['API_ROUTE'] . 'update_commande_lot':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
+        require __DIR__ . '/routes/update_commande_lot.php';
+        exit;
+
+    case $_ENV['API_ROUTE'] . 'update_livraison':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
+        require __DIR__ . '/routes/update_livraison.php';
+        exit;
+
+    case $_ENV['API_ROUTE'] . 'update_lot':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
+        require __DIR__ . '/routes/update_lot.php';
+        exit;
+
+    case $_ENV['API_ROUTE'] . 'update_mouvement_stock':
+        require_auth([ADMIN_ROLE, COMMERCIAL_ROLE]);
+        require __DIR__ . '/routes/update_mouvement_stock.php';
+        exit;
 }
 
 http_response_code(404);
