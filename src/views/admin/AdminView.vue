@@ -87,7 +87,7 @@
                             class="user-avatar"
                             :style="{
                               backgroundColor: getUserColor(
-                                user.id_utilisateur
+                                user.id_utilisateur,
                               ),
                             }"
                           >

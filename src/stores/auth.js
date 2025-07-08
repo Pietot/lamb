@@ -43,9 +43,9 @@ export const useAuthStore = defineStore("auth", {
       this.user = null;
       this.isAuthenticated = false;
       localStorage.removeItem("user");
-      
-      if (router.currentRoute.value.name !== 'Login') {
-        router.push({ name: 'Login' });
+
+      if (router.currentRoute.value.name !== "Login") {
+        router.push({ name: "Login" });
       }
     },
 

@@ -228,74 +228,74 @@ export default {
         label: "Tableau de bord",
         to: "/",
         icon: "DashboardIcon",
-        allowedRoles: [1, 2, 3] // 1=admin, 2=gestionnaire, 3=preparateur
+        allowedRoles: [1, 2, 3], // 1=admin, 2=gestionnaire, 3=preparateur
       },
       {
         name: "Stocks",
         label: "Gestion des stocks",
         to: "/stocks",
         icon: "StocksIcon",
-        allowedRoles: [1, 2] // admin et gestionnaire
+        allowedRoles: [1, 2], // admin et gestionnaire
       },
       {
         name: "Orders",
         label: "Gestion des commandes",
         to: "/orders",
         icon: "OrdersIcon",
-        allowedRoles: [1, 2] // admin et gestionnaire
+        allowedRoles: [1, 2], // admin et gestionnaire
       },
       {
         name: "Prepare",
         label: "Commandes à préparer",
         to: "/prepare",
         icon: "PrepareIcon",
-        allowedRoles: [1, 2, 3] // tous
+        allowedRoles: [1, 2, 3], // tous
       },
       {
         name: "Reception",
         label: "Réception fournisseur",
         to: "/reception",
         icon: "ReceptionIcon",
-        allowedRoles: [1, 2, 3] // tous
+        allowedRoles: [1, 2, 3], // tous
       },
       {
         name: "Agenda",
         label: "Agenda",
         to: "/agenda",
         icon: "AgendaIcon",
-        allowedRoles: [1, 2, 3] // tous
+        allowedRoles: [1, 2, 3], // tous
       },
       {
         name: "Clients",
         label: "Clients",
         to: "/clients",
         icon: "ClientsIcon",
-        allowedRoles: [1, 2] // admin et gestionnaire
+        allowedRoles: [1, 2], // admin et gestionnaire
       },
       {
         name: "Suppliers",
         label: "Fournisseurs",
         to: "/suppliers",
         icon: "SuppliersIcon",
-        allowedRoles: [1, 2] // admin et gestionnaire
+        allowedRoles: [1, 2], // admin et gestionnaire
       },
       {
         name: "Admin",
         label: "Admin",
         to: "/admin",
         icon: "AdminIcon",
-        allowedRoles: [1] // admin seulement
+        allowedRoles: [1], // admin seulement
       },
     ];
 
     // Filtrer les éléments du menu selon le rôle de l'utilisateur
     const filteredMenuItems = computed(() => {
       const userRole = authStore.user?.role;
-      
+
       // Si pas de rôle, ne rien afficher
       if (!userRole) return [];
-      
-      return allMenuItems.filter(item => {
+
+      return allMenuItems.filter((item) => {
         // Si pas de restriction de rôle, afficher pour tous
         if (!item.allowedRoles) return true;
         // Sinon, vérifier si le rôle de l'utilisateur est autorisé

@@ -231,7 +231,7 @@
                         class="supplier-avatar"
                         :style="{
                           backgroundColor: getAvatarColor(
-                            supplier.id_fournisseur
+                            supplier.id_fournisseur,
                           ),
                         }"
                       >
