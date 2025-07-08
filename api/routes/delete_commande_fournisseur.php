@@ -1,4 +1,4 @@
-<?php
+    <?php
 require_once __DIR__ . '/utils/cors.php';
 require_once __DIR__ . '/utils/pdo.php';
 
@@ -9,29 +9,25 @@ try {
         exit;
     }
 
-    $id_article = htmlspecialchars(trim($_POST['id_article'] ?? ''));
-    $id_lot = htmlspecialchars(trim($_POST['id_lot'] ?? ''));
-    $quantite = htmlspecialchars(trim($_POST['quantite'] ?? ''));
+    $id_commande_fournisseur = htmlspecialchars(trim($_POST['id_commande_fournisseur'] ?? ''));
 
-    if (empty($id_article) || empty($id_lot) || empty($quantite)) {
+    if (empty($id_commande_fournisseur)) {
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Champs manquants'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
     }
 
-    if (!is_numeric($id_article) || !is_numeric($id_lot) || !is_numeric($quantite) || $quantite < 0) {
+    if (!is_numeric($id_commande_fournisseur)) {
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Champs invalides'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
     }
 
-    $stmt = $pdo->prepare('INSERT INTO article_lot (id_article, id_lot, quantite) VALUES (:id_article, :id_lot, :quantite)');
-    $stmt->bindValue(':id_article', $id_article);
-    $stmt->bindValue(':id_lot', $id_lot);
-    $stmt->bindValue(':quantite', $quantite);
+    $stmt = $pdo->prepare('DELETE FROM commande_fournisseur WHERE id_commande_fournisseur = :id_commande_fournisseur');
+    $stmt->bindValue(':id_commande_fournisseur', $id_commande_fournisseur);
     $stmt->execute();
-    http_response_code(201);
-    echo json_encode(['success' => true, 'message' => 'Article lot créé avec succès'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    http_response_code(200);
+    echo json_encode(['success' => true, 'message' => 'Commande fournisseur supprimée avec succès'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => 'Erreur du serveur'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);

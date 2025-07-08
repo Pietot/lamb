@@ -27,7 +27,6 @@ try {
 
     $stmt = $pdo->prepare('INSERT INTO commande_lot (id_lot, id_commande, quantite) VALUES (:id_lot, :id_commande, :quantite)');
     $stmt->bindValue(':id_lot', $id_lot);
-    $stmt->bindValue(':id_commande', $id_commande);
     $stmt->bindValue(':quantite', $quantite);
     $stmt->execute();
     http_response_code(201);

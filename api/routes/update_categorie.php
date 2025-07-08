@@ -9,33 +9,32 @@ try {
         exit;
     }
 
+    $id_categorie = htmlspecialchars(trim($_POST['id_categorie'] ?? ''));
     $nom = htmlspecialchars(trim($_POST['nom'] ?? ''));
     $description = htmlspecialchars(trim($_POST['description'] ?? ''));
-    $date_creation = htmlspecialchars(trim($_POST['date_creation'] ?? ''));
-    $quantite_stock = htmlspecialchars(trim($_POST['quantite_stock'] ?? ''));
-    $seuil_alerte = htmlspecialchars(trim($_POST['seuil_alerte'] ?? ''));
 
-    if (empty($nom) || empty($description) || empty($date_creation) || empty($quantite_stock) || empty($seuil_alerte)) {
+    if (empty($id_categorie) || empty($nom) || empty($description)) {
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Champs manquants'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
     }
 
-    if (strlen($nom) > 50 || strlen($description) > 200 || !strtotime($date_creation) || !is_numeric($quantite_stock) || $quantite_stock < 0 || !is_numeric($seuil_alerte) || $seuil_alerte < 0) {
+    if (!is_numeric($id_categorie) || strlen($nom) > 50 || strlen($description) > 50) {
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Champs invalides'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
     }
 
-    $stmt = $pdo->prepare('INSERT INTO lot (nom, description, date_creation, quantite_stock, seuil_alerte) VALUES (:nom, :description, :date_creation, :quantite_stock, :seuil_alerte)');
+    $pdo = getPDO();
+
+    $stmt = $pdo->prepare('UPDATE categorie SET nom = :nom, description = :description WHERE id_categorie = :id_categorie');
+    $stmt->bindValue(':id_categorie', $id_categorie);
     $stmt->bindValue(':nom', $nom);
     $stmt->bindValue(':description', $description);
-    $stmt->bindValue(':date_creation', date('Y-m-d H:i:s', strtotime($date_creation)));
-    $stmt->bindValue(':quantite_stock', $quantite_stock);
-    $stmt->bindValue(':seuil_alerte', $seuil_alerte);
     $stmt->execute();
-    http_response_code(201);
-    echo json_encode(['success' => true, 'message' => 'Lot créé avec succès'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    http_response_code(200);
+    echo json_encode(['success' => true, 'message' => 'Catégorie mise à jour avec succès'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => 'Erreur du serveur'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);

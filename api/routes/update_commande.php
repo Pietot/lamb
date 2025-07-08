@@ -14,18 +14,19 @@ try {
         exit;
     }
 
+    $id_commande = htmlspecialchars(trim($_POST['id_commande'] ?? ''));
     $id_client = htmlspecialchars(trim($_POST['id_client'] ?? ''));
     $date_commande = htmlspecialchars(trim($_POST['date_commande'] ?? ''));
     $statut = htmlspecialchars(trim($_POST['statut'] ?? ''));
     $montant_ht = htmlspecialchars(trim($_POST['montant_ht'] ?? ''));
 
-    if (empty($id_client) || empty($date_commande) || empty($statut) || empty($montant_ht)) {
+    if (empty($id_commande) || empty($id_client) || empty($date_commande) || empty($statut) || empty($montant_ht)) {
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Champs manquants'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
     }
 
-    if (!is_numeric($id_client) || !isValidDate($date_commande) || !in_array($statut, [ATTENTE, PREPARATION, EXPEDIE]) || !is_numeric($montant_ht) || $montant_ht <= 0) {
+    if (!is_numeric($id_commande) || !is_numeric($id_client) || !isValidDate($date_commande) || !in_array($statut, [ATTENTE, PREPARATION, EXPEDIE]) || !is_numeric($montant_ht) || $montant_ht <= 0) {
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Champs invalides'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
@@ -33,10 +34,8 @@ try {
 
     $pdo = getPDO();
 
-    $stmt = $pdo->prepare('INSERT INTO commande (numero_commande, id_client, date_commande, statut, montant_ht, montant_ttc) VALUES (:numero_commande, :id_client, :date_commande, :statut, :montant_ht, :montant_ttc)');
-    // Générer un code aléatoire à 5 lettres majuscules
-    $randomLetters = strtoupper(substr(str_shuffle(str_repeat('ABCDEFGHIJKLMNOPQRSTUVWXYZ', 5)), 0, 5));
-    $stmt->bindValue(':numero_commande', 'CMD-' . date('Ymd') . '-' . $id_client . '-' . $randomLetters);
+    $stmt = $pdo->prepare('UPDATE commande SET id_client = :id_client, date_commande = :date_commande, statut = :statut, montant_ht = :montant_ht, montant_ttc = :montant_ttc WHERE id_commande = :id_commande');
+    $stmt->bindValue(':id_commande', $id_commande);
     $stmt->bindValue(':id_client', $id_client);
     $stmt->bindValue(':date_commande', $date_commande);
     $stmt->bindValue(':statut', $statut);

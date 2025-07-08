@@ -9,6 +9,7 @@ try {
         exit;
     }
 
+    $id_fournisseur = htmlspecialchars(trim($_POST['id_fournisseur'] ?? ''));
     $nom = htmlspecialchars(trim($_POST['nom'] ?? ''));
     $contact_nom = htmlspecialchars(trim($_POST['contact_nom'] ?? ''));
     $contact_prenom = htmlspecialchars(trim($_POST['contact_prenom'] ?? ''));
@@ -28,7 +29,7 @@ try {
 
     // Validation des champs requis
     if (
-        empty($nom) || empty($contact_nom) || empty($contact_prenom) || empty($email) ||
+        empty($id_fournisseur) || empty($nom) || empty($contact_nom) || empty($contact_prenom) || empty($email) ||
         empty($telephone) || empty($adresse) || empty($ville) || empty($code_postal) || empty($pays)
     ) {
         http_response_code(400);
@@ -38,7 +39,7 @@ try {
 
     // Validation des longueurs et formats
     if (
-        strlen($nom) > 100 || strlen($contact_nom) > 50 || strlen($contact_prenom) > 50 ||
+        !is_numeric($id_fournisseur) || strlen($nom) > 100 || strlen($contact_nom) > 50 || strlen($contact_prenom) > 50 ||
         !verifyPhoneNumber($telephone) || !filter_var($email, FILTER_VALIDATE_EMAIL) ||
         strlen($adresse) > 255 || !verifyPostalCode($code_postal)
     ) {
@@ -56,8 +57,9 @@ try {
 
     $pdo = getPDO();
     // Vérifier si l'email existe déjà
-    $checkStmt = $pdo->prepare('SELECT COUNT(*) FROM fournisseur WHERE email = :email');
+    $checkStmt = $pdo->prepare('SELECT COUNT(*) FROM fournisseur WHERE email = :email AND id_fournisseur != :id_fournisseur');
     $checkStmt->bindValue(':email', $email);
+    $checkStmt->bindValue(':id_fournisseur', $id_fournisseur);
     $checkStmt->execute();
     if ($checkStmt->fetchColumn() > 0) {
         http_response_code(409);
@@ -66,19 +68,25 @@ try {
     }
 
     $stmt = $pdo->prepare('
-        INSERT INTO fournisseur (
-            nom, contact_nom, contact_prenom, email, telephone, 
-            adresse, ville, code_postal, pays, site_web, 
-            conditions_paiement, delai_livraison, note_qualite, actif,
-            date_creation, date_modification
-        ) VALUES (
-            :nom, :contact_nom, :contact_prenom, :email, :telephone, 
-            :adresse, :ville, :code_postal, :pays, :site_web, 
-            :conditions_paiement, :delai_livraison, :note_qualite, :actif,
-            NOW(), NOW()
-        )
+        UPDATE fournisseur SET
+            nom = :nom,
+            contact_nom = :contact_nom,
+            contact_prenom = :contact_prenom,
+            email = :email,
+            telephone = :telephone,
+            adresse = :adresse,
+            ville = :ville,
+            code_postal = :code_postal,
+            pays = :pays,
+            site_web = :site_web,
+            conditions_paiement = :conditions_paiement,
+            delai_livraison = :delai_livraison,
+            note_qualite = :note_qualite,
+            actif = :actif,
+            date_modification = NOW()
+        WHERE id_fournisseur = :id_fournisseur
     ');
-
+    $stmt->bindValue(':id_fournisseur', $id_fournisseur);
     $stmt->bindValue(':nom', $nom);
     $stmt->bindValue(':contact_nom', $contact_nom);
     $stmt->bindValue(':contact_prenom', $contact_prenom);
@@ -101,7 +109,7 @@ try {
     http_response_code(201);
     echo json_encode([
         'success' => true,
-        'message' => 'Fournisseur créé avec succès',
+        'message' => 'Fournisseur mis à jour avec succès',
         'id' => intval($newId)
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 } catch (Exception $e) {
