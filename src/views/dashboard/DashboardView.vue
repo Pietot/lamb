@@ -185,6 +185,7 @@
 
 <script>
 import { ref, computed, onMounted } from "vue";
+import { VITE_API_URL } from "@/constants/constants.js";
 
 export default {
   name: "DashboardView",
@@ -213,7 +214,7 @@ export default {
 
       try {
         const response = await fetch(
-          import.meta.env.VITE_API_URL + "get_table?table=commande",
+          VITE_API_URL + "get_table?table=commande",
           {
             method: "GET",
             headers: {
@@ -249,7 +250,7 @@ export default {
 
       try {
         const response = await fetch(
-          import.meta.env.VITE_API_URL + "get_table?table=client",
+          VITE_API_URL + "get_table?table=client",
           {
             method: "GET",
             headers: {
@@ -285,7 +286,7 @@ export default {
 
       try {
         const response = await fetch(
-          import.meta.env.VITE_API_URL + "get_table?table=article",
+          VITE_API_URL + "get_table?table=article",
           {
             method: "GET",
             headers: {
@@ -321,7 +322,8 @@ export default {
 
       try {
         const response = await fetch(
-          import.meta.env.VITE_API_URL + "get_table?table=livraison",
+            VITE_API_URL +
+            "get_table?table=livraison",
           {
             method: "GET",
             headers: {
@@ -357,7 +359,8 @@ export default {
 
       try {
         const response = await fetch(
-          import.meta.env.VITE_API_URL + "get_table?table=fournisseur",
+            VITE_API_URL +
+            "get_table?table=fournisseur",
           {
             method: "GET",
             headers: {

@@ -475,6 +475,7 @@
 
 <script>
 import { ref, computed, onMounted } from "vue";
+import { VITE_API_URL } from "@/constants/constants.js";
 
 export default {
   name: "AdminView",
@@ -560,7 +561,7 @@ export default {
       try {
         // Récupérer les utilisateurs
         const usersResponse = await fetch(
-          import.meta.env.VITE_API_URL + "get_table?table=utilisateur",
+          VITE_API_URL + "get_table?table=utilisateur",
           {
             method: "GET",
             headers: {
@@ -572,7 +573,7 @@ export default {
 
         // Récupérer les rôles
         const rolesResponse = await fetch(
-          import.meta.env.VITE_API_URL + "get_table?table=role",
+          VITE_API_URL + "get_table?table=role",
           {
             method: "GET",
             headers: {
@@ -621,7 +622,7 @@ export default {
         formData.append("id_role", newUserForm.value.id_role.toString());
 
         const response = await fetch(
-          import.meta.env.VITE_API_URL + "new_user",
+          VITE_API_URL + "new_user",
           {
             method: "POST",
             headers: {

@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import router from "@/router";
+import { VITE_API_URL } from "@/constants/constants.js";
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
@@ -9,17 +10,20 @@ export const useAuthStore = defineStore("auth", {
 
   actions: {
     async login({ login, password }) {
-      const response = await fetch(import.meta.env.VITE_API_URL + "login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
+      const response = await fetch(
+        VITE_API_URL + "login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          credentials: "include",
+          body: new URLSearchParams({
+            login,
+            password,
+          }),
         },
-        credentials: "include",
-        body: new URLSearchParams({
-          login,
-          password,
-        }),
-      });
+      );
 
       const result = await response.json();
 
@@ -33,7 +37,7 @@ export const useAuthStore = defineStore("auth", {
     },
 
     async logout() {
-      await fetch(import.meta.env.VITE_API_URL + "logout", {
+      await fetch(VITE_API_URL + "logout", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -66,7 +70,7 @@ export const useAuthStore = defineStore("auth", {
     async verifyUser() {
       try {
         const response = await fetch(
-          import.meta.env.VITE_API_URL + "verify_user",
+          VITE_API_URL + "verify_user",
           {
             method: "GET",
             credentials: "include",

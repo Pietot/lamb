@@ -11,7 +11,6 @@ if (basename($_SERVER['SCRIPT_FILENAME']) === basename(__FILE__)) {
 session_set_cookie_params([
     'lifetime' => 0,
     'path' => '/',
-    'domain' => $_ENV['DOMAIN_WITHOUT_PORT'],
     'secure' => $_ENV['COOKIE_SECURE'] === 'true',
     'httponly' => false,
 ]);
