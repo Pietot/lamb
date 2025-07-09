@@ -696,6 +696,7 @@
 
 <script>
 import { ref, computed, onMounted, watch } from "vue";
+import { VITE_API_URL } from "@/config";
 
 export default {
   name: "ClientsView",
@@ -738,7 +739,7 @@ export default {
 
       try {
         const response = await fetch(
-          import.meta.env.VITE_API_URL + "get_table?table=client",
+          VITE_API_URL + "get_table?table=client",
           {
             method: "GET",
             headers: {
@@ -983,7 +984,7 @@ export default {
         });
 
         const response = await fetch(
-          import.meta.env.VITE_API_URL + "new_client",
+          VITE_API_URL + "new_client",
           {
             method: "POST",
             body: formData,

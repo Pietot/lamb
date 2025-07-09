@@ -363,6 +363,7 @@
 <script>
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { VITE_API_URL } from "@/constants/constants";
 
 export default {
   name: "PrepareView",
@@ -394,7 +395,7 @@ export default {
       try {
         // Récupérer les commandes
         const ordersResponse = await fetch(
-          import.meta.env.VITE_API_URL + "get_table?table=commande",
+          VITE_API_URL + "get_table?table=commande",
           {
             method: "GET",
             headers: {
@@ -406,7 +407,7 @@ export default {
 
         // Récupérer les clients
         const clientsResponse = await fetch(
-          import.meta.env.VITE_API_URL + "get_table?table=client",
+          VITE_API_URL + "get_table?table=client",
           {
             method: "GET",
             headers: {
