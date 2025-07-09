@@ -6,7 +6,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const GREEN = "\x1b[32m";
-const BLUE = "\x1b[34m";
 const RESET = "\x1b[0m";
 
 const apiEnvPath = join(__dirname, "api/routes/utils/", ".env");
@@ -25,37 +24,21 @@ const backendEnvLines = [
   "API_ROUTE=",
 ];
 const backendEnvContent = backendEnvLines.join("\n");
-if (!existsSync(apiEnvPath)) {
-  writeFileSync(apiEnvPath, backendEnvContent);
-  console.log(
-    `${BLUE}api/routes/utils/.env created with default values.${RESET}`,
-  );
-} else {
-  console.log(
-    `${GREEN}api/routes/utils/.env already exists. Skipping creation.${RESET}`,
-  );
-}
+writeFileSync(apiEnvPath, backendEnvContent);
+console.log(
+  `${GREEN}api/routes/utils/.env created with default values (overwritten if existed).${RESET}`,
+);
 
 const envLocalPath = join(__dirname, ".env.local");
 const envLocalLines = ["VITE_API_PATH=/lamb/api/"];
 const envLocalContent = envLocalLines.join("\n");
-if (!existsSync(envLocalPath)) {
-  writeFileSync(envLocalPath, envLocalContent);
-  console.log(`${BLUE}.env.local created with default values.${RESET}`);
-} else {
-  console.log(`${GREEN}.env.local already exists. Skipping creation.${RESET}`);
-}
+writeFileSync(envLocalPath, envLocalContent);
+console.log(`${GREEN}.env.local created with default values (overwritten if existed).${RESET}`);
 
 const envProdPath = join(__dirname, ".env.production.local");
 const envProdLines = ["VITE_API_PATH="];
 const envProdContent = envProdLines.join("\n");
-if (!existsSync(envProdPath)) {
-  writeFileSync(envProdPath, envProdContent);
-  console.log(
-    `${BLUE}.env.production.local created with default values.${RESET}`,
-  );
-} else {
-  console.log(
-    `${GREEN}.env.production.local already exists. Skipping creation.${RESET}`,
-  );
-}
+writeFileSync(envProdPath, envProdContent);
+console.log(
+  `${GREEN}.env.production.local created with default values (overwritten if existed).${RESET}`,
+);
