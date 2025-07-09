@@ -696,7 +696,7 @@
 
 <script>
 import { ref, computed, onMounted, watch } from "vue";
-import { VITE_API_URL } from "@/config";
+import { VITE_API_URL } from "@/constants/constants.js";
 
 export default {
   name: "ClientsView",
