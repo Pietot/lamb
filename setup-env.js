@@ -23,16 +23,16 @@ function ensureEnvVars(filePath, requiredLines) {
     }
     if (addedLines.length > 0) {
       console.log(
-        `${YELLOW}Added missing variables found in ${PURPLE}${filePath}${RESET}.`,
+        `${YELLOW}Ajout des variables manquantes dans ${PURPLE}${filePath}${RESET}.`,
       );
     } else {
       console.log(
-        `${GREEN}All required variables are present in ${PURPLE}${filePath}${RESET}`,
+        `${GREEN}Toutes les variables requises sont présentes dans ${PURPLE}${filePath}${RESET}`,
       );
     }
   } else {
     console.log(
-      `${RED}${filePath} not found. Please run:\n\n${BLUE}npm install\n${RESET}`,
+      `${RED}${filePath} introuvable. Veuillez exécuter :\n\n${BLUE}npm install\n${RESET}`,
     );
   }
 }

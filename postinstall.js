@@ -26,19 +26,19 @@ const backendEnvLines = [
 const backendEnvContent = backendEnvLines.join("\n");
 writeFileSync(apiEnvPath, backendEnvContent);
 console.log(
-  `${GREEN}api/routes/utils/.env created with default values (overwritten if existed).${RESET}`,
+  `${GREEN}api/routes/utils/.env créé avec des valeurs par défaut (écrasé si existait).${RESET}`,
 );
 
 const envLocalPath = join(__dirname, ".env.local");
 const envLocalLines = ["VITE_API_PATH=/lamb/api/"];
 const envLocalContent = envLocalLines.join("\n");
 writeFileSync(envLocalPath, envLocalContent);
-console.log(`${GREEN}.env.local created with default values (overwritten if existed).${RESET}`);
+console.log(`${GREEN}.env.local créé avec des valeurs par défaut (écrasé si existait).${RESET}`);
 
 const envProdPath = join(__dirname, ".env.production.local");
 const envProdLines = ["VITE_API_PATH="];
 const envProdContent = envProdLines.join("\n");
 writeFileSync(envProdPath, envProdContent);
 console.log(
-  `${GREEN}.env.production.local created with default values (overwritten if existed).${RESET}`,
+  `${GREEN}.env.production.local créé avec des valeurs par défaut (écrasé si existait).${RESET}`,
 );
