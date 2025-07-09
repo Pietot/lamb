@@ -37,7 +37,7 @@ if (!existsSync(apiEnvPath)) {
 }
 
 const envLocalPath = join(__dirname, ".env.local");
-const envLocalLines = ["VITE_API_URL=http://localhost/lamb/api/"];
+const envLocalLines = ["VITE_API_PATH=/lamb/api/"];
 const envLocalContent = envLocalLines.join("\n");
 if (!existsSync(envLocalPath)) {
   writeFileSync(envLocalPath, envLocalContent);
@@ -47,7 +47,7 @@ if (!existsSync(envLocalPath)) {
 }
 
 const envProdPath = join(__dirname, ".env.production.local");
-const envProdLines = ["VITE_API_URL=https://lamb.com/api/"];
+const envProdLines = ["VITE_API_PATH="];
 const envProdContent = envProdLines.join("\n");
 if (!existsSync(envProdPath)) {
   writeFileSync(envProdPath, envProdContent);
