@@ -14,7 +14,7 @@ function ensureEnvVars(filePath, requiredLines) {
     let addedLines = [];
     const lines = content.split(/\r?\n/);
     for (const line of requiredLines) {
-      const inSet = lines.some((existingLine) => existingLine.includes(line));
+      const inSet = lines.some(existingLine => existingLine.includes(line));
       if (!inSet) {
         lines.push(line);
         appendFileSync(filePath, "\n" + line);
@@ -22,9 +22,7 @@ function ensureEnvVars(filePath, requiredLines) {
       }
     }
     if (addedLines.length > 0) {
-      console.log(
-        `${YELLOW}Ajout des variables manquantes dans ${PURPLE}${filePath}${RESET}.`,
-      );
+      console.log(`${YELLOW}Ajout des variables manquantes dans ${PURPLE}${filePath}${RESET}.`);
     } else {
       console.log(
         `${GREEN}Toutes les variables requises sont présentes dans ${PURPLE}${filePath}${RESET}`,

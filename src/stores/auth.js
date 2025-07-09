@@ -10,20 +10,17 @@ export const useAuthStore = defineStore("auth", {
 
   actions: {
     async login({ login, password }) {
-      const response = await fetch(
-        VITE_API_URL + "login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          credentials: "include",
-          body: new URLSearchParams({
-            login,
-            password,
-          }),
+      const response = await fetch(VITE_API_URL + "login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
         },
-      );
+        credentials: "include",
+        body: new URLSearchParams({
+          login,
+          password,
+        }),
+      });
 
       const result = await response.json();
 
@@ -69,13 +66,10 @@ export const useAuthStore = defineStore("auth", {
 
     async verifyUser() {
       try {
-        const response = await fetch(
-          VITE_API_URL + "verify_user",
-          {
-            method: "GET",
-            credentials: "include",
-          },
-        );
+        const response = await fetch(VITE_API_URL + "verify_user", {
+          method: "GET",
+          credentials: "include",
+        });
 
         const result = await response.json();
 

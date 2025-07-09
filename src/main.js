@@ -25,7 +25,7 @@ let konamiCode = [
   "a",
 ];
 let konamiCodePosition = 0;
-document.addEventListener("keydown", (event) => {
+document.addEventListener("keydown", event => {
   const key = event.key;
   if (key === konamiCode[konamiCodePosition]) {
     konamiCodePosition++;

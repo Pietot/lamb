@@ -91,10 +91,7 @@ router.beforeEach(async (to, from, next) => {
     next("/login");
   } else if (to.meta.requiresGuest && authStore.isAuthenticated) {
     next("/");
-  } else if (
-    to.meta.requiresKonami &&
-    localStorage.getItem("konamiUnlocked") !== "true"
-  ) {
+  } else if (to.meta.requiresKonami && localStorage.getItem("konamiUnlocked") !== "true") {
     next("/errors");
   } else if (to.matched.length === 0) {
     next("/errors");

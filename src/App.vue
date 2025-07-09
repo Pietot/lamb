@@ -7,31 +7,31 @@
 </template>
 
 <script>
-import { computed, onMounted } from "vue";
-import { useRoute } from "vue-router";
-import { useAuthStore } from "@/stores/auth";
-import MainLayout from "@/layouts/MainLayout.vue";
+  import { computed, onMounted } from "vue";
+  import { useRoute } from "vue-router";
+  import { useAuthStore } from "@/stores/auth";
+  import MainLayout from "@/layouts/MainLayout.vue";
 
-export default {
-  name: "App",
-  components: {
-    MainLayout,
-  },
-  setup() {
-    const route = useRoute();
+  export default {
+    name: "App",
+    components: {
+      MainLayout,
+    },
+    setup() {
+      const route = useRoute();
 
-    const layoutComponent = computed(() => {
-      if (route.meta.layout === "main") {
-        return "MainLayout";
-      }
-      return "div"; // Layout vide pour login
-    });
+      const layoutComponent = computed(() => {
+        if (route.meta.layout === "main") {
+          return "MainLayout";
+        }
+        return "div"; // Layout vide pour login
+      });
 
-    onMounted(() => {});
+      onMounted(() => {});
 
-    return {
-      layoutComponent,
-    };
-  },
-};
+      return {
+        layoutComponent,
+      };
+    },
+  };
 </script>

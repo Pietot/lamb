@@ -6,10 +6,7 @@
         <h1 class="page-title">Réception des livraisons</h1>
       </div>
       <div class="header-right">
-        <button
-          class="new-delivery-button"
-          @click="showNewDeliveryModal = true"
-        >
+        <button class="new-delivery-button" @click="showNewDeliveryModal = true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <circle cx="12" cy="12" r="10" />
             <line x1="12" y1="8" x2="12" y2="16" />
@@ -77,12 +74,7 @@
             placeholder="Rechercher par ID, référence ou fournisseur"
             class="search-input"
           />
-          <svg
-            class="search-icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-          >
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <circle cx="11" cy="11" r="8" />
             <line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg>
@@ -95,12 +87,7 @@
             <option value="Bernard FR">Bernard FR</option>
             <option value="Martin SA">Martin SA</option>
           </select>
-          <svg
-            class="filter-icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-          >
+          <svg class="filter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path d="M6 9l6 6 6-6" />
           </svg>
         </div>
@@ -112,12 +99,7 @@
             <option value="Problème">Problème</option>
             <option value="Réceptionnée">Réceptionnée</option>
           </select>
-          <svg
-            class="filter-icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-          >
+          <svg class="filter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path d="M6 9l6 6 6-6" />
           </svg>
         </div>
@@ -181,10 +163,7 @@
                 <td class="order-reference">{{ delivery.orderRef }}</td>
                 <td class="articles-count">{{ delivery.articlesCount }}</td>
                 <td>
-                  <span
-                    class="status-badge"
-                    :class="getStatusClass(delivery.status)"
-                  >
+                  <span class="status-badge" :class="getStatusClass(delivery.status)">
                     {{ delivery.status }}
                   </span>
                 </td>
@@ -227,9 +206,7 @@
               </tr>
             </tbody>
             <tr v-if="filteredDeliveries.length === 0">
-              <td colspan="100%" class="empty-message">
-                Aucune livraison trouvée
-              </td>
+              <td colspan="100%" class="empty-message">Aucune livraison trouvée</td>
             </tr>
           </table>
         </div>
@@ -294,11 +271,7 @@
     </div>
 
     <!-- Modal Nouvelle livraison (placeholder) -->
-    <div
-      v-if="showNewDeliveryModal"
-      class="modal-overlay"
-      @click="showNewDeliveryModal = false"
-    >
+    <div v-if="showNewDeliveryModal" class="modal-overlay" @click="showNewDeliveryModal = false">
       <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3>Enregistrer une livraison</h3>
@@ -318,825 +291,817 @@
 </template>
 
 <script>
-import { ref, computed } from "vue";
+  import { ref, computed } from "vue";
 
-export default {
-  name: "ReceptionView",
-  setup() {
-    const searchQuery = ref("");
-    const showNewDeliveryModal = ref(false);
+  export default {
+    name: "ReceptionView",
+    setup() {
+      const searchQuery = ref("");
+      const showNewDeliveryModal = ref(false);
 
-    const filters = ref({
-      supplier: "",
-      status: "",
-    });
+      const filters = ref({
+        supplier: "",
+        status: "",
+      });
 
-    const deliveries = ref([
-      {
-        id: "5003",
-        supplier: "Durand SA",
-        expectedDate: "6 mai 2023",
-        orderRef: "CMD-1205",
-        articlesCount: 8,
-        status: "En attente",
-      },
-      {
-        id: "5002",
-        supplier: "Bernard FR",
-        expectedDate: "6 mai 2023",
-        orderRef: "CMD-1273",
-        articlesCount: 5,
-        status: "En attente",
-      },
-      {
-        id: "5001",
-        supplier: "Bernard FR",
-        expectedDate: "3 mai 2023",
-        orderRef: "CMD-1254",
-        articlesCount: 3,
-        status: "Problème",
-      },
-    ]);
+      const deliveries = ref([
+        {
+          id: "5003",
+          supplier: "Durand SA",
+          expectedDate: "6 mai 2023",
+          orderRef: "CMD-1205",
+          articlesCount: 8,
+          status: "En attente",
+        },
+        {
+          id: "5002",
+          supplier: "Bernard FR",
+          expectedDate: "6 mai 2023",
+          orderRef: "CMD-1273",
+          articlesCount: 5,
+          status: "En attente",
+        },
+        {
+          id: "5001",
+          supplier: "Bernard FR",
+          expectedDate: "3 mai 2023",
+          orderRef: "CMD-1254",
+          articlesCount: 3,
+          status: "Problème",
+        },
+      ]);
 
-    const deliveryHistory = ref([
-      {
-        id: "4998",
-        supplier: "Martin SA",
-        receptionDate: "2 mai 2023",
-        orderRef: "CMD-1201",
-        receivedBy: "Jean Dupont",
-        status: "Réceptionnée",
-      },
-      {
-        id: "4997",
-        supplier: "Durand SA",
-        receptionDate: "1 mai 2023",
-        orderRef: "CMD-1198",
-        receivedBy: "Marie Martin",
-        status: "Réceptionnée",
-      },
-      {
-        id: "4996",
-        supplier: "Bernard FR",
-        receptionDate: "29 avr 2023",
-        orderRef: "CMD-1195",
-        receivedBy: "Pierre Leroy",
-        status: "Réceptionnée",
-      },
-    ]);
+      const deliveryHistory = ref([
+        {
+          id: "4998",
+          supplier: "Martin SA",
+          receptionDate: "2 mai 2023",
+          orderRef: "CMD-1201",
+          receivedBy: "Jean Dupont",
+          status: "Réceptionnée",
+        },
+        {
+          id: "4997",
+          supplier: "Durand SA",
+          receptionDate: "1 mai 2023",
+          orderRef: "CMD-1198",
+          receivedBy: "Marie Martin",
+          status: "Réceptionnée",
+        },
+        {
+          id: "4996",
+          supplier: "Bernard FR",
+          receptionDate: "29 avr 2023",
+          orderRef: "CMD-1195",
+          receivedBy: "Pierre Leroy",
+          status: "Réceptionnée",
+        },
+      ]);
 
-    const filteredDeliveries = computed(() => {
-      let result = deliveries.value;
+      const filteredDeliveries = computed(() => {
+        let result = deliveries.value;
 
-      if (filters.value.supplier) {
-        result = result.filter(
-          (delivery) => delivery.supplier === filters.value.supplier,
-        );
-      }
+        if (filters.value.supplier) {
+          result = result.filter(delivery => delivery.supplier === filters.value.supplier);
+        }
 
-      if (filters.value.status) {
-        result = result.filter(
-          (delivery) => delivery.status === filters.value.status,
-        );
-      }
+        if (filters.value.status) {
+          result = result.filter(delivery => delivery.status === filters.value.status);
+        }
 
-      if (searchQuery.value) {
-        result = result.filter(
-          (delivery) =>
-            delivery.id.includes(searchQuery.value) ||
-            delivery.supplier
-              .toLowerCase()
-              .includes(searchQuery.value.toLowerCase()) ||
-            delivery.orderRef
-              .toLowerCase()
-              .includes(searchQuery.value.toLowerCase()),
-        );
-      }
+        if (searchQuery.value) {
+          result = result.filter(
+            delivery =>
+              delivery.id.includes(searchQuery.value) ||
+              delivery.supplier.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+              delivery.orderRef.toLowerCase().includes(searchQuery.value.toLowerCase()),
+          );
+        }
 
-      return result;
-    });
+        return result;
+      });
 
-    const pendingCount = computed(() => {
-      return deliveries.value.filter((d) => d.status === "En attente").length;
-    });
+      const pendingCount = computed(() => {
+        return deliveries.value.filter(d => d.status === "En attente").length;
+      });
 
-    const problemCount = computed(() => {
-      return deliveries.value.filter((d) => d.status === "Problème").length;
-    });
+      const problemCount = computed(() => {
+        return deliveries.value.filter(d => d.status === "Problème").length;
+      });
 
-    const getSupplierInitials = (name) => {
-      return name
-        .split(" ")
-        .map((n) => n[0])
-        .join("")
-        .toUpperCase()
-        .substring(0, 2);
-    };
-
-    const getStatusClass = (status) => {
-      const statusClasses = {
-        "En attente": "status-pending",
-        Problème: "status-problem",
-        Réceptionnée: "status-received",
+      const getSupplierInitials = name => {
+        return name
+          .split(" ")
+          .map(n => n[0])
+          .join("")
+          .toUpperCase()
+          .substring(0, 2);
       };
-      return statusClasses[status] || "status-default";
-    };
 
-    const receiveDelivery = (deliveryId) => {
-      console.log("Réceptionner livraison:", deliveryId);
-    };
+      const getStatusClass = status => {
+        const statusClasses = {
+          "En attente": "status-pending",
+          Problème: "status-problem",
+          Réceptionnée: "status-received",
+        };
+        return statusClasses[status] || "status-default";
+      };
 
-    const reportProblem = (deliveryId) => {
-      console.log("Signaler problème:", deliveryId);
-    };
+      const receiveDelivery = deliveryId => {
+        console.log("Réceptionner livraison:", deliveryId);
+      };
 
-    const viewDetails = (deliveryId) => {
-      console.log("Voir détails:", deliveryId);
-    };
+      const reportProblem = deliveryId => {
+        console.log("Signaler problème:", deliveryId);
+      };
 
-    const viewDeliveryDetails = (deliveryId) => {
-      console.log("Voir détails livraison:", deliveryId);
-    };
+      const viewDetails = deliveryId => {
+        console.log("Voir détails:", deliveryId);
+      };
 
-    return {
-      searchQuery,
-      showNewDeliveryModal,
-      filters,
-      deliveries,
-      deliveryHistory,
-      filteredDeliveries,
-      pendingCount,
-      problemCount,
-      getSupplierInitials,
-      getStatusClass,
-      receiveDelivery,
-      reportProblem,
-      viewDetails,
-      viewDeliveryDetails,
-    };
-  },
-};
+      const viewDeliveryDetails = deliveryId => {
+        console.log("Voir détails livraison:", deliveryId);
+      };
+
+      return {
+        searchQuery,
+        showNewDeliveryModal,
+        filters,
+        deliveries,
+        deliveryHistory,
+        filteredDeliveries,
+        pendingCount,
+        problemCount,
+        getSupplierInitials,
+        getStatusClass,
+        receiveDelivery,
+        reportProblem,
+        viewDetails,
+        viewDeliveryDetails,
+      };
+    },
+  };
 </script>
 
 <style scoped>
-.reception-page {
-  padding: 0;
-  font-family: "Inter", sans-serif;
-}
-
-/* EN-TÊTE */
-.page-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 2rem;
-}
-
-.page-title {
-  font-size: 24px;
-  font-weight: 600;
-  color: #0f172a;
-  margin: 0;
-}
-
-.new-delivery-button {
-  background: #00b8d4;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 0.75rem 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0, 184, 212, 0.3);
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.new-delivery-button:hover {
-  background: #0891a6;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 184, 212, 0.4);
-}
-
-.new-delivery-button svg {
-  width: 18px;
-  height: 18px;
-  stroke-width: 2;
-}
-
-/* STATISTIQUES */
-.stats-section {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.stat-card {
-  background: white;
-  border-radius: 12px;
-  padding: 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  border: 1px solid #f1f5f9;
-  transition: all 0.2s ease;
-}
-
-.stat-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
-}
-
-.stat-content .stat-value {
-  font-size: 28px;
-}
-
-.stat-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.stat-icon svg {
-  width: 24px;
-  height: 24px;
-}
-
-.truck-icon {
-  background: #f0fdf4;
-  color: #059669;
-}
-
-.check-icon {
-  background: #eff6ff;
-  color: #2563eb;
-}
-
-.warning-icon {
-  background: #fffbeb;
-  color: #d97706;
-}
-
-.stat-content {
-  flex: 1;
-}
-
-.stat-label {
-  font-size: 13px;
-  color: #64748b;
-  line-height: 1.3;
-  font-weight: 500;
-}
-
-/* FILTRES */
-.filters-section {
-  margin-bottom: 2rem;
-}
-
-.filter-group {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.search-container {
-  position: relative;
-  flex: 1;
-}
-
-.search-input {
-  width: 100%;
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 0.75rem 1rem 0.75rem 2.5rem;
-  font-size: 14px;
-  color: black;
-  transition: all 0.2s ease;
-}
-
-.search-icon {
-  position: absolute;
-  left: 0.75rem;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 16px;
-  height: 16px;
-  color: #94a3b8;
-  stroke-width: 2;
-  pointer-events: none;
-}
-
-.filter-wrapper {
-  position: relative;
-  display: inline-block;
-}
-
-.filter-select {
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding-top: 0.75rem;
-  padding-right: 2.5rem;
-  padding-bottom: 0.75rem;
-  padding-left: 1rem;
-  font-size: 14px;
-  color: #64748b;
-  min-width: 140px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.filter-select:hover,
-.search-input:hover {
-  box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
-}
-
-.filter-select:focus,
-.search-input:focus {
-  outline: none;
-  border-color: #00b8d4;
-  box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
-}
-
-.filter-select {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-}
-
-.filter-icon {
-  position: absolute;
-  right: 1rem;
-  top: 50%;
-  transform: translate(25%, -50%);
-  pointer-events: none;
-  height: 20px;
-}
-
-.search-button {
-  background: #3b82f6;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 0.75rem 1.5rem;
-  font-size: 14px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.search-button:hover {
-  background: #2563eb;
-  transform: translateY(-1px);
-}
-
-.search-button svg {
-  width: 16px;
-  height: 16px;
-  stroke-width: 2;
-}
-
-/* SECTIONS */
-.deliveries-section,
-.history-section {
-  margin-bottom: 2rem;
-}
-
-.section-card {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  border: 1px solid #f1f5f9;
-  overflow: hidden;
-}
-
-.section-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.5rem;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.section-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #0f172a;
-  margin: 0;
-}
-
-/* TABLEAUX */
-/* TABLEAU */
-.table-section {
-  margin-bottom: 2rem;
-}
-
-.table-card {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  border: 1px solid #f1f5f9;
-  overflow: hidden;
-  text-align: center;
-}
-
-.table-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.5rem;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.table-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #0f172a;
-  margin: 0;
-}
-
-.table-stats {
-  display: flex;
-  gap: 2rem;
-}
-
-.stat-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 14px;
-}
-
-.stat-value {
-  font-weight: 600;
-  color: #0f172a;
-}
-
-.stat-value.low {
-  color: #dc2626;
-}
-
-.table-container {
-  overflow-x: auto;
-}
-
-.deliveries-table,
-.history-table {
-  width: 100%;
-  min-width: max-content;
-  text-align: center;
-}
-
-.deliveries-table th,
-.history-table th {
-  background: #f8fafc;
-  padding: 1rem;
-  font-size: 12px;
-  font-weight: 600;
-  color: #64748b;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.deliveries-table td,
-.history-table td {
-  padding: 1rem;
-  border-bottom: 1px solid #f1f5f9;
-  font-size: 14px;
-  color: black;
-  vertical-align: middle;
-}
-
-.deliveries-table tbody tr:hover,
-.history-table tbody tr:hover {
-  background: #f8fafc;
-}
-
-.deliveries-table tbody tr:last-child td,
-.history-table tbody tr:last-child td {
-  border-bottom: none;
-}
-
-.delivery-id {
-  color: #0f172a;
-}
-
-.supplier-profile {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.supplier-avatar-container {
-  display: flex;
-  width: 40%;
-  justify-content: flex-end;
-}
-
-.supplier-avatar {
-  width: 32px;
-  height: 32px;
-  background: #3b82f6;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: 600;
-  font-size: 12px;
-  flex-shrink: 0;
-}
-
-.supplier-avatar.large {
-  width: 64px;
-  height: 64px;
-  font-size: 20px;
-}
-
-.supplier-details {
-  width: 60%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.delivery-date {
-  color: #64748b;
-  font-size: 13px;
-}
-
-.order-reference {
-  font-weight: 500;
-  color: #3b82f6;
-  cursor: pointer;
-}
-
-.order-reference:hover {
-  text-decoration: underline;
-}
-
-.articles-count {
-  font-weight: 600;
-  color: #0f172a;
-  text-align: center;
-}
-
-.empty-message {
-  text-align: center;
-  color: #64748b;
-  font-style: italic;
-  padding: 1rem;
-}
-
-/* BADGES DE STATUT */
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.375rem 0.75rem;
-  border-radius: 16px;
-  font-size: 12px;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-.status-pending {
-  background: #fef3c7;
-  color: #92400e;
-}
-
-.status-problem {
-  background: #fef2f2;
-  color: #dc2626;
-}
-
-.status-received {
-  background: #d1fae5;
-  color: #047857;
-}
-
-/* ACTIONS */
-.actions {
-  display: flex;
-  justify-content: center;
-  gap: 1.5rem;
-}
-
-.action-btn {
-  border: solid 1px;
-  border-radius: 6px;
-  padding: 0.5rem 1rem;
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  padding: 6px;
-  transition: all 0.2s ease;
-}
-
-.action-btn.success {
-  background: none;
-  border-color: #10b981;
-  color: #10b981;
-  transition: all 0.2s ease;
-}
-
-.action-btn.success:hover {
-  background: #10b981;
-  color: white;
-  transform: translateY(-2px);
-}
-
-.action-btn.success:active {
-  background: #059669;
-  border-color: #059669;
-  color: white;
-}
-
-.action-btn.danger {
-  background: none;
-  border-color: #dc2626;
-  color: #dc2626;
-  transition: all 0.2s ease;
-}
-
-.action-btn.danger:hover {
-  background: #dc2626;
-  color: white;
-  transform: translateY(-2px);
-}
-
-.action-btn.danger:active {
-  background: #b91c1c;
-  border-color: #b91c1c;
-  color: white;
-  transform: translateY(0);
-}
-
-.action-btn.secondary {
-  background: none;
-  border-color: #e2e8f0;
-  color: #64748b;
-}
-
-.action-btn.secondary:hover {
-  background: #f8fafc;
-  border-color: #cbd5e1;
-  color: black;
-}
-
-.action-btn svg {
-  width: 16px;
-  height: 16px;
-  stroke-width: 1.5;
-}
-
-/* MODAL */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background: white;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 500px;
-  max-height: 90vh;
-  overflow: hidden;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-}
-
-.modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.5rem;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.modal-header h3 {
-  font-size: 18px;
-  font-weight: 600;
-  color: #0f172a;
-  margin: 0;
-}
-
-.modal-close {
-  background: none;
-  border: none;
-  color: #64748b;
-  cursor: pointer;
-  padding: 4px;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-}
-
-.modal-close:hover {
-  background: #f1f5f9;
-  color: black;
-}
-
-.modal-close svg {
-  width: 20px;
-  height: 20px;
-  stroke-width: 2;
-}
-
-.modal-body {
-  padding: 1.5rem;
-  text-align: center;
-  color: #64748b;
-}
-
-input:placeholder-shown {
-  text-overflow: ellipsis;
-}
-
-input:focus::placeholder {
-  color: transparent;
-}
-
-/* RESPONSIVE */
-@media (max-width: 1024px) {
+  .reception-page {
+    padding: 0;
+    font-family: "Inter", sans-serif;
+  }
+
+  /* EN-TÊTE */
   .page-header {
-    flex-direction: column;
-    gap: 1rem;
-    align-items: stretch;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+
+  .page-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #0f172a;
+    margin: 0;
   }
 
   .new-delivery-button {
-    width: 100%;
-    justify-content: center;
+    background: #00b8d4;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 184, 212, 0.3);
+    font-size: 14px;
+    font-weight: 500;
   }
 
+  .new-delivery-button:hover {
+    background: #0891a6;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 184, 212, 0.4);
+  }
+
+  .new-delivery-button svg {
+    width: 18px;
+    height: 18px;
+    stroke-width: 2;
+  }
+
+  /* STATISTIQUES */
   .stats-section {
-    grid-template-columns: 1fr;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    border: 1px solid #f1f5f9;
+    transition: all 0.2s ease;
+  }
+
+  .stat-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .stat-content .stat-value {
+    font-size: 28px;
+  }
+
+  .stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .stat-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .truck-icon {
+    background: #f0fdf4;
+    color: #059669;
+  }
+
+  .check-icon {
+    background: #eff6ff;
+    color: #2563eb;
+  }
+
+  .warning-icon {
+    background: #fffbeb;
+    color: #d97706;
+  }
+
+  .stat-content {
+    flex: 1;
+  }
+
+  .stat-label {
+    font-size: 13px;
+    color: #64748b;
+    line-height: 1.3;
+    font-weight: 500;
+  }
+
+  /* FILTRES */
+  .filters-section {
+    margin-bottom: 2rem;
   }
 
   .filter-group {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .search-container,
-  .filter-select {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-@media (max-width: 768px) {
-  .section-header {
-    flex-direction: column;
+    display: flex;
+    align-items: center;
     gap: 1rem;
-    align-items: flex-start;
+    flex-wrap: wrap;
   }
 
-  .section-stats {
+  .search-container {
+    position: relative;
+    flex: 1;
+  }
+
+  .search-input {
     width: 100%;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    font-size: 14px;
+    color: black;
+    transition: all 0.2s ease;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: #94a3b8;
+    stroke-width: 2;
+    pointer-events: none;
+  }
+
+  .filter-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
+  .filter-select {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding-top: 0.75rem;
+    padding-right: 2.5rem;
+    padding-bottom: 0.75rem;
+    padding-left: 1rem;
+    font-size: 14px;
+    color: #64748b;
+    min-width: 140px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .filter-select:hover,
+  .search-input:hover {
+    box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
+  }
+
+  .filter-select:focus,
+  .search-input:focus {
+    outline: none;
+    border-color: #00b8d4;
+    box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
+  }
+
+  .filter-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  }
+
+  .filter-icon {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translate(25%, -50%);
+    pointer-events: none;
+    height: 20px;
+  }
+
+  .search-button {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .search-button:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+  }
+
+  .search-button svg {
+    width: 16px;
+    height: 16px;
+    stroke-width: 2;
+  }
+
+  /* SECTIONS */
+  .deliveries-section,
+  .history-section {
+    margin-bottom: 2rem;
+  }
+
+  .section-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    border: 1px solid #f1f5f9;
+    overflow: hidden;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
     justify-content: space-between;
+    padding: 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #0f172a;
+    margin: 0;
+  }
+
+  /* TABLEAUX */
+  /* TABLEAU */
+  .table-section {
+    margin-bottom: 2rem;
+  }
+
+  .table-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    border: 1px solid #f1f5f9;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  .table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .table-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #0f172a;
+    margin: 0;
+  }
+
+  .table-stats {
+    display: flex;
+    gap: 2rem;
+  }
+
+  .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 14px;
+  }
+
+  .stat-value {
+    font-weight: 600;
+    color: #0f172a;
+  }
+
+  .stat-value.low {
+    color: #dc2626;
+  }
+
+  .table-container {
+    overflow-x: auto;
   }
 
   .deliveries-table,
   .history-table {
-    font-size: 12px;
-  }
-
-  .search-input,
-  .filter-select,
-  .search-button {
     width: 100%;
+    min-width: max-content;
+    text-align: center;
   }
 
+  .deliveries-table th,
+  .history-table th {
+    background: #f8fafc;
+    padding: 1rem;
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .deliveries-table td,
+  .history-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 14px;
+    color: black;
+    vertical-align: middle;
+  }
+
+  .deliveries-table tbody tr:hover,
+  .history-table tbody tr:hover {
+    background: #f8fafc;
+  }
+
+  .deliveries-table tbody tr:last-child td,
+  .history-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .delivery-id {
+    color: #0f172a;
+  }
+
+  .supplier-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .supplier-avatar-container {
+    display: flex;
+    width: 40%;
+    justify-content: flex-end;
+  }
+
+  .supplier-avatar {
+    width: 32px;
+    height: 32px;
+    background: #3b82f6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  .supplier-avatar.large {
+    width: 64px;
+    height: 64px;
+    font-size: 20px;
+  }
+
+  .supplier-details {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .delivery-date {
+    color: #64748b;
+    font-size: 13px;
+  }
+
+  .order-reference {
+    font-weight: 500;
+    color: #3b82f6;
+    cursor: pointer;
+  }
+
+  .order-reference:hover {
+    text-decoration: underline;
+  }
+
+  .articles-count {
+    font-weight: 600;
+    color: #0f172a;
+    text-align: center;
+  }
+
+  .empty-message {
+    text-align: center;
+    color: #64748b;
+    font-style: italic;
+    padding: 1rem;
+  }
+
+  /* BADGES DE STATUT */
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.375rem 0.75rem;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .status-pending {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  .status-problem {
+    background: #fef2f2;
+    color: #dc2626;
+  }
+
+  .status-received {
+    background: #d1fae5;
+    color: #047857;
+  }
+
+  /* ACTIONS */
   .actions {
-    gap: 0.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
   }
 
   .action-btn {
-    padding: 0.375rem 0.75rem;
-    font-size: 11px;
+    border: solid 1px;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 6px;
+    transition: all 0.2s ease;
   }
-}
+
+  .action-btn.success {
+    background: none;
+    border-color: #10b981;
+    color: #10b981;
+    transition: all 0.2s ease;
+  }
+
+  .action-btn.success:hover {
+    background: #10b981;
+    color: white;
+    transform: translateY(-2px);
+  }
+
+  .action-btn.success:active {
+    background: #059669;
+    border-color: #059669;
+    color: white;
+  }
+
+  .action-btn.danger {
+    background: none;
+    border-color: #dc2626;
+    color: #dc2626;
+    transition: all 0.2s ease;
+  }
+
+  .action-btn.danger:hover {
+    background: #dc2626;
+    color: white;
+    transform: translateY(-2px);
+  }
+
+  .action-btn.danger:active {
+    background: #b91c1c;
+    border-color: #b91c1c;
+    color: white;
+    transform: translateY(0);
+  }
+
+  .action-btn.secondary {
+    background: none;
+    border-color: #e2e8f0;
+    color: #64748b;
+  }
+
+  .action-btn.secondary:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    color: black;
+  }
+
+  .action-btn svg {
+    width: 16px;
+    height: 16px;
+    stroke-width: 1.5;
+  }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  .modal-content {
+    background: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow: hidden;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .modal-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #0f172a;
+    margin: 0;
+  }
+
+  .modal-close {
+    background: none;
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+
+  .modal-close:hover {
+    background: #f1f5f9;
+    color: black;
+  }
+
+  .modal-close svg {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2;
+  }
+
+  .modal-body {
+    padding: 1.5rem;
+    text-align: center;
+    color: #64748b;
+  }
+
+  input:placeholder-shown {
+    text-overflow: ellipsis;
+  }
+
+  input:focus::placeholder {
+    color: transparent;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 1024px) {
+    .page-header {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: stretch;
+    }
+
+    .new-delivery-button {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .stats-section {
+      grid-template-columns: 1fr;
+    }
+
+    .filter-group {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .search-container,
+    .filter-select {
+      width: 100%;
+      max-width: none;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .section-header {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .section-stats {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .deliveries-table,
+    .history-table {
+      font-size: 12px;
+    }
+
+    .search-input,
+    .filter-select,
+    .search-button {
+      width: 100%;
+    }
+
+    .actions {
+      gap: 0.5rem;
+    }
+
+    .action-btn {
+      padding: 0.375rem 0.75rem;
+      font-size: 11px;
+    }
+  }
 </style>
