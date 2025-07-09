@@ -8,24 +8,9 @@ if (basename($_SERVER['SCRIPT_FILENAME']) === basename(__FILE__)) {
     exit('Access denied.');
 }
 
-function getRealDomain(): string
-{
-    if (!empty($_SERVER['HTTP_X_FORWARDED_HOST'])) {
-        return $_SERVER['HTTP_X_FORWARDED_HOST'];
-    }
-    if (!empty($_SERVER['HTTP_HOST'])) {
-        return $_SERVER['HTTP_HOST'];
-    }
-    if (!empty($_SERVER['SERVER_NAME'])) {
-        return $_SERVER['SERVER_NAME'];
-    }
-    return 'unknown-host';
-}
-
 session_set_cookie_params([
     'lifetime' => 0,
     'path' => '/',
-    'domain' => getRealDomain(),
     'secure' => $_ENV['COOKIE_SECURE'] === 'true',
     'httponly' => false,
 ]);
