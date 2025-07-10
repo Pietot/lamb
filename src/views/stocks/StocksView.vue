@@ -3,10 +3,15 @@
     <!-- En-tête avec bouton Ajouter -->
     <div class="page-header">
       <div class="header-left">
-        <h1 class="page-title">Stock</h1>
+        <h2 class="page-title">Stock</h2>
       </div>
       <div class="header-right">
-        <button class="add-button" @click="openAddModal">
+        <button
+          role="button"
+          aria-label="Ajouter un article"
+          class="add-button"
+          @click="openAddModal"
+        >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <circle cx="12" cy="12" r="10" />
             <line x1="12" y1="8" x2="12" y2="16" />
@@ -34,7 +39,8 @@
         </div>
 
         <div class="filter-wrapper">
-          <select v-model="filters.category" class="filter-select">
+          <label for="category-filter" class="filter-label">Catégorie :</label>
+          <select id="category-filter" v-model="filters.category" class="filter-select">
             <option value="">Toutes les catégories</option>
             <option value="1">Vêtements Homme</option>
             <option value="2">Vêtements Femme</option>
@@ -48,7 +54,8 @@
         </div>
 
         <div class="filter-wrapper">
-          <select v-model="filters.stockStatus" class="filter-select">
+          <label for="stock-status-filter" class="filter-label">Statut du stock :</label>
+          <select id="stock-status-filter" v-model="filters.stockStatus" class="filter-select">
             <option value="">Tous les stocks</option>
             <option value="low">Stock faible</option>
             <option value="normal">Stock normal</option>
@@ -58,7 +65,7 @@
           </svg>
         </div>
 
-        <button class="search-button">
+        <button role="button" aria-label="Rechercher" class="search-button">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <circle cx="11" cy="11" r="8" />
             <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -90,7 +97,9 @@
         </div>
         <div v-else-if="error" class="error-container">
           <p class="error-message">{{ error }}</p>
-          <button @click="fetchArticles" class="retry-button">Réessayer</button>
+          <button role="button" aria-label="Réessayer" @click="fetchArticles" class="retry-button">
+            Réessayer
+          </button>
         </div>
         <div v-else class="table-container">
           <table class="stocks-table">
@@ -131,13 +140,23 @@
                 </td>
                 <td class="threshold-value">{{ item.seuil_alerte }}</td>
                 <td class="actions">
-                  <button class="action-btn" @click="editArticle(item)" title="Modifier">
+                  <button
+                    role="button"
+                    aria-label="Modifier"
+                    class="action-btn"
+                    @click="editArticle(item)"
+                  >
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                       <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                       <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                     </svg>
                   </button>
-                  <button class="action-btn" @click="viewArticle(item)" title="Voir détails">
+                  <button
+                    role="button"
+                    aria-label="Voir détails"
+                    class="action-btn"
+                    @click="viewArticle(item)"
+                  >
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                       <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                       <circle cx="12" cy="12" r="3" />
@@ -159,6 +178,8 @@
           </div>
           <div class="pagination-controls">
             <button
+              role="button"
+              aria-label="Page précédente"
               class="pagination-btn"
               @click="goToPage(currentPage - 1)"
               :disabled="currentPage === 1"
@@ -176,6 +197,8 @@
                 :class="{ active: page === currentPage }"
                 @click="goToPage(page)"
                 :disabled="page === '...'"
+                :aria-label="`Page ${page}`"
+                role="button"
               >
                 {{ page }}
               </button>
@@ -185,6 +208,8 @@
               class="pagination-btn"
               @click="goToPage(currentPage + 1)"
               :disabled="currentPage === totalPages"
+              role="button"
+              aria-label="Page suivante"
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <polyline points="9 18 15 12 9 6" />
@@ -200,7 +225,7 @@
       <div class="modal-content modal-form" @click.stop>
         <div class="modal-header">
           <h3>Ajouter un article</h3>
-          <button @click="closeAddModal" class="modal-close">
+          <button role="button" aria-label="Fermer" @click="closeAddModal" class="modal-close">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
@@ -389,8 +414,22 @@
             <div v-if="submitSuccess" class="alert alert-success">Article créé avec succès !</div>
 
             <div class="form-actions">
-              <button type="button" @click="closeAddModal" class="btn-secondary">Annuler</button>
-              <button type="submit" class="btn-primary" :disabled="submitting">
+              <button
+                role="button"
+                aria-label="Annuler"
+                type="button"
+                @click="closeAddModal"
+                class="btn-secondary"
+              >
+                Annuler
+              </button>
+              <button
+                role="button"
+                aria-label="Créer l'article"
+                type="submit"
+                class="btn-primary"
+                :disabled="submitting"
+              >
                 <span v-if="submitting">Création en cours...</span>
                 <span v-else>Créer l'article</span>
               </button>
@@ -405,7 +444,12 @@
       <div class="modal-content modal-details" @click.stop>
         <div class="modal-header">
           <h3>Détails de l'article</h3>
-          <button @click="showDetailsModal = false" class="modal-close">
+          <button
+            role="button"
+            aria-label="Fermer"
+            @click="showDetailsModal = false"
+            class="modal-close"
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
@@ -501,7 +545,12 @@
       <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3>Modifier l'article</h3>
-          <button @click="showEditModal = false" class="modal-close">
+          <button
+            role="button"
+            aria-label="Fermer"
+            @click="showEditModal = false"
+            class="modal-close"
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
@@ -530,6 +579,15 @@
 
   export default {
     name: "StocksView",
+    metaInfo: {
+      meta: [
+        {
+          name: "description",
+          content:
+            "Gérez les articles en stock de Fashion Chic, visualisez les détails, filtrez par catégorie et statut de stock, et bien plus encore.",
+        },
+      ],
+    },
     setup() {
       const showAddModal = ref(false);
       const showDetailsModal = ref(false);
@@ -1052,6 +1110,10 @@
     display: inline-block;
   }
 
+  .filter-wrapper label {
+    display: none;
+  }
+
   .filter-select {
     background: white;
     border: 1px solid #e2e8f0;
@@ -1095,7 +1157,7 @@
   }
 
   .search-button {
-    background: #3b82f6;
+    background: #0062ff;
     color: white;
     border: none;
     border-radius: 8px;

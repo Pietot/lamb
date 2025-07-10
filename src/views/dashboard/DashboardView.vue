@@ -53,7 +53,7 @@
     <div class="dashboard-content">
       <!-- Commandes récentes - Pleine largeur -->
       <div class="section-card full-width">
-        <h3 class="section-title">Commandes récentes</h3>
+        <h2 class="section-title">Commandes récentes</h2>
         <div v-if="loadingOrders || loadingClients" class="loading-container">
           <div class="loader"></div>
           <p>Chargement des commandes...</p>
@@ -97,7 +97,7 @@
       <div class="dashboard-bottom">
         <!-- Articles en alerte -->
         <div class="section-card">
-          <h3 class="section-title">Articles en alerte</h3>
+          <h2 class="section-title">Articles en alerte</h2>
           <div v-if="loadingArticles" class="loading-container">
             <div class="loader"></div>
             <p>Chargement des articles...</p>
@@ -127,7 +127,7 @@
 
         <!-- Livraisons à réceptionner -->
         <div class="section-card">
-          <h3 class="section-title">Livraisons à réceptionner</h3>
+          <h2 class="section-title">Livraisons à réceptionner</h2>
           <div v-if="loadingDeliveries || loadingSuppliers" class="loading-container">
             <div class="loader"></div>
             <p>Chargement des livraisons...</p>
@@ -169,6 +169,15 @@
 
   export default {
     name: "DashboardView",
+    metaInfo: {
+      meta: [
+        {
+          name: "description",
+          content:
+            "Le tableau de bord de Fashion Chic pour suivre les commandes, livraisons et alertes de stock.",
+        },
+      ],
+    },
     setup() {
       // États réactifs
       const orders = ref([]);

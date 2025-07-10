@@ -91,6 +91,15 @@
 
   export default {
     name: "LoginView",
+    metaInfo: {
+      meta: [
+        {
+          name: "description",
+          content:
+            "Page de connexion pour accéder à l'application Fashion Chic. Veuillez entrer vos identifiants pour continuer.",
+        },
+      ],
+    },
     setup() {
       const router = useRouter();
       const authStore = useAuthStore();

@@ -3,7 +3,7 @@
     <!-- En-tête avec bouton -->
     <div class="page-header">
       <div class="header-left">
-        <h1 class="page-title">Réception des livraisons</h1>
+        <h2 class="page-title">Réception des livraisons</h2>
       </div>
       <div class="header-right">
         <button class="new-delivery-button" @click="showNewDeliveryModal = true">
@@ -295,6 +295,15 @@
 
   export default {
     name: "ReceptionView",
+    metaInfo: {
+      meta: [
+        {
+          name: "description",
+          content:
+            "Gérez les réceptions de livraisons de Fashion Chic, visualisez les livraisons en attente, l'historique des réceptions et les statistiques.",
+        },
+      ],
+    },
     setup() {
       const searchQuery = ref("");
       const showNewDeliveryModal = ref(false);
@@ -650,7 +659,7 @@
   }
 
   .search-button {
-    background: #3b82f6;
+    background: #0062ff;
     color: white;
     border: none;
     border-radius: 8px;
@@ -816,7 +825,7 @@
   .supplier-avatar {
     width: 32px;
     height: 32px;
-    background: #3b82f6;
+    background: #0062ff;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -847,7 +856,7 @@
 
   .order-reference {
     font-weight: 500;
-    color: #3b82f6;
+    color: #0062ff;
     cursor: pointer;
   }
 

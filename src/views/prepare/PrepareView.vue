@@ -2,7 +2,7 @@
   <div class="prepare-page">
     <!-- En-tête -->
     <div class="page-header">
-      <h1 class="page-title">Commandes à préparer</h1>
+      <h2 class="page-title">Commandes à préparer</h2>
     </div>
 
     <!-- Cartes KPI -->
@@ -298,6 +298,15 @@
 
   export default {
     name: "PrepareView",
+    metaInfo: {
+      meta: [
+        {
+          name: "description",
+          content:
+            "Gérez les commandes à préparer de Fashion Chic, visualisez les détails, filtrez par client et statut, et accédez aux actions pour modifier ou imprimer.",
+        },
+      ],
+    },
     setup() {
       const router = useRouter();
 
@@ -792,7 +801,7 @@
   }
 
   .search-button {
-    background: #3b82f6;
+    background: #0062ff;
     color: white;
     border: none;
     border-radius: 8px;

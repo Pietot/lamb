@@ -2,7 +2,7 @@
   <div class="agenda-page">
     <!-- En-tête -->
     <div class="page-header">
-      <h1 class="page-title">Agenda partagé</h1>
+      <h2 class="page-title">Agenda partagé</h2>
     </div>
 
     <!-- Cartes KPI -->
@@ -63,27 +63,45 @@
     <!-- Navigation du calendrier -->
     <div class="calendar-navigation">
       <div class="nav-group">
-        <button class="nav-btn" @click="previousMonth" title="Mois précédent">
+        <button
+          role="button"
+          aria-label="Mois précédent"
+          class="nav-btn"
+          @click="previousMonth"
+          title="Mois précédent"
+        >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <polyline points="15 18 9 12 15 6" />
           </svg>
         </button>
         <h2 class="current-month">{{ currentMonthLabel }}</h2>
-        <button class="nav-btn" @click="nextMonth" title="Mois suivant">
+        <button
+          role="button"
+          aria-label="Mois suivant"
+          class="nav-btn"
+          @click="nextMonth"
+          title="Mois suivant"
+        >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <polyline points="9 18 15 12 9 6" />
           </svg>
         </button>
       </div>
       <div class="nav-actions">
-        <button class="today-btn" @click="goToToday">
+        <button role="button" aria-label="Aujourd'hui" class="today-btn" @click="goToToday">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <circle cx="12" cy="12" r="10" />
             <polyline points="12 6 12 12 16 14" />
           </svg>
           Aujourd'hui
         </button>
-        <button class="refresh-btn" @click="fetchData" :disabled="loading">
+        <button
+          role="button"
+          aria-label="Rafraîchir les données"
+          class="refresh-btn"
+          @click="fetchData"
+          :disabled="loading"
+        >
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -113,7 +131,9 @@
             <line x1="12" y1="16" x2="12.01" y2="16" />
           </svg>
           <p class="error-message">{{ error }}</p>
-          <button @click="fetchData" class="retry-button">Réessayer</button>
+          <button role="button" aria-label="Réessayer" @click="fetchData" class="retry-button">
+            Réessayer
+          </button>
         </div>
 
         <div v-else class="calendar-grid">
@@ -181,7 +201,7 @@
         <div class="day-details-card">
           <div class="details-header">
             <div class="header-left">
-              <h3 class="details-title">{{ formatSelectedDate }}</h3>
+              <h2 class="details-title">{{ formatSelectedDate }}</h2>
               <p class="details-subtitle">
                 {{
                   selectedDayEvents.length === 0
@@ -192,7 +212,13 @@
                 }}
               </p>
             </div>
-            <button class="close-btn" @click="selectedDate = null" title="Fermer">
+            <button
+              role="button"
+              aria-label="Fermer"
+              class="close-btn"
+              @click="selectedDate = null"
+              title="Fermer"
+            >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <line x1="18" y1="6" x2="6" y2="18" />
                 <line x1="6" y1="6" x2="18" y2="18" />
@@ -261,6 +287,8 @@
 
                     <div class="event-actions">
                       <button
+                        role="button"
+                        aria-label="Voir détails"
                         class="action-btn"
                         @click="viewDeliveryDetails(event)"
                         title="Voir détails"
@@ -315,6 +343,8 @@
 
                     <div class="event-actions">
                       <button
+                        role="button"
+                        aria-label="Voir détails"
                         class="action-btn"
                         @click="viewOrderDetails(event)"
                         title="Voir détails"
@@ -343,6 +373,14 @@
 
   export default {
     name: "AgendaView",
+    metaInfo: {
+      meta: [
+        {
+          name: "description",
+          content: "L'agenda partagé de Fashion Chic pour suivre les livraisons et commandes.",
+        },
+      ],
+    },
     setup() {
       const router = useRouter();
 
@@ -829,7 +867,7 @@
 
   .kpi-sublabel {
     font-size: 12px;
-    color: #94a3b8;
+    color: #64748b;
     margin: 4px 0 0 0;
   }
 
@@ -890,7 +928,7 @@
 
   .today-btn,
   .refresh-btn {
-    background: #3b82f6;
+    background: #0062ff;
     color: white;
     border: none;
     border-radius: 8px;
@@ -1106,7 +1144,7 @@
   .today-label {
     font-size: 10px;
     font-weight: 600;
-    color: #d97706;
+    color: black;
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }

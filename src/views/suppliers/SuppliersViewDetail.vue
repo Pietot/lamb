@@ -9,7 +9,7 @@
           </svg>
           <span>Retour</span>
         </button>
-        <h1 class="page-title">Détail du fournisseur</h1>
+        <h2 class="page-title">Détail du fournisseur</h2>
       </div>
       <div class="header-actions">
         <button class="print-button" @click="printSupplier">
@@ -334,6 +334,15 @@
 
   export default {
     name: "SupplierDetailView",
+    metaInfo: {
+      meta: [
+        {
+          name: "description",
+          content:
+            "Détails du fournisseur - Visualisez et gérez les informations de votre fournisseur.",
+        },
+      ],
+    },
     setup() {
       const router = useRouter();
       const route = useRoute();
@@ -471,7 +480,7 @@
       };
 
       const getSupplierColor = () => {
-        const colors = ["#3B82F6", "#00B8D4", "#059669", "#D97706", "#7C3AED", "#DC2626"];
+        const colors = ["#0062ff", "#00B8D4", "#059669", "#D97706", "#7C3AED", "#DC2626"];
         const id = supplier.value?.id_fournisseur || 0;
         return colors[id % colors.length];
       };

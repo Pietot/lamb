@@ -57,7 +57,13 @@
             <p class="user-name">{{ authStore.user?.name }}</p>
             <p class="user-role">{{ userRoleLabel }}</p>
           </div>
-          <button @click="handleLogout" class="logout-button" title="Se déconnecter">
+          <button
+            @click="handleLogout"
+            class="logout-button"
+            title="Se déconnecter"
+            role="button"
+            aria-label="Se déconnecter"
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
               <polyline points="16,17 21,12 16,7"></polyline>
@@ -75,7 +81,13 @@
         <div class="header-content">
           <h1 class="page-title">{{ pageTitle }}</h1>
           <!-- Menu Burger Icon for Mobile to display / hide sidebar -->
-          <button class="menu-toggle" @click="toggleSidebar" title="Menu">
+          <button
+            class="menu-toggle"
+            @click="toggleSidebar"
+            title="Menu"
+            aria-label="Menu"
+            role="button"
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <line x1="3" y1="6" x2="21" y2="6" />
               <line x1="3" y1="12" x2="21" y2="12" />

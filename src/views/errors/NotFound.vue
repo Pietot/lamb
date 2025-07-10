@@ -104,6 +104,15 @@
 <script>
   export default {
     name: "Error404Page",
+    metaInfo: {
+      meta: [
+        {
+          name: "description",
+          content:
+            "Page non trouvée - Fashion Chic",
+        },
+      ],
+    },
     methods: {
       goHome() {
         this.$router.push("/");

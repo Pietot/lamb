@@ -3,7 +3,7 @@
     <!-- En-tête avec bouton Créer -->
     <div class="page-header">
       <div class="header-left">
-        <h1 class="page-title">Gestion des commandes</h1>
+        <h2 class="page-title">Gestion des commandes</h2>
       </div>
       <div class="header-right">
         <button class="create-button" @click="goToNewOrder">
@@ -293,6 +293,15 @@
 
   export default {
     name: "OrdersView",
+    metaInfo: {
+      meta: [
+        {
+          name: "description",
+          content:
+            "Gérez les commandes de Fashion Chic, visualisez les détails, filtrez par client et statut, et accédez aux actions pour modifier ou imprimer.",
+        },
+      ],
+    },
     setup() {
       const router = useRouter();
       const searchQuery = ref("");
@@ -707,7 +716,7 @@
   }
 
   .search-button {
-    background: #3b82f6;
+    background: #0062ff;
     color: white;
     border: none;
     border-radius: 8px;
@@ -883,7 +892,7 @@
   }
 
   .stat-value.progress {
-    color: #3b82f6;
+    color: #0062ff;
   }
 
   .table-container {

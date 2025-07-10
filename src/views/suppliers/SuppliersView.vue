@@ -3,7 +3,7 @@
     <!-- En-tête avec bouton Nouveau fournisseur -->
     <div class="page-header">
       <div class="header-left">
-        <h1 class="page-title">Gestion des fournisseurs</h1>
+        <h2 class="page-title">Gestion des fournisseurs</h2>
       </div>
       <div class="header-right">
         <button class="new-supplier-button" @click="showNewSupplierModal = true">
@@ -577,6 +577,15 @@
 
   export default {
     name: "SuppliersView",
+    metaInfo: {
+      meta: [
+        {
+          name: "description",
+          content:
+            "Gérez vos fournisseurs avec notre interface intuitive. Ajoutez, modifiez et consultez les informations de vos fournisseurs facilement.",
+        },
+      ],
+    },
     setup() {
       const router = useRouter();
 
@@ -1212,7 +1221,7 @@
 
   .search-button,
   .export-button {
-    background: #3b82f6;
+    background: #0062ff;
     color: white;
     border: none;
     border-radius: 8px;
@@ -1538,7 +1547,7 @@
 
   .action-button,
   .export-button {
-    background: #3b82f6;
+    background: #0062ff;
     color: white;
     border: none;
     border-radius: 8px;

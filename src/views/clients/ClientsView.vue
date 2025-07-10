@@ -3,10 +3,15 @@
     <!-- En-tête avec bouton Nouveau client -->
     <div class="page-header">
       <div class="header-left">
-        <h1 class="page-title">Gestion des clients</h1>
+        <h2 class="page-title">Gestion des clients</h2>
       </div>
       <div class="header-right">
-        <button class="new-client-button" @click="showNewClientModal = true">
+        <button
+          role="button"
+          aria-label="Nouveau client"
+          class="new-client-button"
+          @click="showNewClientModal = true"
+        >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <circle cx="12" cy="12" r="10" />
             <line x1="12" y1="8" x2="12" y2="16" />
@@ -107,7 +112,12 @@
           <option value="id">Par ID</option>
         </select>
 
-        <button class="action-button" @click="resetFilters">
+        <button
+          role="button"
+          aria-label="Réinitialiser les filtres"
+          class="action-button"
+          @click="resetFilters"
+        >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <polyline points="1 4 1 10 7 10" />
             <polyline points="23 20 23 14 17 14" />
@@ -116,7 +126,12 @@
           Réinitialiser
         </button>
 
-        <button class="export-button" @click="exportClients">
+        <button
+          role="button"
+          aria-label="Exporter les clients"
+          class="export-button"
+          @click="exportClients"
+        >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
             <polyline points="7,10 12,15 17,10" />
@@ -154,7 +169,9 @@
             <line x1="12" y1="16" x2="12.01" y2="16" />
           </svg>
           <p class="error-message">{{ error }}</p>
-          <button @click="fetchClients" class="retry-button">Réessayer</button>
+          <button role="button" aria-label="Réessayer" @click="fetchClients" class="retry-button">
+            Réessayer
+          </button>
         </div>
 
         <!-- Table Content -->
@@ -213,6 +230,8 @@
                 </td>
                 <td class="actions">
                   <button
+                    role="button"
+                    aria-label="Voir détails"
                     class="action-btn secondary"
                     @click="viewClient(client.id_client)"
                     title="Voir détails"
@@ -223,6 +242,8 @@
                     </svg>
                   </button>
                   <button
+                    role="button"
+                    aria-label="Modifier"
                     class="action-btn secondary"
                     @click="editClient(client.id_client)"
                     title="Modifier"
@@ -248,7 +269,12 @@
       <div class="modal-content modal-form" @click.stop>
         <div class="modal-header">
           <h3>Nouveau client</h3>
-          <button @click="showNewClientModal = false" class="modal-close">
+          <button
+            role="button"
+            aria-label="Fermer"
+            @click="showNewClientModal = false"
+            class="modal-close"
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
@@ -436,10 +462,22 @@
 
             <!-- Actions -->
             <div class="modal-actions">
-              <button type="button" class="modal-btn secondary" @click="showNewClientModal = false">
+              <button
+                role="button"
+                aria-label="Annuler"
+                type="button"
+                class="modal-btn secondary"
+                @click="showNewClientModal = false"
+              >
                 Annuler
               </button>
-              <button type="submit" class="modal-btn primary" :disabled="submitting">
+              <button
+                role="button"
+                aria-label="Créer le client"
+                type="submit"
+                class="modal-btn primary"
+                :disabled="submitting"
+              >
                 <span v-if="!submitting">Créer le client</span>
                 <span v-else class="loading-text">
                   <svg class="spinner" viewBox="0 0 24 24" fill="none">
@@ -472,7 +510,12 @@
       <div class="modal-content modal-details" @click.stop>
         <div class="modal-header">
           <h3>Détails du client</h3>
-          <button @click="showDetailsModal = false" class="modal-close">
+          <button
+            role="button"
+            aria-label="Fermer"
+            @click="showDetailsModal = false"
+            class="modal-close"
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
@@ -557,8 +600,17 @@
           </div>
 
           <div class="modal-actions">
-            <button class="modal-btn secondary" @click="showDetailsModal = false">Fermer</button>
             <button
+              role="button"
+              aria-label="Fermer"
+              class="modal-btn secondary"
+              @click="showDetailsModal = false"
+            >
+              Fermer
+            </button>
+            <button
+              role="button"
+              aria-label="Modifier le client"
               class="modal-btn primary"
               @click="
                 () => {
@@ -579,7 +631,12 @@
       <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3>Modifier le client</h3>
-          <button @click="showEditModal = false" class="modal-close">
+          <button
+            role="button"
+            aria-label="Fermer"
+            @click="showEditModal = false"
+            class="modal-close"
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
@@ -604,7 +661,14 @@
             </div>
           </div>
           <div class="modal-actions">
-            <button class="modal-btn secondary" @click="showEditModal = false">Fermer</button>
+            <button
+              role="button"
+              aria-label="Fermer"
+              class="modal-btn secondary"
+              @click="showEditModal = false"
+            >
+              Fermer
+            </button>
           </div>
         </div>
       </div>
@@ -618,6 +682,14 @@
 
   export default {
     name: "ClientsView",
+    metaInfo: {
+      meta: [
+        {
+          name: "description",
+          content: "Le panneau de gestion des clients de Fashion Chic.",
+        },
+      ],
+    },
     setup() {
       // États réactifs
       const clients = ref([]);
@@ -1201,7 +1273,7 @@
 
   .search-button,
   .export-button {
-    background: #3b82f6;
+    background: #0062ff;
     color: white;
     border: none;
     border-radius: 8px;
@@ -1440,7 +1512,7 @@
 
   .action-button,
   .export-button {
-    background: #3b82f6;
+    background: #0062ff;
     color: white;
     border: none;
     border-radius: 8px;
