@@ -65,7 +65,7 @@
           </div>
 
           <!-- Bouton LOGIN -->
-          <button type="submit" :disabled="isLoading" class="login-button">
+          <button role="button" aria-label="Se connecter" type="submit" :disabled="isLoading" class="login-button">
             {{ isLoading ? "CONNEXION..." : "LOGIN" }}
           </button>
         </form>
@@ -91,6 +91,15 @@
 
   export default {
     name: "LoginView",
+    metaInfo: {
+      meta: [
+        {
+          name: "description",
+          content:
+            "Page de connexion pour accéder à l'application Fashion Chic. Veuillez entrer vos identifiants pour continuer.",
+        },
+      ],
+    },
     setup() {
       const router = useRouter();
       const authStore = useAuthStore();

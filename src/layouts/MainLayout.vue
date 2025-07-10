@@ -54,10 +54,16 @@
             <span>{{ userInitials }}</span>
           </div>
           <div class="user-info">
-            <p class="user-name">{{ authStore.user?.name }}</p>
+            <p class="user-name">{{ userName }}</p>
             <p class="user-role">{{ userRoleLabel }}</p>
           </div>
-          <button @click="handleLogout" class="logout-button" title="Se déconnecter">
+          <button
+            @click="handleLogout"
+            class="logout-button"
+            title="Se déconnecter"
+            role="button"
+            aria-label="Se déconnecter"
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
               <polyline points="16,17 21,12 16,7"></polyline>
@@ -75,7 +81,13 @@
         <div class="header-content">
           <h1 class="page-title">{{ pageTitle }}</h1>
           <!-- Menu Burger Icon for Mobile to display / hide sidebar -->
-          <button class="menu-toggle" @click="toggleSidebar" title="Menu">
+          <button
+            class="menu-toggle"
+            @click="toggleSidebar"
+            title="Menu"
+            aria-label="Menu"
+            role="button"
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <line x1="3" y1="6" x2="21" y2="6" />
               <line x1="3" y1="12" x2="21" y2="12" />
@@ -305,7 +317,7 @@
       });
 
       const userInitials = computed(() => {
-        const name = authStore.user?.name || "User";
+        const name = authStore.user?.username || "User";
         return name
           .split(" ")
           .map(n => n[0])
@@ -313,16 +325,19 @@
           .toUpperCase();
       });
 
+      const userName = computed(() => {
+        return authStore.user?.username || "Utilisateur";
+      });
+
       const userRoleLabel = computed(() => {
-        const role = authStore.user?.role || "user";
+        const role = authStore.user?.role || 4;
         const roleLabels = {
-          admin: "Administrateur",
-          gestionnaire: "Gestionnaire",
-          preparateur: "Préparateur",
-          commercial: "Commercial",
-          support: "Support",
+          1: "Administrateur",
+          2: "Gestionnaire",
+          3: "Commercial",
+          4: "Utilisateur",
         };
-        return roleLabels[role] || "Utilisateur";
+        return roleLabels[role];
       });
 
       const handleLogout = () => {
@@ -388,7 +403,7 @@
           }
         } else {
           // Sidebar fermée
-          if (startX.value < window.innerWidth / 3 && deltaX > threshold) {
+          if (startX.value < window.innerWidth / 6 && deltaX > threshold) {
             // Ouvrir la sidebar
             sidebarOpen.value = true;
             sidebarTransform.value = 0;
@@ -406,6 +421,7 @@
         filteredMenuItems,
         pageTitle,
         userInitials,
+        userName,
         userRoleLabel,
         handleLogout,
         toggleSidebar,
@@ -596,7 +612,7 @@
   .logout-button {
     background: none;
     border: none;
-    color: rgba(255, 255, 255, 0.6);
+    color: white;
     cursor: pointer;
     padding: 8px;
     border-radius: 6px;

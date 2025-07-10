@@ -16,12 +16,14 @@ try {
         // Stocker l'utilisateur et le rôle dans la session
         $_SESSION['user'] = $user['id_utilisateur'];
         $_SESSION['role'] = $user['role'];
+        $_SESSION['username'] = $user['nom'];
         session_regenerate_id(true);
         addLastLogin($pdo, $user['id_utilisateur']);
         echo json_encode([
             'success' => true,
             'user' => [
                 'id_utilisateur' => $user['id_utilisateur'],
+                'username' => $user['nom'],
                 'role' => $user['role'],
             ]
         ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
@@ -35,7 +37,7 @@ try {
 
 function getUser(PDO $pdo, string $login): array
 {
-    $stmt = $pdo->prepare('SELECT id_utilisateur, pwd_hash, id_role as role FROM utilisateur WHERE login = :login');
+    $stmt = $pdo->prepare('SELECT id_utilisateur, nom, pwd_hash, id_role as role FROM utilisateur WHERE login = :login');
     $stmt->bindValue(':login', $login);
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);

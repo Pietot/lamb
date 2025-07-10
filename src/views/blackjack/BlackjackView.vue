@@ -19,7 +19,12 @@
           <p class="text-lg sm:text-xl">Bienvenue au Blackjack Casino !</p>
           <p class="text-xs sm:text-sm opacity-75">Rapprochez-vous de 21 sans dépasser</p>
         </div>
-        <button class="btn-primary text-lg sm:text-xl px-6 py-3" @click="startGame">
+        <button
+          role="button"
+          aria-label="Nouvelle Partie"
+          class="btn-primary text-lg sm:text-xl px-6 py-3"
+          @click="startGame"
+        >
           🎮 Nouvelle Partie
         </button>
       </div>
@@ -41,6 +46,8 @@
 
           <div class="grid grid-cols-3 gap-2 mb-3">
             <button
+              role="button"
+              aria-label="Choisir une mise"
               v-for="amount in betAmounts"
               :key="amount"
               @click="setBet(amount)"
@@ -58,6 +65,8 @@
 
           <div class="flex justify-center">
             <button
+              role="button"
+              aria-label="Miser"
               @click="dealCards"
               :disabled="currentBet === 0"
               :class="[
@@ -150,10 +159,10 @@
 
         <!-- Actions du joueur -->
         <div v-if="gameState === 'playing'" class="flex justify-center gap-3">
-          <button class="btn-action btn-hit" @click="hit" :disabled="playerTotal >= 21">
+          <button role="button" aria-label="Tirer une carte" class="btn-action btn-hit" @click="hit" :disabled="playerTotal >= 21">
             🎯 Tirer
           </button>
-          <button class="btn-action btn-stand" @click="stand">✋ Rester</button>
+          <button role="button" aria-label="Rester" class="btn-action btn-stand" @click="stand">✋ Rester</button>
         </div>
 
         <!-- Message du croupier -->
@@ -171,14 +180,14 @@
               {{ winLossMessage }}
             </div>
           </div>
-          <button class="btn-primary text-lg px-6 py-3" @click="startGame">🔄 Rejouer</button>
+          <button role="button" aria-label="Rejouer" class="btn-primary text-lg px-6 py-3" @click="startGame">🔄 Rejouer</button>
         </div>
       </div>
 
       <!-- Message si plus de points -->
       <div v-if="playerChips === 0 && gameState === 'start'" class="text-center mt-3">
         <div class="text-red-400 text-lg font-bold mb-2">😱 Plus de points !</div>
-        <button class="btn-primary text-sm px-4 py-2" @click="resetChips">
+        <button role="button" aria-label="Recevoir 1000 points bonus" class="btn-primary text-sm px-4 py-2" @click="resetChips">
           🎁 Recevoir 1000 points bonus
         </button>
       </div>

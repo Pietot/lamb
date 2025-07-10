@@ -3,10 +3,15 @@
     <!-- En-tête avec bouton Nouveau client -->
     <div class="page-header">
       <div class="header-left">
-        <h1 class="page-title">Gestion des clients</h1>
+        <h2 class="page-title">Gestion des clients</h2>
       </div>
       <div class="header-right">
-        <button class="new-client-button" @click="showNewClientModal = true">
+        <button
+          role="button"
+          aria-label="Nouveau client"
+          class="new-client-button"
+          @click="showNewClientModal = true"
+        >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <circle cx="12" cy="12" r="10" />
             <line x1="12" y1="8" x2="12" y2="16" />
@@ -94,20 +99,25 @@
           </svg>
         </div>
 
-        <select v-model="filters.city" class="filter-select">
-          <option value="">Toutes les villes</option>
-          <option v-for="city in availableCities" :key="city" :value="city">
-            {{ city }}
-          </option>
-        </select>
+        <div class="filter-wrapper">
+          <label for="city-filter" class="filter-label">Ville :</label>
+          <select id="city-filter" v-model="filters.city" class="filter-select">
+            <option value="">Toutes les villes</option>
+            <option v-for="city in availableCities" :key="city" :value="city">
+              {{ city }}
+            </option>
+          </select>
+          <svg class="filter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </div>
 
-        <select v-model="filters.sort" class="filter-select">
-          <option value="name">Trier par nom</option>
-          <option value="recent">Plus récents</option>
-          <option value="id">Par ID</option>
-        </select>
-
-        <button class="action-button" @click="resetFilters">
+        <button
+          role="button"
+          aria-label="Réinitialiser les filtres"
+          class="action-button"
+          @click="resetFilters"
+        >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <polyline points="1 4 1 10 7 10" />
             <polyline points="23 20 23 14 17 14" />
@@ -116,7 +126,12 @@
           Réinitialiser
         </button>
 
-        <button class="export-button" @click="exportClients">
+        <button
+          role="button"
+          aria-label="Exporter les clients"
+          class="export-button"
+          @click="exportClients"
+        >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
             <polyline points="7,10 12,15 17,10" />
@@ -154,7 +169,9 @@
             <line x1="12" y1="16" x2="12.01" y2="16" />
           </svg>
           <p class="error-message">{{ error }}</p>
-          <button @click="fetchClients" class="retry-button">Réessayer</button>
+          <button role="button" aria-label="Réessayer" @click="fetchClients" class="retry-button">
+            Réessayer
+          </button>
         </div>
 
         <!-- Table Content -->
@@ -213,6 +230,8 @@
                 </td>
                 <td class="actions">
                   <button
+                    role="button"
+                    aria-label="Voir détails"
                     class="action-btn secondary"
                     @click="viewClient(client.id_client)"
                     title="Voir détails"
@@ -223,6 +242,8 @@
                     </svg>
                   </button>
                   <button
+                    role="button"
+                    aria-label="Modifier"
                     class="action-btn secondary"
                     @click="editClient(client.id_client)"
                     title="Modifier"
@@ -248,7 +269,12 @@
       <div class="modal-content modal-form" @click.stop>
         <div class="modal-header">
           <h3>Nouveau client</h3>
-          <button @click="showNewClientModal = false" class="modal-close">
+          <button
+            role="button"
+            aria-label="Fermer"
+            @click="showNewClientModal = false"
+            class="modal-close"
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
@@ -436,10 +462,22 @@
 
             <!-- Actions -->
             <div class="modal-actions">
-              <button type="button" class="modal-btn secondary" @click="showNewClientModal = false">
+              <button
+                role="button"
+                aria-label="Annuler"
+                type="button"
+                class="modal-btn secondary"
+                @click="showNewClientModal = false"
+              >
                 Annuler
               </button>
-              <button type="submit" class="modal-btn primary" :disabled="submitting">
+              <button
+                role="button"
+                aria-label="Créer le client"
+                type="submit"
+                class="modal-btn primary"
+                :disabled="submitting"
+              >
                 <span v-if="!submitting">Créer le client</span>
                 <span v-else class="loading-text">
                   <svg class="spinner" viewBox="0 0 24 24" fill="none">
@@ -472,7 +510,12 @@
       <div class="modal-content modal-details" @click.stop>
         <div class="modal-header">
           <h3>Détails du client</h3>
-          <button @click="showDetailsModal = false" class="modal-close">
+          <button
+            role="button"
+            aria-label="Fermer"
+            @click="showDetailsModal = false"
+            class="modal-close"
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
@@ -557,8 +600,17 @@
           </div>
 
           <div class="modal-actions">
-            <button class="modal-btn secondary" @click="showDetailsModal = false">Fermer</button>
             <button
+              role="button"
+              aria-label="Fermer"
+              class="modal-btn secondary"
+              @click="showDetailsModal = false"
+            >
+              Fermer
+            </button>
+            <button
+              role="button"
+              aria-label="Modifier le client"
               class="modal-btn primary"
               @click="
                 () => {
@@ -579,7 +631,12 @@
       <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3>Modifier le client</h3>
-          <button @click="showEditModal = false" class="modal-close">
+          <button
+            role="button"
+            aria-label="Fermer"
+            @click="showEditModal = false"
+            class="modal-close"
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
@@ -604,7 +661,14 @@
             </div>
           </div>
           <div class="modal-actions">
-            <button class="modal-btn secondary" @click="showEditModal = false">Fermer</button>
+            <button
+              role="button"
+              aria-label="Fermer"
+              class="modal-btn secondary"
+              @click="showEditModal = false"
+            >
+              Fermer
+            </button>
           </div>
         </div>
       </div>
@@ -618,6 +682,14 @@
 
   export default {
     name: "ClientsView",
+    metaInfo: {
+      meta: [
+        {
+          name: "description",
+          content: "Le panneau de gestion des clients de Fashion Chic.",
+        },
+      ],
+    },
     setup() {
       // États réactifs
       const clients = ref([]);
@@ -744,19 +816,6 @@
           });
         }
 
-        // Tri
-        switch (filters.value.sort) {
-          case "name":
-            result.sort((a, b) => (a.raison_sociale || "").localeCompare(b.raison_sociale || ""));
-            break;
-          case "recent":
-            result.sort((a, b) => b.id_client - a.id_client);
-            break;
-          case "id":
-            result.sort((a, b) => a.id_client - b.id_client);
-            break;
-        }
-
         return result;
       });
 
@@ -790,8 +849,8 @@
       };
 
       const getAvatarColor = id => {
-        const colors = ["#00B8D4", "#2563EB", "#059669", "#D97706", "#7C3AED", "#DC2626"];
-        return colors[id % colors.length];
+        const colors = ["#D100BC", "#2563EB", "#00872D", "#B35F00", "#7C3AED", "#DC2626"];
+        return colors[(id - 1) % colors.length];
       };
 
       const formatCurrency = amount => {
@@ -998,7 +1057,7 @@
   }
 
   .new-client-button {
-    background: #00b8d4;
+    background: #5500ff;
     color: white;
     border: none;
     border-radius: 8px;
@@ -1008,15 +1067,15 @@
     gap: 0.5rem;
     cursor: pointer;
     transition: all 0.2s ease;
-    box-shadow: 0 2px 8px rgba(0, 184, 212, 0.3);
+    box-shadow: 0 2px 8px rgba(85, 0, 255, 0.3);
     font-size: 14px;
     font-weight: 500;
   }
 
   .new-client-button:hover {
-    background: #0891a6;
+    background: #5500cc;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 184, 212, 0.4);
+    box-shadow: 0 4px 12px rgba(85, 0, 255, 0.3);
   }
 
   .new-client-button svg {
@@ -1108,7 +1167,7 @@
 
   .stat-trend {
     font-size: 12px;
-    color: #059669;
+    color: #00893E;
     margin: 4px 0 0 0;
   }
 
@@ -1120,13 +1179,14 @@
   .filter-group {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 2rem 1rem;
     flex-wrap: wrap;
   }
 
   .search-container {
     position: relative;
     flex: 1;
+    min-width: 450px;
   }
 
   .search-input {
@@ -1155,6 +1215,13 @@
   .filter-wrapper {
     position: relative;
     display: inline-block;
+  }
+
+  .filter-wrapper label {
+    position: absolute;
+    top: -25px;
+    left: 3px;
+    font-size: 14px;
   }
 
   .filter-select {
@@ -1201,7 +1268,7 @@
 
   .search-button,
   .export-button {
-    background: #3b82f6;
+    background: #0062ff;
     color: white;
     border: none;
     border-radius: 8px;
@@ -1440,7 +1507,7 @@
 
   .action-button,
   .export-button {
-    background: #3b82f6;
+    background: #0062ff;
     color: white;
     border: none;
     border-radius: 8px;
@@ -1840,6 +1907,7 @@
 
     .filter-group {
       flex-direction: column;
+      align-items: stretch;
     }
 
     .search-container,
@@ -1848,6 +1916,7 @@
     .export-button {
       width: 100%;
       max-width: none;
+      justify-content: center;
     }
 
     .details-grid {
@@ -1860,6 +1929,10 @@
   }
 
   @media (max-width: 768px) {
+    .search-container {
+      min-width: none;
+    }
+
     .stats-section {
       grid-template-columns: 1fr;
     }

@@ -1,6 +1,8 @@
 <template>
   <button
     :class="buttonClasses"
+    role="button"
+    :aria-label="$attrs['aria-label'] || 'Button'"
     :disabled="disabled || isLoading"
     v-bind="$attrs"
     @click="$emit('click', $event)"

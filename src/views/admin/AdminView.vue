@@ -3,10 +3,15 @@
     <!-- En-tête -->
     <div class="page-header">
       <div class="header-left">
-        <h1 class="page-title">Administration</h1>
+        <h2 class="page-title">Administration</h2>
       </div>
       <div class="header-right">
-        <button class="new-user-button" @click="showNewUserModal = true">
+        <button
+          role="button"
+          aria-label="Ajouter un nouvel utilisateur"
+          class="new-user-button"
+          @click="showNewUserModal = true"
+        >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <circle cx="12" cy="12" r="10" />
             <line x1="12" y1="8" x2="12" y2="16" />
@@ -21,6 +26,8 @@
     <div class="tabs-section">
       <div class="tabs-nav">
         <button
+          role="button"
+          aria-label="Onglet Utilisateurs"
           v-for="tab in tabs"
           :key="tab.id"
           class="tab-button"
@@ -57,7 +64,9 @@
 
           <div v-else-if="error" class="error-container">
             <p class="error-message">{{ error }}</p>
-            <button @click="fetchData" class="retry-button">Réessayer</button>
+            <button role="button" aria-label="Réessayer" @click="fetchData" class="retry-button">
+              Réessayer
+            </button>
           </div>
 
           <div v-else class="table-card">
@@ -99,13 +108,25 @@
                       </span>
                     </td>
                     <td class="actions">
-                      <button class="action-btn primary" @click="editUser(user)" title="Modifier">
+                      <button
+                        role="button"
+                        aria-label="Modifier"
+                        class="action-btn primary"
+                        @click="editUser(user)"
+                        title="Modifier"
+                      >
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                           <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                           <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                         </svg>
                       </button>
-                      <button class="action-btn danger" @click="deleteUser(user)" title="Supprimer">
+                      <button
+                        role="button"
+                        aria-label="Supprimer"
+                        class="action-btn danger"
+                        @click="deleteUser(user)"
+                        title="Supprimer"
+                      >
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                           <polyline points="3 6 5 6 21 6" />
                           <path
@@ -133,7 +154,9 @@
 
           <div v-else-if="error" class="error-container">
             <p class="error-message">{{ error }}</p>
-            <button @click="fetchData" class="retry-button">Réessayer</button>
+            <button role="button" aria-label="Réessayer" @click="fetchData" class="retry-button">
+              Réessayer
+            </button>
           </div>
 
           <div v-else class="roles-grid">
@@ -171,7 +194,12 @@
                 </ul>
               </div>
               <div class="role-actions">
-                <button class="role-edit-button" @click="editRole(role)">
+                <button
+                  role="button"
+                  aria-label="Modifier les permissions"
+                  class="role-edit-button"
+                  @click="editRole(role)"
+                >
                   Modifier les permissions
                 </button>
               </div>
@@ -185,8 +213,8 @@
     <div v-if="showNewUserModal" class="modal-overlay" @click="showNewUserModal = false">
       <div class="modal-content" @click.stop>
         <div class="modal-header">
-          <h3>Nouvel utilisateur</h3>
-          <button @click="closeNewUserModal" class="modal-close">
+          <h2>Nouvel utilisateur</h2>
+          <button role="button" aria-label="Fermer" @click="closeNewUserModal" class="modal-close">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
@@ -261,7 +289,13 @@
                   title="Le mot de passe doit contenir au moins : une majuscule, une minuscule, un chiffre et un caractère spécial (@$!%*?&)"
                   required
                 />
-                <button type="button" class="password-toggle" @click="showPassword = !showPassword">
+                <button
+                  role="button"
+                  aria-label="Afficher le mot de passe"
+                  type="button"
+                  class="password-toggle"
+                  @click="showPassword = !showPassword"
+                >
                   <svg v-if="!showPassword" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                     <circle cx="12" cy="12" r="3" />
@@ -308,10 +342,22 @@
             </div>
 
             <div class="modal-actions">
-              <button type="button" class="modal-btn secondary" @click="closeNewUserModal">
+              <button
+                role="button"
+                aria-label="Annuler"
+                type="button"
+                class="modal-btn secondary"
+                @click="closeNewUserModal"
+              >
                 Annuler
               </button>
-              <button type="submit" class="modal-btn primary" :disabled="creatingUser">
+              <button
+                role="button"
+                aria-label="Créer l'utilisateur"
+                type="submit"
+                class="modal-btn primary"
+                :disabled="creatingUser"
+              >
                 <span v-if="creatingUser" class="loading-spinner"></span>
                 {{ creatingUser ? "Création..." : "Créer l'utilisateur" }}
               </button>
@@ -325,8 +371,13 @@
     <div v-if="showEditUserModal" class="modal-overlay" @click="showEditUserModal = false">
       <div class="modal-content modal-edit" @click.stop>
         <div class="modal-header">
-          <h3>Modifier l'utilisateur</h3>
-          <button @click="showEditUserModal = false" class="modal-close">
+          <h2>Modifier l'utilisateur</h2>
+          <button
+            role="button"
+            aria-label="Fermer"
+            @click="showEditUserModal = false"
+            class="modal-close"
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
@@ -363,8 +414,21 @@
             </div>
           </div>
           <div class="modal-actions">
-            <button class="modal-btn secondary" @click="showEditUserModal = false">Annuler</button>
-            <button class="modal-btn primary">Enregistrer les modifications</button>
+            <button
+              role="button"
+              aria-label="Annuler"
+              class="modal-btn secondary"
+              @click="showEditUserModal = false"
+            >
+              Annuler
+            </button>
+            <button
+              role="button"
+              aria-label="Enregistrer les modifications"
+              class="modal-btn primary"
+            >
+              Enregistrer les modifications
+            </button>
           </div>
         </div>
       </div>
@@ -378,6 +442,15 @@
 
   export default {
     name: "AdminView",
+    metaInfo: {
+      meta: [
+        {
+          name: "description",
+          content:
+            "Le panneau d'administration de Fashion Chic pour gérer les utilisateurs et rôles.",
+        },
+      ],
+    },
     setup() {
       const activeTab = ref("users");
       const userSearch = ref("");
@@ -448,7 +521,7 @@
       const roleColors = {
         1: "#6B7280", // Gris pour test
         2: "#059669", // Vert pour gestionnaire
-        3: "#3B82F6", // Bleu pour commercial
+        3: "#0062ff", // Bleu pour commercial
         4: "#DC2626", // Rouge pour admin
       };
 
@@ -593,7 +666,7 @@
       };
 
       const getUserColor = userId => {
-        const colors = ["#3B82F6", "#059669", "#DC2626", "#7C3AED", "#F59E0B", "#EC4899"];
+        const colors = ["#D100BC", "#2563EB", "#00872D", "#B35F00", "#7C3AED", "#DC2626"];
         return colors[userId % colors.length];
       };
 
@@ -713,7 +786,7 @@
   }
 
   .new-user-button {
-    background: #00b8d4;
+    background: #5500ff;
     color: white;
     border: none;
     border-radius: 8px;
@@ -723,15 +796,15 @@
     gap: 0.5rem;
     cursor: pointer;
     transition: all 0.2s ease;
-    box-shadow: 0 2px 8px rgba(0, 184, 212, 0.3);
+    box-shadow: 0 2px 8px rgba(85, 0, 255, 0.3);
     font-size: 14px;
     font-weight: 500;
   }
 
   .new-user-button:hover {
-    background: #0891a6;
+    background: #5500cc;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 184, 212, 0.4);
+    box-shadow: 0 4px 12px rgba(85, 0, 255, 0.3);
   }
 
   .new-user-button svg {
@@ -828,9 +901,9 @@
   }
 
   .tab-button.active {
-    color: #00b8d4;
+    color: #0062ff;
     background: white;
-    border-bottom-color: #00b8d4;
+    border-bottom-color: #0062ff;
   }
 
   .tab-content {
@@ -1364,7 +1437,7 @@
     border-bottom: 1px solid #e2e8f0;
   }
 
-  .modal-header h3 {
+  .modal-header h2 {
     font-size: 18px;
     font-weight: 600;
     color: #0f172a;

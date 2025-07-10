@@ -22,14 +22,14 @@
       </div>
 
       <div class="error-actions">
-        <button class="btn-primary" @click="goHome">
+        <button role="button" aria-label="Retour à l'accueil" class="btn-primary" @click="goHome">
           <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
             <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
           </svg>
           Retour à l'accueil
         </button>
 
-        <button class="btn-secondary" @click="goBack">
+        <button role="button" aria-label="Page précédente" class="btn-secondary" @click="goBack">
           <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
             <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
           </svg>
@@ -38,7 +38,7 @@
       </div>
 
       <div class="suggestions-section">
-        <h3 class="suggestions-title">Liens utiles</h3>
+        <h2 class="suggestions-title">Liens utiles</h2>
         <div class="suggestions-grid">
           <a href="/" class="suggestion-card">
             <div class="suggestion-icon orders-icon">
@@ -104,6 +104,15 @@
 <script>
   export default {
     name: "Error404Page",
+    metaInfo: {
+      meta: [
+        {
+          name: "description",
+          content:
+            "Page non trouvée - Fashion Chic",
+        },
+      ],
+    },
     methods: {
       goHome() {
         this.$router.push("/");
