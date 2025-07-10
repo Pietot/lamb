@@ -6,7 +6,12 @@
         <h2 class="page-title">Réception des livraisons</h2>
       </div>
       <div class="header-right">
-        <button class="new-delivery-button" @click="showNewDeliveryModal = true">
+        <button
+          role="button"
+          aria-label="Nouvelle livraison"
+          class="new-delivery-button"
+          @click="showNewDeliveryModal = true"
+        >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <circle cx="12" cy="12" r="10" />
             <line x1="12" y1="8" x2="12" y2="16" />
@@ -81,7 +86,8 @@
         </div>
 
         <div class="filter-wrapper">
-          <select v-model="filters.supplier" class="filter-select">
+          <label for="supplier-filter" class="filter-label">Fournisseur :</label>
+          <select id="supplier-filter" v-model="filters.supplier" class="filter-select">
             <option value="">Tous les fournisseurs</option>
             <option value="Durand SA">Durand SA</option>
             <option value="Bernard FR">Bernard FR</option>
@@ -93,7 +99,8 @@
         </div>
 
         <div class="filter-wrapper">
-          <select v-model="filters.status" class="filter-select">
+          <label for="status-filter" class="filter-label">Statut :</label>
+          <select id="status-filter" v-model="filters.status" class="filter-select">
             <option value="">Tous les statuts</option>
             <option value="En attente">En attente</option>
             <option value="Problème">Problème</option>
@@ -104,7 +111,7 @@
           </svg>
         </div>
 
-        <button class="search-button">
+        <button role="button" aria-label="Rechercher" class="search-button">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <circle cx="11" cy="11" r="8" />
             <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -169,6 +176,8 @@
                 </td>
                 <td class="actions">
                   <button
+                    role="button"
+                    aria-label="Recevoir la livraison"
                     v-if="delivery.status === 'En attente'"
                     class="action-btn success"
                     @click="receiveDelivery(delivery.id)"
@@ -181,6 +190,8 @@
                     </svg>
                   </button>
                   <button
+                    role="button"
+                    aria-label="Signaler un problème"
                     v-if="delivery.status === 'Problème'"
                     class="action-btn danger"
                     @click="reportProblem(delivery.id)"
@@ -193,6 +204,8 @@
                     </svg>
                   </button>
                   <button
+                    role="button"
+                    aria-label="Voir détails"
                     class="action-btn secondary"
                     @click="viewDetails(delivery.id)"
                     title="Voir détails"
@@ -253,6 +266,8 @@
                 </td>
                 <td class="actions">
                   <button
+                    role="button"
+                    aria-label="Voir détails"
                     class="action-btn secondary"
                     @click="viewDeliveryDetails(item.id)"
                     title="Voir détails"
@@ -275,7 +290,12 @@
       <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3>Enregistrer une livraison</h3>
-          <button @click="showNewDeliveryModal = false" class="modal-close">
+          <button
+            role="button"
+            aria-label="Fermer"
+            @click="showNewDeliveryModal = false"
+            class="modal-close"
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
@@ -474,7 +494,7 @@
   }
 
   .new-delivery-button {
-    background: #00b8d4;
+    background: #5500ff;
     color: white;
     border: none;
     border-radius: 8px;
@@ -484,15 +504,15 @@
     gap: 0.5rem;
     cursor: pointer;
     transition: all 0.2s ease;
-    box-shadow: 0 2px 8px rgba(0, 184, 212, 0.3);
+    box-shadow: 0 2px 8px rgba(85, 0, 255, 0.3);
     font-size: 14px;
     font-weight: 500;
   }
 
   .new-delivery-button:hover {
-    background: #0891a6;
+    background: #5500cc;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 184, 212, 0.4);
+    box-shadow: 0 4px 12px rgba(85, 0, 255, 0.3);
   }
 
   .new-delivery-button svg {
@@ -579,13 +599,14 @@
   .filter-group {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 2rem 1rem;
     flex-wrap: wrap;
   }
 
   .search-container {
     position: relative;
     flex: 1;
+    min-width: 350px;
   }
 
   .search-input {
@@ -614,6 +635,13 @@
   .filter-wrapper {
     position: relative;
     display: inline-block;
+  }
+
+  .filter-wrapper label {
+    position: absolute;
+    top: -25px;
+    left: 3px;
+    font-size: 14px;
   }
 
   .filter-select {
@@ -895,7 +923,7 @@
 
   .status-problem {
     background: #fef2f2;
-    color: #dc2626;
+    color: #AB0000;
   }
 
   .status-received {
@@ -1044,14 +1072,6 @@
     color: #64748b;
   }
 
-  input:placeholder-shown {
-    text-overflow: ellipsis;
-  }
-
-  input:focus::placeholder {
-    color: transparent;
-  }
-
   /* RESPONSIVE */
   @media (max-width: 1024px) {
     .page-header {
@@ -1078,10 +1098,15 @@
     .filter-select {
       width: 100%;
       max-width: none;
+      justify-content: center;
     }
   }
 
   @media (max-width: 768px) {
+    .search-container {
+      min-width: auto;
+    }
+
     .section-header {
       flex-direction: column;
       gap: 1rem;
@@ -1111,6 +1136,16 @@
     .action-btn {
       padding: 0.375rem 0.75rem;
       font-size: 11px;
+    }
+  }
+
+  @media (max-width: 425px) {
+    .search-container > input:placeholder-shown {
+      text-overflow: ellipsis;
+    }
+
+    .search-container > input:focus::placeholder {
+      color: transparent;
     }
   }
 </style>

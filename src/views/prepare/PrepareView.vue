@@ -69,7 +69,8 @@
         </div>
 
         <div class="filter-wrapper">
-          <select v-model="filterPriority" class="filter-select">
+          <label for="priority-filter" class="filter-label">Priorité :</label>
+          <select id="priority-filter" v-model="filterPriority" class="filter-select">
             <option value="">Toutes les priorités</option>
             <option value="urgent">Urgente</option>
             <option value="normal">Normale</option>
@@ -80,7 +81,8 @@
         </div>
 
         <div class="filter-wrapper">
-          <select v-model="filterStatus" class="filter-select">
+          <label for="status-filter" class="filter-label">Statut :</label>
+          <select id="status-filter" v-model="filterStatus" class="filter-select">
             <option value="">Tous les statuts</option>
             <option value="attente">En attente</option>
             <option value="preparation">En préparation</option>
@@ -90,7 +92,7 @@
           </svg>
         </div>
 
-        <button class="search-button">
+        <button role="button" aria-label="Rechercher" class="search-button">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <circle cx="11" cy="11" r="8" />
             <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -115,7 +117,9 @@
 
         <div v-else-if="error" class="error-container">
           <p class="error-message">{{ error }}</p>
-          <button @click="fetchData" class="retry-button">Réessayer</button>
+          <button role="button" aria-label="Réessayer" @click="fetchData" class="retry-button">
+            Réessayer
+          </button>
         </div>
 
         <div v-else class="orders-list">
@@ -144,6 +148,8 @@
 
               <div class="order-actions">
                 <button
+                  role="button"
+                  aria-label="Commencer la préparation"
                   v-if="order.statut === 'attente'"
                   class="action-btn primary"
                   @click="startPreparation(order)"
@@ -152,6 +158,8 @@
                 </button>
 
                 <button
+                  role="button"
+                  aria-label="Terminer la préparation"
                   v-else-if="order.statut === 'preparation'"
                   class="action-btn success"
                   @click="completePreparation(order)"
@@ -159,7 +167,13 @@
                   Terminer
                 </button>
 
-                <button class="action-btn icon-btn" @click="viewOrder(order)" title="Voir détails">
+                <button
+                  role="button"
+                  aria-label="Voir les détails"
+                  class="action-btn icon-btn"
+                  @click="viewOrder(order)"
+                  title="Voir détails"
+                >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                     <circle cx="12" cy="12" r="3" />
@@ -167,6 +181,8 @@
                 </button>
 
                 <button
+                  role="button"
+                  aria-label="Voir le contenu"
                   class="action-btn icon-btn"
                   @click="viewOrderContent(order)"
                   title="Voir contenu"
@@ -194,8 +210,13 @@
     <div v-if="showContentModal" class="modal-overlay" @click="showContentModal = false">
       <div class="modal-content modal-details" @click.stop>
         <div class="modal-header">
-          <h3>Contenu de la commande</h3>
-          <button @click="showContentModal = false" class="modal-close">
+          <h2>Contenu de la commande</h2>
+          <button
+            role="button"
+            aria-label="Fermer"
+            @click="showContentModal = false"
+            class="modal-close"
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
@@ -260,7 +281,12 @@
       <div class="modal-content modal-confirm" @click.stop>
         <div class="modal-header">
           <h3>Confirmer la fin de préparation</h3>
-          <button @click="showConfirmModal = false" class="modal-close">
+          <button
+            role="button"
+            aria-label="Fermer"
+            @click="showConfirmModal = false"
+            class="modal-close"
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
@@ -282,8 +308,22 @@
             Cette action changera le statut de la commande en "Expédiée".
           </p>
           <div class="modal-actions">
-            <button class="modal-btn secondary" @click="showConfirmModal = false">Annuler</button>
-            <button class="modal-btn primary" @click="confirmCompletePreparation">Confirmer</button>
+            <button
+              role="button"
+              aria-label="Annuler"
+              class="modal-btn secondary"
+              @click="showConfirmModal = false"
+            >
+              Annuler
+            </button>
+            <button
+              role="button"
+              aria-label="Confirmer"
+              class="modal-btn primary"
+              @click="confirmCompletePreparation"
+            >
+              Confirmer
+            </button>
           </div>
         </div>
       </div>
@@ -721,13 +761,14 @@
   .filter-group {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 2rem 1rem;
     flex-wrap: wrap;
   }
 
   .search-container {
     position: relative;
     flex: 1;
+    min-width: 380px;
   }
 
   .search-input {
@@ -756,6 +797,13 @@
   .filter-wrapper {
     position: relative;
     display: inline-block;
+  }
+
+  .filter-wrapper label {
+    position: absolute;
+    top: -25px;
+    left: 3px;
+    font-size: 14px;
   }
 
   .filter-select {
@@ -1347,14 +1395,6 @@
     color: black;
   }
 
-  input:placeholder-shown {
-    text-overflow: ellipsis;
-  }
-
-  input:focus::placeholder {
-    color: transparent;
-  }
-
   /* RESPONSIVE */
   @media (max-width: 1024px) {
     .kpi-section {
@@ -1363,16 +1403,22 @@
 
     .filter-group {
       flex-direction: column;
+      align-items: stretch;
     }
 
     .filter-select,
     .search-container {
       width: 100%;
       max-width: none;
+      justify-content: center;
     }
   }
 
   @media (max-width: 768px) {
+    .search-container {
+      min-width: auto;
+    }
+
     .order-item {
       flex-direction: column;
       align-items: stretch;
@@ -1420,6 +1466,16 @@
 
     .modal-btn {
       width: 100%;
+    }
+  }
+
+  @media (max-width: 425px) {
+    .search-container > input:placeholder-shown {
+      text-overflow: ellipsis;
+    }
+
+    .search-container > input:focus::placeholder {
+      color: transparent;
     }
   }
 </style>

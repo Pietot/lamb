@@ -6,7 +6,12 @@
         <h2 class="page-title">Gestion des commandes</h2>
       </div>
       <div class="header-right">
-        <button class="create-button" @click="goToNewOrder">
+        <button
+          role="button"
+          aria-label="Créer une nouvelle commande"
+          class="create-button"
+          @click="goToNewOrder"
+        >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <circle cx="12" cy="12" r="10" />
             <line x1="12" y1="8" x2="12" y2="16" />
@@ -34,7 +39,8 @@
         </div>
 
         <div class="filter-wrapper">
-          <select v-model="filters.clientId" class="filter-select">
+          <label for="client-filter" class="filter-label">Client :</label>
+          <select id="client-filter" v-model="filters.clientId" class="filter-select">
             <option value="">Tous les clients</option>
             <option
               v-for="client in uniqueClients"
@@ -50,7 +56,8 @@
         </div>
 
         <div class="filter-wrapper">
-          <select v-model="filters.status" class="filter-select">
+          <label for="status-filter" class="filter-label">Statut :</label>
+          <select id="status-filter" v-model="filters.status" class="filter-select">
             <option value="">Tous les statuts</option>
             <option value="attente">En attente</option>
             <option value="preparation">En préparation</option>
@@ -61,7 +68,7 @@
           </svg>
         </div>
 
-        <button class="search-button">
+        <button role="button" aria-label="Rechercher" class="search-button">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <circle cx="11" cy="11" r="8" />
             <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -99,7 +106,9 @@
 
         <div v-else-if="error" class="error-container">
           <p class="error-message">{{ error }}</p>
-          <button @click="fetchData" class="retry-button">Réessayer</button>
+          <button role="button" aria-label="Réessayer" @click="fetchData" class="retry-button">
+            Réessayer
+          </button>
         </div>
 
         <div v-else class="table-container">
@@ -132,19 +141,33 @@
                   </span>
                 </td>
                 <td class="actions">
-                  <button class="action-btn" @click="viewOrder(order)" title="Voir les détails">
+                  <button
+                    role="button"
+                    aria-label="Voir les détails"
+                    class="action-btn"
+                    @click="viewOrder(order)"
+                    title="Voir les détails"
+                  >
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                       <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                       <circle cx="12" cy="12" r="3" />
                     </svg>
                   </button>
-                  <button class="action-btn" @click="editOrder(order.id_commande)" title="Modifier">
+                  <button
+                    role="button"
+                    aria-label="Modifier"
+                    class="action-btn"
+                    @click="editOrder(order.id_commande)"
+                    title="Modifier"
+                  >
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                       <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                       <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                     </svg>
                   </button>
                   <button
+                    role="button"
+                    aria-label="Imprimer"
                     class="action-btn"
                     @click="printOrder(order.id_commande)"
                     title="Imprimer"
@@ -173,6 +196,8 @@
           </div>
           <div class="pagination-controls">
             <button
+              role="button"
+              aria-label="Page précédente"
               class="pagination-btn"
               @click="goToPage(currentPage - 1)"
               :disabled="currentPage === 1"
@@ -184,6 +209,8 @@
 
             <div class="page-numbers">
               <button
+                role="button"
+                aria-label="Page {{ page }}"
                 v-for="page in visiblePages"
                 :key="page"
                 class="page-number"
@@ -196,6 +223,8 @@
             </div>
 
             <button
+              role="button"
+              aria-label="Page suivante"
               class="pagination-btn"
               @click="goToPage(currentPage + 1)"
               :disabled="currentPage === totalPages"
@@ -213,8 +242,13 @@
     <div v-if="showDetailsModal" class="modal-overlay" @click="showDetailsModal = false">
       <div class="modal-content modal-details" @click.stop>
         <div class="modal-header">
-          <h3>Détails de la commande</h3>
-          <button @click="showDetailsModal = false" class="modal-close">
+          <h2>Détails de la commande</h2>
+          <button
+            role="button"
+            aria-label="Fermer"
+            @click="showDetailsModal = false"
+            class="modal-close"
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
@@ -275,8 +309,20 @@
           </div>
 
           <div class="modal-actions">
-            <button class="modal-btn secondary" @click="showDetailsModal = false">Fermer</button>
-            <button class="modal-btn primary" @click="editOrder(selectedOrder.id_commande)">
+            <button
+              role="button"
+              aria-label="Fermer"
+              class="modal-btn secondary"
+              @click="showDetailsModal = false"
+            >
+              Fermer
+            </button>
+            <button
+              role="button"
+              aria-label="Modifier la commande"
+              class="modal-btn primary"
+              @click="editOrder(selectedOrder.id_commande)"
+            >
               Modifier la commande
             </button>
           </div>
@@ -634,7 +680,7 @@
   }
 
   .create-button {
-    background: #00b8d4;
+    background: #5500ff;
     color: white;
     border: none;
     border-radius: 8px;
@@ -644,15 +690,15 @@
     gap: 0.5rem;
     cursor: pointer;
     transition: all 0.2s ease;
-    box-shadow: 0 2px 8px rgba(0, 184, 212, 0.3);
+    box-shadow: 0 2px 8px rgba(85, 0, 255, 0.3);
     font-size: 14px;
     font-weight: 500;
   }
 
   .create-button:hover {
-    background: #0891a6;
+    background: #5500cc;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 184, 212, 0.4);
+    box-shadow: 0 4px 12px rgba(85, 0, 255, 0.3);
   }
 
   .create-button svg {
@@ -669,7 +715,7 @@
   .filter-group {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 2rem 1rem;
     flex-wrap: wrap;
   }
 
@@ -744,6 +790,7 @@
   .search-container {
     position: relative;
     flex: 1;
+    min-width: 340px;
   }
 
   .search-input {
@@ -772,6 +819,13 @@
   .filter-wrapper {
     position: relative;
     display: inline-block;
+  }
+
+  .filter-wrapper label {
+    position: absolute;
+    top: -25px;
+    left: 3px;
+    font-size: 14px;
   }
 
   .search-input:focus {
@@ -1270,14 +1324,6 @@
     color: black;
   }
 
-  input:placeholder-shown {
-    text-overflow: ellipsis;
-  }
-
-  input:focus::placeholder {
-    color: transparent;
-  }
-
   /* RESPONSIVE */
   @media (max-width: 1024px) {
     .page-header {
@@ -1319,6 +1365,10 @@
   }
 
   @media (max-width: 768px) {
+    .search-container {
+      min-width: auto;
+    }
+
     .orders-table {
       font-size: 12px;
     }
@@ -1352,6 +1402,16 @@
 
     .modal-btn {
       width: 100%;
+    }
+
+    @media (max-width: 375px) {
+      .search-container > input:placeholder-shown {
+        text-overflow: ellipsis;
+      }
+
+      .search-container > input:focus::placeholder {
+        color: transparent;
+      }
     }
   }
 </style>

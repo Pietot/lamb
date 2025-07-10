@@ -3,7 +3,7 @@
     <!-- En-tête avec boutons -->
     <div class="page-header">
       <div class="header-left">
-        <button class="back-button" @click="goBack">
+        <button role="button" aria-label="Retour" class="back-button" @click="goBack">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <polyline points="15,18 9,12 15,6" />
           </svg>
@@ -12,7 +12,12 @@
         <h2 class="page-title">Détail du fournisseur</h2>
       </div>
       <div class="header-actions">
-        <button class="print-button" @click="printSupplier">
+        <button
+          role="button"
+          aria-label="Imprimer le fournisseur"
+          class="print-button"
+          @click="printSupplier"
+        >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <polyline points="6,9 6,2 18,2 18,9" />
             <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
@@ -20,7 +25,12 @@
           </svg>
           <span>Imprimer</span>
         </button>
-        <button class="edit-button" @click="editSupplier">
+        <button
+          role="button"
+          aria-label="Modifier le fournisseur"
+          class="edit-button"
+          @click="editSupplier"
+        >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
@@ -44,7 +54,9 @@
         <line x1="12" y1="16" x2="12.01" y2="16" />
       </svg>
       <p class="error-message">{{ error }}</p>
-      <button @click="fetchSupplier" class="retry-button">Réessayer</button>
+      <button role="button" aria-label="Réessayer" @click="fetchSupplier" class="retry-button">
+        Réessayer
+      </button>
     </div>
 
     <!-- Content -->
@@ -126,7 +138,7 @@
           </div>
 
           <div class="contact-section">
-            <h3 class="section-title">Contact principal</h3>
+            <h2 class="section-title">Contact principal</h2>
             <div class="contact-person">
               <div class="contact-avatar">{{ getContactInitials() }}</div>
               <div class="contact-info">
@@ -139,7 +151,7 @@
 
         <!-- Statistiques -->
         <div class="stats-card">
-          <h3 class="card-title">Informations commerciales</h3>
+          <h2 class="card-title">Informations commerciales</h2>
 
           <div class="stats-grid">
             <div class="stat-item">
@@ -198,7 +210,7 @@
 
           <!-- Stats supplémentaires (simulées pour l'instant) -->
           <div class="additional-stats">
-            <h4 class="subsection-title">Statistiques d'activité</h4>
+            <h3 class="subsection-title">Statistiques d'activité</h3>
             <div class="mini-stats">
               <div class="mini-stat">
                 <span class="mini-label">Commandes en cours</span>
@@ -221,6 +233,8 @@
       <div class="tabs-section">
         <div class="tabs-nav">
           <button
+            role="button"
+            aria-label="Onglet {{ tab.label }}"
             v-for="tab in tabs"
             :key="tab.id"
             class="tab-button"
@@ -236,8 +250,13 @@
           <!-- Onglet Produits -->
           <div v-if="activeTab === 'products'" class="products-section">
             <div class="table-header">
-              <h3 class="table-title">Produits fournis</h3>
-              <button class="export-button" @click="exportProducts">
+              <h2 class="table-title">Produits fournis</h2>
+              <button
+                role="button"
+                aria-label="Exporter les produits"
+                class="export-button"
+                @click="exportProducts"
+              >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                   <polyline points="7,10 12,15 17,10" />
@@ -306,7 +325,7 @@
               <line x1="16" y1="13" x2="8" y2="13" />
               <line x1="16" y1="17" x2="8" y2="17" />
             </svg>
-            <h4>Commandes</h4>
+            <h3>Commandes</h3>
             <p>Section des commandes en cours de développement</p>
           </div>
 
@@ -318,7 +337,7 @@
               <circle cx="5.5" cy="18.5" r="2.5" />
               <circle cx="18.5" cy="18.5" r="2.5" />
             </svg>
-            <h4>Livraisons</h4>
+            <h3>Livraisons</h3>
             <p>Section des livraisons en cours de développement</p>
           </div>
         </div>
@@ -480,7 +499,7 @@
       };
 
       const getSupplierColor = () => {
-        const colors = ["#0062ff", "#00B8D4", "#059669", "#D97706", "#7C3AED", "#DC2626"];
+        const colors = ["#D100BC", "#2563EB", "#00872D", "#B35F00", "#7C3AED", "#DC2626"];
         const id = supplier.value?.id_fournisseur || 0;
         return colors[id % colors.length];
       };
@@ -776,15 +795,25 @@
   }
 
   .edit-button {
-    background: #00b8d4;
+    background: #5500ff;
     color: white;
-    box-shadow: 0 2px 8px rgba(0, 184, 212, 0.3);
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(85, 0, 255, 0.3);
+    font-size: 14px;
+    font-weight: 500;
   }
 
   .edit-button:hover {
-    background: #0891a6;
+    background: #5500cc;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 184, 212, 0.4);
+    box-shadow: 0 4px 12px rgba(85, 0, 255, 0.3);
   }
 
   .print-button svg,
@@ -944,7 +973,7 @@
   .contact-avatar {
     width: 40px;
     height: 40px;
-    background: #00b8d4;
+    background: #9300ff;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -1152,9 +1181,9 @@
   }
 
   .tab-button.active {
-    color: #00b8d4;
+    color: #0062ff;
     background: white;
-    border-bottom-color: #00b8d4;
+    border-bottom-color: #0062ff;
   }
 
   .tab-content {
@@ -1252,7 +1281,7 @@
   }
 
   .stock.low-stock {
-    color: #dc2626;
+    color: #AB0000;
     background: #fef2f2;
     padding: 0.25rem 0.5rem;
     border-radius: 1rem;

@@ -60,7 +60,9 @@
         </div>
         <div v-else-if="ordersError" class="error-container">
           <p class="error-message">{{ ordersError }}</p>
-          <button @click="fetchOrders" class="retry-button">Réessayer</button>
+          <button role="button" aria-label="Réessayer" @click="fetchOrders" class="retry-button">
+            Réessayer
+          </button>
         </div>
         <div v-else class="table-container">
           <table class="data-table">
@@ -78,7 +80,7 @@
                 <td class="order-id">#{{ order.id_commande }}</td>
                 <td>{{ getClientName(order.id_client) }}</td>
                 <td>{{ formatDate(order.date_commande) }}</td>
-                <td>{{ formatCurrency(order.montant_total) }}</td>
+                <td>{{ formatCurrency(order.montant_ttc) }}</td>
                 <td>
                   <span class="status" :class="getStatusClass(order.statut)">
                     {{ getStatusLabel(order.statut) }}
@@ -104,7 +106,14 @@
           </div>
           <div v-else-if="articlesError" class="error-container">
             <p class="error-message">{{ articlesError }}</p>
-            <button @click="fetchArticles" class="retry-button">Réessayer</button>
+            <button
+              role="button"
+              aria-label="Réessayer"
+              @click="fetchArticles"
+              class="retry-button"
+            >
+              Réessayer
+            </button>
           </div>
           <div v-else class="alerts-container">
             <div v-for="item in lowStockItems" :key="item.id_article" class="alert-item">
@@ -134,7 +143,14 @@
           </div>
           <div v-else-if="deliveriesError" class="error-container">
             <p class="error-message">{{ deliveriesError }}</p>
-            <button @click="fetchDeliveries" class="retry-button">Réessayer</button>
+            <button
+              role="button"
+              aria-label="Réessayer"
+              @click="fetchDeliveries"
+              class="retry-button"
+            >
+              Réessayer
+            </button>
           </div>
           <div v-else class="table-container">
             <table class="data-table">

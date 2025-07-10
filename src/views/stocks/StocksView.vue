@@ -1038,7 +1038,7 @@
   }
 
   .add-button {
-    background: #00b8d4;
+    background: #5500ff;
     color: white;
     border: none;
     border-radius: 8px;
@@ -1048,15 +1048,15 @@
     gap: 0.5rem;
     cursor: pointer;
     transition: all 0.2s ease;
-    box-shadow: 0 2px 8px rgba(0, 184, 212, 0.3);
+    box-shadow: 0 2px 8px rgba(85, 0, 255, 0.3);
     font-size: 14px;
     font-weight: 500;
   }
 
   .add-button:hover {
-    background: #0891a6;
+    background: #5500cc;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 184, 212, 0.4);
+    box-shadow: 0 4px 12px rgba(85, 0, 255, 0.3);
   }
 
   .add-button svg {
@@ -1073,13 +1073,14 @@
   .filter-group {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 2rem 1rem;
     flex-wrap: wrap;
   }
 
   .search-container {
     position: relative;
     flex: 1;
+    min-width: 395px;
   }
 
   .search-input {
@@ -1111,7 +1112,10 @@
   }
 
   .filter-wrapper label {
-    display: none;
+    position: absolute;
+    top: -25px;
+    left: 3px;
+    font-size: 14px;
   }
 
   .filter-select {
@@ -1210,7 +1214,6 @@
     color: #dc2626;
     margin-bottom: 1rem;
   }
-
   .retry-button {
     background: #00b8d4;
     color: white;
@@ -1793,16 +1796,12 @@
     margin: 0;
   }
 
-  input:placeholder-shown {
-    text-overflow: ellipsis;
-  }
-
-  input:focus::placeholder {
-    color: transparent;
-  }
-
   /* RESPONSIVE */
   @media (max-width: 768px) {
+    .search-container {
+      min-width: auto;
+    }
+
     .page-header {
       flex-direction: column;
       gap: 1rem;
@@ -1870,6 +1869,16 @@
     .btn-secondary,
     .btn-primary {
       width: 100%;
+    }
+  }
+  
+  @media (max-width: 425px) {
+    .search-container > input:placeholder-shown {
+      text-overflow: ellipsis;
+    }
+
+    .search-container > input:focus::placeholder {
+      color: transparent;
     }
   }
 </style>

@@ -99,18 +99,18 @@
           </svg>
         </div>
 
-        <select v-model="filters.city" class="filter-select">
-          <option value="">Toutes les villes</option>
-          <option v-for="city in availableCities" :key="city" :value="city">
-            {{ city }}
-          </option>
-        </select>
-
-        <select v-model="filters.sort" class="filter-select">
-          <option value="name">Trier par nom</option>
-          <option value="recent">Plus récents</option>
-          <option value="id">Par ID</option>
-        </select>
+        <div class="filter-wrapper">
+          <label for="city-filter" class="filter-label">Ville :</label>
+          <select id="city-filter" v-model="filters.city" class="filter-select">
+            <option value="">Toutes les villes</option>
+            <option v-for="city in availableCities" :key="city" :value="city">
+              {{ city }}
+            </option>
+          </select>
+          <svg class="filter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </div>
 
         <button
           role="button"
@@ -816,19 +816,6 @@
           });
         }
 
-        // Tri
-        switch (filters.value.sort) {
-          case "name":
-            result.sort((a, b) => (a.raison_sociale || "").localeCompare(b.raison_sociale || ""));
-            break;
-          case "recent":
-            result.sort((a, b) => b.id_client - a.id_client);
-            break;
-          case "id":
-            result.sort((a, b) => a.id_client - b.id_client);
-            break;
-        }
-
         return result;
       });
 
@@ -862,8 +849,8 @@
       };
 
       const getAvatarColor = id => {
-        const colors = ["#00B8D4", "#2563EB", "#059669", "#D97706", "#7C3AED", "#DC2626"];
-        return colors[id % colors.length];
+        const colors = ["#D100BC", "#2563EB", "#00872D", "#B35F00", "#7C3AED", "#DC2626"];
+        return colors[(id - 1) % colors.length];
       };
 
       const formatCurrency = amount => {
@@ -1070,7 +1057,7 @@
   }
 
   .new-client-button {
-    background: #00b8d4;
+    background: #5500ff;
     color: white;
     border: none;
     border-radius: 8px;
@@ -1080,15 +1067,15 @@
     gap: 0.5rem;
     cursor: pointer;
     transition: all 0.2s ease;
-    box-shadow: 0 2px 8px rgba(0, 184, 212, 0.3);
+    box-shadow: 0 2px 8px rgba(85, 0, 255, 0.3);
     font-size: 14px;
     font-weight: 500;
   }
 
   .new-client-button:hover {
-    background: #0891a6;
+    background: #5500cc;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 184, 212, 0.4);
+    box-shadow: 0 4px 12px rgba(85, 0, 255, 0.3);
   }
 
   .new-client-button svg {
@@ -1180,7 +1167,7 @@
 
   .stat-trend {
     font-size: 12px;
-    color: #059669;
+    color: #00893E;
     margin: 4px 0 0 0;
   }
 
@@ -1192,13 +1179,14 @@
   .filter-group {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 2rem 1rem;
     flex-wrap: wrap;
   }
 
   .search-container {
     position: relative;
     flex: 1;
+    min-width: 450px;
   }
 
   .search-input {
@@ -1227,6 +1215,13 @@
   .filter-wrapper {
     position: relative;
     display: inline-block;
+  }
+
+  .filter-wrapper label {
+    position: absolute;
+    top: -25px;
+    left: 3px;
+    font-size: 14px;
   }
 
   .filter-select {
@@ -1912,6 +1907,7 @@
 
     .filter-group {
       flex-direction: column;
+      align-items: stretch;
     }
 
     .search-container,
@@ -1920,6 +1916,7 @@
     .export-button {
       width: 100%;
       max-width: none;
+      justify-content: center;
     }
 
     .details-grid {
@@ -1932,6 +1929,10 @@
   }
 
   @media (max-width: 768px) {
+    .search-container {
+      min-width: none;
+    }
+
     .stats-section {
       grid-template-columns: 1fr;
     }

@@ -65,7 +65,7 @@
           </div>
 
           <!-- Bouton LOGIN -->
-          <button type="submit" :disabled="isLoading" class="login-button">
+          <button role="button" aria-label="Se connecter" type="submit" :disabled="isLoading" class="login-button">
             {{ isLoading ? "CONNEXION..." : "LOGIN" }}
           </button>
         </form>

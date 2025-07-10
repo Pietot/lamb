@@ -666,7 +666,7 @@
       };
 
       const getUserColor = userId => {
-        const colors = ["#0062ff", "#059669", "#DC2626", "#7C3AED", "#F59E0B", "#EC4899"];
+        const colors = ["#D100BC", "#2563EB", "#00872D", "#B35F00", "#7C3AED", "#DC2626"];
         return colors[userId % colors.length];
       };
 
@@ -786,7 +786,7 @@
   }
 
   .new-user-button {
-    background: #00b8d4;
+    background: #5500ff;
     color: white;
     border: none;
     border-radius: 8px;
@@ -796,15 +796,15 @@
     gap: 0.5rem;
     cursor: pointer;
     transition: all 0.2s ease;
-    box-shadow: 0 2px 8px rgba(0, 184, 212, 0.3);
+    box-shadow: 0 2px 8px rgba(85, 0, 255, 0.3);
     font-size: 14px;
     font-weight: 500;
   }
 
   .new-user-button:hover {
-    background: #0891a6;
+    background: #5500cc;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 184, 212, 0.4);
+    box-shadow: 0 4px 12px rgba(85, 0, 255, 0.3);
   }
 
   .new-user-button svg {
@@ -901,9 +901,9 @@
   }
 
   .tab-button.active {
-    color: #00b8d4;
+    color: #0062ff;
     background: white;
-    border-bottom-color: #00b8d4;
+    border-bottom-color: #0062ff;
   }
 
   .tab-content {
