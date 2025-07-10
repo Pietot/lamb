@@ -6,6 +6,7 @@ if (isset($_SESSION['user']) && isset($_SESSION['role'])) {
         'success' => true,
         'user' => [
             'id_utilisateur' => $_SESSION['user'],
+            'username' => $_SESSION['username'],
             'role' => $_SESSION['role'],
         ]
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);

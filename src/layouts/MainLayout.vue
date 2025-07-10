@@ -54,7 +54,7 @@
             <span>{{ userInitials }}</span>
           </div>
           <div class="user-info">
-            <p class="user-name">{{ authStore.user?.name }}</p>
+            <p class="user-name">{{ userName }}</p>
             <p class="user-role">{{ userRoleLabel }}</p>
           </div>
           <button
@@ -317,7 +317,7 @@
       });
 
       const userInitials = computed(() => {
-        const name = authStore.user?.name || "User";
+        const name = authStore.user?.username || "User";
         return name
           .split(" ")
           .map(n => n[0])
@@ -325,16 +325,19 @@
           .toUpperCase();
       });
 
+      const userName = computed(() => {
+        return authStore.user?.username || "Utilisateur";
+      });
+
       const userRoleLabel = computed(() => {
-        const role = authStore.user?.role || "user";
+        const role = authStore.user?.role || 4;
         const roleLabels = {
-          admin: "Administrateur",
-          gestionnaire: "Gestionnaire",
-          preparateur: "Préparateur",
-          commercial: "Commercial",
-          support: "Support",
+          1: "Administrateur",
+          2: "Gestionnaire",
+          3: "Commercial",
+          4: "Utilisateur",
         };
-        return roleLabels[role] || "Utilisateur";
+        return roleLabels[role];
       });
 
       const handleLogout = () => {
@@ -418,6 +421,7 @@
         filteredMenuItems,
         pageTitle,
         userInitials,
+        userName,
         userRoleLabel,
         handleLogout,
         toggleSidebar,
@@ -608,7 +612,7 @@
   .logout-button {
     background: none;
     border: none;
-    color: rgba(255, 255, 255, 0.6);
+    color: white;
     cursor: pointer;
     padding: 8px;
     border-radius: 6px;
