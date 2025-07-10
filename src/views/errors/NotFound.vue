@@ -108,8 +108,7 @@
       meta: [
         {
           name: "description",
-          content:
-            "Page non trouvée - Fashion Chic",
+          content: "Page non trouvée - Fashion Chic",
         },
       ],
     },

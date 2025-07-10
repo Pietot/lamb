@@ -1871,7 +1871,7 @@
       width: 100%;
     }
   }
-  
+
   @media (max-width: 425px) {
     .search-container > input:placeholder-shown {
       text-overflow: ellipsis;

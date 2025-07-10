@@ -923,7 +923,7 @@
 
   .status-problem {
     background: #fef2f2;
-    color: #AB0000;
+    color: #ab0000;
   }
 
   .status-received {

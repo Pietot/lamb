@@ -159,10 +159,18 @@
 
         <!-- Actions du joueur -->
         <div v-if="gameState === 'playing'" class="flex justify-center gap-3">
-          <button role="button" aria-label="Tirer une carte" class="btn-action btn-hit" @click="hit" :disabled="playerTotal >= 21">
+          <button
+            role="button"
+            aria-label="Tirer une carte"
+            class="btn-action btn-hit"
+            @click="hit"
+            :disabled="playerTotal >= 21"
+          >
             🎯 Tirer
           </button>
-          <button role="button" aria-label="Rester" class="btn-action btn-stand" @click="stand">✋ Rester</button>
+          <button role="button" aria-label="Rester" class="btn-action btn-stand" @click="stand">
+            ✋ Rester
+          </button>
         </div>
 
         <!-- Message du croupier -->
@@ -180,14 +188,26 @@
               {{ winLossMessage }}
             </div>
           </div>
-          <button role="button" aria-label="Rejouer" class="btn-primary text-lg px-6 py-3" @click="startGame">🔄 Rejouer</button>
+          <button
+            role="button"
+            aria-label="Rejouer"
+            class="btn-primary text-lg px-6 py-3"
+            @click="startGame"
+          >
+            🔄 Rejouer
+          </button>
         </div>
       </div>
 
       <!-- Message si plus de points -->
       <div v-if="playerChips === 0 && gameState === 'start'" class="text-center mt-3">
         <div class="text-red-400 text-lg font-bold mb-2">😱 Plus de points !</div>
-        <button role="button" aria-label="Recevoir 1000 points bonus" class="btn-primary text-sm px-4 py-2" @click="resetChips">
+        <button
+          role="button"
+          aria-label="Recevoir 1000 points bonus"
+          class="btn-primary text-sm px-4 py-2"
+          @click="resetChips"
+        >
           🎁 Recevoir 1000 points bonus
         </button>
       </div>

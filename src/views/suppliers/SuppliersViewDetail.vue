@@ -1281,7 +1281,7 @@
   }
 
   .stock.low-stock {
-    color: #AB0000;
+    color: #ab0000;
     background: #fef2f2;
     padding: 0.25rem 0.5rem;
     border-radius: 1rem;

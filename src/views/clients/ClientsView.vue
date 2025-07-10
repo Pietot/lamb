@@ -1167,7 +1167,7 @@
 
   .stat-trend {
     font-size: 12px;
-    color: #00893E;
+    color: #00893e;
     margin: 4px 0 0 0;
   }
 
