@@ -403,7 +403,7 @@
           }
         } else {
           // Sidebar fermée
-          if (startX.value < window.innerWidth / 3 && deltaX > threshold) {
+          if (startX.value < window.innerWidth / 6 && deltaX > threshold) {
             // Ouvrir la sidebar
             sidebarOpen.value = true;
             sidebarTransform.value = 0;
