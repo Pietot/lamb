@@ -118,7 +118,7 @@
                 <th>N° Commande</th>
                 <th>Client</th>
                 <th>Date</th>
-                <th>Montant</th>
+                <th>Montant TTC</th>
                 <th>État</th>
                 <th>Actions</th>
               </tr>
@@ -133,7 +133,7 @@
                   {{ formatDate(order.date_commande) }}
                 </td>
                 <td class="order-amount">
-                  {{ formatCurrency(order.montant_total) }}
+                  {{ formatCurrency(order.montant_ttc) }}
                 </td>
                 <td>
                   <span class="status-badge" :class="getStatusClass(order.statut)">
