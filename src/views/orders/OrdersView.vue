@@ -115,6 +115,7 @@
           <table class="orders-table">
             <thead>
               <tr>
+                <th>ID</th>
                 <th>N° Commande</th>
                 <th>Client</th>
                 <th>Date</th>
@@ -125,7 +126,10 @@
             </thead>
             <tbody>
               <tr v-for="order in paginatedOrders" :key="order.id_commande">
-                <td class="order-id">#{{ String(order.id_commande).padStart(5, "0") }}</td>
+                <td class="order-id">
+                  {{ order.id_commande }}
+                </td>
+                <td class="order-id">{{ order.numero_commande }}</td>
                 <td class="client-name">
                   {{ getClientName(order.id_client) }}
                 </td>
