@@ -68,12 +68,18 @@
           </svg>
         </div>
 
-        <button role="button" aria-label="Rechercher" class="search-button">
+        <button
+          role="button"
+          aria-label="Exporter les commandes"
+          class="export-button"
+          @click="exportOrders"
+        >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <circle cx="11" cy="11" r="8" />
-            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7,10 12,15 17,10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
           </svg>
-          Rechercher
+          Exporter
         </button>
       </div>
     </div>
@@ -339,6 +345,7 @@
 <script>
   import { ref, computed, onMounted, watch } from "vue";
   import { useRouter } from "vue-router";
+  import { triggerToast } from "@/utils/toastHelper";
   import { VITE_API_URL } from "@/constants/constants.js";
 
   export default {
@@ -442,16 +449,23 @@
 
         // Filtre par recherche
         if (searchQuery.value) {
-          const query = searchQuery.value.toLowerCase();
-          result = result.filter(order => {
-            const client = getClient(order.id_client);
-            const clientName = client ? getFullName(client).toLowerCase() : "";
-            return (
-              order.id_commande.toString().padStart(5, "0").includes(query) ||
-              clientName.includes(query) ||
-              order.montant_total.toString().includes(query)
-            );
-          });
+          if (searchQuery.value.startsWith("#")) {
+            // Si la recherche commence par #, on filtre par id
+            const id = searchQuery.value.slice(1).toLowerCase();
+            result = result.filter(order => order.id_commande.toString().includes(id));
+          } else {
+            const query = searchQuery.value.toLowerCase();
+            result = result.filter(order => {
+              const client = getClient(order.id_client);
+              const clientName = client ? getFullName(client).toLowerCase() : "";
+              const numero_commande = order.numero_commande ? order.numero_commande.toString() : "";
+              return (
+                numero_commande.includes(query) ||
+                clientName.includes(query) ||
+                order.montant_ttc.toString().includes(query)
+              );
+            });
+          }
         }
 
         return result;
@@ -605,6 +619,43 @@
         router.push("/orders/new");
       };
 
+      const exportOrders = () => {
+        // Fonction d'export
+        const data = [
+          [
+            "ID",
+            "Numéro de commande",
+            "ID Client",
+            "Date de commande",
+            "Statut",
+            "Montant HT",
+            "Montant TTC",
+          ],
+          ...filteredOrders.value.map(o => [
+            o.id_commande,
+            o.numero_commande,
+            o.id_client,
+            formatDate(o.date_commande),
+            getStatusLabel(o.statut),
+            formatCurrency(o.montant_ht),
+            formatCurrency(o.montant_ttc),
+          ]),
+        ];
+
+        if (!data[1]) {
+          triggerToast("Aucune commande à exporter !", "error");
+          return;
+        }
+        const csvString = data.map(row => row.join(",")).join("\n");
+        const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "commandes.csv";
+        a.click();
+        URL.revokeObjectURL(url);
+      };
+
       const viewOrder = order => {
         selectedOrder.value = order;
         showDetailsModal.value = true;
@@ -653,6 +704,7 @@
         getStatusLabel,
         goToPage,
         goToNewOrder,
+        exportOrders,
         viewOrder,
         editOrder,
         printOrder,
@@ -765,7 +817,7 @@
     height: 20px;
   }
 
-  .search-button {
+  .export-button {
     background: #0062ff;
     color: white;
     border: none;
@@ -780,12 +832,12 @@
     transition: all 0.2s ease;
   }
 
-  .search-button:hover {
+  .export-button:hover {
     background: #2563eb;
     transform: translateY(-1px);
   }
 
-  .search-button svg {
+  .export-button svg {
     width: 16px;
     height: 16px;
     stroke-width: 2;
