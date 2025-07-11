@@ -985,7 +985,6 @@
     background: #b91c1c;
     border-color: #b91c1c;
     color: white;
-    transform: translateY(0);
   }
 
   .action-btn.secondary {
