@@ -111,12 +111,18 @@
           </svg>
         </div>
 
-        <button role="button" aria-label="Rechercher" class="search-button">
+        <button
+          role="button"
+          aria-label="Exporter les réceptions"
+          class="export-button"
+          @click="exportDelivery"
+        >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <circle cx="11" cy="11" r="8" />
-            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7,10 12,15 17,10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
           </svg>
-          Rechercher
+          Exporter
         </button>
       </div>
     </div>
@@ -312,6 +318,8 @@
 
 <script>
   import { ref, computed } from "vue";
+  import { triggerToast } from "@/utils/toastHelper";
+  import { VITE_API_URL } from "@/constants/constants.js";
 
   export default {
     name: "ReceptionView",
@@ -398,13 +406,27 @@
           result = result.filter(delivery => delivery.status === filters.value.status);
         }
 
+        // Filtre par recherche
         if (searchQuery.value) {
-          result = result.filter(
-            delivery =>
-              delivery.id.includes(searchQuery.value) ||
-              delivery.supplier.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-              delivery.orderRef.toLowerCase().includes(searchQuery.value.toLowerCase()),
-          );
+          if (searchQuery.value.startsWith("#")) {
+            // Si la recherche commence par #, on filtre par id
+            const id = searchQuery.value.slice(1).toLowerCase();
+            result = result.filter(supplier => supplier.id.toString().includes(id));
+          } else {
+            const query = searchQuery.value.toLowerCase();
+            result = result.filter(supplier => {
+              const supplierName = supplier.supplier.toLowerCase();
+              const expectedDate = supplier.expectedDate.toLowerCase();
+              const orderRef = supplier.orderRef.toLowerCase();
+              const status = supplier.status.toLowerCase();
+              return (
+                supplierName.includes(query) ||
+                expectedDate.includes(query) ||
+                orderRef.includes(query) ||
+                status.includes(query)
+              );
+            });
+          }
         }
 
         return result;
@@ -427,6 +449,25 @@
           .substring(0, 2);
       };
 
+      const formatDate = dateString => {
+        const date = new Date(dateString);
+        const months = [
+          "janv.",
+          "févr.",
+          "mars",
+          "avr.",
+          "mai",
+          "juin",
+          "juil.",
+          "août",
+          "sept.",
+          "oct.",
+          "nov.",
+          "déc.",
+        ];
+        return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+      };
+
       const getStatusClass = status => {
         const statusClasses = {
           "En attente": "status-pending",
@@ -434,6 +475,43 @@
           Réceptionnée: "status-received",
         };
         return statusClasses[status] || "status-default";
+      };
+
+      const getStatusLabel = status => {
+        const statusLabels = {
+          probleme: "Problème",
+          attente: "En attente",
+          receptionnee: "Réceptionnée",
+        };
+        return statusLabels[status] || status;
+      };
+
+      const exportDelivery = () => {
+        // Fonction d'export
+        const data = [
+          ["ID", "Fournisseur", "Date prévue", "Commande liée", "Nb. articles", "Statut"],
+          ...filteredDeliveries.value.map(d => [
+            d.id,
+            d.supplier,
+            formatDate(d.expectedDate),
+            d.orderRef,
+            d.receivedBy,
+            getStatusLabel(d.status),
+          ]),
+        ];
+
+        if (!data[1]) {
+          triggerToast("Aucune livraison à exporter !", "error");
+          return;
+        }
+        const csvString = data.map(row => row.join(",")).join("\n");
+        const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "livraisons.csv";
+        a.click();
+        URL.revokeObjectURL(url);
       };
 
       const receiveDelivery = deliveryId => {
@@ -465,6 +543,7 @@
         getStatusClass,
         receiveDelivery,
         reportProblem,
+        exportDelivery,
         viewDetails,
         viewDeliveryDetails,
       };
@@ -686,7 +765,7 @@
     height: 20px;
   }
 
-  .search-button {
+  .export-button {
     background: #0062ff;
     color: white;
     border: none;
@@ -701,12 +780,12 @@
     transition: all 0.2s ease;
   }
 
-  .search-button:hover {
+  .export-button:hover {
     background: #2563eb;
     transform: translateY(-1px);
   }
 
-  .search-button svg {
+  .export-button svg {
     width: 16px;
     height: 16px;
     stroke-width: 2;
@@ -985,7 +1064,6 @@
     background: #b91c1c;
     border-color: #b91c1c;
     color: white;
-    transform: translateY(0);
   }
 
   .action-btn.secondary {

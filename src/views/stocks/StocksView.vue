@@ -65,12 +65,18 @@
           </svg>
         </div>
 
-        <button role="button" aria-label="Rechercher" class="search-button">
+        <button
+          role="button"
+          aria-label="Exporter les articles en stock"
+          class="export-button"
+          @click="exportArticles"
+        >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <circle cx="11" cy="11" r="8" />
-            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7,10 12,15 17,10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
           </svg>
-          Rechercher
+          Exporter
         </button>
       </div>
     </div>
@@ -575,6 +581,7 @@
 
 <script>
   import { ref, reactive, computed, onMounted, watch } from "vue";
+  import { triggerToast } from "@/utils/toastHelper";
   import { VITE_API_URL } from "@/constants/constants.js";
 
   export default {
@@ -707,14 +714,19 @@
 
         // Filtre par recherche
         if (searchQuery.value) {
-          const query = searchQuery.value.toLowerCase();
-          result = result.filter(
-            article =>
-              article.nom.toLowerCase().includes(query) ||
-              article.description.toLowerCase().includes(query) ||
-              (article.reference && article.reference.toLowerCase().includes(query)) ||
-              article.id_article.toString().includes(query),
-          );
+          if (searchQuery.value.startsWith("#")) {
+            const id = searchQuery.value.slice(1).toLowerCase();
+            result = result.filter(article => article.id_article.toString().includes(id));
+          } else {
+            const query = searchQuery.value.toLowerCase();
+            result = result.filter(
+              article =>
+                article.nom.toLowerCase().includes(query) ||
+                article.description.toLowerCase().includes(query) ||
+                (article.reference && article.reference.toLowerCase().includes(query)) ||
+                article.id_article.toString().includes(query),
+            );
+          }
         }
 
         // Filtre par catégorie
@@ -965,6 +977,51 @@
         showEditModal.value = true;
       };
 
+      const exportArticles = () => {
+        // Fonction d'export
+        const data = [
+          [
+            "ID",
+            "Référence",
+            "Description",
+            "Nom",
+            "Quantite stock",
+            "Seuil d'alerte",
+            "Date de création",
+            "Id catégorie",
+            "Id fournisseur",
+            "Référence fournisseur",
+            "Prix d'achat",
+          ],
+          ...filteredArticles.value.map(a => [
+            a.id_article,
+            a.reference,
+            a.description,
+            a.nom,
+            a.quantite,
+            a.seuil_alerte,
+            a.date_creation,
+            a.id_categorie,
+            a.id_fournisseur,
+            a.reference_fournisseur,
+            a.prix_achat,
+          ]),
+        ];
+
+        if (!data[1]) {
+          triggerToast("Aucun article à exporter !", "error");
+          return;
+        }
+        const csvString = data.map(row => row.join(",")).join("\n");
+        const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "articles.csv";
+        a.click();
+        URL.revokeObjectURL(url);
+      };
+
       const viewArticle = article => {
         selectedArticle.value = article;
         showDetailsModal.value = true;
@@ -1007,6 +1064,7 @@
         formatCurrency,
         goToPage,
         editArticle,
+        exportArticles,
         viewArticle,
         openAddModal,
         closeAddModal,
@@ -1160,7 +1218,7 @@
     height: 20px;
   }
 
-  .search-button {
+  .export-button {
     background: #0062ff;
     color: white;
     border: none;
@@ -1175,12 +1233,12 @@
     transition: all 0.2s ease;
   }
 
-  .search-button:hover {
+  .export-button:hover {
     background: #2563eb;
     transform: translateY(-1px);
   }
 
-  .search-button svg {
+  .export-button svg {
     width: 16px;
     height: 16px;
     stroke-width: 2;

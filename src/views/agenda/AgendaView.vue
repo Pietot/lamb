@@ -948,6 +948,10 @@
   }
 
   .refresh-btn {
+    height: 42.39px;
+    width: 42.39px;
+    display: flex;
+    justify-content: center;
     padding: 0.625rem;
     background: #00b8d4;
   }

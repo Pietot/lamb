@@ -71,7 +71,7 @@
                 <th>ID</th>
                 <th>Client</th>
                 <th>Date</th>
-                <th>Montant</th>
+                <th>Montant TTC</th>
                 <th>Statut</th>
               </tr>
             </thead>
