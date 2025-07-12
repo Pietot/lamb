@@ -213,7 +213,7 @@ switch ($path) {
 }
 
 http_response_code(404);
-echo json_encode(['success' => false, 'message' => 'Route introuvable.', 'route' => $path, 'referer' => $_ENV['API_ROUTE'] . 'login'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+echo json_encode(['success' => false, 'message' => 'Route introuvable.'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 
 // function tooManyAttempts($ip)
 // {
