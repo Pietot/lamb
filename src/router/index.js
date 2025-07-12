@@ -32,7 +32,11 @@ const router = createRouter({
       path: "/prepare",
       name: "Prepare",
       component: () => import("@/views/prepare/PrepareView.vue"),
-      meta: { requiresAuth: true, layout: "main", title: "Préparation des commandes - Fashion Chic" },
+      meta: {
+        requiresAuth: true,
+        layout: "main",
+        title: "Préparation des commandes - Fashion Chic",
+      },
     },
     {
       path: "/reception",
@@ -56,7 +60,11 @@ const router = createRouter({
       path: "/suppliers",
       name: "Suppliers",
       component: () => import("@/views/suppliers/SuppliersView.vue"),
-      meta: { requiresAuth: true, layout: "main", title: "Gestion des fournisseurs - Fashion Chic" },
+      meta: {
+        requiresAuth: true,
+        layout: "main",
+        title: "Gestion des fournisseurs - Fashion Chic",
+      },
     },
     {
       path: "/suppliers/:id",
