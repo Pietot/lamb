@@ -328,7 +328,11 @@
 
                     <div class="event-content">
                       <div class="event-header">
-                        <span class="event-id"> {{event.rawData.numero_commande || "#" + String(event.id).padStart(5, "0") }}</span>
+                        <span class="event-id">
+                          {{
+                            event.rawData.numero_commande || "#" + String(event.id).padStart(5, "0")
+                          }}</span
+                        >
                         <span class="event-badge" :class="getOrderStatusClass(event.statut)">{{
                           getOrderStatusLabel(event.statut)
                         }}</span>
