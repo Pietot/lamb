@@ -93,7 +93,7 @@
             <circle cx="12" cy="12" r="10" />
             <polyline points="12 6 12 12 16 14" />
           </svg>
-          Aujourd'hui
+          <span class="btn-text">Aujourd'hui</span>
         </button>
         <button
           role="button"
@@ -162,32 +162,24 @@
             >
               <div class="day-header">
                 <span class="day-number">{{ day.number }}</span>
-                <span v-if="day.isToday" class="today-label">Aujourd'hui</span>
               </div>
 
-              <div v-if="day.events.length > 0" class="day-content">
-                <div class="event-summary">
-                  <div v-if="day.deliveries > 0" class="summary-item delivery">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <rect x="1" y="3" width="15" height="13" />
-                      <polygon points="16,3 19,7 19,13 16,13" />
-                    </svg>
-                    <span>{{ day.deliveries }}</span>
-                  </div>
-                  <div v-if="day.orders > 0" class="summary-item order">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <path d="M20 6L9 17l-5-5" />
-                    </svg>
-                    <span>{{ day.orders }}</span>
-                  </div>
+              <div v-if="day.events.length > 0 && !day.otherMonth" class="day-content">
+                <div class="event-dots">
+                  <span 
+                    v-if="day.deliveries > 0" 
+                    class="event-dot delivery"
+                    :title="`${day.deliveries} livraison${day.deliveries > 1 ? 's' : ''}`"
+                  ></span>
+                  <span 
+                    v-if="day.orders > 0" 
+                    class="event-dot order"
+                    :title="`${day.orders} commande${day.orders > 1 ? 's' : ''}`"
+                  ></span>
                 </div>
-                <div v-if="day.events.length > 2" class="more-indicator">
-                  +{{ day.events.length - 2 }}
+                <div v-if="day.events.length > 0" class="event-count">
+                  {{ day.events.length }}
                 </div>
-              </div>
-
-              <div v-else-if="!day.otherMonth" class="day-empty">
-                <span class="empty-dot"></span>
               </div>
             </div>
           </div>
@@ -195,166 +187,158 @@
       </div>
     </div>
 
-    <!-- Détails du jour sélectionné -->
-    <transition name="slide-up">
-      <div v-if="selectedDate" class="day-details-section">
-        <div class="day-details-card">
-          <div class="details-header">
-            <div class="header-left">
-              <h2 class="details-title">{{ formatSelectedDate }}</h2>
-              <p class="details-subtitle">
-                {{
-                  selectedDayEvents.length === 0
-                    ? "Aucun événement"
-                    : selectedDayEvents.length === 1
-                      ? "1 événement"
-                      : selectedDayEvents.length + " événements"
-                }}
-              </p>
-            </div>
-            <button
-              role="button"
-              aria-label="Fermer"
-              class="close-btn"
-              @click="selectedDate = null"
-              title="Fermer"
-            >
+    <!-- Modal Détails du jour -->
+    <div v-if="showDetailsModal" class="modal-overlay" @click="closeModal">
+      <div class="modal-content modal-large" @click.stop>
+        <div class="modal-header">
+          <div class="modal-header-content">
+            <h3 class="modal-title">{{ formatSelectedDate }}</h3>
+            <p class="modal-subtitle">
+              {{
+                selectedDayEvents.length === 0
+                  ? "Aucun événement"
+                  : selectedDayEvents.length === 1
+                    ? "1 événement"
+                    : selectedDayEvents.length + " événements"
+              }}
+            </p>
+          </div>
+          <button @click="closeModal" class="modal-close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        
+        <div class="modal-body">
+          <!-- Si pas d'événements -->
+          <div v-if="selectedDayEvents.length === 0" class="empty-state">
+            <div class="empty-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
               </svg>
-            </button>
+            </div>
+            <p class="empty-text">Aucun événement prévu ce jour</p>
           </div>
 
-          <div class="details-body">
-            <!-- Si pas d'événements -->
-            <div v-if="selectedDayEvents.length === 0" class="empty-state">
-              <div class="empty-icon">
+          <!-- Liste des événements -->
+          <div v-else class="events-list">
+            <div class="events-section" v-if="deliveryEvents.length > 0">
+              <h4 class="section-title">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                  <line x1="16" y1="2" x2="16" y2="6" />
-                  <line x1="8" y1="2" x2="8" y2="6" />
-                  <line x1="3" y1="10" x2="21" y2="10" />
+                  <rect x="1" y="3" width="15" height="13" />
+                  <polygon points="16,3 19,7 19,13 16,13" />
                 </svg>
-              </div>
-              <p class="empty-text">Aucun événement prévu ce jour</p>
-            </div>
+                Livraisons ({{ deliveryEvents.length }})
+              </h4>
+              <div class="section-events">
+                <div
+                  v-for="event in deliveryEvents"
+                  :key="event.id"
+                  class="event-item delivery"
+                  :class="{ completed: event.completed }"
+                >
+                  <div class="event-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <rect x="1" y="3" width="15" height="13" />
+                      <polygon points="16,3 19,7 19,13 16,13" />
+                      <circle cx="5.5" cy="18.5" r="2.5" />
+                      <circle cx="18.5" cy="18.5" r="2.5" />
+                    </svg>
+                  </div>
 
-            <!-- Liste des événements -->
-            <div v-else class="events-list">
-              <div class="events-section" v-if="deliveryEvents.length > 0">
-                <h4 class="section-title">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <rect x="1" y="3" width="15" height="13" />
-                    <polygon points="16,3 19,7 19,13 16,13" />
-                  </svg>
-                  Livraisons ({{ deliveryEvents.length }})
-                </h4>
-                <div class="section-events">
-                  <div
-                    v-for="event in deliveryEvents"
-                    :key="event.id"
-                    class="event-item delivery"
-                    :class="{ completed: event.completed }"
-                  >
-                    <div class="event-icon">
+                  <div class="event-content">
+                    <div class="event-header">
+                      <span class="event-id">{{ event.numero_livraison || "#" + event.id }}</span>
+                      <span v-if="event.completed" class="event-badge completed">{{
+                        getDeliveryStatusLabel(event.statut)
+                      }}</span>
+                      <span v-else class="event-badge pending">{{
+                        getDeliveryStatusLabel(event.statut)
+                      }}</span>
+                    </div>
+                    <div class="event-main">
+                      <p class="event-partner">{{ event.partner }}</p>
+                      <p class="event-info">Bon: {{ event.numero_bon_livraison || "N/A" }}</p>
+                      <p v-if="event.notes" class="event-notes">
+                        {{ event.notes }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="event-actions">
+                    <button
+                      role="button"
+                      aria-label="Voir détails"
+                      class="action-btn"
+                      @click="viewDeliveryDetails(event)"
+                      title="Voir détails"
+                    >
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <rect x="1" y="3" width="15" height="13" />
-                        <polygon points="16,3 19,7 19,13 16,13" />
-                        <circle cx="5.5" cy="18.5" r="2.5" />
-                        <circle cx="18.5" cy="18.5" r="2.5" />
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
                       </svg>
-                    </div>
-
-                    <div class="event-content">
-                      <div class="event-header">
-                        <span class="event-id">{{ event.numero_livraison || "#" + event.id }}</span>
-                        <span v-if="event.completed" class="event-badge completed">{{
-                          getDeliveryStatusLabel(event.statut)
-                        }}</span>
-                        <span v-else class="event-badge pending">{{
-                          getDeliveryStatusLabel(event.statut)
-                        }}</span>
-                      </div>
-                      <div class="event-main">
-                        <p class="event-partner">{{ event.partner }}</p>
-                        <p class="event-info">Bon: {{ event.numero_bon_livraison || "N/A" }}</p>
-                        <p v-if="event.notes" class="event-notes">
-                          {{ event.notes }}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div class="event-actions">
-                      <button
-                        role="button"
-                        aria-label="Voir détails"
-                        class="action-btn"
-                        @click="viewDeliveryDetails(event)"
-                        title="Voir détails"
-                      >
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                          <circle cx="12" cy="12" r="3" />
-                        </svg>
-                      </button>
-                    </div>
+                    </button>
                   </div>
                 </div>
               </div>
+            </div>
 
-              <div class="events-section" v-if="orderEvents.length > 0">
-                <h4 class="section-title">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path
-                      d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"
-                    />
-                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
-                  </svg>
-                  Commandes ({{ orderEvents.length }})
-                </h4>
-                <div class="section-events">
-                  <div
-                    v-for="event in orderEvents"
-                    :key="event.id"
-                    class="event-item order"
-                    :class="{ completed: event.completed }"
-                  >
-                    <div class="event-icon">
+            <div class="events-section" v-if="orderEvents.length > 0">
+              <h4 class="section-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path
+                    d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"
+                  />
+                  <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
+                </svg>
+                Commandes ({{ orderEvents.length }})
+              </h4>
+              <div class="section-events">
+                <div
+                  v-for="event in orderEvents"
+                  :key="event.id"
+                  class="event-item order"
+                  :class="{ completed: event.completed }"
+                >
+                  <div class="event-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <path d="M20 6L9 17l-5-5" />
+                    </svg>
+                  </div>
+
+                  <div class="event-content">
+                    <div class="event-header">
+                      <span class="event-id">#{{ String(event.id).padStart(5, "0") }}</span>
+                      <span class="event-badge" :class="getOrderStatusClass(event.statut)">{{
+                        getOrderStatusLabel(event.statut)
+                      }}</span>
+                    </div>
+                    <div class="event-main">
+                      <p class="event-partner">{{ event.partner }}</p>
+                      <p class="event-info">
+                        {{ formatCurrency(event.amount) }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="event-actions">
+                    <button
+                      role="button"
+                      aria-label="Voir détails"
+                      class="action-btn"
+                      @click="viewOrderDetails(event)"
+                      title="Voir détails"
+                    >
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path d="M20 6L9 17l-5-5" />
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
                       </svg>
-                    </div>
-
-                    <div class="event-content">
-                      <div class="event-header">
-                        <span class="event-id">#{{ String(event.id).padStart(5, "0") }}</span>
-                        <span class="event-badge" :class="getOrderStatusClass(event.statut)">{{
-                          getOrderStatusLabel(event.statut)
-                        }}</span>
-                      </div>
-                      <div class="event-main">
-                        <p class="event-partner">{{ event.partner }}</p>
-                        <p class="event-info">
-                          {{ formatCurrency(event.amount) }}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div class="event-actions">
-                      <button
-                        role="button"
-                        aria-label="Voir détails"
-                        class="action-btn"
-                        @click="viewOrderDetails(event)"
-                        title="Voir détails"
-                      >
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                          <circle cx="12" cy="12" r="3" />
-                        </svg>
-                      </button>
-                    </div>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -362,7 +346,7 @@
           </div>
         </div>
       </div>
-    </transition>
+    </div>
   </div>
 </template>
 
@@ -392,6 +376,7 @@
       const error = ref(null);
       const currentDate = ref(new Date());
       const selectedDate = ref(null);
+      const showDetailsModal = ref(false);
 
       const weekDays = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
 
@@ -559,6 +544,13 @@
           days.push(createDayObject(date, false));
         }
 
+        // Jours du mois suivant pour compléter la grille
+        const remainingDays = 42 - days.length;
+        for (let i = 1; i <= remainingDays; i++) {
+          const date = new Date(year, month + 1, i);
+          days.push(createDayObject(date, true));
+        }
+
         return days;
       });
 
@@ -716,12 +708,18 @@
         currentDate.value = new Date();
         const today = formatDateKey(new Date());
         selectedDate.value = today;
+        showDetailsModal.value = true;
       };
 
       const selectDay = day => {
         if (!day.otherMonth) {
           selectedDate.value = day.date;
+          showDetailsModal.value = true;
         }
+      };
+
+      const closeModal = () => {
+        showDetailsModal.value = false;
       };
 
       const viewDeliveryDetails = event => {
@@ -743,6 +741,7 @@
         error,
         currentDate,
         selectedDate,
+        showDetailsModal,
         weekDays,
         currentMonthLabel,
         calendarDays,
@@ -766,6 +765,7 @@
         nextMonth,
         goToToday,
         selectDay,
+        closeModal,
         viewDeliveryDetails,
         viewOrderDetails,
       };
@@ -902,7 +902,7 @@
 
   .nav-btn:hover {
     background: #f1f5f9;
-    color: black;
+    color: #0f172a;
   }
 
   .nav-btn svg {
@@ -928,7 +928,7 @@
 
   .today-btn,
   .refresh-btn {
-    background: #0062ff;
+    background: #00B8D4;
     color: white;
     border: none;
     border-radius: 8px;
@@ -944,16 +944,11 @@
 
   .today-btn:hover,
   .refresh-btn:hover {
-    background: #2563eb;
+    background: #0891a6;
   }
 
   .refresh-btn {
     padding: 0.625rem;
-    background: #00b8d4;
-  }
-
-  .refresh-btn:hover {
-    background: #0891a6;
   }
 
   .refresh-btn:disabled {
@@ -966,6 +961,10 @@
     width: 16px;
     height: 16px;
     stroke-width: 2;
+  }
+
+  .btn-text {
+    display: inline;
   }
 
   @keyframes spin {
@@ -1040,7 +1039,7 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     border: 1px solid #f1f5f9;
     overflow: hidden;
-    padding: 1.5rem;
+    padding: 1rem;
   }
 
   .weekdays {
@@ -1056,7 +1055,7 @@
     color: #64748b;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    padding: 0.75rem 0;
+    padding: 0.5rem 0;
   }
 
   .days-grid {
@@ -1066,15 +1065,14 @@
   }
 
   .day-cell {
-    aspect-ratio: 1;
     background: #fafbfc;
     border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 0.5rem;
+    border-radius: 6px;
+    padding: 0.375rem;
     cursor: pointer;
     transition: all 0.2s ease;
     position: relative;
-    min-height: 90px;
+    min-height: 60px;
     display: flex;
     flex-direction: column;
   }
@@ -1082,8 +1080,6 @@
   .day-cell:hover {
     background: #f1f5f9;
     border-color: #cbd5e1;
-    transform: translateY(-2px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 
   .day-cell.other-month {
@@ -1092,8 +1088,8 @@
   }
 
   .day-cell.other-month:hover {
-    transform: none;
-    box-shadow: none;
+    background: #fafbfc;
+    border-color: #e2e8f0;
   }
 
   .day-cell.is-today {
@@ -1132,109 +1128,90 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
   }
 
   .day-number {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
     color: #0f172a;
-  }
-
-  .today-label {
-    font-size: 10px;
-    font-weight: 600;
-    color: black;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
   }
 
   .day-content {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .event-summary {
-    display: flex;
-    gap: 0.25rem;
-  }
-
-  .summary-item {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: 2px;
-    padding: 2px 6px;
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: 600;
-    color: white;
-  }
-
-  .summary-item svg {
-    width: 12px;
-    height: 12px;
-    stroke-width: 2;
-  }
-
-  .summary-item.delivery {
-    background: #059669;
-  }
-
-  .summary-item.order {
-    background: #2563eb;
-  }
-
-  .more-indicator {
-    font-size: 10px;
-    color: #64748b;
-    text-align: center;
-    margin-top: 2px;
-  }
-
-  .day-empty {
-    flex: 1;
-    display: flex;
     align-items: center;
     justify-content: center;
+    gap: 0.25rem;
   }
 
-  .empty-dot {
-    width: 4px;
-    height: 4px;
-    background: #e2e8f0;
+  .event-dots {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .event-dot {
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
   }
 
-  /* DÉTAILS DU JOUR */
-  .day-details-section {
-    margin-bottom: 2rem;
+  .event-dot.delivery {
+    background: #059669;
   }
 
-  .day-details-card {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    border: 1px solid #f1f5f9;
-    overflow: hidden;
+  .event-dot.order {
+    background: #2563eb;
   }
 
-  .details-header {
+  .event-count {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+  }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+  }
+
+  .modal-content {
+    background: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 700px;
+    max-height: 90vh;
+    overflow: hidden;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: flex-start;
     justify-content: space-between;
     padding: 1.5rem;
     background: #f8fafc;
     border-bottom: 1px solid #e2e8f0;
   }
 
-  .header-left {
+  .modal-header-content {
     flex: 1;
   }
 
-  .details-title {
+  .modal-title {
     font-size: 18px;
     font-weight: 600;
     color: #0f172a;
@@ -1242,35 +1219,37 @@
     text-transform: capitalize;
   }
 
-  .details-subtitle {
+  .modal-subtitle {
     font-size: 14px;
     color: #64748b;
     margin: 0;
   }
 
-  .close-btn {
+  .modal-close {
     background: none;
     border: none;
     color: #64748b;
     cursor: pointer;
-    padding: 8px;
-    border-radius: 6px;
+    padding: 4px;
+    border-radius: 4px;
     transition: all 0.2s ease;
   }
 
-  .close-btn:hover {
+  .modal-close:hover {
     background: #e2e8f0;
-    color: black;
+    color: #334155;
   }
 
-  .close-btn svg {
+  .modal-close svg {
     width: 20px;
     height: 20px;
     stroke-width: 2;
   }
 
-  .details-body {
+  .modal-body {
     padding: 1.5rem;
+    overflow-y: auto;
+    flex: 1;
   }
 
   /* ÉTAT VIDE */
@@ -1482,29 +1461,13 @@
   .action-btn:hover {
     background: #f8fafc;
     border-color: #cbd5e1;
-    color: black;
+    color: #334155;
   }
 
   .action-btn svg {
     width: 16px;
     height: 16px;
     stroke-width: 1.5;
-  }
-
-  /* ANIMATIONS */
-  .slide-up-enter-active,
-  .slide-up-leave-active {
-    transition: all 0.3s ease;
-  }
-
-  .slide-up-enter-from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  .slide-up-leave-to {
-    opacity: 0;
-    transform: translateY(20px);
   }
 
   /* RESPONSIVE */
@@ -1516,6 +1479,7 @@
     .calendar-navigation {
       flex-direction: column;
       gap: 1rem;
+      padding: 1rem;
     }
 
     .nav-group {
@@ -1527,11 +1491,32 @@
       width: 100%;
       justify-content: center;
     }
+
+    .current-month {
+      font-size: 18px;
+      min-width: auto;
+    }
   }
 
   @media (max-width: 768px) {
+    .page-title {
+      font-size: 20px;
+    }
+
+    .kpi-card {
+      padding: 1rem;
+    }
+
+    .kpi-value {
+      font-size: 24px;
+    }
+
+    .calendar-card {
+      padding: 0.5rem;
+    }
+
     .day-cell {
-      min-height: 70px;
+      min-height: 50px;
       padding: 0.25rem;
     }
 
@@ -1539,26 +1524,69 @@
       font-size: 12px;
     }
 
-    .summary-item {
-      font-size: 10px;
-      padding: 1px 4px;
+    .event-dot {
+      width: 5px;
+      height: 5px;
     }
 
-    .summary-item svg {
-      width: 10px;
-      height: 10px;
+    .event-count {
+      font-size: 10px;
+    }
+
+    .modal-content {
+      width: 100%;
+      height: 100vh;
+      max-height: 100vh;
+      border-radius: 0;
     }
 
     .event-item {
       flex-direction: column;
       align-items: stretch;
+      gap: 0.75rem;
+    }
+
+    .event-icon {
+      width: 36px;
+      height: 36px;
     }
 
     .event-actions {
       justify-content: flex-end;
-      margin-top: 0.75rem;
-      padding-top: 0.75rem;
+      margin-top: 0.5rem;
+      padding-top: 0.5rem;
       border-top: 1px solid #e2e8f0;
+    }
+
+    .btn-text {
+      display: none;
+    }
+
+    .today-btn {
+      padding: 0.625rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .weekday {
+      font-size: 11px;
+      padding: 0.25rem 0;
+    }
+
+    .day-cell {
+      min-height: 40px;
+    }
+
+    .day-number {
+      font-size: 11px;
+    }
+
+    .event-dots {
+      display: none;
+    }
+
+    .event-count {
+      font-size: 9px;
     }
   }
 </style>
