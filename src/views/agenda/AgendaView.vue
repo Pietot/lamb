@@ -328,7 +328,7 @@
 
                     <div class="event-content">
                       <div class="event-header">
-                        <span class="event-id">#{{ String(event.id).padStart(5, "0") }}</span>
+                        <span class="event-id"> {{event.rawData.numero_commande || "#" + String(event.id).padStart(5, "0") }}</span>
                         <span class="event-badge" :class="getOrderStatusClass(event.statut)">{{
                           getOrderStatusLabel(event.statut)
                         }}</span>
@@ -494,10 +494,10 @@
                 id: commande.id_commande,
                 type: "order",
                 partner: client
-                  ? `${client.prénom} ${client.nom}`
+                  ? `${client.contact_principal} | ${client.nom_commercial}`
                   : `Client #${commande.id_client}`,
                 date: new Date(commande.date_commande),
-                amount: commande.montant_total,
+                amount: commande.montant_ttc,
                 completed: commande.statut === "expedie",
                 statut: commande.statut,
                 rawData: commande,
