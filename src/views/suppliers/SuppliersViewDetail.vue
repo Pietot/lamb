@@ -1230,7 +1230,7 @@
     height: 16px;
     stroke-width: 2;
   }
-  
+
   .table-container {
     overflow-x: auto;
   }
