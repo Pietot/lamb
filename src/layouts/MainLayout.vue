@@ -246,6 +246,13 @@
           allowedRoles: [1, 2], // admin et gestionnaire
         },
         {
+          name: "Lot",
+          label: "Gestion des Lot",
+          to: "/lot",
+          icon: "StocksIcon",
+          allowedRoles: [1, 2], // admin et gestionnaire
+        },
+        {
           name: "Orders",
           label: "Gestion des commandes",
           to: "/orders",

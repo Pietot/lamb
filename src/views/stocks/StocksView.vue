@@ -144,7 +144,7 @@
                     role="button"
                     aria-label="Modifier"
                     class="action-btn"
-                    @click="editArticle(item)"
+                    @click="openEditModal(item)"
                   >
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                       <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
@@ -540,15 +540,15 @@
       </div>
     </div>
 
-    <!-- Modal Modifier (TODO) -->
-    <div v-if="showEditModal" class="modal-overlay" @click="showEditModal = false">
-      <div class="modal-content" @click.stop>
+    <!-- Modal Modifier -->
+    <div v-if="showEditModal" class="modal-overlay" @click="closeEditModal">
+      <div class="modal-content modal-form" @click.stop>
         <div class="modal-header">
           <h3>Modifier l'article</h3>
           <button
             role="button"
             aria-label="Fermer"
-            @click="showEditModal = false"
+            @click="closeEditModal"
             class="modal-close"
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -558,15 +558,208 @@
           </button>
         </div>
         <div class="modal-body">
-          <div class="todo-container">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="todo-icon">
-              <path d="M12 2L2 7l10 5 10-5-10-5z" />
-              <path d="M2 17l10 5 10-5" />
-              <path d="M2 12l10 5 10-5" />
-            </svg>
-            <h4>Fonctionnalité à venir</h4>
-            <p>La modification des articles sera bientôt disponible.</p>
-          </div>
+          <form @submit.prevent="submitUpdateArticle" class="article-form">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="edit-reference" class="form-label"
+                  >Référence<span class="required-indicator">*</span></label
+                >
+                <input
+                  v-model="editArticle.reference"
+                  type="text"
+                  id="edit-reference"
+                  class="form-input"
+                  :class="{ error: editFormErrors.reference }"
+                  maxlength="20"
+                  required
+                />
+                <span v-if="editFormErrors.reference" class="error-text">{{
+                  editFormErrors.reference
+                }}</span>
+              </div>
+
+              <div class="form-group">
+                <label for="edit-nom" class="form-label"
+                  >Nom<span class="required-indicator">*</span></label
+                >
+                <input
+                  v-model="editArticle.nom"
+                  type="text"
+                  id="edit-nom"
+                  class="form-input"
+                  :class="{ error: editFormErrors.nom }"
+                  maxlength="50"
+                  required
+                />
+                <span v-if="editFormErrors.nom" class="error-text">{{ editFormErrors.nom }}</span>
+              </div>
+
+              <div class="form-group full-width">
+                <label for="edit-description" class="form-label"
+                  >Description<span class="required-indicator">*</span></label
+                >
+                <textarea
+                  v-model="editArticle.description"
+                  id="edit-description"
+                  class="form-input form-textarea"
+                  :class="{ error: editFormErrors.description }"
+                  maxlength="200"
+                  rows="3"
+                  required
+                ></textarea>
+                <span v-if="editFormErrors.description" class="error-text">{{
+                  editFormErrors.description
+                }}</span>
+              </div>
+
+              <div class="form-group">
+                <label for="edit-quantite" class="form-label"
+                  >Quantité en stock<span class="required-indicator">*</span></label
+                >
+                <input
+                  v-model.number="editArticle.quantite"
+                  type="number"
+                  id="edit-quantite"
+                  class="form-input"
+                  :class="{ error: editFormErrors.quantite }"
+                  min="0"
+                  required
+                />
+                <span v-if="editFormErrors.quantite" class="error-text">{{ editFormErrors.quantite }}</span>
+              </div>
+
+              <div class="form-group">
+                <label for="edit-seuil_alerte" class="form-label"
+                  >Seuil d'alerte<span class="required-indicator">*</span></label
+                >
+                <input
+                  v-model.number="editArticle.seuil_alerte"
+                  type="number"
+                  id="edit-seuil_alerte"
+                  class="form-input"
+                  :class="{ error: editFormErrors.seuil_alerte }"
+                  min="0"
+                  required
+                />
+                <span v-if="editFormErrors.seuil_alerte" class="error-text">{{
+                  editFormErrors.seuil_alerte
+                }}</span>
+              </div>
+
+              <div class="form-group">
+                <label for="edit-id_categorie" class="form-label"
+                  >Catégorie<span class="required-indicator">*</span></label
+                >
+                <select
+                  v-model="editArticle.id_categorie"
+                  id="edit-id_categorie"
+                  class="form-input"
+                  :class="{ error: editFormErrors.id_categorie }"
+                  required
+                >
+                  <option value="">Sélectionner une catégorie</option>
+                  <option value="1">Vêtements Homme</option>
+                  <option value="2">Vêtements Femme</option>
+                  <option value="3">Accessoires</option>
+                  <option value="4">Enfants</option>
+                  <option value="5">Chaussures</option>
+                </select>
+                <span v-if="editFormErrors.id_categorie" class="error-text">{{
+                  editFormErrors.id_categorie
+                }}</span>
+              </div>
+
+              <div class="form-group">
+                <label for="edit-id_fournisseur" class="form-label"
+                  >Fournisseur principal<span class="required-indicator">*</span></label
+                >
+                <select
+                  v-model="editArticle.id_fournisseur"
+                  id="edit-id_fournisseur"
+                  class="form-input"
+                  :class="{ error: editFormErrors.id_fournisseur }"
+                  required
+                >
+                  <option value="">Sélectionner un fournisseur</option>
+                  <option
+                    v-for="supplier in suppliers"
+                    :key="supplier.id_fournisseur"
+                    :value="supplier.id_fournisseur"
+                  >
+                    {{ supplier.nom || supplier.raison_sociale }}
+                  </option>
+                </select>
+                <span v-if="editFormErrors.id_fournisseur" class="error-text">{{
+                  editFormErrors.id_fournisseur
+                }}</span>
+              </div>
+
+              <div class="form-group">
+                <label for="edit-reference_fournisseur" class="form-label"
+                  >Référence fournisseur<span class="required-indicator">*</span></label
+                >
+                <input
+                  v-model="editArticle.reference_fournisseur"
+                  type="text"
+                  id="edit-reference_fournisseur"
+                  class="form-input"
+                  :class="{ error: editFormErrors.reference_fournisseur }"
+                  maxlength="20"
+                  required
+                />
+                <span v-if="editFormErrors.reference_fournisseur" class="error-text">{{
+                  editFormErrors.reference_fournisseur
+                }}</span>
+              </div>
+
+              <div class="form-group">
+                <label for="edit-prix_achat" class="form-label"
+                  >Prix d'achat (€)<span class="required-indicator">*</span></label
+                >
+                <input
+                  v-model.number="editArticle.prix_achat"
+                  type="number"
+                  id="edit-prix_achat"
+                  class="form-input"
+                  :class="{ error: editFormErrors.prix_achat }"
+                  min="0"
+                  step="0.01"
+                  required
+                />
+                <span v-if="editFormErrors.prix_achat" class="error-text">{{
+                  editFormErrors.prix_achat
+                }}</span>
+              </div>
+            </div>
+
+            <div v-if="updateError" class="alert alert-error">
+              {{ updateError }}
+            </div>
+
+            <div v-if="updateSuccess" class="alert alert-success">Article modifié avec succès !</div>
+
+            <div class="form-actions">
+              <button
+                role="button"
+                aria-label="Annuler"
+                type="button"
+                @click="closeEditModal"
+                class="btn-secondary"
+              >
+                Annuler
+              </button>
+              <button
+                role="button"
+                aria-label="Enregistrer les modifications"
+                type="submit"
+                class="btn-primary"
+                :disabled="updating"
+              >
+                <span v-if="updating">Enregistrement...</span>
+                <span v-else>Enregistrer les modifications</span>
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -603,6 +796,9 @@
       const submitting = ref(false);
       const submitError = ref("");
       const submitSuccess = ref(false);
+      const updating = ref(false);
+      const updateError = ref("");
+      const updateSuccess = ref(false);
 
       const filters = reactive({
         category: "",
@@ -623,6 +819,32 @@
       });
 
       const formErrors = reactive({
+        reference: "",
+        description: "",
+        nom: "",
+        quantite: "",
+        seuil_alerte: "",
+        id_categorie: "",
+        id_fournisseur: "",
+        reference_fournisseur: "",
+        prix_achat: "",
+      });
+
+      // Formulaire modification article
+      const editArticle = reactive({
+        id_article: "",
+        reference: "",
+        description: "",
+        nom: "",
+        quantite: "",
+        seuil_alerte: "",
+        id_categorie: "",
+        id_fournisseur: "",
+        reference_fournisseur: "",
+        prix_achat: "",
+      });
+
+      const editFormErrors = reactive({
         reference: "",
         description: "",
         nom: "",
@@ -887,6 +1109,85 @@
         return isValid;
       };
 
+      // Validation du formulaire de modification
+      const validateEditForm = () => {
+        let isValid = true;
+
+        // Réinitialiser les erreurs
+        Object.keys(editFormErrors).forEach(key => {
+          editFormErrors[key] = "";
+        });
+
+        // Valider la référence
+        if (!editArticle.reference) {
+          editFormErrors.reference = "La référence est requise";
+          isValid = false;
+        } else if (editArticle.reference.length > 20) {
+          editFormErrors.reference = "La référence ne doit pas dépasser 20 caractères";
+          isValid = false;
+        }
+
+        // Valider le nom
+        if (!editArticle.nom) {
+          editFormErrors.nom = "Le nom est requis";
+          isValid = false;
+        } else if (editArticle.nom.length > 50) {
+          editFormErrors.nom = "Le nom ne doit pas dépasser 50 caractères";
+          isValid = false;
+        }
+
+        // Valider la description
+        if (!editArticle.description) {
+          editFormErrors.description = "La description est requise";
+          isValid = false;
+        } else if (editArticle.description.length > 200) {
+          editFormErrors.description = "La description ne doit pas dépasser 200 caractères";
+          isValid = false;
+        }
+
+        // Valider la quantité
+        if (editArticle.quantite === "" || editArticle.quantite < 0) {
+          editFormErrors.quantite = "La quantité doit être un nombre positif";
+          isValid = false;
+        }
+
+        // Valider le seuil d'alerte
+        if (editArticle.seuil_alerte === "" || editArticle.seuil_alerte < 0) {
+          editFormErrors.seuil_alerte = "Le seuil d'alerte doit être un nombre positif";
+          isValid = false;
+        }
+
+        // Valider la catégorie
+        if (!editArticle.id_categorie) {
+          editFormErrors.id_categorie = "Veuillez sélectionner une catégorie";
+          isValid = false;
+        }
+
+        // Valider le fournisseur
+        if (!editArticle.id_fournisseur) {
+          editFormErrors.id_fournisseur = "Veuillez sélectionner un fournisseur";
+          isValid = false;
+        }
+
+        // Valider la référence fournisseur
+        if (!editArticle.reference_fournisseur) {
+          editFormErrors.reference_fournisseur = "La référence fournisseur est requise";
+          isValid = false;
+        } else if (editArticle.reference_fournisseur.length > 20) {
+          editFormErrors.reference_fournisseur =
+            "La référence fournisseur ne doit pas dépasser 20 caractères";
+          isValid = false;
+        }
+
+        // Valider le prix d'achat
+        if (editArticle.prix_achat === "" || editArticle.prix_achat < 0) {
+          editFormErrors.prix_achat = "Le prix d'achat doit être un nombre positif";
+          isValid = false;
+        }
+
+        return isValid;
+      };
+
       // Soumettre le nouvel article
       const submitNewArticle = async () => {
         if (!validateForm()) {
@@ -936,6 +1237,56 @@
         }
       };
 
+      // Soumettre la modification de l'article
+      const submitUpdateArticle = async () => {
+        if (!validateEditForm()) {
+          return;
+        }
+
+        updating.value = true;
+        updateError.value = "";
+        updateSuccess.value = false;
+
+        const formData = new FormData();
+        formData.append("id_article", editArticle.id_article);
+        formData.append("reference", editArticle.reference);
+        formData.append("description", editArticle.description);
+        formData.append("nom", editArticle.nom);
+        formData.append("quantite", editArticle.quantite);
+        formData.append("seuil_alerte", editArticle.seuil_alerte);
+        formData.append("id_categorie", editArticle.id_categorie);
+        formData.append("id_fournisseur", editArticle.id_fournisseur);
+        formData.append("reference_fournisseur", editArticle.reference_fournisseur);
+        formData.append("prix_achat", editArticle.prix_achat);
+
+        try {
+          const response = await fetch(VITE_API_URL + "update_article", {
+            method: "POST",
+            body: formData,
+            credentials: "include",
+          });
+
+          const data = await response.json();
+
+          if (response.ok && data.success) {
+            updateSuccess.value = true;
+            // Recharger les articles
+            await fetchArticles();
+            // Fermer la modale après un délai
+            setTimeout(() => {
+              closeEditModal();
+            }, 1500);
+          } else {
+            updateError.value = data.message || "Erreur lors de la modification de l'article";
+          }
+        } catch (err) {
+          console.error("Erreur lors de la modification de l'article:", err);
+          updateError.value = "Erreur de connexion au serveur";
+        } finally {
+          updating.value = false;
+        }
+      };
+
       const openAddModal = () => {
         showAddModal.value = true;
         fetchSuppliers();
@@ -955,14 +1306,40 @@
       };
 
       const goToPage = page => {
-        if (page >= 1 && page <= totalPages.value) {
+        if (page !== '...' && page >= 1 && page <= totalPages.value) {
           currentPage.value = page;
         }
       };
 
-      const editArticle = article => {
+      const openEditModal = article => {
         selectedArticle.value = article;
+        // Pré-remplir le formulaire avec les données de l'article
+        editArticle.id_article = article.id_article;
+        editArticle.reference = article.reference || "";
+        editArticle.nom = article.nom;
+        editArticle.description = article.description;
+        editArticle.quantite = article.quantite_stock;
+        editArticle.seuil_alerte = article.seuil_alerte;
+        editArticle.id_categorie = article.id_categorie;
+        editArticle.id_fournisseur = article.id_fournisseur_principal || "";
+        editArticle.reference_fournisseur = article.reference_fournisseur || "";
+        editArticle.prix_achat = article.prix_achat;
+        
         showEditModal.value = true;
+        fetchSuppliers();
+      };
+
+      const closeEditModal = () => {
+        showEditModal.value = false;
+        // Réinitialiser le formulaire
+        Object.keys(editArticle).forEach(key => {
+          editArticle[key] = "";
+        });
+        Object.keys(editFormErrors).forEach(key => {
+          editFormErrors[key] = "";
+        });
+        updateError.value = "";
+        updateSuccess.value = false;
       };
 
       const viewArticle = article => {
@@ -1001,16 +1378,23 @@
         submitting,
         submitError,
         submitSuccess,
+        editArticle,
+        editFormErrors,
+        updating,
+        updateError,
+        updateSuccess,
         fetchArticles,
         getCategoryName,
         getSupplierName,
         formatCurrency,
         goToPage,
-        editArticle,
+        openEditModal,
         viewArticle,
         openAddModal,
         closeAddModal,
+        closeEditModal,
         submitNewArticle,
+        submitUpdateArticle,
       };
     },
   };
@@ -1769,31 +2153,6 @@
   .status-ok {
     background: #f0fdf4;
     color: #166534;
-  }
-
-  /* MODAL TODO */
-  .todo-container {
-    text-align: center;
-    padding: 2rem 0;
-  }
-
-  .todo-icon {
-    width: 64px;
-    height: 64px;
-    color: #00b8d4;
-    margin-bottom: 1rem;
-  }
-
-  .todo-container h4 {
-    font-size: 18px;
-    font-weight: 600;
-    color: #0f172a;
-    margin: 0 0 0.5rem 0;
-  }
-
-  .todo-container p {
-    color: #64748b;
-    margin: 0;
   }
 
   /* RESPONSIVE */

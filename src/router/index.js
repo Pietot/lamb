@@ -45,6 +45,12 @@ const router = createRouter({
       meta: { requiresAuth: true, layout: "main", title: "Réception des commandes - Fashion Chic" },
     },
     {
+      path: "/lot",
+      name: "Lot",
+      component: () => import("@/views/lot/LotView.vue"),
+      meta: { requiresAuth: true, layout: "main", title: "Gestion des lots  Fashion Chic" },
+    },
+    {
       path: "/clients",
       name: "Clients",
       component: () => import("@/views/clients/ClientsView.vue"),
