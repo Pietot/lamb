@@ -124,7 +124,7 @@
                         role="button"
                         aria-label="Supprimer"
                         class="action-btn danger"
-                        @click="deleteUser(user)"
+                        @click="confirmDeleteUser(user)"
                         title="Supprimer"
                       >
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -192,16 +192,6 @@
                     +{{ getRolePermissions(role.id_role).length - 3 }} autres
                   </li>
                 </ul>
-              </div>
-              <div class="role-actions">
-                <button
-                  role="button"
-                  aria-label="Modifier les permissions"
-                  class="role-edit-button"
-                  @click="editRole(role)"
-                >
-                  Modifier les permissions
-                </button>
               </div>
             </div>
           </div>
@@ -375,7 +365,7 @@
           <button
             role="button"
             aria-label="Fermer"
-            @click="showEditUserModal = false"
+            @click="closeEditUserModal"
             class="modal-close"
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -385,49 +375,167 @@
           </button>
         </div>
         <div class="modal-body" v-if="selectedUser">
-          <div class="user-details-card">
-            <div class="user-header">
-              <div
-                class="user-avatar large"
-                :style="{
-                  backgroundColor: getUserColor(selectedUser.id_utilisateur),
-                }"
+          <form @submit.prevent="handleUpdateUser" class="user-form">
+            <div class="form-group">
+              <label for="edit-nom" class="form-label">Nom</label>
+              <input
+                id="edit-nom"
+                v-model="editUserForm.nom"
+                type="text"
+                class="form-input"
+                placeholder="Entrez le nom"
+                maxlength="50"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="edit-prenom" class="form-label">Prénom</label>
+              <input
+                id="edit-prenom"
+                v-model="editUserForm.prenom"
+                type="text"
+                class="form-input"
+                placeholder="Entrez le prénom"
+                maxlength="50"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="edit-email" class="form-label">Email</label>
+              <input
+                id="edit-email"
+                v-model="editUserForm.email"
+                type="email"
+                class="form-input"
+                placeholder="exemple@lamb.com"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="edit-login" class="form-label">Login</label>
+              <input
+                id="edit-login"
+                v-model="editUserForm.login"
+                type="text"
+                class="form-input"
+                placeholder="Nom d'utilisateur pour la connexion"
+                maxlength="30"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="edit-role" class="form-label">Rôle</label>
+              <select id="edit-role" v-model="editUserForm.id_role" class="form-select" required>
+                <option value="" disabled>Sélectionnez un rôle</option>
+                <option v-for="role in roles" :key="role.id_role" :value="role.id_role">
+                  {{ role.role }}
+                </option>
+              </select>
+            </div>
+
+            <div v-if="updateError" class="form-error">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+              {{ updateError }}
+            </div>
+
+            <div v-if="updateSuccess" class="form-success">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+              </svg>
+              Utilisateur modifié avec succès !
+            </div>
+
+            <div class="modal-actions">
+              <button
+                role="button"
+                aria-label="Annuler"
+                type="button"
+                class="modal-btn secondary"
+                @click="closeEditUserModal"
               >
-                {{ getInitials(selectedUser) }}
-              </div>
-              <div class="user-info">
-                <h4>{{ selectedUser.prenom }} {{ selectedUser.nom }}</h4>
-                <p>{{ selectedUser.email }}</p>
-              </div>
+                Annuler
+              </button>
+              <button
+                role="button"
+                aria-label="Enregistrer les modifications"
+                type="submit"
+                class="modal-btn primary"
+                :disabled="updatingUser"
+              >
+                <span v-if="updatingUser" class="loading-spinner"></span>
+                {{ updatingUser ? "Enregistrement..." : "Enregistrer les modifications" }}
+              </button>
             </div>
-            <div class="detail-row">
-              <span class="detail-label">ID Utilisateur :</span>
-              <span class="detail-value">{{ selectedUser.id_utilisateur }}</span>
-            </div>
-            <div class="detail-row">
-              <span class="detail-label">Rôle actuel :</span>
-              <span class="detail-value">
-                <span class="role-badge" :class="getRoleClass(selectedUser.id_role)">
-                  {{ getRoleName(selectedUser.id_role) }}
-                </span>
-              </span>
-            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Confirmation suppression -->
+    <div v-if="showDeleteModal" class="modal-overlay" @click="showDeleteModal = false">
+      <div class="modal-content modal-delete" @click.stop>
+        <div class="modal-header">
+          <h2>Confirmer la suppression</h2>
+          <button
+            role="button"
+            aria-label="Fermer"
+            @click="showDeleteModal = false"
+            class="modal-close"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body" v-if="userToDelete">
+          <div class="delete-warning">
+            <svg class="warning-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+            <p class="warning-text">
+              Êtes-vous sûr de vouloir supprimer l'utilisateur 
+              <strong>{{ userToDelete.prenom }} {{ userToDelete.nom }}</strong> ?
+            </p>
+            <p class="warning-subtext">Cette action est irréversible.</p>
           </div>
+
+          <div v-if="deleteError" class="form-error">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            {{ deleteError }}
+          </div>
+
           <div class="modal-actions">
             <button
               role="button"
               aria-label="Annuler"
               class="modal-btn secondary"
-              @click="showEditUserModal = false"
+              @click="showDeleteModal = false"
             >
               Annuler
             </button>
             <button
               role="button"
-              aria-label="Enregistrer les modifications"
-              class="modal-btn primary"
+              aria-label="Confirmer la suppression"
+              class="modal-btn danger"
+              @click="handleDeleteUser"
+              :disabled="deletingUser"
             >
-              Enregistrer les modifications
+              <span v-if="deletingUser" class="loading-spinner"></span>
+              {{ deletingUser ? "Suppression..." : "Supprimer l'utilisateur" }}
             </button>
           </div>
         </div>
@@ -456,7 +564,9 @@
       const userSearch = ref("");
       const showNewUserModal = ref(false);
       const showEditUserModal = ref(false);
+      const showDeleteModal = ref(false);
       const selectedUser = ref(null);
+      const userToDelete = ref(null);
       const users = ref([]);
       const roles = ref([]);
       const loading = ref(true);
@@ -464,6 +574,11 @@
       const creatingUser = ref(false);
       const createError = ref(null);
       const createSuccess = ref(false);
+      const updatingUser = ref(false);
+      const updateError = ref(null);
+      const updateSuccess = ref(false);
+      const deletingUser = ref(false);
+      const deleteError = ref(null);
       const showPassword = ref(false);
 
       const tabs = ref([
@@ -478,6 +593,16 @@
         email: "",
         login: "",
         password: "",
+        id_role: "",
+      });
+
+      // Formulaire modification utilisateur
+      const editUserForm = ref({
+        id_utilisateur: "",
+        nom: "",
+        prenom: "",
+        email: "",
+        login: "",
         id_role: "",
       });
 
@@ -628,14 +753,93 @@
         }
       };
 
-      // Fonction pour supprimer un utilisateur (placeholder)
-      const deleteUser = user => {
-        if (
-          confirm(`Êtes-vous sûr de vouloir supprimer l'utilisateur ${user.prenom} ${user.nom} ?`)
-        ) {
-          console.log("Supprimer utilisateur:", user.id_utilisateur);
-          // TODO: Implémenter l'API DELETE
+      // Fonction pour modifier un utilisateur
+      const handleUpdateUser = async () => {
+        updateError.value = null;
+        updateSuccess.value = false;
+        updatingUser.value = true;
+
+        try {
+          const formData = new URLSearchParams();
+          formData.append("id_utilisateur", editUserForm.value.id_utilisateur.toString());
+          formData.append("nom", editUserForm.value.nom);
+          formData.append("prenom", editUserForm.value.prenom);
+          formData.append("email", editUserForm.value.email);
+          formData.append("login", editUserForm.value.login);
+          formData.append("id_role", editUserForm.value.id_role.toString());
+
+          const response = await fetch(VITE_API_URL + "update_user", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            credentials: "include",
+            body: formData.toString(),
+          });
+
+          const data = await response.json();
+
+          if (!response.ok || !data.success) {
+            throw new Error(data.message || "Erreur lors de la modification de l'utilisateur");
+          }
+
+          updateSuccess.value = true;
+
+          // Rafraîchir la liste des utilisateurs après 1.5 secondes
+          setTimeout(() => {
+            fetchData();
+            closeEditUserModal();
+          }, 1500);
+        } catch (err) {
+          console.error("Erreur lors de la modification:", err);
+          updateError.value =
+            err.message || "Impossible de modifier l'utilisateur. Veuillez réessayer.";
+        } finally {
+          updatingUser.value = false;
         }
+      };
+
+      // Fonction pour supprimer un utilisateur
+      const handleDeleteUser = async () => {
+        deleteError.value = null;
+        deletingUser.value = true;
+
+        try {
+          const formData = new URLSearchParams();
+          formData.append("id_utilisateur", userToDelete.value.id_utilisateur.toString());
+
+          const response = await fetch(VITE_API_URL + "delete_user", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            credentials: "include",
+            body: formData.toString(),
+          });
+
+          const data = await response.json();
+
+          if (!response.ok || !data.success) {
+            throw new Error(data.message || "Erreur lors de la suppression de l'utilisateur");
+          }
+
+          // Rafraîchir la liste et fermer la modale
+          fetchData();
+          showDeleteModal.value = false;
+          userToDelete.value = null;
+        } catch (err) {
+          console.error("Erreur lors de la suppression:", err);
+          deleteError.value =
+            err.message || "Impossible de supprimer l'utilisateur. Veuillez réessayer.";
+        } finally {
+          deletingUser.value = false;
+        }
+      };
+
+      // Ouvrir la modale de confirmation de suppression
+      const confirmDeleteUser = user => {
+        userToDelete.value = user;
+        showDeleteModal.value = true;
       };
 
       // Computed properties
@@ -699,12 +903,15 @@
 
       const editUser = user => {
         selectedUser.value = user;
+        // Pré-remplir le formulaire
+        editUserForm.value.id_utilisateur = user.id_utilisateur;
+        editUserForm.value.nom = user.nom;
+        editUserForm.value.prenom = user.prenom;
+        editUserForm.value.email = user.email;
+        editUserForm.value.login = user.login;
+        editUserForm.value.id_role = user.id_role;
+        
         showEditUserModal.value = true;
-      };
-
-      const editRole = role => {
-        console.log("Modifier rôle:", role.id_role);
-        // TODO: Implémenter la modification des rôles
       };
 
       const closeNewUserModal = () => {
@@ -723,6 +930,21 @@
         createSuccess.value = false;
       };
 
+      const closeEditUserModal = () => {
+        showEditUserModal.value = false;
+        // Réinitialiser le formulaire
+        editUserForm.value = {
+          id_utilisateur: "",
+          nom: "",
+          prenom: "",
+          email: "",
+          login: "",
+          id_role: "",
+        };
+        updateError.value = null;
+        updateSuccess.value = false;
+      };
+
       // Charger les données au montage
       onMounted(() => {
         fetchData();
@@ -733,7 +955,9 @@
         userSearch,
         showNewUserModal,
         showEditUserModal,
+        showDeleteModal,
         selectedUser,
+        userToDelete,
         tabs,
         users,
         roles,
@@ -742,8 +966,14 @@
         creatingUser,
         createError,
         createSuccess,
+        updatingUser,
+        updateError,
+        updateSuccess,
+        deletingUser,
+        deleteError,
         showPassword,
         newUserForm,
+        editUserForm,
         filteredUsers,
         rolesWithStats,
         getInitials,
@@ -754,11 +984,13 @@
         getRoleDescription,
         getRolePermissions,
         editUser,
-        deleteUser,
-        editRole,
+        confirmDeleteUser,
         fetchData,
         handleCreateUser,
+        handleUpdateUser,
+        handleDeleteUser,
         closeNewUserModal,
+        closeEditUserModal,
       };
     },
   };
@@ -1240,7 +1472,7 @@
   .permissions-list {
     list-style: none;
     padding: 0;
-    margin: 0 0 1rem 0;
+    margin: 0;
   }
 
   .permissions-list li {
@@ -1261,31 +1493,6 @@
   .more-permissions {
     font-style: italic;
     color: #94a3b8;
-  }
-
-  .role-actions {
-    height: 100%;
-    display: flex;
-    align-items: flex-end;
-  }
-
-  .role-edit-button {
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    padding: 0.5rem 1rem;
-    font-size: 13px;
-    font-weight: 500;
-    color: #64748b;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    width: 100%;
-  }
-
-  .role-edit-button:hover {
-    background: #f8fafc;
-    border-color: #cbd5e1;
-    color: black;
   }
 
   /* FORMULAIRE */
@@ -1429,6 +1636,10 @@
     max-width: 600px;
   }
 
+  .modal-content.modal-delete {
+    max-width: 450px;
+  }
+
   .modal-header {
     display: flex;
     align-items: center;
@@ -1472,60 +1683,37 @@
     max-height: calc(90vh - 120px);
   }
 
-  /* MODAL EDIT USER */
-  .user-details-card {
-    background: #f8fafc;
-    border-radius: 8px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
+  /* MODAL SUPPRESSION */
+  .delete-warning {
+    text-align: center;
+    margin-bottom: 2rem;
   }
 
-  .user-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid #e2e8f0;
+  .warning-icon {
+    width: 64px;
+    height: 64px;
+    color: #DC2626;
+    margin: 0 auto 1rem;
+    stroke-width: 1.5;
   }
 
-  .user-info h4 {
-    font-size: 18px;
-    font-weight: 600;
-    color: #0f172a;
-    margin: 0 0 0.25rem 0;
+  .warning-text {
+    font-size: 16px;
+    color: #0F172A;
+    margin: 0 0 0.5rem 0;
   }
 
-  .user-info p {
+  .warning-text strong {
+    color: #DC2626;
+  }
+
+  .warning-subtext {
     font-size: 14px;
-    color: #64748b;
+    color: #64748B;
     margin: 0;
   }
 
-  .detail-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid #e2e8f0;
-  }
-
-  .detail-row:last-child {
-    border-bottom: none;
-  }
-
-  .detail-label {
-    font-size: 13px;
-    color: #64748b;
-    font-weight: 500;
-  }
-
-  .detail-value {
-    font-size: 14px;
-    color: #0f172a;
-    font-weight: 600;
-  }
-
+  /* MODAL ACTIONS */
   .modal-actions {
     display: flex;
     gap: 1rem;
@@ -1568,6 +1756,15 @@
   .modal-btn.secondary:hover {
     background: #e2e8f0;
     color: black;
+  }
+
+  .modal-btn.danger {
+    background: #DC2626;
+    color: white;
+  }
+
+  .modal-btn.danger:hover:not(:disabled) {
+    background: #B91C1C;
   }
 
   input:placeholder-shown {

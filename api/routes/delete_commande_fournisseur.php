@@ -22,6 +22,7 @@ try {
         echo json_encode(['success' => false, 'message' => 'Champs invalides'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
     }
+    $pdo = getPDO();
 
     $stmt = $pdo->prepare('DELETE FROM commande_fournisseur WHERE id_commande_fournisseur = :id_commande_fournisseur');
     $stmt->bindValue(':id_commande_fournisseur', $id_commande_fournisseur);
