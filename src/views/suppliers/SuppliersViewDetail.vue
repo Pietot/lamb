@@ -1206,13 +1206,13 @@
   }
 
   .export-button {
-    background: white;
-    border: 1px solid #e2e8f0;
+    background: #0062ff;
+    color: white;
+    border: none;
     border-radius: 8px;
-    padding: 0.75rem 1rem;
+    padding: 0.75rem 1.5rem;
     font-size: 14px;
     font-weight: 500;
-    color: #64748b;
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -1221,9 +1221,8 @@
   }
 
   .export-button:hover {
-    background: #f8fafc;
-    border-color: #cbd5e1;
-    color: black;
+    background: #2563eb;
+    transform: translateY(-1px);
   }
 
   .export-button svg {

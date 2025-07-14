@@ -23,7 +23,7 @@ if (!$tableExists) {
 
 try {
     if ($table === 'utilisateur') {
-        $stmt = $pdo->prepare("SELECT id_utilisateur, nom, prenom, email, id_role FROM $table");
+        $stmt = $pdo->prepare("SELECT id_utilisateur, nom, prenom, email, login, id_role FROM $table");
         $stmt->execute();
     } else {
         $stmt = $pdo->prepare("SELECT * FROM $table");
