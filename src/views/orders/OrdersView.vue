@@ -312,7 +312,7 @@
               <div class="detail-row">
                 <span class="detail-label">Montant total :</span>
                 <span class="detail-value amount">{{
-                  formatCurrency(selectedOrder.montant_total)
+                  formatCurrency(selectedOrder.montant_ttc)
                 }}</span>
               </div>
             </div>
