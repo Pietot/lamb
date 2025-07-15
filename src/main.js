@@ -6,8 +6,6 @@ import Toast from "vue-toastification";
 setTimeout(() => import("./style.css"), 0);
 setTimeout(() => import("vue-toastification/dist/index.css"), 0);
 
-console.log("arno ne finira peut être son dev");
-
 const app = createApp(App);
 
 app.use(createPinia());
