@@ -17,71 +17,6 @@
       </div>
     </div>
 
-    <!-- Cartes KPI -->
-    <div class="kpi-section">
-      <div class="kpi-card">
-        <div class="kpi-icon bundles-icon">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <rect x="2" y="2" width="9" height="9" rx="1"/>
-            <rect x="13" y="2" width="9" height="9" rx="1"/>
-            <rect x="2" y="13" width="9" height="9" rx="1"/>
-            <rect x="13" y="13" width="9" height="9" rx="1"/>
-          </svg>
-        </div>
-        <div class="kpi-content">
-          <p class="kpi-label">Lots actifs</p>
-          <p class="kpi-value">{{ activeBundles }}</p>
-          <p class="kpi-trend">{{ bundleTrend }}% ce mois</p>
-        </div>
-      </div>
-
-      <div class="kpi-card">
-        <div class="kpi-icon revenue-icon">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <line x1="12" y1="1" x2="12" y2="23"/>
-            <polyline points="17 6 12 1 7 6"/>
-            <polyline points="17 18 12 23 7 18"/>
-          </svg>
-        </div>
-        <div class="kpi-content">
-          <p class="kpi-label">Valeur totale</p>
-          <p class="kpi-value">{{ formatCurrency(totalValue) }}</p>
-          <p class="kpi-trend">Stock lots</p>
-        </div>
-      </div>
-
-      <div class="kpi-card">
-        <div class="kpi-icon products-icon">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-            <polyline points="3.27,6.96 12,12.01 20.73,6.96"/>
-            <line x1="12" y1="22.08" x2="12" y2="12"/>
-          </svg>
-        </div>
-        <div class="kpi-content">
-          <p class="kpi-label">Articles en lots</p>
-          <p class="kpi-value">{{ totalProductsInBundles }}</p>
-          <p class="kpi-trend">Produits uniques</p>
-        </div>
-      </div>
-
-      <div class="kpi-card">
-        <div class="kpi-icon savings-icon">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <circle cx="8" cy="21" r="1"/>
-            <circle cx="20" cy="21" r="1"/>
-            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-            <path d="M9 11l3-3 3 3"/>
-          </svg>
-        </div>
-        <div class="kpi-content">
-          <p class="kpi-label">Économie moyenne</p>
-          <p class="kpi-value">{{ averageSavings }}%</p>
-          <p class="kpi-trend">Sur les lots</p>
-        </div>
-      </div>
-    </div>
-
     <!-- Filtres et recherche -->
     <div class="filters-section">
       <div class="filter-group">
@@ -98,18 +33,16 @@
           </svg>
         </div>
         
-        <select v-model="filters.status" class="filter-select">
-          <option value="">Tous les statuts</option>
-          <option value="active">Actif</option>
-          <option value="inactive">Inactif</option>
-          <option value="draft">Brouillon</option>
+        <select v-model="filters.stockStatus" class="filter-select">
+          <option value="">Tous les stocks</option>
+          <option value="normal">Stock normal</option>
+          <option value="low">Stock faible</option>
         </select>
         
         <select v-model="filters.sort" class="filter-select">
           <option value="name">Trier par nom</option>
           <option value="date">Plus récents</option>
-          <option value="price">Prix croissant</option>
-          <option value="savings">Économies</option>
+          <option value="stock">Stock croissant</option>
         </select>
         
         <button class="action-button" @click="resetFilters">
@@ -142,6 +75,17 @@
           <p>Chargement des lots...</p>
         </div>
 
+        <!-- Error State -->
+        <div v-else-if="error" class="error-container">
+          <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          <p class="error-message">{{ error }}</p>
+          <button @click="fetchData" class="retry-button">Réessayer</button>
+        </div>
+
         <!-- Table Content -->
         <div v-else class="table-container">
           <table class="bundles-table">
@@ -149,19 +93,18 @@
               <tr>
                 <th>Lot</th>
                 <th>Articles</th>
-                <th>Prix unitaire</th>
-                <th>Prix du lot</th>
-                <th>Économie</th>
                 <th>Stock</th>
+                <th>Seuil d'alerte</th>
+                <th>Date création</th>
                 <th>Statut</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="bundle in paginatedBundles" :key="bundle.id">
+              <tr v-for="bundle in paginatedBundles" :key="bundle.id_lot">
                 <td>
                   <div class="bundle-info">
-                    <div class="bundle-icon" :style="{ backgroundColor: getBundleColor(bundle.id) }">
+                    <div class="bundle-icon" :style="{ backgroundColor: getBundleColor(bundle.id_lot) }">
                       <svg viewBox="0 0 24 24" fill="currentColor">
                         <rect x="2" y="2" width="9" height="9" rx="1"/>
                         <rect x="13" y="2" width="9" height="9" rx="1"/>
@@ -170,34 +113,29 @@
                       </svg>
                     </div>
                     <div class="bundle-details">
-                      <p class="bundle-name">{{ bundle.name }}</p>
-                      <p class="bundle-code">{{ bundle.code }}</p>
+                      <p class="bundle-name">{{ bundle.nom }}</p>
+                      <p class="bundle-code">{{ bundle.description }}</p>
                     </div>
                   </div>
                 </td>
                 <td class="products-count">
                   <div class="products-preview">
-                    <span class="count">{{ bundle.products.length }}</span>
+                    <span class="count">{{ getBundleProductsCount(bundle.id_lot) }}</span>
                     <span class="label">articles</span>
                   </div>
                 </td>
-                <td class="price-unit">{{ formatCurrency(bundle.originalPrice) }}</td>
-                <td class="price-bundle">
-                  <span class="bundle-price">{{ formatCurrency(bundle.bundlePrice) }}</span>
-                </td>
-                <td class="savings">
-                  <span class="savings-badge">
-                    -{{ bundle.savingsPercent }}%
-                  </span>
-                </td>
                 <td class="stock">
-                  <span class="stock-value" :class="getStockClass(bundle.stock)">
-                    {{ bundle.stock }}
+                  <span class="stock-value" :class="getStockClass(bundle.quantite_stock, bundle.seuil_alerte)">
+                    {{ bundle.quantite_stock }}
                   </span>
                 </td>
+                <td class="threshold">
+                  <span class="threshold-value">{{ bundle.seuil_alerte }}</span>
+                </td>
+                <td class="date">{{ formatDate(bundle.date_creation) }}</td>
                 <td>
-                  <span class="status-badge" :class="getStatusClass(bundle.status)">
-                    {{ getStatusLabel(bundle.status) }}
+                  <span class="status-badge" :class="getStatusClass(bundle.quantite_stock, bundle.seuil_alerte)">
+                    {{ getStatusLabel(bundle.quantite_stock, bundle.seuil_alerte) }}
                   </span>
                 </td>
                 <td class="actions">
@@ -213,16 +151,10 @@
                       <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
                     </svg>
                   </button>
-                  <button class="action-btn danger" @click="deleteBundle(bundle)" title="Supprimer">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <polyline points="3 6 5 6 21 6"/>
-                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                    </svg>
-                  </button>
                 </td>
               </tr>
               <tr v-if="filteredBundles.length === 0 && !loading">
-                <td colspan="8" class="empty-message">
+                <td colspan="7" class="empty-message">
                   Aucun lot trouvé
                 </td>
               </tr>
@@ -278,44 +210,47 @@
               <div class="form-group">
                 <label class="form-label">Nom du lot</label>
                 <input 
-                  v-model="bundleForm.name"
+                  v-model="bundleForm.nom"
                   type="text" 
                   class="form-input"
-                  placeholder="Ex: Pack Été 2025"
+                  placeholder="Ex: Lot Printemps"
                   required
                 />
               </div>
               
               <div class="form-group">
-                <label class="form-label">Code</label>
+                <label class="form-label">Description</label>
                 <input 
-                  v-model="bundleForm.code"
+                  v-model="bundleForm.description"
                   type="text" 
                   class="form-input"
-                  placeholder="Ex: PACK-ETE-2025"
+                  placeholder="Ex: Collection Printemps 2025"
                   required
                 />
               </div>
 
               <div class="form-group">
-                <label class="form-label">Prix du lot</label>
+                <label class="form-label">Stock initial</label>
                 <input 
-                  v-model.number="bundleForm.bundlePrice"
+                  v-model.number="bundleForm.quantite_stock"
                   type="number" 
-                  step="0.01"
+                  min="0"
                   class="form-input"
-                  placeholder="0.00"
+                  placeholder="0"
                   required
                 />
               </div>
 
               <div class="form-group">
-                <label class="form-label">Statut</label>
-                <select v-model="bundleForm.status" class="form-select">
-                  <option value="active">Actif</option>
-                  <option value="inactive">Inactif</option>
-                  <option value="draft">Brouillon</option>
-                </select>
+                <label class="form-label">Seuil d'alerte</label>
+                <input 
+                  v-model.number="bundleForm.seuil_alerte"
+                  type="number" 
+                  min="0"
+                  class="form-input"
+                  placeholder="10"
+                  required
+                />
               </div>
             </div>
 
@@ -328,10 +263,10 @@
                     <option value="">Sélectionner un article</option>
                     <option 
                       v-for="product in availableProducts" 
-                      :key="product.id"
-                      :value="product.id"
+                      :key="product.id_article"
+                      :value="product.id_article"
                     >
-                      {{ product.name }} - {{ formatCurrency(product.price) }}
+                      {{ product.nom }} - {{ product.reference }} - {{ formatCurrency(product.prix_achat) }}
                     </option>
                   </select>
                   <input 
@@ -357,12 +292,12 @@
                 <div class="selected-products" v-if="bundleForm.products.length > 0">
                   <div 
                     v-for="(item, index) in bundleForm.products" 
-                    :key="item.productId"
+                    :key="item.id_article"
                     class="product-item"
                   >
-                    <span class="product-name">{{ getProductName(item.productId) }}</span>
-                    <span class="product-quantity">x{{ item.quantity }}</span>
-                    <span class="product-price">{{ formatCurrency(getProductPrice(item.productId) * item.quantity) }}</span>
+                    <span class="product-name">{{ getProductName(item.id_article) }}</span>
+                    <span class="product-quantity">x{{ item.quantite_article }}</span>
+                    <span class="product-price">{{ formatCurrency(getProductPrice(item.id_article) * item.quantite_article) }}</span>
                     <button 
                       type="button"
                       @click="removeProductFromBundle(index)"
@@ -383,16 +318,8 @@
 
               <div class="price-summary">
                 <div class="summary-row">
-                  <span>Prix total des articles:</span>
-                  <span>{{ formatCurrency(calculateOriginalPrice()) }}</span>
-                </div>
-                <div class="summary-row">
-                  <span>Prix du lot:</span>
-                  <span>{{ formatCurrency(bundleForm.bundlePrice || 0) }}</span>
-                </div>
-                <div class="summary-row highlight">
-                  <span>Économie:</span>
-                  <span>{{ calculateSavings() }}</span>
+                  <span>Valeur totale des articles:</span>
+                  <span>{{ formatCurrency(calculateTotalValue()) }}</span>
                 </div>
               </div>
             </div>
@@ -428,46 +355,53 @@
               <h4 class="section-subtitle">Informations générales</h4>
               <div class="detail-row">
                 <span class="detail-label">Nom:</span>
-                <span class="detail-value">{{ selectedBundle.name }}</span>
+                <span class="detail-value">{{ selectedBundle.nom }}</span>
               </div>
               <div class="detail-row">
-                <span class="detail-label">Code:</span>
-                <span class="detail-value">{{ selectedBundle.code }}</span>
+                <span class="detail-label">Description:</span>
+                <span class="detail-value">{{ selectedBundle.description }}</span>
               </div>
               <div class="detail-row">
-                <span class="detail-label">Statut:</span>
-                <span class="detail-value">
-                  <span class="status-badge" :class="getStatusClass(selectedBundle.status)">
-                    {{ getStatusLabel(selectedBundle.status) }}
-                  </span>
-                </span>
+                <span class="detail-label">Date création:</span>
+                <span class="detail-value">{{ formatDate(selectedBundle.date_creation) }}</span>
               </div>
             </div>
 
             <div class="details-section">
-              <h4 class="section-subtitle">Détails financiers</h4>
+              <h4 class="section-subtitle">Stock</h4>
               <div class="detail-row">
-                <span class="detail-label">Prix unitaire:</span>
-                <span class="detail-value">{{ formatCurrency(selectedBundle.originalPrice) }}</span>
+                <span class="detail-label">Quantité en stock:</span>
+                <span class="detail-value">{{ selectedBundle.quantite_stock }}</span>
               </div>
               <div class="detail-row">
-                <span class="detail-label">Prix du lot:</span>
-                <span class="detail-value amount">{{ formatCurrency(selectedBundle.bundlePrice) }}</span>
+                <span class="detail-label">Seuil d'alerte:</span>
+                <span class="detail-value">{{ selectedBundle.seuil_alerte }}</span>
               </div>
               <div class="detail-row">
-                <span class="detail-label">Économie:</span>
-                <span class="detail-value savings">-{{ selectedBundle.savingsPercent }}%</span>
+                <span class="detail-label">Statut:</span>
+                <span class="detail-value">
+                  <span class="status-badge" :class="getStatusClass(selectedBundle.quantite_stock, selectedBundle.seuil_alerte)">
+                    {{ getStatusLabel(selectedBundle.quantite_stock, selectedBundle.seuil_alerte) }}
+                  </span>
+                </span>
               </div>
             </div>
             
             <div class="details-section full-width">
-              <h4 class="section-subtitle">Articles inclus ({{ selectedBundle.products.length }})</h4>
+              <h4 class="section-subtitle">Articles inclus ({{ getBundleProducts(selectedBundle.id_lot).length }})</h4>
               <div class="products-list">
-                <div v-for="item in selectedBundle.products" :key="item.productId" class="product-detail">
-                  <span class="product-info">{{ getProductName(item.productId) }}</span>
-                  <span class="product-qty">x{{ item.quantity }}</span>
-                  <span class="product-subtotal">{{ formatCurrency(getProductPrice(item.productId) * item.quantity) }}</span>
+                <div v-for="item in getBundleProducts(selectedBundle.id_lot)" :key="item.id_article" class="product-detail">
+                  <span class="product-info">{{ getProductName(item.id_article) }} - {{ getProductReference(item.id_article) }}</span>
+                  <span class="product-qty">x{{ item.quantite_article }}</span>
+                  <span class="product-subtotal">{{ formatCurrency(getProductPrice(item.id_article) * item.quantite_article) }}</span>
                 </div>
+                <div v-if="getBundleProducts(selectedBundle.id_lot).length === 0" class="no-products">
+                  Aucun article dans ce lot
+                </div>
+              </div>
+              <div class="total-value">
+                <span>Valeur totale:</span>
+                <span class="amount">{{ formatCurrency(calculateBundleTotalValue(selectedBundle.id_lot)) }}</span>
               </div>
             </div>
           </div>
@@ -495,7 +429,9 @@ export default {
     // États réactifs
     const bundles = ref([])
     const products = ref([])
-    const loading = ref(false)
+    const bundleProducts = ref([])
+    const loading = ref(true)
+    const error = ref(null)
     const searchQuery = ref('')
     const currentPage = ref(1)
     const itemsPerPage = 10
@@ -507,142 +443,114 @@ export default {
     const productQuantity = ref(1)
     
     const filters = ref({
-      status: '',
+      stockStatus: '',
       sort: 'name'
     })
 
     const bundleForm = ref({
-      name: '',
-      code: '',
-      bundlePrice: 0,
-      status: 'active',
+      nom: '',
+      description: '',
+      quantite_stock: 0,
+      seuil_alerte: 10,
       products: []
     })
 
-    // Données mockées
-    const mockProducts = [
-      { id: 1, name: 'Robe d\'été Flora', price: 89.90 },
-      { id: 2, name: 'Chemisier Soie', price: 129.90 },
-      { id: 3, name: 'Pantalon Lin', price: 99.90 },
-      { id: 4, name: 'Jupe Plissée', price: 79.90 },
-      { id: 5, name: 'Top Dentelle', price: 59.90 },
-      { id: 6, name: 'Cardigan Mohair', price: 149.90 },
-      { id: 7, name: 'Short Denim', price: 69.90 },
-      { id: 8, name: 'Blouse Fleurie', price: 84.90 }
-    ]
+    // Fonction pour récupérer les données depuis l'API
+    const fetchData = async () => {
+      loading.value = true
+      error.value = null
+      
+      try {
+        // Récupérer les lots
+        const lotsResponse = await fetch(import.meta.env.VITE_API_URL + "get_table?table=lot", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            credentials: "include",
+          });
 
-    const mockBundles = [
-      {
-        id: 1,
-        name: 'Collection Printemps',
-        code: 'SPRING-2025',
-        products: [
-          { productId: 1, quantity: 1 },
-          { productId: 2, quantity: 1 },
-          { productId: 4, quantity: 1 }
-        ],
-        originalPrice: 299.70,
-        bundlePrice: 239.90,
-        savingsPercent: 20,
-        stock: 15,
-        status: 'active'
-      },
-      {
-        id: 2,
-        name: 'Pack Été Complet',
-        code: 'SUMMER-FULL',
-        products: [
-          { productId: 1, quantity: 2 },
-          { productId: 3, quantity: 1 },
-          { productId: 7, quantity: 2 }
-        ],
-        originalPrice: 429.50,
-        bundlePrice: 349.90,
-        savingsPercent: 19,
-        stock: 8,
-        status: 'active'
-      },
-      {
-        id: 3,
-        name: 'Duo Élégance',
-        code: 'DUO-ELEG',
-        products: [
-          { productId: 2, quantity: 1 },
-          { productId: 6, quantity: 1 }
-        ],
-        originalPrice: 279.80,
-        bundlePrice: 249.90,
-        savingsPercent: 11,
-        stock: 22,
-        status: 'active'
+        // Récupérer les articles
+        const articlesResponse = await fetch(import.meta.env.VITE_API_URL + "get_table?table=article", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            credentials: "include",
+          });
+
+        // Récupérer les associations articles-lots
+        const articleLotsResponse = await fetch(import.meta.env.VITE_API_URL + "get_table?table=article_lot", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            credentials: "include",
+          });
+
+        if (!lotsResponse.ok || !articlesResponse.ok || !articleLotsResponse.ok) {
+          throw new Error('Erreur lors du chargement des données')
+        }
+
+        const lotsData = await lotsResponse.json()
+        const articlesData = await articlesResponse.json()
+        const articleLotsData = await articleLotsResponse.json()
+        
+        if (lotsData.success && lotsData.data) {
+          bundles.value = lotsData.data
+        }
+
+        if (articlesData.success && articlesData.data) {
+          products.value = articlesData.data
+        }
+
+        if (articleLotsData.success && articleLotsData.data) {
+          bundleProducts.value = articleLotsData.data
+        }
+      } catch (err) {
+        console.error('Erreur lors du chargement:', err)
+        error.value = 'Impossible de charger les données. Veuillez réessayer.'
+      } finally {
+        loading.value = false
       }
-    ]
+    }
 
     // Computed properties
-    const activeBundles = computed(() => {
-      return bundles.value.filter(b => b.status === 'active').length
-    })
-
-    const bundleTrend = computed(() => '+15')
-
-    const totalValue = computed(() => {
-      return bundles.value.reduce((total, bundle) => {
-        return total + (bundle.bundlePrice * bundle.stock)
-      }, 0)
-    })
-
-    const totalProductsInBundles = computed(() => {
-      const uniqueProducts = new Set()
-      bundles.value.forEach(bundle => {
-        bundle.products.forEach(item => {
-          uniqueProducts.add(item.productId)
-        })
-      })
-      return uniqueProducts.size
-    })
-
-    const averageSavings = computed(() => {
-      if (bundles.value.length === 0) return 0
-      const totalSavings = bundles.value.reduce((sum, bundle) => sum + bundle.savingsPercent, 0)
-      return Math.round(totalSavings / bundles.value.length)
-    })
-
     const availableProducts = computed(() => {
       return products.value.filter(product => {
-        return !bundleForm.value.products.some(item => item.productId === product.id)
+        return !bundleForm.value.products.some(item => item.id_article === product.id_article)
       })
     })
 
     const filteredBundles = computed(() => {
       let result = [...bundles.value]
 
-      // Filtre par statut
-      if (filters.value.status) {
-        result = result.filter(bundle => bundle.status === filters.value.status)
+      // Filtre par statut de stock
+      if (filters.value.stockStatus === 'low') {
+        result = result.filter(bundle => Number(bundle.quantite_stock) <= Number(bundle.seuil_alerte))
+      } else if (filters.value.stockStatus === 'normal') {
+        result = result.filter(bundle => Number(bundle.quantite_stock) > Number(bundle.seuil_alerte))
       }
 
       // Filtre par recherche
       if (searchQuery.value) {
         const query = searchQuery.value.toLowerCase()
         result = result.filter(bundle =>
-          bundle.name.toLowerCase().includes(query) ||
-          bundle.code.toLowerCase().includes(query)
+          bundle.nom.toLowerCase().includes(query) ||
+          bundle.description.toLowerCase().includes(query)
         )
       }
 
       // Tri
       switch (filters.value.sort) {
         case 'name':
-          result.sort((a, b) => a.name.localeCompare(b.name))
+          result.sort((a, b) => a.nom.localeCompare(b.nom))
           break
         case 'date':
-          result.sort((a, b) => b.id - a.id)
+          result.sort((a, b) => new Date(b.date_creation) - new Date(a.date_creation))
           break
-        case 'price':
-          result.sort((a, b) => a.bundlePrice - b.bundlePrice)
-          break
-        case 'savings':
-          result.sort((a, b) => b.savingsPercent - a.savingsPercent)
+        case 'stock':
+          result.sort((a, b) => Number(a.quantite_stock) - Number(b.quantite_stock))
           break
       }
 
@@ -666,10 +574,10 @@ export default {
     })
 
     const isFormValid = computed(() => {
-      return bundleForm.value.name && 
-             bundleForm.value.code && 
-             bundleForm.value.bundlePrice > 0 && 
-             bundleForm.value.products.length > 0
+      return bundleForm.value.nom && 
+             bundleForm.value.description && 
+             bundleForm.value.quantite_stock >= 0 && 
+             bundleForm.value.seuil_alerte >= 0
     })
 
     // Fonctions
@@ -680,64 +588,69 @@ export default {
       }).format(amount)
     }
 
+    const formatDate = (dateString) => {
+      const date = new Date(dateString)
+      return date.toLocaleDateString('fr-FR')
+    }
+
     const getBundleColor = (id) => {
       const colors = ['#00B8D4', '#2563EB', '#059669', '#D97706', '#7C3AED', '#DC2626']
       return colors[id % colors.length]
     }
 
-    const getStatusClass = (status) => {
-      const classes = {
-        'active': 'status-active',
-        'inactive': 'status-inactive',
-        'draft': 'status-draft'
-      }
-      return classes[status] || 'status-default'
+    const getStatusClass = (stock, threshold) => {
+      return Number(stock) <= Number(threshold) ? 'status-alert' : 'status-normal'
     }
 
-    const getStatusLabel = (status) => {
-      const labels = {
-        'active': 'Actif',
-        'inactive': 'Inactif',
-        'draft': 'Brouillon'
-      }
-      return labels[status] || status
+    const getStatusLabel = (stock, threshold) => {
+      return Number(stock) <= Number(threshold) ? 'Stock faible' : 'Stock normal'
     }
 
-    const getStockClass = (stock) => {
-      if (stock <= 5) return 'stock-low'
-      if (stock <= 20) return 'stock-medium'
-      return 'stock-high'
+    const getStockClass = (stock, threshold) => {
+      return Number(stock) <= Number(threshold) ? 'stock-low' : 'stock-high'
+    }
+
+    const getBundleProductsCount = (bundleId) => {
+      return bundleProducts.value.filter(item => Number(item.id_lot) === Number(bundleId)).length
+    }
+
+    const getBundleProducts = (bundleId) => {
+      return bundleProducts.value.filter(item => Number(item.id_lot) === Number(bundleId))
     }
 
     const getProductName = (productId) => {
-      const product = products.value.find(p => p.id === productId)
-      return product ? product.name : `Produit #${productId}`
+      const product = products.value.find(p => Number(p.id_article) === Number(productId))
+      return product ? product.nom : `Article #${productId}`
+    }
+
+    const getProductReference = (productId) => {
+      const product = products.value.find(p => Number(p.id_article) === Number(productId))
+      return product ? product.reference : ''
     }
 
     const getProductPrice = (productId) => {
-      const product = products.value.find(p => p.id === productId)
-      return product ? product.price : 0
+      const product = products.value.find(p => Number(p.id_article) === Number(productId))
+      return product ? Number(product.prix_achat) : 0
     }
 
-    const calculateOriginalPrice = () => {
+    const calculateTotalValue = () => {
       return bundleForm.value.products.reduce((total, item) => {
-        return total + (getProductPrice(item.productId) * item.quantity)
+        return total + (getProductPrice(item.id_article) * Number(item.quantite_article))
       }, 0)
     }
 
-    const calculateSavings = () => {
-      const original = calculateOriginalPrice()
-      const bundle = bundleForm.value.bundlePrice || 0
-      if (original === 0 || bundle >= original) return '0%'
-      const savings = ((original - bundle) / original) * 100
-      return `-${savings.toFixed(0)}%`
+    const calculateBundleTotalValue = (bundleId) => {
+      const products = getBundleProducts(bundleId)
+      return products.reduce((total, item) => {
+        return total + (getProductPrice(item.id_article) * Number(item.quantite_article))
+      }, 0)
     }
 
     const addProductToBundle = () => {
       if (selectedProduct.value && productQuantity.value > 0) {
         bundleForm.value.products.push({
-          productId: Number(selectedProduct.value),
-          quantity: productQuantity.value
+          id_article: Number(selectedProduct.value),
+          quantite_article: productQuantity.value
         })
         selectedProduct.value = ''
         productQuantity.value = 1
@@ -750,7 +663,7 @@ export default {
 
     const resetFilters = () => {
       searchQuery.value = ''
-      filters.value.status = ''
+      filters.value.stockStatus = ''
       filters.value.sort = 'name'
       currentPage.value = 1
     }
@@ -758,10 +671,10 @@ export default {
     const openNewBundleModal = () => {
       isEditing.value = false
       bundleForm.value = {
-        name: '',
-        code: '',
-        bundlePrice: 0,
-        status: 'active',
+        nom: '',
+        description: '',
+        quantite_stock: 0,
+        seuil_alerte: 10,
         products: []
       }
       showBundleModal.value = true
@@ -770,12 +683,15 @@ export default {
     const editBundle = (bundle) => {
       isEditing.value = true
       bundleForm.value = {
-        id: bundle.id,
-        name: bundle.name,
-        code: bundle.code,
-        bundlePrice: bundle.bundlePrice,
-        status: bundle.status,
-        products: [...bundle.products]
+        id_lot: bundle.id_lot,
+        nom: bundle.nom,
+        description: bundle.description,
+        quantite_stock: Number(bundle.quantite_stock),
+        seuil_alerte: Number(bundle.seuil_alerte),
+        products: getBundleProducts(bundle.id_lot).map(item => ({
+          id_article: Number(item.id_article),
+          quantite_article: Number(item.quantite_article)
+        }))
       }
       showBundleModal.value = true
     }
@@ -786,37 +702,11 @@ export default {
     }
 
     const saveBundle = () => {
-      // Calculer les prix et économies
-      const originalPrice = calculateOriginalPrice()
-      const savingsPercent = Math.round(((originalPrice - bundleForm.value.bundlePrice) / originalPrice) * 100)
-      
-      const newBundle = {
-        ...bundleForm.value,
-        originalPrice,
-        savingsPercent,
-        stock: 10 // Stock par défaut
-      }
-
-      if (isEditing.value) {
-        const index = bundles.value.findIndex(b => b.id === bundleForm.value.id)
-        if (index !== -1) {
-          bundles.value[index] = newBundle
-        }
-      } else {
-        newBundle.id = bundles.value.length + 1
-        bundles.value.push(newBundle)
-      }
-
+      // TODO: Implémenter la sauvegarde via API
+      console.log('Sauvegarde du lot:', bundleForm.value)
       closeBundleModal()
-    }
-
-    const deleteBundle = (bundle) => {
-      if (confirm(`Êtes-vous sûr de vouloir supprimer le lot "${bundle.name}" ?`)) {
-        const index = bundles.value.findIndex(b => b.id === bundle.id)
-        if (index !== -1) {
-          bundles.value.splice(index, 1)
-        }
-      }
+      // Recharger les données
+      fetchData()
     }
 
     const closeBundleModal = () => {
@@ -832,14 +722,15 @@ export default {
 
     // Charger les données au montage
     onMounted(() => {
-      products.value = mockProducts
-      bundles.value = mockBundles
+      fetchData()
     })
 
     return {
       bundles,
       products,
+      bundleProducts,
       loading,
+      error,
       searchQuery,
       currentPage,
       showBundleModal,
@@ -850,11 +741,6 @@ export default {
       productQuantity,
       filters,
       bundleForm,
-      activeBundles,
-      bundleTrend,
-      totalValue,
-      totalProductsInBundles,
-      averageSavings,
       availableProducts,
       filteredBundles,
       totalPages,
@@ -863,14 +749,18 @@ export default {
       paginatedBundles,
       isFormValid,
       formatCurrency,
+      formatDate,
       getBundleColor,
       getStatusClass,
       getStatusLabel,
       getStockClass,
+      getBundleProductsCount,
+      getBundleProducts,
       getProductName,
+      getProductReference,
       getProductPrice,
-      calculateOriginalPrice,
-      calculateSavings,
+      calculateTotalValue,
+      calculateBundleTotalValue,
       addProductToBundle,
       removeProductFromBundle,
       resetFilters,
@@ -878,9 +768,9 @@ export default {
       editBundle,
       viewBundle,
       saveBundle,
-      deleteBundle,
       closeBundleModal,
-      closeDetailsModal
+      closeDetailsModal,
+      fetchData
     }
   }
 }
@@ -933,91 +823,6 @@ export default {
   width: 18px;
   height: 18px;
   stroke-width: 2;
-}
-
-/* SECTION KPI */
-.kpi-section {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.kpi-card {
-  background: white;
-  border-radius: 12px;
-  padding: 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  border: 1px solid #F1F5F9;
-  transition: all 0.2s ease;
-}
-
-.kpi-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
-}
-
-.kpi-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.kpi-icon svg {
-  width: 24px;
-  height: 24px;
-}
-
-.bundles-icon {
-  background: #F3E8FF;
-  color: #7C3AED;
-}
-
-.revenue-icon {
-  background: #EFF6FF;
-  color: #2563EB;
-}
-
-.products-icon {
-  background: #F0FDF4;
-  color: #059669;
-}
-
-.savings-icon {
-  background: #FEF3C7;
-  color: #D97706;
-}
-
-.kpi-content {
-  flex: 1;
-}
-
-.kpi-label {
-  font-size: 13px;
-  color: #64748B;
-  margin: 0 0 4px 0;
-  font-weight: 500;
-}
-
-.kpi-value {
-  font-size: 28px;
-  font-weight: 700;
-  color: #0F172A;
-  margin: 0;
-  line-height: 1;
-}
-
-.kpi-trend {
-  font-size: 12px;
-  color: #059669;
-  margin: 4px 0 0 0;
 }
 
 /* FILTRES */
@@ -1111,8 +916,9 @@ export default {
   stroke-width: 2;
 }
 
-/* LOADING */
-.loading-container {
+/* LOADING & ERROR */
+.loading-container,
+.error-container {
   text-align: center;
   padding: 4rem 2rem;
   color: #64748B;
@@ -1130,6 +936,35 @@ export default {
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+.error-icon {
+  width: 48px;
+  height: 48px;
+  color: #DC2626;
+  margin: 0 auto 1rem;
+}
+
+.error-message {
+  color: #DC2626;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.retry-button {
+  background: #00B8D4;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1.5rem;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.retry-button:hover {
+  background: #0891A6;
 }
 
 /* TABLEAU */
@@ -1273,30 +1108,9 @@ export default {
   color: #64748B;
 }
 
-/* PRICES */
-.price-unit,
-.price-bundle {
-  font-weight: 600;
-  color: #0F172A;
-}
-
-.bundle-price {
-  font-size: 16px;
-  color: #00B8D4;
-}
-
-/* SAVINGS */
-.savings-badge {
-  background: #D1FAE5;
-  color: #047857;
-  padding: 0.375rem 0.75rem;
-  border-radius: 16px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
 /* STOCK */
-.stock-value {
+.stock-value,
+.threshold-value {
   font-weight: 600;
 }
 
@@ -1304,12 +1118,17 @@ export default {
   color: #DC2626;
 }
 
-.stock-medium {
+.stock-high {
+  color: #059669;
+}
+
+.threshold-value {
   color: #F59E0B;
 }
 
-.stock-high {
-  color: #059669;
+.date {
+  color: #64748B;
+  font-size: 13px;
 }
 
 /* STATUS */
@@ -1323,19 +1142,14 @@ export default {
   white-space: nowrap;
 }
 
-.status-active {
+.status-normal {
   background: #D1FAE5;
   color: #047857;
 }
 
-.status-inactive {
+.status-alert {
   background: #FEF2F2;
   color: #DC2626;
-}
-
-.status-draft {
-  background: #F1F5F9;
-  color: #64748B;
 }
 
 /* ACTIONS */
@@ -1358,12 +1172,6 @@ export default {
   background: #F8FAFC;
   border-color: #CBD5E1;
   color: #334155;
-}
-
-.action-btn.danger:hover {
-  background: #FEF2F2;
-  border-color: #DC2626;
-  color: #DC2626;
 }
 
 .action-btn svg {
@@ -1690,14 +1498,6 @@ export default {
   color: #64748B;
 }
 
-.summary-row.highlight {
-  font-weight: 600;
-  font-size: 16px;
-  color: #059669;
-  padding-top: 0.75rem;
-  border-top: 1px solid #E2E8F0;
-}
-
 .modal-actions {
   display: flex;
   gap: 1rem;
@@ -1792,15 +1592,6 @@ export default {
   text-align: right;
 }
 
-.detail-value.amount {
-  font-size: 16px;
-  color: #00B8D4;
-}
-
-.detail-value.savings {
-  color: #059669;
-}
-
 .products-list {
   display: flex;
   flex-direction: column;
@@ -1835,12 +1626,24 @@ export default {
   color: #0F172A;
 }
 
+.total-value {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #E2E8F0;
+  font-weight: 600;
+  font-size: 16px;
+  color: #0F172A;
+}
+
+.total-value .amount {
+  color: #00B8D4;
+}
+
 /* RESPONSIVE */
 @media (max-width: 1024px) {
-  .kpi-section {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  
   .page-header {
     flex-direction: column;
     gap: 1rem;
@@ -1873,10 +1676,6 @@ export default {
 }
 
 @media (max-width: 768px) {
-  .kpi-section {
-    grid-template-columns: 1fr;
-  }
-  
   .table-header {
     flex-direction: column;
     gap: 1rem;
