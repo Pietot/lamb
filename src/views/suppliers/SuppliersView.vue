@@ -274,7 +274,7 @@
                     role="button"
                     aria-label="Modifier le fournisseur"
                     class="action-btn secondary"
-                    @click="editSupplier(supplier.id_fournisseur)"
+                    @click="openEditModal(supplier)"
                     title="Modifier"
                   >
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -597,11 +597,244 @@
         </form>
       </div>
     </div>
+
+    <!-- Modal Modifier fournisseur -->
+    <div v-if="showEditSupplierModal" class="modal-overlay" @click="closeEditModal">
+      <div class="modal-content modal-large" @click.stop>
+        <div class="modal-header">
+          <h3>Modifier le fournisseur</h3>
+          <button
+            role="button"
+            aria-label="Fermer"
+            @click="closeEditModal"
+            class="modal-close"
+            :disabled="isSubmitting"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+
+        <form @submit.prevent="submitUpdateSupplier" class="supplier-form">
+          <div class="modal-body">
+            <!-- Section Entreprise -->
+            <div class="form-section">
+              <h4 class="section-title">Informations de l'entreprise</h4>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="edit-nom" class="form-label required">Nom de l'entreprise</label>
+                  <input
+                    id="edit-nom"
+                    v-model="editSupplier.nom"
+                    type="text"
+                    class="form-input"
+                    placeholder="Ex: Durand SA"
+                    required
+                    maxlength="50"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="edit-email" class="form-label required">Email professionnel</label>
+                  <input
+                    id="edit-email"
+                    v-model="editSupplier.email"
+                    type="email"
+                    class="form-input"
+                    placeholder="contact@entreprise.com"
+                    required
+                  />
+                  <span v-if="editErrors.email" class="error-text">{{ editErrors.email }}</span>
+                </div>
+
+                <div class="form-group">
+                  <label for="edit-telephone" class="form-label required">Téléphone</label>
+                  <input
+                    id="edit-telephone"
+                    v-model="editSupplier.telephone"
+                    type="tel"
+                    class="form-input"
+                    placeholder="0123456789"
+                    pattern="0[1-9][0-9]{8}"
+                    required
+                  />
+                  <span v-if="editErrors.telephone" class="error-text">{{ editErrors.telephone }}</span>
+                </div>
+
+                <div class="form-group">
+                  <label for="edit-site_web" class="form-label">Site web</label>
+                  <input
+                    id="edit-site_web"
+                    v-model="editSupplier.site_web"
+                    type="url"
+                    class="form-input"
+                    placeholder="https://www.exemple.com"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Section Adresse -->
+            <div class="form-section">
+              <h4 class="section-title">Adresse</h4>
+              <div class="form-grid">
+                <div class="form-group col-span-2">
+                  <label for="edit-adresse" class="form-label required">Adresse</label>
+                  <input
+                    id="edit-adresse"
+                    v-model="editSupplier.adresse"
+                    type="text"
+                    class="form-input"
+                    placeholder="123 rue de la Paix"
+                    required
+                    maxlength="100"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="edit-code_postal" class="form-label required">Code postal</label>
+                  <input
+                    id="edit-code_postal"
+                    v-model="editSupplier.code_postal"
+                    type="text"
+                    class="form-input"
+                    placeholder="75001"
+                    required
+                    pattern="[0-9]{5}"
+                  />
+                  <span v-if="editErrors.code_postal" class="error-text">{{ editErrors.code_postal }}</span>
+                </div>
+
+                <div class="form-group">
+                  <label for="edit-ville" class="form-label required">Ville</label>
+                  <input
+                    id="edit-ville"
+                    v-model="editSupplier.ville"
+                    type="text"
+                    class="form-input"
+                    placeholder="Paris"
+                    required
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="edit-pays" class="form-label required">Pays</label>
+                  <div class="filter-wrapper" style="width: fit-content">
+                    <select id="edit-pays" class="filter-select" v-model="editSupplier.pays" required>
+                      <option value="">Sélectionner un pays</option>
+                      <option value="France">France</option>
+                      <option value="Belgique">Belgique</option>
+                      <option value="Suisse">Suisse</option>
+                      <option value="Luxembourg">Luxembourg</option>
+                      <option value="Allemagne">Allemagne</option>
+                      <option value="Espagne">Espagne</option>
+                      <option value="Italie">Italie</option>
+                    </select>
+                    <svg class="filter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <path d="M6 9l6 6 6-6" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section Contact -->
+            <div class="form-section">
+              <h4 class="section-title">Contact principal</h4>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="edit-contact_prenom" class="form-label required">Prénom du contact</label>
+                  <input
+                    id="edit-contact_prenom"
+                    v-model="editSupplier.contact_prenom"
+                    type="text"
+                    class="form-input"
+                    placeholder="Marie"
+                    required
+                    maxlength="50"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="edit-contact_nom" class="form-label required">Nom du contact</label>
+                  <input
+                    id="edit-contact_nom"
+                    v-model="editSupplier.contact_nom"
+                    type="text"
+                    class="form-input"
+                    placeholder="Dupont"
+                    required
+                    maxlength="50"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Messages d'erreur -->
+            <div v-if="editGlobalError" class="error-banner">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+              <span>{{ editGlobalError }}</span>
+            </div>
+
+            <!-- Message de succès -->
+            <div v-if="editSuccessMessage" class="success-banner">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+              </svg>
+              <span>{{ editSuccessMessage }}</span>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              role="button"
+              aria-label="Annuler"
+              type="button"
+              @click="closeEditModal"
+              class="btn-cancel"
+              :disabled="isSubmitting"
+            >
+              Annuler
+            </button>
+            <button
+              role="button"
+              aria-label="Enregistrer les modifications"
+              type="submit"
+              class="btn-submit"
+              :disabled="isSubmitting"
+            >
+              <span v-if="!isSubmitting">Enregistrer les modifications</span>
+              <span v-else class="loading-text">
+                <svg class="spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="32">
+                    <animate
+                      attributeName="stroke-dashoffset"
+                      dur="1s"
+                      repeatCount="indefinite"
+                      from="32"
+                      to="0"
+                    />
+                  </circle>
+                </svg>
+                Enregistrement...
+              </span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-  import { ref, computed, onMounted } from "vue";
+  import { ref, computed, onMounted, reactive } from "vue";
   import { useRouter } from "vue-router";
   import { VITE_API_URL } from "@/constants/constants.js";
 
@@ -625,10 +858,14 @@
       const error = ref(null);
       const searchQuery = ref("");
       const showNewSupplierModal = ref(false);
+      const showEditSupplierModal = ref(false);
       const isSubmitting = ref(false);
       const globalError = ref("");
       const successMessage = ref("");
       const errors = ref({});
+      const editGlobalError = ref("");
+      const editSuccessMessage = ref("");
+      const editErrors = ref({});
 
       // Formulaire nouveau fournisseur
       const newSupplier = ref({
@@ -646,6 +883,21 @@
         delai_livraison: "",
         note_qualite: "",
         actif: true,
+      });
+
+      // Formulaire modification fournisseur
+      const editSupplier = reactive({
+        id_fournisseur: "",
+        nom: "",
+        email: "",
+        telephone: "",
+        adresse: "",
+        code_postal: "",
+        ville: "",
+        pays: "",
+        site_web: "",
+        contact_prenom: "",
+        contact_nom: "",
       });
 
       const filters = ref({
@@ -765,7 +1017,7 @@
       };
 
       const getAvatarColor = id => {
-        const colors = ["#D100BC", "#2563EB", "#00872D", "#B35F00", "#7C3AED", "#DC2626"];
+        const colors = ["#00B8D4", "#2563EB", "#059669", "#D97706", "#7C3AED", "#DC2626"];
         return colors[id % colors.length];
       };
 
@@ -818,9 +1070,30 @@
         router.push(`/suppliers/${supplierId}`);
       };
 
-      const editSupplier = supplierId => {
-        console.log("Modifier fournisseur:", supplierId);
-        // TODO: Redirection vers la page d'édition
+      // Ouvrir la modale de modification
+      const openEditModal = supplier => {
+        // Pré-remplir le formulaire avec les données du fournisseur
+        Object.assign(editSupplier, {
+          id_fournisseur: supplier.id_fournisseur,
+          nom: supplier.nom || "",
+          email: supplier.email || "",
+          telephone: supplier.telephone || "",
+          adresse: supplier.adresse || "",
+          code_postal: supplier.code_postal || "",
+          ville: supplier.ville || "",
+          pays: supplier.pays || "",
+          site_web: supplier.site_web || "",
+          contact_prenom: supplier.contact_prenom || "",
+          contact_nom: supplier.contact_nom || "",
+        });
+        
+        // Réinitialiser les messages d'erreur
+        editErrors.value = {};
+        editGlobalError.value = "";
+        editSuccessMessage.value = "";
+        
+        // Ouvrir la modale
+        showEditSupplierModal.value = true;
       };
 
       // Charger les données au montage
@@ -851,11 +1124,25 @@
         successMessage.value = "";
       };
 
-      // Fermer la modale
+      // Fermer la modale de création
       const closeModal = () => {
         if (!isSubmitting.value) {
           showNewSupplierModal.value = false;
           resetForm();
+        }
+      };
+
+      // Fermer la modale de modification
+      const closeEditModal = () => {
+        if (!isSubmitting.value) {
+          showEditSupplierModal.value = false;
+          // Réinitialiser le formulaire d'édition
+          Object.keys(editSupplier).forEach(key => {
+            editSupplier[key] = "";
+          });
+          editErrors.value = {};
+          editGlobalError.value = "";
+          editSuccessMessage.value = "";
         }
       };
 
@@ -881,6 +1168,31 @@
         }
 
         errors.value = newErrors;
+        return Object.keys(newErrors).length === 0;
+      };
+
+      // Valider le formulaire de modification
+      const validateEditForm = () => {
+        const newErrors = {};
+
+        // Validation du téléphone
+        const phoneRegex = /^0[1-9][0-9]{8}$/;
+        if (!phoneRegex.test(editSupplier.telephone)) {
+          newErrors.telephone = "Le numéro de téléphone doit être au format 0123456789";
+        }
+
+        // Validation email
+        if (!editSupplier.email.includes("@")) {
+          newErrors.email = "Email invalide";
+        }
+
+        // Validation code postal
+        const postalCodeRegex = /^[0-9]{5}$/;
+        if (!postalCodeRegex.test(editSupplier.code_postal)) {
+          newErrors.code_postal = "Le code postal doit contenir 5 chiffres";
+        }
+
+        editErrors.value = newErrors;
         return Object.keys(newErrors).length === 0;
       };
 
@@ -968,17 +1280,90 @@
         }
       };
 
+      // Soumettre la modification du fournisseur
+      const submitUpdateSupplier = async () => {
+        editGlobalError.value = "";
+        editSuccessMessage.value = "";
+
+        if (!validateEditForm()) {
+          editGlobalError.value = "Veuillez corriger les erreurs dans le formulaire";
+          return;
+        }
+
+        isSubmitting.value = true;
+
+        try {
+          // Créer un URLSearchParams pour l'envoi
+          const formData = new URLSearchParams();
+
+          // Envoyer tous les champs requis
+          formData.append("id_fournisseur", editSupplier.id_fournisseur);
+          formData.append("nom", editSupplier.nom);
+          formData.append("contact_nom", editSupplier.contact_nom);
+          formData.append("contact_prenom", editSupplier.contact_prenom);
+          formData.append("email", editSupplier.email);
+          formData.append("telephone", editSupplier.telephone);
+          formData.append("adresse", editSupplier.adresse);
+          formData.append("ville", editSupplier.ville);
+          formData.append("code_postal", editSupplier.code_postal);
+          formData.append("pays", editSupplier.pays);
+
+          const response = await fetch(VITE_API_URL + "update_fournisseur", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: formData,
+            credentials: "include",
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            // Gérer les erreurs spécifiques
+            if (response.status === 400) {
+              editGlobalError.value = data.message || "Données invalides";
+            } else {
+              throw new Error(data.message || "Erreur lors de la modification");
+            }
+            return;
+          }
+
+          if (data.success) {
+            editSuccessMessage.value = "Fournisseur modifié avec succès !";
+
+            // Attendre un peu avant de fermer et recharger
+            setTimeout(() => {
+              closeEditModal();
+              fetchSuppliers(); // Recharger la liste
+            }, 1500);
+          } else {
+            throw new Error(data.message || "Erreur lors de la modification");
+          }
+        } catch (err) {
+          console.error("Erreur lors de la modification:", err);
+          editGlobalError.value = err.message || "Une erreur est survenue lors de la modification";
+        } finally {
+          isSubmitting.value = false;
+        }
+      };
+
       return {
         suppliers,
         loading,
         error,
         searchQuery,
         showNewSupplierModal,
+        showEditSupplierModal,
         isSubmitting,
         globalError,
         successMessage,
         errors,
+        editGlobalError,
+        editSuccessMessage,
+        editErrors,
         newSupplier,
+        editSupplier,
         filters,
         totalSuppliers,
         activeSuppliers,
@@ -993,11 +1378,14 @@
         resetFilters,
         exportSuppliers,
         viewSupplier,
-        editSupplier,
+        openEditModal,
         resetForm,
         closeModal,
+        closeEditModal,
         validateForm,
+        validateEditForm,
         submitNewSupplier,
+        submitUpdateSupplier,
       };
     },
     methods: {
@@ -1031,7 +1419,7 @@
   }
 
   .new-supplier-button {
-    background: #5500ff;
+    background: #00B8D4;
     color: white;
     border: none;
     border-radius: 8px;
@@ -1041,15 +1429,15 @@
     gap: 0.5rem;
     cursor: pointer;
     transition: all 0.2s ease;
-    box-shadow: 0 2px 8px rgba(85, 0, 255, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 184, 212, 0.3);
     font-size: 14px;
     font-weight: 500;
   }
 
   .new-supplier-button:hover {
-    background: #5500cc;
+    background: #0891A6;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(85, 0, 255, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 184, 212, 0.4);
   }
 
   .new-supplier-button svg {
@@ -1141,7 +1529,7 @@
 
   .stat-trend {
     font-size: 12px;
-    color: #00893e;
+    color: #059669;
     margin: 4px 0 0 0;
   }
 
@@ -1170,7 +1558,7 @@
     border-radius: 8px;
     padding: 0.75rem 1rem 0.75rem 2.5rem;
     font-size: 14px;
-    color: black;
+    color: #0f172a;
     transition: all 0.2s ease;
   }
 
@@ -1242,7 +1630,7 @@
 
   .search-button,
   .export-button {
-    background: #0062ff;
+    background: #3B82F6;
     color: white;
     border: none;
     border-radius: 8px;
@@ -1396,7 +1784,7 @@
     padding: 1rem;
     border-bottom: 1px solid #f1f5f9;
     font-size: 14px;
-    color: black;
+    color: #0f172a;
     vertical-align: middle;
   }
 
@@ -1464,7 +1852,7 @@
   /* CONTACT INFO */
   .contact-person {
     font-weight: 500;
-    color: black;
+    color: #0f172a;
     margin: 0 0 0.25rem 0;
   }
 
@@ -1477,7 +1865,7 @@
   /* LOCATION INFO */
   .city {
     font-weight: 500;
-    color: black;
+    color: #0f172a;
     margin: 0 0 0.25rem 0;
   }
 
@@ -1568,7 +1956,7 @@
 
   .action-button,
   .export-button {
-    background: #0062ff;
+    background: #3B82F6;
     color: white;
     border: none;
     border-radius: 8px;
@@ -1608,7 +1996,7 @@
   .action-btn:hover {
     background: #f8fafc;
     border-color: #cbd5e1;
-    color: black;
+    color: #0f172a;
   }
 
   .action-btn svg {
@@ -1679,7 +2067,7 @@
 
   .modal-close:hover:not(:disabled) {
     background: #f1f5f9;
-    color: black;
+    color: #0f172a;
   }
 
   .modal-close:disabled {
@@ -1742,7 +2130,7 @@
   .form-label {
     font-size: 14px;
     font-weight: 500;
-    color: black;
+    color: #0f172a;
   }
 
   .form-label.required::after {
@@ -1793,7 +2181,7 @@
     gap: 0.5rem;
     cursor: pointer;
     font-size: 14px;
-    color: black;
+    color: #0f172a;
   }
 
   .checkbox-input {
@@ -1866,7 +2254,7 @@
   .btn-cancel:hover:not(:disabled) {
     background: #f8fafc;
     border-color: #cbd5e1;
-    color: black;
+    color: #0f172a;
   }
 
   .btn-submit {

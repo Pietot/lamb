@@ -29,7 +29,7 @@
           role="button"
           aria-label="Modifier le fournisseur"
           class="edit-button"
-          @click="editSupplier"
+          @click="showEditModal = true"
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
@@ -229,125 +229,264 @@
         </div>
       </div>
 
-      <!-- Onglets -->
-      <div class="tabs-section">
-        <div class="tabs-nav">
+      <!-- Section Produits -->
+      <div class="products-section-card">
+        <div class="table-header">
+          <h2 class="table-title">Produits fournis</h2>
           <button
             role="button"
-            aria-label="Onglet {{ tab.label }}"
-            v-for="tab in tabs"
-            :key="tab.id"
-            class="tab-button"
-            :class="{ active: activeTab === tab.id }"
-            @click="activeTab = tab.id"
+            aria-label="Exporter les produits"
+            class="export-button"
+            @click="exportProducts"
           >
-            {{ tab.label }}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7,10 12,15 17,10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            Exporter
           </button>
         </div>
 
-        <!-- Contenu des onglets -->
-        <div class="tab-content">
-          <!-- Onglet Produits -->
-          <div v-if="activeTab === 'products'" class="products-section">
-            <div class="table-header">
-              <h2 class="table-title">Produits fournis</h2>
-              <button
-                role="button"
-                aria-label="Exporter les produits"
-                class="export-button"
-                @click="exportProducts"
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="7,10 12,15 17,10" />
-                  <line x1="12" y1="15" x2="12" y2="3" />
-                </svg>
-                Exporter
-              </button>
-            </div>
+        <div v-if="loadingProducts" class="loading-mini">
+          <div class="loader-mini"></div>
+          <p>Chargement des produits...</p>
+        </div>
 
-            <div v-if="loadingProducts" class="loading-mini">
-              <div class="loader-mini"></div>
-              <p>Chargement des produits...</p>
-            </div>
+        <div v-else-if="products.length === 0" class="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path
+              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+            />
+            <polyline points="3.27,6.96 12,12.01 20.73,6.96" />
+            <line x1="12" y1="22.08" x2="12" y2="12" />
+          </svg>
+          <p>Aucun produit fourni par ce fournisseur</p>
+        </div>
 
-            <div v-else-if="products.length === 0" class="empty-state">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path
-                  d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
-                />
-                <polyline points="3.27,6.96 12,12.01 20.73,6.96" />
-                <line x1="12" y1="22.08" x2="12" y2="12" />
-              </svg>
-              <p>Aucun produit fourni par ce fournisseur</p>
-            </div>
-
-            <div v-else class="table-container">
-              <table class="data-table">
-                <thead>
-                  <tr>
-                    <th>RÉFÉRENCE</th>
-                    <th>PRODUIT</th>
-                    <th>CATÉGORIE</th>
-                    <th>PRIX UNITAIRE</th>
-                    <th>EN STOCK</th>
-                    <th>SEUIL</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="product in products" :key="product.id_article">
-                    <td class="reference">
-                      {{ product.reference || `ART${product.id_article}` }}
-                    </td>
-                    <td>{{ product.nom }}</td>
-                    <td>{{ product.categorie || "Non catégorisé" }}</td>
-                    <td class="price">{{ formatCurrency(product.prix) }}</td>
-                    <td
-                      class="stock"
-                      :class="{
-                        'low-stock': product.quantite_stock <= product.seuil_alerte,
-                      }"
-                    >
-                      {{ product.quantite_stock }}
-                    </td>
-                    <td class="threshold">{{ product.seuil_alerte }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <!-- Onglet Commandes -->
-          <div v-else-if="activeTab === 'orders'" class="placeholder-section">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" />
-              <polyline points="14,2 14,8 20,8" />
-              <line x1="16" y1="13" x2="8" y2="13" />
-              <line x1="16" y1="17" x2="8" y2="17" />
-            </svg>
-            <h3>Commandes</h3>
-            <p>Section des commandes en cours de développement</p>
-          </div>
-
-          <!-- Onglet Livraisons -->
-          <div v-else-if="activeTab === 'deliveries'" class="placeholder-section">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <rect x="1" y="3" width="15" height="13" />
-              <polygon points="16,3 19,7 19,13 16,13" />
-              <circle cx="5.5" cy="18.5" r="2.5" />
-              <circle cx="18.5" cy="18.5" r="2.5" />
-            </svg>
-            <h3>Livraisons</h3>
-            <p>Section des livraisons en cours de développement</p>
-          </div>
+        <div v-else class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>RÉFÉRENCE</th>
+                <th>PRODUIT</th>
+                <th>CATÉGORIE</th>
+                <th>PRIX UNITAIRE</th>
+                <th>EN STOCK</th>
+                <th>SEUIL</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="product in products" :key="product.id_article">
+                <td class="reference">
+                  {{ product.reference || `ART${product.id_article}` }}
+                </td>
+                <td>{{ product.nom }}</td>
+                <td>{{ product.categorie || "Non catégorisé" }}</td>
+                <td class="price">{{ formatCurrency(product.prix) }}</td>
+                <td
+                  class="stock"
+                  :class="{
+                    'low-stock': product.quantite_stock <= product.seuil_alerte,
+                  }"
+                >
+                  {{ product.quantite_stock }}
+                </td>
+                <td class="threshold">{{ product.seuil_alerte }}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </template>
+
+    <!-- Modal Modifier fournisseur -->
+    <div v-if="showEditModal" class="modal-overlay" @click="showEditModal = false">
+      <div class="modal-content modal-edit" @click.stop>
+        <div class="modal-header">
+          <h3>Modifier le fournisseur</h3>
+          <button @click="showEditModal = false" class="modal-close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form @submit.prevent="updateSupplier" v-if="editForm">
+            <div class="form-grid">
+              <!-- Informations générales -->
+              <div class="form-section">
+                <h4 class="form-subtitle">Informations générales</h4>
+                
+                <div class="form-group">
+                  <label for="nom" class="form-label">Nom du fournisseur *</label>
+                  <input
+                    id="nom"
+                    v-model="editForm.nom"
+                    type="text"
+                    class="form-input"
+                    required
+                    placeholder="Ex: Textiles Premium SA"
+                  />
+                </div>
+              </div>
+
+              <!-- Contact -->
+              <div class="form-section">
+                <h4 class="form-subtitle">Contact principal</h4>
+                
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="contact_prenom" class="form-label">Prénom *</label>
+                    <input
+                      id="contact_prenom"
+                      v-model="editForm.contact_prenom"
+                      type="text"
+                      class="form-input"
+                      required
+                      placeholder="Ex: Marie"
+                    />
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="contact_nom" class="form-label">Nom *</label>
+                    <input
+                      id="contact_nom"
+                      v-model="editForm.contact_nom"
+                      type="text"
+                      class="form-input"
+                      required
+                      placeholder="Ex: Dupont"
+                    />
+                  </div>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="email" class="form-label">Email *</label>
+                    <input
+                      id="email"
+                      v-model="editForm.email"
+                      type="email"
+                      class="form-input"
+                      required
+                      placeholder="Ex: contact@fournisseur.com"
+                    />
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="telephone" class="form-label">Téléphone *</label>
+                    <input
+                      id="telephone"
+                      v-model="editForm.telephone"
+                      type="tel"
+                      class="form-input"
+                      required
+                      placeholder="Ex: 0612345678"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Adresse -->
+              <div class="form-section full-width">
+                <h4 class="form-subtitle">Adresse</h4>
+                
+                <div class="form-group">
+                  <label for="adresse" class="form-label">Adresse *</label>
+                  <input
+                    id="adresse"
+                    v-model="editForm.adresse"
+                    type="text"
+                    class="form-input"
+                    required
+                    placeholder="Ex: 123 rue de la République"
+                  />
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="code_postal" class="form-label">Code postal *</label>
+                    <input
+                      id="code_postal"
+                      v-model="editForm.code_postal"
+                      type="text"
+                      class="form-input"
+                      required
+                      placeholder="Ex: 75001"
+                    />
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="ville" class="form-label">Ville *</label>
+                    <input
+                      id="ville"
+                      v-model="editForm.ville"
+                      type="text"
+                      class="form-input"
+                      required
+                      placeholder="Ex: Paris"
+                    />
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="pays" class="form-label">Pays *</label>
+                    <input
+                      id="pays"
+                      v-model="editForm.pays"
+                      type="text"
+                      class="form-input"
+                      required
+                      placeholder="Ex: France"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Error message -->
+            <div v-if="updateError" class="form-error">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+              <span>{{ updateError }}</span>
+            </div>
+
+            <!-- Success message -->
+            <div v-if="updateSuccess" class="form-success">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+              </svg>
+              <span>Fournisseur mis à jour avec succès !</span>
+            </div>
+
+            <!-- Modal actions -->
+            <div class="modal-actions">
+              <button type="button" class="modal-btn secondary" @click="showEditModal = false">
+                Annuler
+              </button>
+              <button 
+                type="submit" 
+                class="modal-btn primary" 
+                :disabled="submitting"
+              >
+                <span v-if="submitting" class="loader-inline"></span>
+                <span v-else>Enregistrer les modifications</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-  import { ref, computed, onMounted } from "vue";
+  import { ref, computed, onMounted, reactive } from "vue";
   import { useRouter, useRoute } from "vue-router";
   import { VITE_API_URL } from "@/constants/constants.js";
 
@@ -365,28 +504,37 @@
     setup() {
       const router = useRouter();
       const route = useRoute();
-      const activeTab = ref("products");
       const supplier = ref(null);
       const products = ref([]);
       const loading = ref(true);
       const loadingProducts = ref(true);
       const error = ref(null);
-
-      const tabs = ref([
-        { id: "products", label: "Produits" },
-        { id: "orders", label: "Commandes" },
-        { id: "deliveries", label: "Livraisons" },
-      ]);
+      const showEditModal = ref(false);
+      const submitting = ref(false);
+      const updateError = ref(null);
+      const updateSuccess = ref(false);
+      
+      // Formulaire d'édition
+      const editForm = reactive({
+        id_fournisseur: '',
+        nom: '',
+        contact_nom: '',
+        contact_prenom: '',
+        email: '',
+        telephone: '',
+        adresse: '',
+        ville: '',
+        code_postal: '',
+        pays: ''
+      });
 
       // Récupérer l'ID du fournisseur depuis l'URL
       const supplierId = computed(() => {
-        // Essayer différentes façons de récupérer l'ID
         return route.params.id || route.params.supplierId || route.query.id;
       });
 
       // Fonction pour récupérer les informations du fournisseur
       const fetchSupplier = async () => {
-        console.log("fetchSupplier appelé avec ID :", supplierId.value);
         loading.value = true;
         error.value = null;
 
@@ -399,20 +547,30 @@
             credentials: "include",
           });
 
-          console.log("Response status:", response.status);
           if (!response.ok) {
             throw new Error(`Erreur HTTP: ${response.status}`);
           }
 
           const data = await response.json();
-          console.log("Data reçue:", data);
 
           if (data.success && data.data) {
             // Trouver le fournisseur par ID
             const foundSupplier = data.data.find(f => f.id_fournisseur == supplierId.value);
             if (foundSupplier) {
               supplier.value = foundSupplier;
-              console.log("Fournisseur trouvé:", foundSupplier);
+              // Initialiser le formulaire avec les données actuelles
+              Object.assign(editForm, {
+                id_fournisseur: foundSupplier.id_fournisseur,
+                nom: foundSupplier.nom || '',
+                contact_nom: foundSupplier.contact_nom || '',
+                contact_prenom: foundSupplier.contact_prenom || '',
+                email: foundSupplier.email || '',
+                telephone: foundSupplier.telephone || '',
+                adresse: foundSupplier.adresse || '',
+                ville: foundSupplier.ville || '',
+                code_postal: foundSupplier.code_postal || '',
+                pays: foundSupplier.pays || ''
+              });
             } else {
               throw new Error("Fournisseur introuvable");
             }
@@ -458,6 +616,50 @@
         }
       };
 
+      // Fonction pour mettre à jour le fournisseur
+      const updateSupplier = async () => {
+        submitting.value = true;
+        updateError.value = null;
+        updateSuccess.value = false;
+
+        try {
+          // Préparer les données du formulaire
+          const formData = new URLSearchParams();
+          Object.keys(editForm).forEach(key => {
+            formData.append(key, editForm[key]);
+          });
+
+          const response = await fetch(VITE_API_URL + "update_fournisseur", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            credentials: "include",
+            body: formData
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            updateSuccess.value = true;
+            // Mettre à jour les données locales
+            Object.assign(supplier.value, editForm);
+            // Fermer la modale après 2 secondes
+            setTimeout(() => {
+              showEditModal.value = false;
+              updateSuccess.value = false;
+            }, 2000);
+          } else {
+            throw new Error(data.message || "Erreur lors de la mise à jour");
+          }
+        } catch (err) {
+          console.error("Erreur lors de la mise à jour:", err);
+          updateError.value = err.message || "Impossible de mettre à jour le fournisseur.";
+        } finally {
+          submitting.value = false;
+        }
+      };
+
       // Fonctions utilitaires
       const formatCurrency = amount => {
         return new Intl.NumberFormat("fr-FR", {
@@ -499,7 +701,7 @@
       };
 
       const getSupplierColor = () => {
-        const colors = ["#D100BC", "#2563EB", "#00872D", "#B35F00", "#7C3AED", "#DC2626"];
+        const colors = ["#00B8D4", "#2563EB", "#059669", "#D97706", "#7C3AED", "#DC2626"];
         const id = supplier.value?.id_fournisseur || 0;
         return colors[id % colors.length];
       };
@@ -515,10 +717,6 @@
 
       const printSupplier = () => {
         window.print();
-      };
-
-      const editSupplier = () => {
-        router.push(`/suppliers/${supplierId.value}/edit`);
       };
 
       const exportProducts = () => {
@@ -549,14 +747,7 @@
 
       // Charger les données au montage
       onMounted(() => {
-        console.log("Component mounted");
-        console.log("Route params:", route.params);
-        console.log("Route query:", route.query);
-        console.log("Supplier ID :", supplierId.value);
-
-        // Pour le développement, on peut charger le premier fournisseur si pas d'ID
         if (!supplierId.value) {
-          console.warn("Pas d'ID fournisseur trouvé, chargement du premier fournisseur");
           // Charger quand même les données pour récupérer le premier fournisseur
           fetchAllSuppliers();
         } else {
@@ -584,12 +775,23 @@
           }
 
           const data = await response.json();
-          console.log("API Response:", data);
 
           if (data.success && data.data && data.data.length > 0) {
             // Prendre le premier fournisseur
             supplier.value = data.data[0];
-            console.log("Premier fournisseur chargé:", supplier.value);
+            // Initialiser le formulaire
+            Object.assign(editForm, {
+              id_fournisseur: supplier.value.id_fournisseur,
+              nom: supplier.value.nom || '',
+              contact_nom: supplier.value.contact_nom || '',
+              contact_prenom: supplier.value.contact_prenom || '',
+              email: supplier.value.email || '',
+              telephone: supplier.value.telephone || '',
+              adresse: supplier.value.adresse || '',
+              ville: supplier.value.ville || '',
+              code_postal: supplier.value.code_postal || '',
+              pays: supplier.value.pays || ''
+            });
             // Charger aussi les produits
             fetchProducts();
           } else {
@@ -604,17 +806,21 @@
       };
 
       return {
-        activeTab,
         supplier,
         products,
         loading,
         loadingProducts,
         error,
-        tabs,
+        showEditModal,
+        editForm,
+        submitting,
+        updateError,
+        updateSuccess,
         supplierId,
         fetchSupplier,
         fetchProducts,
         fetchAllSuppliers,
+        updateSupplier,
         formatCurrency,
         formatDate,
         formatPhone,
@@ -624,7 +830,6 @@
         getYearFromDate,
         goBack,
         printSupplier,
-        editSupplier,
         exportProducts,
       };
     },
@@ -668,6 +873,17 @@
     border-top-color: #00b8d4;
     border-radius: 50%;
     margin: 0 auto 0.5rem;
+    animation: spin 1s linear infinite;
+  }
+
+  .loader-inline {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #f1f5f9;
+    border-top-color: white;
+    border-radius: 50%;
+    margin-right: 0.5rem;
     animation: spin 1s linear infinite;
   }
 
@@ -747,7 +963,7 @@
   .back-button:hover {
     background: #f8fafc;
     border-color: #cbd5e1;
-    color: black;
+    color: #0f172a;
   }
 
   .back-button svg {
@@ -791,11 +1007,11 @@
   .print-button:hover {
     background: #f8fafc;
     border-color: #cbd5e1;
-    color: black;
+    color: #0f172a;
   }
 
   .edit-button {
-    background: #5500ff;
+    background: #00b8d4;
     color: white;
     border: none;
     border-radius: 8px;
@@ -805,15 +1021,15 @@
     gap: 0.5rem;
     cursor: pointer;
     transition: all 0.2s ease;
-    box-shadow: 0 2px 8px rgba(85, 0, 255, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 184, 212, 0.3);
     font-size: 14px;
     font-weight: 500;
   }
 
   .edit-button:hover {
-    background: #5500cc;
+    background: #0891a6;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(85, 0, 255, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 184, 212, 0.4);
   }
 
   .print-button svg,
@@ -832,7 +1048,8 @@
   }
 
   .info-card,
-  .stats-card {
+  .stats-card,
+  .products-section-card {
     background: white;
     border-radius: 12px;
     padding: 1.5rem;
@@ -935,7 +1152,7 @@
 
   .info-value {
     font-size: 14px;
-    color: black;
+    color: #0f172a;
     font-weight: 500;
     line-height: 1.4;
   }
@@ -973,7 +1190,7 @@
   .contact-avatar {
     width: 40px;
     height: 40px;
-    background: #9300ff;
+    background: #00b8d4;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -1148,48 +1365,6 @@
     color: #0f172a;
   }
 
-  /* ONGLETS */
-  .tabs-section {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    border: 1px solid #f1f5f9;
-    overflow: hidden;
-  }
-
-  .tabs-nav {
-    display: flex;
-    border-bottom: 1px solid #e2e8f0;
-    background: #f8fafc;
-  }
-
-  .tab-button {
-    background: none;
-    border: none;
-    padding: 1rem 1.5rem;
-    font-size: 14px;
-    font-weight: 500;
-    color: #64748b;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border-bottom: 3px solid transparent;
-  }
-
-  .tab-button:hover {
-    color: black;
-    background: #f1f5f9;
-  }
-
-  .tab-button.active {
-    color: #0062ff;
-    background: white;
-    border-bottom-color: #0062ff;
-  }
-
-  .tab-content {
-    padding: 1.5rem;
-  }
-
   /* TABLE */
   .table-header {
     display: flex;
@@ -1223,7 +1398,7 @@
   .export-button:hover {
     background: #f8fafc;
     border-color: #cbd5e1;
-    color: black;
+    color: #0f172a;
   }
 
   .export-button svg {
@@ -1257,7 +1432,7 @@
     padding: 1rem;
     border-bottom: 1px solid #f1f5f9;
     font-size: 14px;
-    color: black;
+    color: #0f172a;
   }
 
   .data-table tbody tr:hover {
@@ -1281,7 +1456,7 @@
   }
 
   .stock.low-stock {
-    color: #ab0000;
+    color: #dc2626;
     background: #fef2f2;
     padding: 0.25rem 0.5rem;
     border-radius: 1rem;
@@ -1302,25 +1477,214 @@
     stroke-width: 1.5;
   }
 
-  .placeholder-section {
-    text-align: center;
-    padding: 3rem;
-    color: #64748b;
+  /* MODAL */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
   }
 
-  .placeholder-section svg {
-    width: 48px;
-    height: 48px;
-    margin: 0 auto 1rem;
-    color: #cbd5e1;
-    stroke-width: 1.5;
+  .modal-content {
+    background: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow: hidden;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
   }
 
-  .placeholder-section h4 {
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .modal-header h3 {
     font-size: 18px;
     font-weight: 600;
     color: #0f172a;
-    margin: 0 0 0.5rem 0;
+    margin: 0;
+  }
+
+  .modal-close {
+    background: none;
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+
+  .modal-close:hover {
+    background: #f1f5f9;
+    color: #334155;
+  }
+
+  .modal-close svg {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2;
+  }
+
+  .modal-body {
+    padding: 1.5rem;
+    overflow-y: auto;
+    max-height: calc(90vh - 120px);
+  }
+
+  /* FORMULAIRE */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  .form-section {
+    background: #f8fafc;
+    padding: 1.5rem;
+    border-radius: 8px;
+  }
+
+  .form-section.full-width {
+    grid-column: 1 / -1;
+  }
+
+  .form-subtitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0f172a;
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .form-group {
+    margin-bottom: 1rem;
+  }
+
+  .form-group:last-child {
+    margin-bottom: 0;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: #64748b;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 14px;
+    color: #0f172a;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: #00b8d4;
+    box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
+  }
+
+  .form-input::placeholder {
+    color: #94a3b8;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .form-error,
+  .form-success {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+  }
+
+  .form-error {
+    background: #fef2f2;
+    color: #dc2626;
+  }
+
+  .form-success {
+    background: #f0fdf4;
+    color: #047857;
+  }
+
+  .form-error svg,
+  .form-success svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+    margin-top: 1.5rem;
+  }
+
+  .modal-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-btn.primary {
+    background: #00b8d4;
+    color: white;
+    min-width: 180px;
+  }
+
+  .modal-btn.primary:hover:not(:disabled) {
+    background: #0891a6;
+  }
+
+  .modal-btn.primary:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  .modal-btn.secondary {
+    background: #f1f5f9;
+    color: #64748b;
+  }
+
+  .modal-btn.secondary:hover {
+    background: #e2e8f0;
+    color: #334155;
   }
 
   /* RESPONSIVE */
@@ -1331,6 +1695,14 @@
 
     .stats-grid {
       grid-template-columns: repeat(3, 1fr);
+    }
+
+    .form-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .form-row {
+      grid-template-columns: 1fr;
     }
   }
 
@@ -1356,17 +1728,16 @@
       text-align: center;
     }
 
-    .tabs-nav {
-      flex-wrap: wrap;
-    }
-
-    .tab-button {
-      flex: 1;
-      min-width: 100px;
-    }
-
     .data-table {
       font-size: 12px;
+    }
+
+    .modal-actions {
+      flex-direction: column;
+    }
+
+    .modal-btn {
+      width: 100%;
     }
   }
 
@@ -1380,20 +1751,15 @@
     .back-button,
     .print-button,
     .edit-button,
-    .export-button,
-    .tabs-nav {
+    .export-button {
       display: none;
     }
 
-    .tabs-section {
+    .products-section-card {
       box-shadow: none;
       border: 1px solid #e2e8f0;
       margin-top: 2rem;
       page-break-inside: avoid;
-    }
-
-    .tab-content {
-      padding: 0;
     }
   }
 </style>
