@@ -628,7 +628,7 @@
 
     <!-- Modal Modifier client -->
     <div v-if="showEditModal" class="modal-overlay" @click="showEditModal = false">
-      <div class="modal-content" @click.stop>
+      <div class="modal-content modal-form" @click.stop>
         <div class="modal-header">
           <h3>Modifier le client</h3>
           <button
@@ -644,32 +644,234 @@
           </button>
         </div>
         <div class="modal-body">
-          <div class="todo-message">
-            <svg class="todo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path d="M12 2L2 7l10 5 10-5-10-5z" />
-              <path d="M2 17l10 5 10-5M2 12l10 5 10-5" />
-            </svg>
-            <h4>Fonctionnalité en cours de développement</h4>
-            <p>La modification des informations client sera bientôt disponible.</p>
-            <div class="client-preview" v-if="selectedClient">
-              <p>
-                <strong>Client sélectionné:</strong>
-                {{ selectedClient.raison_sociale }}
-              </p>
-              <p><strong>Contact:</strong> {{ selectedClient.contact_principal }}</p>
-              <p><strong>Email:</strong> {{ selectedClient.email }}</p>
+          <form @submit.prevent="handleSubmitEditClient" class="client-form">
+            <div class="form-grid">
+              <!-- Informations entreprise -->
+              <div class="form-section">
+                <h4 class="form-section-title">Informations entreprise</h4>
+
+                <div class="form-group">
+                  <label for="edit_raison_sociale" class="form-label"
+                    >Raison sociale <span class="required">*</span></label
+                  >
+                  <input
+                    id="edit_raison_sociale"
+                    v-model="editClientForm.raison_sociale"
+                    type="text"
+                    class="form-input"
+                    placeholder="SARL Exemple"
+                    required
+                    maxlength="100"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="edit_nom_commercial" class="form-label">Nom commercial</label>
+                  <input
+                    id="edit_nom_commercial"
+                    v-model="editClientForm.nom_commercial"
+                    type="text"
+                    class="form-input"
+                    placeholder="Exemple Distribution"
+                    maxlength="100"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="edit_secteur_activite" class="form-label">Secteur d'activité</label>
+                  <input
+                    id="edit_secteur_activite"
+                    v-model="editClientForm.secteur_activite"
+                    type="text"
+                    class="form-input"
+                    placeholder="Distribution textile"
+                    maxlength="100"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="edit_siret" class="form-label"
+                    >SIRET <span class="required">*</span></label
+                  >
+                  <input
+                    id="edit_siret"
+                    v-model="editClientForm.siret"
+                    type="text"
+                    class="form-input"
+                    placeholder="12345678901234"
+                    pattern="\d{14}"
+                    required
+                    maxlength="14"
+                  />
+                  <p class="form-hint">14 chiffres</p>
+                </div>
+              </div>
+
+              <!-- Informations contact -->
+              <div class="form-section">
+                <h4 class="form-section-title">Contact</h4>
+
+                <div class="form-group">
+                  <label for="edit_contact_principal" class="form-label"
+                    >Contact principal <span class="required">*</span></label
+                  >
+                  <input
+                    id="edit_contact_principal"
+                    v-model="editClientForm.contact_principal"
+                    type="text"
+                    class="form-input"
+                    placeholder="Jean Dupont"
+                    required
+                    maxlength="100"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="edit_email" class="form-label"
+                    >Email <span class="required">*</span></label
+                  >
+                  <input
+                    id="edit_email"
+                    v-model="editClientForm.email"
+                    type="email"
+                    class="form-input"
+                    placeholder="contact@entreprise.fr"
+                    required
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="edit_telephone" class="form-label"
+                    >Téléphone <span class="required">*</span></label
+                  >
+                  <input
+                    id="edit_telephone"
+                    v-model="editClientForm.telephone"
+                    type="tel"
+                    class="form-input"
+                    placeholder="0123456789"
+                    pattern="0[1-9][0-9]{8}"
+                    required
+                  />
+                  <p class="form-hint">Format: 10 chiffres commençant par 0</p>
+                </div>
+              </div>
+
+              <!-- Adresse -->
+              <div class="form-section full-width">
+                <h4 class="form-section-title">Adresse</h4>
+
+                <div class="form-group">
+                  <label for="edit_adresse" class="form-label"
+                    >Adresse <span class="required">*</span></label
+                  >
+                  <input
+                    id="edit_adresse"
+                    v-model="editClientForm.adresse"
+                    type="text"
+                    class="form-input"
+                    placeholder="123 rue de la Paix"
+                    required
+                    maxlength="255"
+                  />
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="edit_code_postal" class="form-label"
+                      >Code postal <span class="required">*</span></label
+                    >
+                    <input
+                      id="edit_code_postal"
+                      v-model="editClientForm.code_postal"
+                      type="text"
+                      class="form-input"
+                      placeholder="75001"
+                      pattern="\d{5}"
+                      required
+                      maxlength="5"
+                    />
+                    <p class="form-hint">5 chiffres</p>
+                  </div>
+
+                  <div class="form-group" style="flex: 2">
+                    <label for="edit_ville" class="form-label"
+                      >Ville <span class="required">*</span></label
+                    >
+                    <input
+                      id="edit_ville"
+                      v-model="editClientForm.ville"
+                      type="text"
+                      class="form-input"
+                      placeholder="Paris"
+                      required
+                      maxlength="100"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="modal-actions">
-            <button
-              role="button"
-              aria-label="Fermer"
-              class="modal-btn secondary"
-              @click="showEditModal = false"
-            >
-              Fermer
-            </button>
-          </div>
+
+            <!-- Messages d'erreur -->
+            <div v-if="editFormError" class="form-error">
+              <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+              {{ editFormError }}
+            </div>
+
+            <!-- Message de succès -->
+            <div v-if="editSuccess" class="form-success">
+              <svg class="success-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M8 12l2 2 4-4" />
+              </svg>
+              Client modifié avec succès !
+            </div>
+
+            <!-- Actions -->
+            <div class="modal-actions">
+              <button
+                role="button"
+                aria-label="Annuler"
+                type="button"
+                class="modal-btn secondary"
+                @click="showEditModal = false"
+              >
+                Annuler
+              </button>
+              <button
+                role="button"
+                aria-label="Enregistrer les modifications"
+                type="submit"
+                class="modal-btn primary"
+                :disabled="submittingEdit"
+              >
+                <span v-if="!submittingEdit">Enregistrer les modifications</span>
+                <span v-else class="loading-text">
+                  <svg class="spinner" viewBox="0 0 24 24" fill="none">
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      stroke-width="4"
+                      opacity="0.25"
+                    />
+                    <path
+                      d="M12 2a10 10 0 0 1 0 20"
+                      stroke="currentColor"
+                      stroke-width="4"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                  Modification...
+                </span>
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -702,9 +904,27 @@
       const selectedClient = ref(null);
       const submitting = ref(false);
       const formError = ref("");
+      const submittingEdit = ref(false);
+      const editFormError = ref("");
+      const editSuccess = ref(false);
 
       // Formulaire nouveau client
       const newClientForm = ref({
+        raison_sociale: "",
+        nom_commercial: "",
+        email: "",
+        telephone: "",
+        adresse: "",
+        code_postal: "",
+        ville: "",
+        siret: "",
+        secteur_activite: "",
+        contact_principal: "",
+      });
+
+      // Formulaire modification client
+      const editClientForm = ref({
+        id_client: "",
         raison_sociale: "",
         nom_commercial: "",
         email: "",
@@ -921,6 +1141,22 @@
         const client = clients.value.find(c => c.id_client === clientId);
         if (client) {
           selectedClient.value = client;
+          // Pré-remplir le formulaire avec les données du client
+          editClientForm.value = {
+            id_client: client.id_client,
+            raison_sociale: client.raison_sociale || "",
+            nom_commercial: client.nom_commercial || "",
+            email: client.email || "",
+            telephone: client.telephone || "",
+            adresse: client.adresse || "",
+            code_postal: client.code_postal || "",
+            ville: client.ville || "",
+            siret: client.siret || "",
+            secteur_activite: client.secteur_activite || "",
+            contact_principal: client.contact_principal || "",
+          };
+          editFormError.value = "";
+          editSuccess.value = false;
           showEditModal.value = true;
         }
       };
@@ -978,6 +1214,60 @@
         }
       };
 
+      // Fonction pour modifier un client
+      const handleSubmitEditClient = async () => {
+        editFormError.value = "";
+        editSuccess.value = false;
+        submittingEdit.value = true;
+
+        try {
+          // Créer les données du formulaire
+          const formData = new URLSearchParams();
+          Object.keys(editClientForm.value).forEach(key => {
+            formData.append(key, editClientForm.value[key]);
+          });
+
+          const response = await fetch(VITE_API_URL + "update_client", {
+            method: "POST",
+            body: formData,
+            credentials: "include",
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            if (response.status === 409) {
+              throw new Error("Cet email est déjà utilisé par un autre client");
+            } else if (response.status === 400) {
+              throw new Error(data.message || "Veuillez vérifier tous les champs");
+            } else if (response.status === 404) {
+              throw new Error("Client introuvable");
+            } else {
+              throw new Error(data.message || "Une erreur est survenue");
+            }
+          }
+
+          if (data.success) {
+            // Afficher le message de succès
+            editSuccess.value = true;
+
+            // Recharger la liste des clients
+            await fetchClients();
+
+            // Fermer la modale après un délai
+            setTimeout(() => {
+              showEditModal.value = false;
+              editSuccess.value = false;
+            }, 1500);
+          }
+        } catch (err) {
+          console.error("Erreur lors de la modification du client:", err);
+          editFormError.value = err.message || "Impossible de modifier le client. Veuillez réessayer.";
+        } finally {
+          submittingEdit.value = false;
+        }
+      };
+
       // Réinitialiser le formulaire quand on ferme la modale
       const resetNewClientForm = () => {
         Object.keys(newClientForm.value).forEach(key => {
@@ -990,6 +1280,14 @@
       watch(showNewClientModal, newValue => {
         if (!newValue) {
           resetNewClientForm();
+        }
+      });
+
+      // Watcher pour réinitialiser les messages quand on ferme la modale de modification
+      watch(showEditModal, newValue => {
+        if (!newValue) {
+          editFormError.value = "";
+          editSuccess.value = false;
         }
       });
 
@@ -1009,7 +1307,11 @@
         selectedClient,
         submitting,
         formError,
+        submittingEdit,
+        editFormError,
+        editSuccess,
         newClientForm,
+        editClientForm,
         filters,
         totalClients,
         percentageChange,
@@ -1029,6 +1331,7 @@
         viewClient,
         editClient,
         handleSubmitNewClient,
+        handleSubmitEditClient,
         resetNewClientForm,
       };
     },
@@ -1866,6 +2169,25 @@
     width: 20px;
     height: 20px;
     flex-shrink: 0;
+  }
+
+  .form-success {
+    background: #f0fdf4;
+    color: #059669;
+    padding: 1rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    font-size: 14px;
+  }
+
+  .form-success .success-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    stroke-width: 3;
   }
 
   .loading-text {
