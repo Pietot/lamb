@@ -28,6 +28,8 @@ try {
         exit;
     }
 
+    $pdo = getPDO();
+
     $stmt = $pdo->prepare('UPDATE lot SET nom = :nom, description = :description, date_creation = :date_creation, quantite_stock = :quantite_stock, seuil_alerte = :seuil_alerte WHERE id_lot = :id_lot');
     $stmt->bindValue(':nom', $nom);
     $stmt->bindValue(':description', $description);

@@ -27,6 +27,8 @@ try {
         exit;
     }
 
+    $pdo = getPDO();
+
     $stmt = $pdo->prepare('INSERT INTO lot (nom, description, date_creation, quantite_stock, seuil_alerte) VALUES (:nom, :description, :date_creation, :quantite_stock, :seuil_alerte)');
     $stmt->bindValue(':nom', $nom);
     $stmt->bindValue(':description', $description);
@@ -34,8 +36,16 @@ try {
     $stmt->bindValue(':quantite_stock', $quantite_stock);
     $stmt->bindValue(':seuil_alerte', $seuil_alerte);
     $stmt->execute();
+    
+    $id_lot = $pdo->lastInsertId();
+    
     http_response_code(201);
-    echo json_encode(['success' => true, 'message' => 'Lot créé avec succès'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    echo json_encode([
+        'success' => true, 
+        'message' => 'Lot créé avec succès',
+        'id_lot' => $id_lot
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => 'Erreur du serveur'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);

@@ -205,6 +205,22 @@
           </button>
         </div>
         <div class="modal-body">
+          <!-- Messages de succès/erreur -->
+          <div v-if="successMessage" class="success-message">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M20 6L9 17l-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            {{ successMessage }}
+          </div>
+          <div v-if="errorMessage" class="error-message-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            {{ errorMessage }}
+          </div>
+
           <form @submit.prevent="saveBundle" class="bundle-form">
             <div class="form-grid">
               <div class="form-group">
@@ -328,8 +344,9 @@
               <button type="button" class="modal-btn secondary" @click="closeBundleModal">
                 Annuler
               </button>
-              <button type="submit" class="modal-btn primary" :disabled="!isFormValid">
-                {{ isEditing ? 'Mettre à jour' : 'Créer le lot' }}
+              <button type="submit" class="modal-btn primary" :disabled="!isFormValid || saving">
+                <span v-if="saving">Enregistrement...</span>
+                <span v-else>{{ isEditing ? 'Mettre à jour' : 'Créer le lot' }}</span>
               </button>
             </div>
           </form>
@@ -441,6 +458,9 @@ export default {
     const isEditing = ref(false)
     const selectedProduct = ref('')
     const productQuantity = ref(1)
+    const saving = ref(false)
+    const successMessage = ref('')
+    const errorMessage = ref('')
     
     const filters = ref({
       stockStatus: '',
@@ -677,6 +697,8 @@ export default {
         seuil_alerte: 10,
         products: []
       }
+      successMessage.value = ''
+      errorMessage.value = ''
       showBundleModal.value = true
     }
 
@@ -693,6 +715,8 @@ export default {
           quantite_article: Number(item.quantite_article)
         }))
       }
+      successMessage.value = ''
+      errorMessage.value = ''
       showBundleModal.value = true
     }
 
@@ -701,18 +725,156 @@ export default {
       showDetailsModal.value = true
     }
 
-    const saveBundle = () => {
-      // TODO: Implémenter la sauvegarde via API
-      console.log('Sauvegarde du lot:', bundleForm.value)
-      closeBundleModal()
-      // Recharger les données
-      fetchData()
+    const saveBundle = async () => {
+      if (saving.value) return
+      
+      saving.value = true
+      successMessage.value = ''
+      errorMessage.value = ''
+      
+      try {
+        // Préparer les données pour l'API avec URLSearchParams
+        const formData = new URLSearchParams()
+        
+        if (isEditing.value) {
+          // Pour la mise à jour, ajouter l'ID du lot
+          formData.append('id_lot', bundleForm.value.id_lot.toString())
+        }
+        
+        formData.append('nom', bundleForm.value.nom)
+        formData.append('description', bundleForm.value.description)
+        formData.append('date_creation', new Date().toISOString().split('T')[0]) // Format YYYY-MM-DD
+        formData.append('quantite_stock', bundleForm.value.quantite_stock.toString())
+        formData.append('seuil_alerte', bundleForm.value.seuil_alerte.toString())
+
+        // Appel API pour créer ou mettre à jour le lot
+        const endpoint = isEditing.value ? "update_lot" : "new_lot"
+        const response = await fetch(import.meta.env.VITE_API_URL + endpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          credentials: "include",
+          body: formData.toString(),
+        })
+
+        if (!response.ok) {
+          throw new Error(`Erreur HTTP: ${response.status}`)
+        }
+
+        const result = await response.json()
+        console.log(`Réponse de ${endpoint}:`, result)
+
+        if (result.success) {
+          // Récupérer l'ID du lot (créé ou mis à jour)
+          const lotId = isEditing.value ? bundleForm.value.id_lot : result.id_lot
+          console.log('ID du lot:', lotId)
+          
+          // Si mise à jour, d'abord supprimer les anciennes associations
+          if (isEditing.value && lotId) {
+            console.log('Suppression des anciennes associations article_lot...')
+            
+            // Récupérer les associations existantes
+            const existingProducts = getBundleProducts(lotId)
+            
+            // Pour chaque association existante, la supprimer
+            for (const existing of existingProducts) {
+              try {
+                const deleteData = new URLSearchParams()
+                deleteData.append('id_article', existing.id_article.toString())
+                deleteData.append('id_lot', lotId.toString())
+                
+                // Appel à un endpoint delete_article_lot (à créer si nécessaire)
+                const deleteResponse = await fetch(import.meta.env.VITE_API_URL + "delete_article_lot", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                  },
+                  credentials: "include",
+                  body: deleteData.toString(),
+                })
+                
+                if (!deleteResponse.ok) {
+                  console.error('Erreur lors de la suppression de l\'association')
+                }
+              } catch (error) {
+                console.error('Erreur:', error)
+              }
+            }
+          }
+          
+          // Créer les (nouvelles) associations article_lot
+          if (bundleForm.value.products.length > 0 && lotId) {
+            console.log('Création des associations article_lot...')
+            
+            for (const product of bundleForm.value.products) {
+              try {
+                const articleLotData = new URLSearchParams()
+                articleLotData.append('id_article', product.id_article.toString())
+                articleLotData.append('id_lot', lotId.toString())
+                articleLotData.append('quantite', product.quantite_article.toString())
+
+                console.log('Envoi:', {
+                  id_article: product.id_article.toString(),
+                  id_lot: lotId.toString(),
+                  quantite: product.quantite_article.toString()
+                })
+
+                const articleResponse = await fetch(import.meta.env.VITE_API_URL + "new_article_lot", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                  },
+                  credentials: "include",
+                  body: articleLotData.toString(),
+                })
+
+                const responseText = await articleResponse.text()
+                
+                try {
+                  const articleResult = JSON.parse(responseText)
+                  
+                  if (!articleResponse.ok || !articleResult.success) {
+                    console.error(`Erreur lors de l'association de l'article ${product.id_article}:`, articleResult.message || 'Erreur inconnue')
+                  }
+                } catch (parseError) {
+                  console.error('Erreur de parsing JSON:', parseError)
+                  console.error('Réponse non-JSON:', responseText)
+                }
+                
+              } catch (error) {
+                console.error(`Erreur lors de l'association de l'article ${product.id_article}:`, error)
+              }
+            }
+          }
+
+          // Afficher le message de succès
+          successMessage.value = isEditing.value ? 'Lot modifié avec succès!' : 'Lot créé avec succès!'
+          
+          // Attendre 2 secondes puis fermer la modal et recharger
+          setTimeout(async () => {
+            closeBundleModal()
+            await fetchData()
+          }, 2000)
+          
+        } else {
+          throw new Error(result.message || 'Erreur lors de la sauvegarde du lot')
+        }
+      } catch (error) {
+        console.error('Erreur lors de la sauvegarde:', error)
+        errorMessage.value = 'Erreur lors de la sauvegarde: ' + error.message
+      } finally {
+        saving.value = false
+      }
     }
 
     const closeBundleModal = () => {
       showBundleModal.value = false
       selectedProduct.value = ''
       productQuantity.value = 1
+      saving.value = false
+      successMessage.value = ''
+      errorMessage.value = ''
     }
 
     const closeDetailsModal = () => {
@@ -739,6 +901,9 @@ export default {
       isEditing,
       selectedProduct,
       productQuantity,
+      saving,
+      successMessage,
+      errorMessage,
       filters,
       bundleForm,
       availableProducts,
@@ -1311,6 +1476,43 @@ export default {
   padding: 1.5rem;
   overflow-y: auto;
   flex: 1;
+}
+
+/* MESSAGES DE SUCCÈS/ERREUR */
+.success-message,
+.error-message-box {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.success-message {
+  background: #D1FAE5;
+  color: #047857;
+  border: 1px solid #A7F3D0;
+}
+
+.success-message svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.error-message-box {
+  background: #FEE2E2;
+  color: #DC2626;
+  border: 1px solid #FECACA;
+}
+
+.error-message-box svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
 }
 
 /* FORMULAIRE */
