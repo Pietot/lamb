@@ -50,8 +50,8 @@
     <div v-else-if="error" class="error-container">
       <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
         <circle cx="12" cy="12" r="10" />
-        <line x1="12" y1="8" x2="12" y2="12" />
-        <line x1="12" y1="16" x2="12.01" y2="16" />
+        <line x1="12" y1="8" x2="12" y2="13" />
+        <line x1="12" y1="16" x2="12" y2="17" />
       </svg>
       <p class="error-message">{{ error }}</p>
       <button role="button" aria-label="Réessayer" @click="fetchSupplier" class="retry-button">
@@ -1381,13 +1381,13 @@
   }
 
   .export-button {
-    background: white;
-    border: 1px solid #e2e8f0;
+    background: #0062ff;
+    color: white;
+    border: none;
     border-radius: 8px;
-    padding: 0.75rem 1rem;
+    padding: 0.75rem 1.5rem;
     font-size: 14px;
     font-weight: 500;
-    color: #64748b;
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -1396,9 +1396,8 @@
   }
 
   .export-button:hover {
-    background: #f8fafc;
-    border-color: #cbd5e1;
-    color: #0f172a;
+    background: #2563eb;
+    transform: translateY(-1px);
   }
 
   .export-button svg {

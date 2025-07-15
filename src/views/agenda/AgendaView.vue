@@ -127,8 +127,8 @@
         <div v-else-if="error" class="error-container">
           <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <circle cx="12" cy="12" r="10" />
-            <line x1="12" y1="8" x2="12" y2="12" />
-            <line x1="12" y1="16" x2="12.01" y2="16" />
+            <line x1="12" y1="8" x2="12" y2="13" />
+            <line x1="12" y1="16" x2="12" y2="17" />
           </svg>
           <p class="error-message">{{ error }}</p>
           <button role="button" aria-label="Réessayer" @click="fetchData" class="retry-button">
@@ -479,10 +479,10 @@
                 id: commande.id_commande,
                 type: "order",
                 partner: client
-                  ? `${client.prénom} ${client.nom}`
+                  ? `${client.contact_principal} | ${client.nom_commercial}`
                   : `Client #${commande.id_client}`,
                 date: new Date(commande.date_commande),
-                amount: commande.montant_total,
+                amount: commande.montant_ttc,
                 completed: commande.statut === "expedie",
                 statut: commande.statut,
                 rawData: commande,
@@ -948,6 +948,10 @@
   }
 
   .refresh-btn {
+    height: 42.39px;
+    width: 42.39px;
+    display: flex;
+    justify-content: center;
     padding: 0.625rem;
   }
 

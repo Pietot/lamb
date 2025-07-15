@@ -2,11 +2,16 @@ import { createApp } from "vue";
 import { createPinia } from "pinia";
 import router from "./router";
 import App from "./App.vue";
+import Toast from "vue-toastification";
 setTimeout(() => import("./style.css"), 0);
+setTimeout(() => import("vue-toastification/dist/index.css"), 0);
+
+console.log("arno ne finira peut être son dev");
 
 const app = createApp(App);
 
 app.use(createPinia());
+app.use(Toast);
 app.use(router);
 
 app.mount("#app");

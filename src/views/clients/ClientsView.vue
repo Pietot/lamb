@@ -114,20 +114,6 @@
 
         <button
           role="button"
-          aria-label="Réinitialiser les filtres"
-          class="action-button"
-          @click="resetFilters"
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <polyline points="1 4 1 10 7 10" />
-            <polyline points="23 20 23 14 17 14" />
-            <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15" />
-          </svg>
-          Réinitialiser
-        </button>
-
-        <button
-          role="button"
           aria-label="Exporter les clients"
           class="export-button"
           @click="exportClients"
@@ -165,8 +151,8 @@
         <div v-else-if="error" class="error-container">
           <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <circle cx="12" cy="12" r="10" />
-            <line x1="12" y1="8" x2="12" y2="12" />
-            <line x1="12" y1="16" x2="12.01" y2="16" />
+            <line x1="12" y1="8" x2="12" y2="13" />
+            <line x1="12" y1="16" x2="12" y2="17" />
           </svg>
           <p class="error-message">{{ error }}</p>
           <button role="button" aria-label="Réessayer" @click="fetchClients" class="retry-button">
@@ -454,8 +440,8 @@
             <div v-if="formError" class="form-error">
               <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" />
+                <line x1="12" y1="8" x2="12" y2="13" />
+                <line x1="12" y1="16" x2="12" y2="17" />
               </svg>
               {{ formError }}
             </div>
@@ -880,6 +866,7 @@
 
 <script>
   import { ref, computed, onMounted, watch } from "vue";
+  import { triggerToast } from "@/utils/toastHelper";
   import { VITE_API_URL } from "@/constants/constants.js";
 
   export default {
@@ -1080,16 +1067,9 @@
         }).format(amount);
       };
 
-      const resetFilters = () => {
-        searchQuery.value = "";
-        filters.value.city = "";
-        filters.value.sort = "name";
-      };
-
       const exportClients = () => {
         // Fonction d'export
-        console.log("Export des clients...");
-        const csv = [
+        const data = [
           [
             "ID",
             "Raison sociale",
@@ -1103,7 +1083,7 @@
             "SIRET",
             "Secteur activité",
           ],
-          ...clients.value.map(c => [
+          ...filteredClients.value.map(c => [
             c.id_client,
             c.raison_sociale,
             c.nom_commercial || "",
@@ -1116,11 +1096,14 @@
             c.siret,
             c.secteur_activite || "",
           ]),
-        ]
-          .map(row => row.join(","))
-          .join("\n");
+        ];
 
-        const blob = new Blob([csv], { type: "text/csv" });
+        if (!data[1]) {
+          triggerToast("Aucun client à exporter !", "error");
+          return;
+        }
+        const csvString = data.map(row => row.join(",")).join("\n");
+        const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
@@ -1326,7 +1309,6 @@
         formatPhone,
         formatCurrency,
         getAvatarColor,
-        resetFilters,
         exportClients,
         viewClient,
         editClient,
@@ -1569,7 +1551,6 @@
     height: 20px;
   }
 
-  .search-button,
   .export-button {
     background: #0062ff;
     color: white;
@@ -1585,13 +1566,11 @@
     transition: all 0.2s ease;
   }
 
-  .search-button:hover,
   .export-button:hover {
     background: #2563eb;
     transform: translateY(-1px);
   }
 
-  .search-button svg,
   .export-button svg {
     width: 16px;
     height: 16px;

@@ -43,17 +43,35 @@
         <!-- Onglet Utilisateurs -->
         <div v-if="activeTab === 'users'" class="users-section">
           <div class="section-header">
-            <div class="search-container">
-              <input
-                v-model="userSearch"
-                type="text"
-                placeholder="Rechercher par ID, nom, prénom ou email"
-                class="search-input"
-              />
-              <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
+            <div class="filters-section">
+              <div class="filter-group">
+                <div class="search-container">
+                  <input
+                    v-model="userSearch"
+                    type="text"
+                    placeholder="Rechercher par ID, nom, prénom ou email"
+                    class="search-input"
+                  />
+                  <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                  </svg>
+                </div>
+
+                <button
+                  role="button"
+                  aria-label="Exporter les utilisateurs"
+                  class="export-button"
+                  @click="exportUsers"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7,10 12,15 17,10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                  </svg>
+                  Exporter
+                </button>
+              </div>
             </div>
           </div>
 
@@ -77,6 +95,7 @@
                     <th>ID</th>
                     <th>UTILISATEUR</th>
                     <th>EMAIL</th>
+                    <th>LOGIN</th>
                     <th>RÔLE</th>
                     <th>ACTIONS</th>
                   </tr>
@@ -102,6 +121,7 @@
                       </div>
                     </td>
                     <td class="user-email">{{ user.email }}</td>
+                    <td class="user-login">{{ user.login }}</td>
                     <td>
                       <span class="role-badge" :class="getRoleClass(user.id_role)">
                         {{ getRoleName(user.id_role) }}
@@ -317,8 +337,8 @@
             <div v-if="createError" class="form-error">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" />
+                <line x1="12" y1="8" x2="12" y2="13" />
+                <line x1="12" y1="16" x2="12" y2="17" />
               </svg>
               {{ createError }}
             </div>
@@ -696,6 +716,34 @@
         }
       };
 
+      const exportUsers = () => {
+        // Fonction d'export
+        const data = [
+          ["ID", "Nom", "Prénom", "Email", "Login", "Rôle"],
+          ...users.value.map(u => [
+            u.id,
+            u.nom,
+            u.prenom,
+            u.email,
+            u.login,
+            roleDescriptions[u.id_role] || "Inconnu",
+          ]),
+        ];
+
+        if (!data[1]) {
+          triggerToast("Aucun utilisateur à exporter !", "error");
+          return;
+        }
+        const csvString = data.map(row => row.join(",")).join("\n");
+        const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "utilisateurs.csv";
+        a.click();
+        URL.revokeObjectURL(url);
+      };
+
       // Fonction pour créer un nouvel utilisateur
       const handleCreateUser = async () => {
         createError.value = null;
@@ -986,6 +1034,7 @@
         editUser,
         confirmDeleteUser,
         fetchData,
+        exportUsers,
         handleCreateUser,
         handleUpdateUser,
         handleDeleteUser,
@@ -1149,6 +1198,8 @@
 
   .search-container {
     position: relative;
+    flex: 1;
+    min-width: 340px;
   }
 
   .search-input {
@@ -1178,6 +1229,43 @@
     color: #94a3b8;
     stroke-width: 2;
     pointer-events: none;
+  }
+
+  .filters-section {
+    margin-bottom: 2rem;
+  }
+
+  .filter-group {
+    display: flex;
+    align-items: center;
+    gap: 2rem 1rem;
+    flex-wrap: wrap;
+  }
+
+  .export-button {
+    background: #0062ff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .export-button:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+  }
+
+  .export-button svg {
+    width: 16px;
+    height: 16px;
+    stroke-width: 2;
   }
 
   /* TABLEAU */
