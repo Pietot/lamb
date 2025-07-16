@@ -1768,7 +1768,7 @@
   }
 
   .export-button:hover {
-    background: #2563eb;
+    background: #0056cc;
     transform: translateY(-1px);
   }
 

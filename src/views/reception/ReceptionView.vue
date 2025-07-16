@@ -181,7 +181,10 @@
                 <td class="supplier-info">
                   <div class="supplier-profile">
                     <div class="supplier-avatar-container">
-                      <div class="supplier-avatar" :style="{ backgroundColor: getAvatarColor(delivery.id_fournisseur) }">
+                      <div
+                        class="supplier-avatar"
+                        :style="{ backgroundColor: getAvatarColor(delivery.id_fournisseur) }"
+                      >
                         {{ getSupplierInitials(getSupplierName(delivery.id_fournisseur)) }}
                       </div>
                     </div>
@@ -231,10 +234,9 @@
                     role="button"
                     aria-label="Marquer comme complétée"
                     class="action-btn"
-                    style="border: none; background: transparent; cursor: default;"
+                    style="border: none; background: transparent; cursor: default"
                   >
-                    <svg viewBox="0 0 448 512">
-                    </svg>
+                    <svg viewBox="0 0 448 512"></svg>
                   </button>
                 </td>
               </tr>
@@ -1313,7 +1315,7 @@
   }
 
   .export-button:hover {
-    background: #2563eb;
+    background: #0056cc;
     transform: translateY(-1px);
   }
 

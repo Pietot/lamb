@@ -908,7 +908,7 @@
   }
 
   .today-btn {
-    background: #00b8d4;
+    background: #0062ff;
     color: white;
     border: none;
     border-radius: 8px;
@@ -923,7 +923,7 @@
   }
 
   .today-btn:hover{
-    background: #0891a6;
+    background: #0056cc;
   }
 
   .today-btn svg {
