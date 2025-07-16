@@ -24,7 +24,7 @@
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="Rechercher un lot..."
+            placeholder="Rechercher par lot ou date de création"
             class="search-input"
           />
           <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -33,25 +33,30 @@
           </svg>
         </div>
 
-        <select v-model="filters.stockStatus" class="filter-select">
-          <option value="">Tous les stocks</option>
-          <option value="normal">Stock normal</option>
-          <option value="low">Stock faible</option>
-        </select>
-
-        <select v-model="filters.sort" class="filter-select">
-          <option value="name">Trier par nom</option>
-          <option value="date">Plus récents</option>
-          <option value="stock">Stock croissant</option>
-        </select>
-
-        <button class="action-button" @click="resetFilters">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <polyline points="1 4 1 10 7 10" />
-            <polyline points="23 20 23 14 17 14" />
-            <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15" />
+        <div class="filter-wrapper">
+          <label for="stocks-filter" class="filter-label">Stocks :</label>
+          <select id="stocks-filter" v-model="filters.stockStatus" class="filter-select">
+            <option value="" >Tous les stocks</option>
+            <option value="normal">Stock normal</option>
+            <option value="low">Stock faible</option>
+          </select>
+          <svg class="filter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M6 9l6 6 6-6" />
           </svg>
-          Réinitialiser
+        </div>
+
+        <button
+          role="button"
+          aria-label="Exporter les lots"
+          class="export-button"
+          @click="exportLots"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7,10 12,15 17,10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+          Exporter
         </button>
       </div>
     </div>
@@ -1060,14 +1065,14 @@
   .filter-group {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 2rem 1rem;
     flex-wrap: wrap;
   }
 
   .search-container {
     position: relative;
     flex: 1;
-    max-width: 300px;
+    min-width: 315px;
   }
 
   .search-input {
@@ -1079,12 +1084,6 @@
     font-size: 14px;
     color: #334155;
     transition: all 0.2s ease;
-  }
-
-  .search-input:focus {
-    outline: none;
-    border-color: #00b8d4;
-    box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
   }
 
   .search-icon {
@@ -1099,11 +1098,26 @@
     pointer-events: none;
   }
 
+ .filter-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
+  .filter-wrapper label {
+    position: absolute;
+    top: -25px;
+    left: 3px;
+    font-size: 14px;
+  }
+
   .filter-select {
     background: white;
     border: 1px solid #e2e8f0;
     border-radius: 8px;
-    padding: 0.75rem 1rem;
+    padding-top: 0.75rem;
+    padding-right: 2.5rem;
+    padding-bottom: 0.75rem;
+    padding-left: 1rem;
     font-size: 14px;
     color: #64748b;
     min-width: 140px;
@@ -1111,13 +1125,34 @@
     transition: all 0.2s ease;
   }
 
-  .filter-select:focus {
+  .filter-select:hover,
+  .search-input:hover {
+    box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
+  }
+
+  .filter-select:focus,
+  .search-input:focus {
     outline: none;
     border-color: #00b8d4;
     box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
   }
 
-  .action-button {
+  .filter-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  }
+
+  .filter-icon {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translate(25%, -50%);
+    pointer-events: none;
+    height: 20px;
+  }
+
+  .export-button {
     background: #0062ff;
     color: white;
     border: none;
@@ -1132,12 +1167,12 @@
     transition: all 0.2s ease;
   }
 
-  .action-button:hover {
+  .export-button:hover {
     background: #0056cc;
     transform: translateY(-1px);
   }
 
-  .action-button svg {
+  .export-button svg {
     width: 16px;
     height: 16px;
     stroke-width: 2;
@@ -1922,17 +1957,6 @@
       justify-content: center;
     }
 
-    .filter-group {
-      flex-direction: column;
-    }
-
-    .search-container,
-    .filter-select,
-    .action-button {
-      width: 100%;
-      max-width: none;
-    }
-
     .form-grid {
       grid-template-columns: 1fr;
     }
@@ -1942,48 +1966,89 @@
     }
   }
 
+  /* RESPONSIVE */
   @media (max-width: 768px) {
+    .search-container {
+      min-width: auto;
+    }
+
+    .page-header {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: stretch;
+    }
+
+    .add-button {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .filter-group {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .search-input,
+    .filter-select,
+    .search-button {
+      width: 100%;
+    }
+
     .table-header {
       flex-direction: column;
       gap: 1rem;
       align-items: flex-start;
     }
 
-    .data-table {
+    .table-stats {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .stocks-table {
       font-size: 12px;
     }
 
-    .data-table th,
-    .data-table td {
-      padding: 0.75rem 0.5rem;
-    }
-
     .actions {
-      flex-direction: column;
       gap: 0.5rem;
     }
 
-    .modal-content {
-      width: 100%;
-      height: 100vh;
-      max-height: 100vh;
-      border-radius: 0;
-    }
-
-    .add-product-row {
+    .pagination-container {
       flex-direction: column;
+      gap: 1rem;
     }
 
-    .quantity-input {
+    .page-numbers {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .form-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .details-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .form-actions {
+      flex-direction: column-reverse;
+    }
+
+    .btn-secondary,
+    .btn-primary {
       width: 100%;
     }
+  }
 
-    .modal-actions {
-      flex-direction: column;
+  @media (max-width: 425px) {
+    .search-container > input:placeholder-shown {
+      text-overflow: ellipsis;
     }
 
-    .modal-btn {
-      width: 100%;
+    .search-container > input:focus::placeholder {
+      color: transparent;
     }
   }
 </style>
