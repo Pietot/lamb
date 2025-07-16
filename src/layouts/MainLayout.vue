@@ -247,7 +247,7 @@
         },
         {
           name: "Lot",
-          label: "Gestion des Lot",
+          label: "Gestion des lots",
           to: "/lot",
           icon: "StocksIcon",
           allowedRoles: [1, 2], // admin et gestionnaire
