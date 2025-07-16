@@ -666,12 +666,12 @@
               : "";
             const fournisseurName = getSupplierName(delivery.id_fournisseur).toLowerCase();
             const notes = delivery.notes ? delivery.notes.toLowerCase() : "";
-            const dateLivraison = delivery.date_livraisoneturn (
+            const dateLivraison = delivery.date_livraisoneturn(
               numero.includes(query) ||
-              bon.includes(query) ||
-              fournisseurName.includes(query) ||
-              dateLivraison.includes(query) ||
-              notes.includes(query)
+                bon.includes(query) ||
+                fournisseurName.includes(query) ||
+                dateLivraison.includes(query) ||
+                notes.includes(query),
             );
           });
         }
