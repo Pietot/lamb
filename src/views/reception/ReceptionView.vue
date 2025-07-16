@@ -1519,7 +1519,7 @@
   .actions {
     display: flex;
     justify-content: center;
-    gap: 0.5rem;
+    gap: 1.5rem;
   }
 
   .action-btn {
@@ -2057,7 +2057,7 @@
     }
 
     .actions {
-      gap: 0.25rem;
+      gap: 0.5rem;
     }
 
     .action-btn {

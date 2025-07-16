@@ -1385,7 +1385,7 @@
   /* ACTIONS */
   .actions {
     display: flex;
-    gap: 0.5rem;
+    gap: 1.5rem;
   }
 
   .action-btn {
@@ -1960,7 +1960,7 @@
 
     .actions {
       flex-direction: column;
-      gap: 0.25rem;
+      gap: 0.5rem;
     }
 
     .modal-content {
