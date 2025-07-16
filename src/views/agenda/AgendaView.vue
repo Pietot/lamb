@@ -95,24 +95,6 @@
           </svg>
           <span class="btn-text">Aujourd'hui</span>
         </button>
-        <button
-          role="button"
-          aria-label="Rafraîchir les données"
-          class="refresh-btn"
-          @click="fetchData"
-          :disabled="loading"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            :class="{ 'animate-spin': loading }"
-          >
-            <path
-              d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"
-            />
-          </svg>
-        </button>
       </div>
     </div>
 
@@ -925,8 +907,7 @@
     gap: 0.75rem;
   }
 
-  .today-btn,
-  .refresh-btn {
+  .today-btn {
     background: #00b8d4;
     color: white;
     border: none;
@@ -941,26 +922,11 @@
     gap: 0.5rem;
   }
 
-  .today-btn:hover,
-  .refresh-btn:hover {
+  .today-btn:hover{
     background: #0891a6;
   }
 
-  .refresh-btn {
-    height: 42.39px;
-    width: 42.39px;
-    display: flex;
-    justify-content: center;
-    padding: 0.625rem;
-  }
-
-  .refresh-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-
-  .today-btn svg,
-  .refresh-btn svg {
+  .today-btn svg {
     width: 16px;
     height: 16px;
     stroke-width: 2;
