@@ -22,6 +22,7 @@ try {
         echo json_encode(['success' => false, 'message' => 'Champs invalides'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
     }
+
     $pdo = getPDO();
 
     $stmt = $pdo->prepare('DELETE FROM utilisateur WHERE id_utilisateur = :id_utilisateur');
