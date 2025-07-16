@@ -382,12 +382,7 @@
       <div class="modal-content modal-edit" @click.stop>
         <div class="modal-header">
           <h2>Modifier l'utilisateur</h2>
-          <button
-            role="button"
-            aria-label="Fermer"
-            @click="closeEditUserModal"
-            class="modal-close"
-          >
+          <button role="button" aria-label="Fermer" @click="closeEditUserModal" class="modal-close">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
@@ -520,10 +515,12 @@
         <div class="modal-body" v-if="userToDelete">
           <div class="delete-warning">
             <svg class="warning-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+              <path
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+              />
             </svg>
             <p class="warning-text">
-              Êtes-vous sûr de vouloir supprimer l'utilisateur 
+              Êtes-vous sûr de vouloir supprimer l'utilisateur
               <strong>{{ userToDelete.prenom }} {{ userToDelete.nom }}</strong> ?
             </p>
             <p class="warning-subtext">Cette action est irréversible.</p>
@@ -958,7 +955,7 @@
         editUserForm.value.email = user.email;
         editUserForm.value.login = user.login;
         editUserForm.value.id_role = user.id_role;
-        
+
         showEditUserModal.value = true;
       };
 
@@ -1780,24 +1777,24 @@
   .warning-icon {
     width: 64px;
     height: 64px;
-    color: #DC2626;
+    color: #dc2626;
     margin: 0 auto 1rem;
     stroke-width: 1.5;
   }
 
   .warning-text {
     font-size: 16px;
-    color: #0F172A;
+    color: #0f172a;
     margin: 0 0 0.5rem 0;
   }
 
   .warning-text strong {
-    color: #DC2626;
+    color: #dc2626;
   }
 
   .warning-subtext {
     font-size: 14px;
-    color: #64748B;
+    color: #64748b;
     margin: 0;
   }
 
@@ -1847,12 +1844,12 @@
   }
 
   .modal-btn.danger {
-    background: #DC2626;
+    background: #dc2626;
     color: white;
   }
 
   .modal-btn.danger:hover:not(:disabled) {
-    background: #B91C1C;
+    background: #b91c1c;
   }
 
   input:placeholder-shown {

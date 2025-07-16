@@ -1245,7 +1245,8 @@
           }
         } catch (err) {
           console.error("Erreur lors de la modification du client:", err);
-          editFormError.value = err.message || "Impossible de modifier le client. Veuillez réessayer.";
+          editFormError.value =
+            err.message || "Impossible de modifier le client. Veuillez réessayer.";
         } finally {
           submittingEdit.value = false;
         }

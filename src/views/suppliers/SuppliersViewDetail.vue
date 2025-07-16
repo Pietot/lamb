@@ -318,7 +318,7 @@
               <!-- Informations générales -->
               <div class="form-section">
                 <h4 class="form-subtitle">Informations générales</h4>
-                
+
                 <div class="form-group">
                   <label for="nom" class="form-label">Nom du fournisseur *</label>
                   <input
@@ -335,7 +335,7 @@
               <!-- Contact -->
               <div class="form-section">
                 <h4 class="form-subtitle">Contact principal</h4>
-                
+
                 <div class="form-row">
                   <div class="form-group">
                     <label for="contact_prenom" class="form-label">Prénom *</label>
@@ -348,7 +348,7 @@
                       placeholder="Ex: Marie"
                     />
                   </div>
-                  
+
                   <div class="form-group">
                     <label for="contact_nom" class="form-label">Nom *</label>
                     <input
@@ -361,7 +361,7 @@
                     />
                   </div>
                 </div>
-                
+
                 <div class="form-row">
                   <div class="form-group">
                     <label for="email" class="form-label">Email *</label>
@@ -374,7 +374,7 @@
                       placeholder="Ex: contact@fournisseur.com"
                     />
                   </div>
-                  
+
                   <div class="form-group">
                     <label for="telephone" class="form-label">Téléphone *</label>
                     <input
@@ -392,7 +392,7 @@
               <!-- Adresse -->
               <div class="form-section full-width">
                 <h4 class="form-subtitle">Adresse</h4>
-                
+
                 <div class="form-group">
                   <label for="adresse" class="form-label">Adresse *</label>
                   <input
@@ -404,7 +404,7 @@
                     placeholder="Ex: 123 rue de la République"
                   />
                 </div>
-                
+
                 <div class="form-row">
                   <div class="form-group">
                     <label for="code_postal" class="form-label">Code postal *</label>
@@ -417,7 +417,7 @@
                       placeholder="Ex: 75001"
                     />
                   </div>
-                  
+
                   <div class="form-group">
                     <label for="ville" class="form-label">Ville *</label>
                     <input
@@ -429,7 +429,7 @@
                       placeholder="Ex: Paris"
                     />
                   </div>
-                  
+
                   <div class="form-group">
                     <label for="pays" class="form-label">Pays *</label>
                     <input
@@ -469,11 +469,7 @@
               <button type="button" class="modal-btn secondary" @click="showEditModal = false">
                 Annuler
               </button>
-              <button 
-                type="submit" 
-                class="modal-btn primary" 
-                :disabled="submitting"
-              >
+              <button type="submit" class="modal-btn primary" :disabled="submitting">
                 <span v-if="submitting" class="loader-inline"></span>
                 <span v-else>Enregistrer les modifications</span>
               </button>
@@ -513,19 +509,19 @@
       const submitting = ref(false);
       const updateError = ref(null);
       const updateSuccess = ref(false);
-      
+
       // Formulaire d'édition
       const editForm = reactive({
-        id_fournisseur: '',
-        nom: '',
-        contact_nom: '',
-        contact_prenom: '',
-        email: '',
-        telephone: '',
-        adresse: '',
-        ville: '',
-        code_postal: '',
-        pays: ''
+        id_fournisseur: "",
+        nom: "",
+        contact_nom: "",
+        contact_prenom: "",
+        email: "",
+        telephone: "",
+        adresse: "",
+        ville: "",
+        code_postal: "",
+        pays: "",
       });
 
       // Récupérer l'ID du fournisseur depuis l'URL
@@ -561,15 +557,15 @@
               // Initialiser le formulaire avec les données actuelles
               Object.assign(editForm, {
                 id_fournisseur: foundSupplier.id_fournisseur,
-                nom: foundSupplier.nom || '',
-                contact_nom: foundSupplier.contact_nom || '',
-                contact_prenom: foundSupplier.contact_prenom || '',
-                email: foundSupplier.email || '',
-                telephone: foundSupplier.telephone || '',
-                adresse: foundSupplier.adresse || '',
-                ville: foundSupplier.ville || '',
-                code_postal: foundSupplier.code_postal || '',
-                pays: foundSupplier.pays || ''
+                nom: foundSupplier.nom || "",
+                contact_nom: foundSupplier.contact_nom || "",
+                contact_prenom: foundSupplier.contact_prenom || "",
+                email: foundSupplier.email || "",
+                telephone: foundSupplier.telephone || "",
+                adresse: foundSupplier.adresse || "",
+                ville: foundSupplier.ville || "",
+                code_postal: foundSupplier.code_postal || "",
+                pays: foundSupplier.pays || "",
               });
             } else {
               throw new Error("Fournisseur introuvable");
@@ -635,7 +631,7 @@
               "Content-Type": "application/x-www-form-urlencoded",
             },
             credentials: "include",
-            body: formData
+            body: formData,
           });
 
           const data = await response.json();
@@ -782,15 +778,15 @@
             // Initialiser le formulaire
             Object.assign(editForm, {
               id_fournisseur: supplier.value.id_fournisseur,
-              nom: supplier.value.nom || '',
-              contact_nom: supplier.value.contact_nom || '',
-              contact_prenom: supplier.value.contact_prenom || '',
-              email: supplier.value.email || '',
-              telephone: supplier.value.telephone || '',
-              adresse: supplier.value.adresse || '',
-              ville: supplier.value.ville || '',
-              code_postal: supplier.value.code_postal || '',
-              pays: supplier.value.pays || ''
+              nom: supplier.value.nom || "",
+              contact_nom: supplier.value.contact_nom || "",
+              contact_prenom: supplier.value.contact_prenom || "",
+              email: supplier.value.email || "",
+              telephone: supplier.value.telephone || "",
+              adresse: supplier.value.adresse || "",
+              ville: supplier.value.ville || "",
+              code_postal: supplier.value.code_postal || "",
+              pays: supplier.value.pays || "",
             });
             // Charger aussi les produits
             fetchProducts();

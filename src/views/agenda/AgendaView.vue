@@ -166,13 +166,13 @@
 
               <div v-if="day.events.length > 0 && !day.otherMonth" class="day-content">
                 <div class="event-dots">
-                  <span 
-                    v-if="day.deliveries > 0" 
+                  <span
+                    v-if="day.deliveries > 0"
                     class="event-dot delivery"
                     :title="`${day.deliveries} livraison${day.deliveries > 1 ? 's' : ''}`"
                   ></span>
-                  <span 
-                    v-if="day.orders > 0" 
+                  <span
+                    v-if="day.orders > 0"
                     class="event-dot order"
                     :title="`${day.orders} commande${day.orders > 1 ? 's' : ''}`"
                   ></span>
@@ -205,12 +205,12 @@
           </div>
           <button @click="closeModal" class="modal-close">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <line x1="18" y1="6" x2="6" y2="18"/>
-              <line x1="6" y1="6" x2="18" y2="18"/>
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
         </div>
-        
+
         <div class="modal-body">
           <!-- Si pas d'événements -->
           <div v-if="selectedDayEvents.length === 0" class="empty-state">
@@ -928,7 +928,7 @@
 
   .today-btn,
   .refresh-btn {
-    background: #00B8D4;
+    background: #00b8d4;
     color: white;
     border: none;
     border-radius: 8px;

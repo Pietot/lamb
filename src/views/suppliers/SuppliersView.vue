@@ -646,7 +646,9 @@
                     pattern="0[1-9][0-9]{8}"
                     required
                   />
-                  <span v-if="editErrors.telephone" class="error-text">{{ editErrors.telephone }}</span>
+                  <span v-if="editErrors.telephone" class="error-text">{{
+                    editErrors.telephone
+                  }}</span>
                 </div>
 
                 <div class="form-group">
@@ -690,7 +692,9 @@
                     required
                     pattern="[0-9]{5}"
                   />
-                  <span v-if="editErrors.code_postal" class="error-text">{{ editErrors.code_postal }}</span>
+                  <span v-if="editErrors.code_postal" class="error-text">{{
+                    editErrors.code_postal
+                  }}</span>
                 </div>
 
                 <div class="form-group">
@@ -708,7 +712,12 @@
                 <div class="form-group">
                   <label for="edit-pays" class="form-label required">Pays</label>
                   <div class="filter-wrapper" style="width: fit-content">
-                    <select id="edit-pays" class="filter-select" v-model="editSupplier.pays" required>
+                    <select
+                      id="edit-pays"
+                      class="filter-select"
+                      v-model="editSupplier.pays"
+                      required
+                    >
                       <option value="">Sélectionner un pays</option>
                       <option value="France">France</option>
                       <option value="Belgique">Belgique</option>
@@ -731,7 +740,9 @@
               <h4 class="section-title">Contact principal</h4>
               <div class="form-grid">
                 <div class="form-group">
-                  <label for="edit-contact_prenom" class="form-label required">Prénom du contact</label>
+                  <label for="edit-contact_prenom" class="form-label required"
+                    >Prénom du contact</label
+                  >
                   <input
                     id="edit-contact_prenom"
                     v-model="editSupplier.contact_prenom"
@@ -1071,12 +1082,12 @@
           contact_prenom: supplier.contact_prenom || "",
           contact_nom: supplier.contact_nom || "",
         });
-        
+
         // Réinitialiser les messages d'erreur
         editErrors.value = {};
         editGlobalError.value = "";
         editSuccessMessage.value = "";
-        
+
         // Ouvrir la modale
         showEditSupplierModal.value = true;
       };
@@ -1403,7 +1414,7 @@
   }
 
   .new-supplier-button {
-    background: #00B8D4;
+    background: #00b8d4;
     color: white;
     border: none;
     border-radius: 8px;
@@ -1419,7 +1430,7 @@
   }
 
   .new-supplier-button:hover {
-    background: #0891A6;
+    background: #0891a6;
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 184, 212, 0.4);
   }
@@ -1614,7 +1625,7 @@
 
   .search-button,
   .export-button {
-    background: #3B82F6;
+    background: #3b82f6;
     color: white;
     border: none;
     border-radius: 8px;
@@ -1940,7 +1951,7 @@
 
   .action-button,
   .export-button {
-    background: #3B82F6;
+    background: #3b82f6;
     color: white;
     border: none;
     border-radius: 8px;

@@ -551,12 +551,7 @@
       <div class="modal-content modal-form" @click.stop>
         <div class="modal-header">
           <h3>Modifier l'article</h3>
-          <button
-            role="button"
-            aria-label="Fermer"
-            @click="closeEditModal"
-            class="modal-close"
-          >
+          <button role="button" aria-label="Fermer" @click="closeEditModal" class="modal-close">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
@@ -631,7 +626,9 @@
                   min="0"
                   required
                 />
-                <span v-if="editFormErrors.quantite" class="error-text">{{ editFormErrors.quantite }}</span>
+                <span v-if="editFormErrors.quantite" class="error-text">{{
+                  editFormErrors.quantite
+                }}</span>
               </div>
 
               <div class="form-group">
@@ -742,7 +739,9 @@
               {{ updateError }}
             </div>
 
-            <div v-if="updateSuccess" class="alert alert-success">Article modifié avec succès !</div>
+            <div v-if="updateSuccess" class="alert alert-success">
+              Article modifié avec succès !
+            </div>
 
             <div class="form-actions">
               <button
@@ -1318,7 +1317,7 @@
       };
 
       const goToPage = page => {
-        if (page !== '...' && page >= 1 && page <= totalPages.value) {
+        if (page !== "..." && page >= 1 && page <= totalPages.value) {
           currentPage.value = page;
         }
       };
@@ -1336,7 +1335,7 @@
         editArticle.id_fournisseur = article.id_fournisseur_principal || "";
         editArticle.reference_fournisseur = article.reference_fournisseur || "";
         editArticle.prix_achat = article.prix_achat;
-        
+
         showEditModal.value = true;
         fetchSuppliers();
       };

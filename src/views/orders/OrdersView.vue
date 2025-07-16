@@ -304,7 +304,10 @@
 
             <div class="details-section full-width">
               <h4 class="section-subtitle">Lots commandés</h4>
-              <div v-if="getOrderLots(selectedOrder.id_commande).length > 0" class="lots-table-container">
+              <div
+                v-if="getOrderLots(selectedOrder.id_commande).length > 0"
+                class="lots-table-container"
+              >
                 <table class="lots-table">
                   <thead>
                     <tr>
@@ -315,31 +318,34 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="orderLot in getOrderLots(selectedOrder.id_commande)" :key="orderLot.id_lot">
-                      <td class="lot-name">{{ getLotInfo(orderLot.id_lot)?.nom || 'Lot #' + orderLot.id_lot }}</td>
-                      <td class="lot-description">{{ getLotInfo(orderLot.id_lot)?.description || '-' }}</td>
+                    <tr
+                      v-for="orderLot in getOrderLots(selectedOrder.id_commande)"
+                      :key="orderLot.id_lot"
+                    >
+                      <td class="lot-name">
+                        {{ getLotInfo(orderLot.id_lot)?.nom || "Lot #" + orderLot.id_lot }}
+                      </td>
+                      <td class="lot-description">
+                        {{ getLotInfo(orderLot.id_lot)?.description || "-" }}
+                      </td>
                       <td class="lot-quantity">{{ orderLot.quantite }}</td>
                       <td class="lot-stock">
                         <span :class="getStockClass(getLotInfo(orderLot.id_lot))">
-                          {{ getLotInfo(orderLot.id_lot)?.quantite_stock || '-' }}
+                          {{ getLotInfo(orderLot.id_lot)?.quantite_stock || "-" }}
                         </span>
                       </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-              <div v-else class="empty-lots">
-                Aucun lot associé à cette commande
-              </div>
+              <div v-else class="empty-lots">Aucun lot associé à cette commande</div>
             </div>
 
             <div class="details-section full-width">
               <h4 class="section-subtitle">Informations financières</h4>
               <div class="detail-row">
                 <span class="detail-label">Montant HT :</span>
-                <span class="detail-value">{{
-                  formatCurrency(selectedOrder.montant_ht)
-                }}</span>
+                <span class="detail-value">{{ formatCurrency(selectedOrder.montant_ht) }}</span>
               </div>
               <div class="detail-row">
                 <span class="detail-label">Montant TTC :</span>
@@ -363,7 +369,12 @@
               role="button"
               aria-label="Modifier la commande"
               class="modal-btn primary"
-              @click="() => { showDetailsModal = false; openEditModal(selectedOrder); }"
+              @click="
+                () => {
+                  showDetailsModal = false;
+                  openEditModal(selectedOrder);
+                }
+              "
             >
               Modifier la commande
             </button>
@@ -395,16 +406,16 @@
               <!-- Sélection du client -->
               <div class="form-group">
                 <label for="client-select" class="form-label">Client *</label>
-                <select 
-                  id="client-select" 
-                  v-model="newOrderForm.id_client" 
+                <select
+                  id="client-select"
+                  v-model="newOrderForm.id_client"
                   class="form-select"
                   required
                 >
                   <option value="">Sélectionner un client</option>
-                  <option 
-                    v-for="client in clients" 
-                    :key="client.id_client" 
+                  <option
+                    v-for="client in clients"
+                    :key="client.id_client"
                     :value="client.id_client"
                   >
                     {{ getFullName(client) }}
@@ -415,10 +426,10 @@
               <!-- Date de commande -->
               <div class="form-group">
                 <label for="date-input" class="form-label">Date de commande *</label>
-                <input 
+                <input
                   id="date-input"
-                  type="date" 
-                  v-model="newOrderForm.date_commande" 
+                  type="date"
+                  v-model="newOrderForm.date_commande"
                   class="form-input"
                   required
                 />
@@ -427,9 +438,9 @@
               <!-- Statut -->
               <div class="form-group">
                 <label for="status-select" class="form-label">Statut *</label>
-                <select 
+                <select
                   id="status-select"
-                  v-model="newOrderForm.statut" 
+                  v-model="newOrderForm.statut"
                   class="form-select"
                   required
                 >
@@ -444,11 +455,7 @@
             <div class="lots-section">
               <div class="lots-header">
                 <h4 class="section-subtitle">Lots commandés</h4>
-                <button 
-                  type="button"
-                  class="add-lot-btn"
-                  @click="addLotToForm"
-                >
+                <button type="button" class="add-lot-btn" @click="addLotToForm">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <circle cx="12" cy="12" r="10" />
                     <line x1="12" y1="8" x2="12" y2="16" />
@@ -459,43 +466,37 @@
               </div>
 
               <div v-if="newOrderForm.lots.length > 0" class="lots-list">
-                <div 
-                  v-for="(lot, index) in newOrderForm.lots" 
-                  :key="index"
-                  class="lot-item"
-                >
+                <div v-for="(lot, index) in newOrderForm.lots" :key="index" class="lot-item">
                   <div class="lot-select-group">
                     <label class="form-label">Lot</label>
-                    <select 
-                      v-model="lot.id_lot" 
-                      class="form-select"
-                      required
-                    >
+                    <select v-model="lot.id_lot" class="form-select" required>
                       <option value="">Sélectionner un lot</option>
-                      <option 
-                        v-for="availableLot in lots" 
-                        :key="availableLot.id_lot" 
+                      <option
+                        v-for="availableLot in lots"
+                        :key="availableLot.id_lot"
                         :value="availableLot.id_lot"
-                        :class="{ 'low-stock': availableLot.quantite_stock <= availableLot.seuil_alerte }"
+                        :class="{
+                          'low-stock': availableLot.quantite_stock <= availableLot.seuil_alerte,
+                        }"
                       >
                         {{ availableLot.nom }} (Stock: {{ availableLot.quantite_stock }})
-                        {{ availableLot.quantite_stock <= availableLot.seuil_alerte ? '⚠️' : '' }}
+                        {{ availableLot.quantite_stock <= availableLot.seuil_alerte ? "⚠️" : "" }}
                       </option>
                     </select>
                   </div>
-                  
+
                   <div class="lot-quantity-group">
                     <label class="form-label">Quantité</label>
-                    <input 
-                      type="number" 
-                      v-model.number="lot.quantite" 
+                    <input
+                      type="number"
+                      v-model.number="lot.quantite"
                       min="1"
                       class="form-input"
                       required
                     />
                   </div>
 
-                  <button 
+                  <button
                     type="button"
                     class="remove-lot-btn"
                     @click="removeLotFromForm(index)"
@@ -521,7 +522,9 @@
               </div>
               <div class="total-row">
                 <span class="total-label">Montant TTC (20%) :</span>
-                <span class="total-value total-ttc">{{ formatCurrency(calculateTotalHT * 1.2) }}</span>
+                <span class="total-value total-ttc">{{
+                  formatCurrency(calculateTotalHT * 1.2)
+                }}</span>
               </div>
             </div>
 
@@ -535,11 +538,7 @@
               >
                 Annuler
               </button>
-              <button
-                type="submit"
-                class="modal-btn primary"
-                :disabled="createOrderLoading"
-              >
+              <button type="submit" class="modal-btn primary" :disabled="createOrderLoading">
                 <span v-if="createOrderLoading">Création en cours...</span>
                 <span v-else>Créer la commande</span>
               </button>
@@ -572,16 +571,16 @@
               <!-- Client -->
               <div class="form-group">
                 <label for="edit-client-select" class="form-label">Client *</label>
-                <select 
-                  id="edit-client-select" 
-                  v-model="editOrderForm.id_client" 
+                <select
+                  id="edit-client-select"
+                  v-model="editOrderForm.id_client"
                   class="form-select"
                   required
                 >
                   <option value="">Sélectionner un client</option>
-                  <option 
-                    v-for="client in clients" 
-                    :key="client.id_client" 
+                  <option
+                    v-for="client in clients"
+                    :key="client.id_client"
                     :value="client.id_client"
                   >
                     {{ getFullName(client) }}
@@ -592,10 +591,10 @@
               <!-- Date -->
               <div class="form-group">
                 <label for="edit-date-input" class="form-label">Date de commande *</label>
-                <input 
+                <input
                   id="edit-date-input"
-                  type="date" 
-                  v-model="editOrderForm.date_commande" 
+                  type="date"
+                  v-model="editOrderForm.date_commande"
                   class="form-input"
                   required
                 />
@@ -604,9 +603,9 @@
               <!-- Statut -->
               <div class="form-group">
                 <label for="edit-status-select" class="form-label">Statut *</label>
-                <select 
+                <select
                   id="edit-status-select"
-                  v-model="editOrderForm.statut" 
+                  v-model="editOrderForm.statut"
                   class="form-select"
                   required
                 >
@@ -621,11 +620,7 @@
             <div class="lots-section">
               <div class="lots-header">
                 <h4 class="section-subtitle">Lots commandés</h4>
-                <button 
-                  type="button"
-                  class="add-lot-btn"
-                  @click="addLotToEditForm"
-                >
+                <button type="button" class="add-lot-btn" @click="addLotToEditForm">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <circle cx="12" cy="12" r="10" />
                     <line x1="12" y1="8" x2="12" y2="16" />
@@ -636,43 +631,37 @@
               </div>
 
               <div v-if="editOrderForm.lots.length > 0" class="lots-list">
-                <div 
-                  v-for="(lot, index) in editOrderForm.lots" 
-                  :key="index"
-                  class="lot-item"
-                >
+                <div v-for="(lot, index) in editOrderForm.lots" :key="index" class="lot-item">
                   <div class="lot-select-group">
                     <label class="form-label">Lot</label>
-                    <select 
-                      v-model="lot.id_lot" 
-                      class="form-select"
-                      required
-                    >
+                    <select v-model="lot.id_lot" class="form-select" required>
                       <option value="">Sélectionner un lot</option>
-                      <option 
-                        v-for="availableLot in lots" 
-                        :key="availableLot.id_lot" 
+                      <option
+                        v-for="availableLot in lots"
+                        :key="availableLot.id_lot"
                         :value="availableLot.id_lot"
-                        :class="{ 'low-stock': availableLot.quantite_stock <= availableLot.seuil_alerte }"
+                        :class="{
+                          'low-stock': availableLot.quantite_stock <= availableLot.seuil_alerte,
+                        }"
                       >
                         {{ availableLot.nom }} (Stock: {{ availableLot.quantite_stock }})
-                        {{ availableLot.quantite_stock <= availableLot.seuil_alerte ? '⚠️' : '' }}
+                        {{ availableLot.quantite_stock <= availableLot.seuil_alerte ? "⚠️" : "" }}
                       </option>
                     </select>
                   </div>
-                  
+
                   <div class="lot-quantity-group">
                     <label class="form-label">Quantité</label>
-                    <input 
-                      type="number" 
-                      v-model.number="lot.quantite" 
+                    <input
+                      type="number"
+                      v-model.number="lot.quantite"
                       min="1"
                       class="form-input"
                       required
                     />
                   </div>
 
-                  <button 
+                  <button
                     type="button"
                     class="remove-lot-btn"
                     @click="removeLotFromEditForm(index)"
@@ -685,9 +674,7 @@
                   </button>
                 </div>
               </div>
-              <div v-else class="empty-lots">
-                Aucun lot dans cette commande.
-              </div>
+              <div v-else class="empty-lots">Aucun lot dans cette commande.</div>
             </div>
 
             <!-- Montant total -->
@@ -698,7 +685,9 @@
               </div>
               <div class="total-row">
                 <span class="total-label">Montant TTC (20%) :</span>
-                <span class="total-value total-ttc">{{ formatCurrency(calculateEditTotalHT * 1.2) }}</span>
+                <span class="total-value total-ttc">{{
+                  formatCurrency(calculateEditTotalHT * 1.2)
+                }}</span>
               </div>
             </div>
 
@@ -712,11 +701,7 @@
               >
                 Annuler
               </button>
-              <button
-                type="submit"
-                class="modal-btn primary"
-                :disabled="updateOrderLoading"
-              >
+              <button type="submit" class="modal-btn primary" :disabled="updateOrderLoading">
                 <span v-if="updateOrderLoading">Mise à jour en cours...</span>
                 <span v-else>Mettre à jour la commande</span>
               </button>
@@ -735,9 +720,9 @@
   import { VITE_API_URL } from "@/constants/constants.js";
 
   // Constantes pour les statuts de commande
-  const STATUT_ATTENTE = '0';
-  const STATUT_PREPARATION = '1';
-  const STATUT_EXPEDIE = '2';
+  const STATUT_ATTENTE = "0";
+  const STATUT_PREPARATION = "1";
+  const STATUT_EXPEDIE = "2";
 
   export default {
     name: "OrdersView",
@@ -773,20 +758,20 @@
 
       // Données pour la nouvelle commande
       const newOrderForm = ref({
-        id_client: '',
-        date_commande: new Date().toISOString().split('T')[0],
+        id_client: "",
+        date_commande: new Date().toISOString().split("T")[0],
         statut: STATUT_ATTENTE,
-        lots: []
+        lots: [],
       });
 
       // Données pour la modification de commande
       const editOrderForm = ref({
-        id_commande: '',
-        id_client: '',
-        date_commande: '',
-        statut: '',
+        id_commande: "",
+        id_client: "",
+        date_commande: "",
+        statut: "",
         montant_ht: 0,
-        lots: []
+        lots: [],
       });
 
       const createOrderLoading = ref(false);
@@ -834,7 +819,12 @@
             credentials: "include",
           });
 
-          if (!ordersResponse.ok || !clientsResponse.ok || !lotsResponse.ok || !commandeLotsResponse.ok) {
+          if (
+            !ordersResponse.ok ||
+            !clientsResponse.ok ||
+            !lotsResponse.ok ||
+            !commandeLotsResponse.ok
+          ) {
             throw new Error("Erreur lors du chargement des données");
           }
 
@@ -999,23 +989,23 @@
       };
 
       // Fonctions pour les lots
-      const getOrderLots = (orderId) => {
+      const getOrderLots = orderId => {
         return commandeLots.value.filter(cl => cl.id_commande === orderId);
       };
 
-      const getOrderLotsCount = (orderId) => {
+      const getOrderLotsCount = orderId => {
         return getOrderLots(orderId).length;
       };
 
-      const getLotInfo = (lotId) => {
+      const getLotInfo = lotId => {
         return lots.value.find(lot => lot.id_lot === lotId);
       };
 
-      const getStockClass = (lot) => {
-        if (!lot) return '';
-        if (lot.quantite_stock <= lot.seuil_alerte) return 'stock-alert';
-        if (lot.quantite_stock <= lot.seuil_alerte * 2) return 'stock-warning';
-        return 'stock-ok';
+      const getStockClass = lot => {
+        if (!lot) return "";
+        if (lot.quantite_stock <= lot.seuil_alerte) return "stock-alert";
+        if (lot.quantite_stock <= lot.seuil_alerte * 2) return "stock-warning";
+        return "stock-ok";
       };
 
       const formatDate = dateString => {
@@ -1058,13 +1048,13 @@
       const getStatusClass = status => {
         const statusStr = status?.toString();
         const statusClasses = {
-          '0': "status-pending",      // attente
-          '1': "status-progress",     // preparation
-          '2': "status-shipped",      // expedie
+          0: "status-pending", // attente
+          1: "status-progress", // preparation
+          2: "status-shipped", // expedie
           // Pour la compatibilité avec l'ancien format
-          'attente': "status-pending",
-          'preparation': "status-progress",
-          'expedie': "status-shipped"
+          attente: "status-pending",
+          preparation: "status-progress",
+          expedie: "status-shipped",
         };
         return statusClasses[statusStr] || "status-default";
       };
@@ -1072,13 +1062,13 @@
       const getStatusLabel = status => {
         const statusStr = status?.toString();
         const statusLabels = {
-          '0': "En attente",
-          '1': "En préparation",
-          '2': "Expédiée",
+          0: "En attente",
+          1: "En préparation",
+          2: "Expédiée",
           // Pour la compatibilité avec l'ancien format
-          'attente': "En attente",
-          'preparation': "En préparation",
-          'expedie': "Expédiée"
+          attente: "En attente",
+          preparation: "En préparation",
+          expedie: "Expédiée",
         };
         return statusLabels[statusStr] || status;
       };
@@ -1092,10 +1082,10 @@
       const goToNewOrder = () => {
         // Réinitialiser le formulaire
         newOrderForm.value = {
-          id_client: '',
-          date_commande: new Date().toISOString().split('T')[0],
+          id_client: "",
+          date_commande: new Date().toISOString().split("T")[0],
           statut: STATUT_ATTENTE,
-          lots: []
+          lots: [],
         };
         showCreateModal.value = true;
       };
@@ -1103,26 +1093,26 @@
       // Ajouter un lot au formulaire
       const addLotToForm = () => {
         newOrderForm.value.lots.push({
-          id_lot: '',
-          quantite: 1
+          id_lot: "",
+          quantite: 1,
         });
       };
 
       // Supprimer un lot du formulaire
-      const removeLotFromForm = (index) => {
+      const removeLotFromForm = index => {
         newOrderForm.value.lots.splice(index, 1);
       };
 
       // Ajouter un lot au formulaire d'édition
       const addLotToEditForm = () => {
         editOrderForm.value.lots.push({
-          id_lot: '',
-          quantite: 1
+          id_lot: "",
+          quantite: 1,
         });
       };
 
       // Supprimer un lot du formulaire d'édition
-      const removeLotFromEditForm = (index) => {
+      const removeLotFromEditForm = index => {
         editOrderForm.value.lots.splice(index, 1);
       };
 
@@ -1133,7 +1123,7 @@
           if (lotInfo && lot.quantite > 0) {
             // Utiliser un prix fixe pour l'instant (à remplacer par le vrai prix du lot)
             const prixUnitaire = 100;
-            return total + (lot.quantite * prixUnitaire);
+            return total + lot.quantite * prixUnitaire;
           }
           return total;
         }, 0);
@@ -1146,28 +1136,28 @@
           if (lotInfo && lot.quantite > 0) {
             // Utiliser un prix fixe pour l'instant (à remplacer par le vrai prix du lot)
             const prixUnitaire = 100;
-            return total + (lot.quantite * prixUnitaire);
+            return total + lot.quantite * prixUnitaire;
           }
           return total;
         }, 0);
       });
 
       // Fonction pour mettre à jour une commande
-      const updateOrder = async (orderData) => {
+      const updateOrder = async orderData => {
         try {
           const formData = new FormData();
-          formData.append('id_commande', orderData.id_commande.toString());
-          formData.append('id_client', orderData.id_client.toString());
-          formData.append('date_commande', orderData.date_commande);
-          formData.append('statut', orderData.statut.toString());
-          formData.append('montant_ht', orderData.montant_ht.toString());
+          formData.append("id_commande", orderData.id_commande.toString());
+          formData.append("id_client", orderData.id_client.toString());
+          formData.append("date_commande", orderData.date_commande);
+          formData.append("statut", orderData.statut.toString());
+          formData.append("montant_ht", orderData.montant_ht.toString());
 
-          console.log('FormData envoyé pour mise à jour:', {
+          console.log("FormData envoyé pour mise à jour:", {
             id_commande: orderData.id_commande,
             id_client: orderData.id_client,
             date_commande: orderData.date_commande,
             statut: orderData.statut,
-            montant_ht: orderData.montant_ht
+            montant_ht: orderData.montant_ht,
           });
 
           const response = await fetch(VITE_API_URL + "update_commande", {
@@ -1177,7 +1167,7 @@
           });
 
           const data = await response.json();
-          console.log('Réponse update_commande:', data);
+          console.log("Réponse update_commande:", data);
 
           if (!response.ok || !data.success) {
             throw new Error(data.message || "Erreur lors de la mise à jour de la commande");
@@ -1191,17 +1181,17 @@
       };
 
       // Fonction pour mettre à jour un lot de commande
-      const updateOrderLot = async (lotData) => {
+      const updateOrderLot = async lotData => {
         try {
           const formData = new FormData();
-          formData.append('id_lot', lotData.id_lot.toString());
-          formData.append('id_commande', lotData.id_commande.toString());
-          formData.append('quantite', lotData.quantite.toString());
+          formData.append("id_lot", lotData.id_lot.toString());
+          formData.append("id_commande", lotData.id_commande.toString());
+          formData.append("quantite", lotData.quantite.toString());
 
-          console.log('FormData envoyé pour mise à jour lot:', {
+          console.log("FormData envoyé pour mise à jour lot:", {
             id_lot: lotData.id_lot,
             id_commande: lotData.id_commande,
-            quantite: lotData.quantite
+            quantite: lotData.quantite,
           });
 
           const response = await fetch(VITE_API_URL + "update_commande_lot", {
@@ -1211,7 +1201,7 @@
           });
 
           const data = await response.json();
-          console.log('Réponse update_commande_lot:', data);
+          console.log("Réponse update_commande_lot:", data);
 
           if (!response.ok || !data.success) {
             throw new Error(data.message || "Erreur lors de la mise à jour du lot");
@@ -1228,9 +1218,9 @@
       const deleteOrderLot = async (id_lot, id_commande) => {
         try {
           const formData = new FormData();
-          formData.append('id_lot', id_lot.toString());
-          formData.append('id_commande', id_commande.toString());
-          
+          formData.append("id_lot", id_lot.toString());
+          formData.append("id_commande", id_commande.toString());
+
           const response = await fetch(VITE_API_URL + "delete_commande_lot", {
             method: "POST",
             body: formData,
@@ -1238,7 +1228,7 @@
           });
 
           const data = await response.json();
-          
+
           if (!response.ok || !data.success) {
             throw new Error(data.message || "Erreur lors de la suppression du lot");
           }
@@ -1251,23 +1241,23 @@
       };
 
       // Fonction pour supprimer tous les lots d'une commande
-      const deleteOrderLots = async (orderId) => {
+      const deleteOrderLots = async orderId => {
         try {
           const orderLots = getOrderLots(orderId);
-          
+
           if (orderLots.length === 0) {
-            console.log('Aucun lot à supprimer pour la commande:', orderId);
+            console.log("Aucun lot à supprimer pour la commande:", orderId);
             return true;
           }
 
           const promises = orderLots.map(lot => {
             const formData = new FormData();
-            formData.append('id_lot', lot.id_lot.toString());
-            formData.append('id_commande', lot.id_commande.toString());
-            
-            console.log('Suppression lot:', {
+            formData.append("id_lot", lot.id_lot.toString());
+            formData.append("id_commande", lot.id_commande.toString());
+
+            console.log("Suppression lot:", {
               id_lot: lot.id_lot,
-              id_commande: lot.id_commande
+              id_commande: lot.id_commande,
             });
 
             return fetch(VITE_API_URL + "delete_commande_lot", {
@@ -1278,7 +1268,7 @@
           });
 
           const responses = await Promise.all(promises);
-          
+
           // Vérifier que toutes les suppressions ont réussi
           for (const response of responses) {
             const data = await response.json();
@@ -1296,24 +1286,24 @@
       };
 
       // Ouvrir la modal d'édition
-      const openEditModal = (order) => {
+      const openEditModal = order => {
         selectedOrder.value = order;
-        
+
         // Pré-remplir le formulaire d'édition
         editOrderForm.value = {
           id_commande: order.id_commande,
           id_client: order.id_client,
-          date_commande: order.date_commande.split(' ')[0], // Garder seulement la partie date
+          date_commande: order.date_commande.split(" ")[0], // Garder seulement la partie date
           statut: order.statut.toString(),
           montant_ht: order.montant_ht,
-          lots: []
+          lots: [],
         };
 
         // Charger les lots existants
         const orderLots = getOrderLots(order.id_commande);
         editOrderForm.value.lots = orderLots.map(lot => ({
           id_lot: lot.id_lot,
-          quantite: lot.quantite
+          quantite: lot.quantite,
         }));
 
         showEditModal.value = true;
@@ -1336,26 +1326,29 @@
             id_client: editOrderForm.value.id_client.toString(),
             date_commande: editOrderForm.value.date_commande,
             statut: editOrderForm.value.statut.toString(),
-            montant_ht: calculateEditTotalHT.value.toFixed(2)
+            montant_ht: calculateEditTotalHT.value.toFixed(2),
           };
 
-          console.log('Mise à jour commande avec:', orderData);
+          console.log("Mise à jour commande avec:", orderData);
 
           await updateOrder(orderData);
 
           // Supprimer les anciens lots
-          console.log('Suppression des anciens lots de la commande:', editOrderForm.value.id_commande);
+          console.log(
+            "Suppression des anciens lots de la commande:",
+            editOrderForm.value.id_commande,
+          );
           await deleteOrderLots(editOrderForm.value.id_commande);
 
           // Ajouter les nouveaux lots
           if (editOrderForm.value.lots.length > 0) {
-            console.log('Ajout des nouveaux lots:', editOrderForm.value.lots);
+            console.log("Ajout des nouveaux lots:", editOrderForm.value.lots);
             await addLotsToOrder(editOrderForm.value.id_commande, editOrderForm.value.lots);
           }
 
           triggerToast("Commande mise à jour avec succès", "success");
           showEditModal.value = false;
-          
+
           // Recharger les données
           await fetchData();
         } catch (error) {
@@ -1379,7 +1372,9 @@
             return;
           }
 
-          const invalidLots = newOrderForm.value.lots.filter(lot => !lot.id_lot || lot.quantite <= 0);
+          const invalidLots = newOrderForm.value.lots.filter(
+            lot => !lot.id_lot || lot.quantite <= 0,
+          );
           if (invalidLots.length > 0) {
             triggerToast("Veuillez remplir tous les lots correctement", "error");
             return;
@@ -1393,7 +1388,10 @@
               return;
             }
             if (lot.quantite > lotInfo.quantite_stock) {
-              triggerToast(`Stock insuffisant pour le lot ${lotInfo.nom} (disponible: ${lotInfo.quantite_stock})`, "error");
+              triggerToast(
+                `Stock insuffisant pour le lot ${lotInfo.nom} (disponible: ${lotInfo.quantite_stock})`,
+                "error",
+              );
               return;
             }
           }
@@ -1405,34 +1403,35 @@
             id_client: newOrderForm.value.id_client.toString(),
             date_commande: newOrderForm.value.date_commande,
             statut: newOrderForm.value.statut.toString(),
-            montant_ht: calculateTotalHT.value.toFixed(2)
+            montant_ht: calculateTotalHT.value.toFixed(2),
           };
 
-          console.log('Création commande avec:', orderData);
+          console.log("Création commande avec:", orderData);
 
           const result = await createOrder(orderData);
-          
-          console.log('Résultat création commande:', result);
+
+          console.log("Résultat création commande:", result);
 
           // Recharger les données pour avoir la nouvelle commande
           await fetchData();
-          
+
           // Trouver la commande créée (la plus récente = ID le plus élevé)
-          const createdOrder = orders.value
-            .sort((a, b) => Number(b.id_commande) - Number(a.id_commande))[0];
+          const createdOrder = orders.value.sort(
+            (a, b) => Number(b.id_commande) - Number(a.id_commande),
+          )[0];
 
           if (createdOrder) {
-            console.log('Commande créée, ID:', createdOrder.id_commande);
-            
+            console.log("Commande créée, ID:", createdOrder.id_commande);
+
             // Ajouter les lots à la commande
             await addLotsToOrder(createdOrder.id_commande, newOrderForm.value.lots);
           } else {
-            console.error('Commande créée non trouvée dans la liste');
+            console.error("Commande créée non trouvée dans la liste");
           }
 
           triggerToast("Commande créée avec succès", "success");
           showCreateModal.value = false;
-          
+
           // Recharger les données pour afficher la nouvelle commande
           await fetchData();
         } catch (error) {
@@ -1494,20 +1493,20 @@
       };
 
       // Fonction pour créer une nouvelle commande
-      const createOrder = async (orderData) => {
+      const createOrder = async orderData => {
         try {
           // Créer la commande
           const formData = new FormData();
-          formData.append('id_client', orderData.id_client.toString());
-          formData.append('date_commande', orderData.date_commande);
-          formData.append('statut', orderData.statut.toString());
-          formData.append('montant_ht', orderData.montant_ht.toString());
+          formData.append("id_client", orderData.id_client.toString());
+          formData.append("date_commande", orderData.date_commande);
+          formData.append("statut", orderData.statut.toString());
+          formData.append("montant_ht", orderData.montant_ht.toString());
 
-          console.log('FormData envoyé pour création:', {
+          console.log("FormData envoyé pour création:", {
             id_client: orderData.id_client,
             date_commande: orderData.date_commande,
             statut: orderData.statut,
-            montant_ht: orderData.montant_ht
+            montant_ht: orderData.montant_ht,
           });
 
           const response = await fetch(VITE_API_URL + "new_commande", {
@@ -1517,7 +1516,7 @@
           });
 
           const data = await response.json();
-          console.log('Réponse new_commande:', data);
+          console.log("Réponse new_commande:", data);
 
           if (!response.ok || !data.success) {
             throw new Error(data.message || "Erreur lors de la création de la commande");
@@ -1535,22 +1534,22 @@
         try {
           // Filtrer les lots valides
           const validLots = lots.filter(lot => lot.id_lot && lot.quantite > 0);
-          
+
           if (validLots.length === 0) {
-            console.log('Aucun lot valide à ajouter');
+            console.log("Aucun lot valide à ajouter");
             return true;
           }
 
           const promises = validLots.map(lot => {
             const formData = new FormData();
-            formData.append('id_lot', lot.id_lot.toString());
-            formData.append('id_commande', orderId.toString());
-            formData.append('quantite', lot.quantite.toString());
+            formData.append("id_lot", lot.id_lot.toString());
+            formData.append("id_commande", orderId.toString());
+            formData.append("quantite", lot.quantite.toString());
 
-            console.log('Ajout lot:', {
+            console.log("Ajout lot:", {
               id_lot: lot.id_lot,
               id_commande: orderId,
-              quantite: lot.quantite
+              quantite: lot.quantite,
             });
 
             return fetch(VITE_API_URL + "new_commande_lot", {
@@ -1560,7 +1559,7 @@
             }).then(async response => {
               const data = await response.json();
               if (!response.ok || !data.success) {
-                console.error('Erreur new_commande_lot:', data);
+                console.error("Erreur new_commande_lot:", data);
                 throw new Error(data.message || "Erreur lors de l'ajout du lot");
               }
               return data;
@@ -1568,8 +1567,8 @@
           });
 
           const results = await Promise.all(promises);
-          console.log('Tous les lots ajoutés:', results);
-          
+          console.log("Tous les lots ajoutés:", results);
+
           return true;
         } catch (error) {
           console.error("Erreur lors de l'ajout des lots:", error);
@@ -1644,7 +1643,7 @@
         // Constantes de statut exportées pour utilisation dans d'autres composants
         STATUT_ATTENTE,
         STATUT_PREPARATION,
-        STATUT_EXPEDIE
+        STATUT_EXPEDIE,
       };
     },
   };
@@ -1990,8 +1989,8 @@
     min-width: 24px;
     height: 24px;
     padding: 0 8px;
-    background: #E0E7FF;
-    color: #4338CA;
+    background: #e0e7ff;
+    color: #4338ca;
     border-radius: 12px;
     font-size: 12px;
     font-weight: 600;
@@ -2291,20 +2290,20 @@
   }
 
   .lots-table th {
-    background: #F1F5F9;
+    background: #f1f5f9;
     text-align: left;
     padding: 0.75rem;
     font-size: 12px;
     font-weight: 600;
-    color: #64748B;
+    color: #64748b;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    border-bottom: 1px solid #E2E8F0;
+    border-bottom: 1px solid #e2e8f0;
   }
 
   .lots-table td {
     padding: 0.75rem;
-    border-bottom: 1px solid #E2E8F0;
+    border-bottom: 1px solid #e2e8f0;
     font-size: 14px;
     color: #334155;
   }
@@ -2315,18 +2314,18 @@
 
   .lot-name {
     font-weight: 600;
-    color: #0F172A;
+    color: #0f172a;
   }
 
   .lot-description {
     font-size: 13px;
-    color: #64748B;
+    color: #64748b;
   }
 
   .lot-quantity {
     font-weight: 600;
     text-align: center;
-    color: #0F172A;
+    color: #0f172a;
   }
 
   .lot-stock {
@@ -2339,17 +2338,17 @@
   }
 
   .stock-warning {
-    color: #F59E0B;
+    color: #f59e0b;
   }
 
   .stock-alert {
-    color: #DC2626;
+    color: #dc2626;
   }
 
   .empty-lots {
     text-align: center;
     padding: 2rem;
-    color: #64748B;
+    color: #64748b;
     font-style: italic;
   }
 
@@ -2424,10 +2423,10 @@
   .form-input,
   .form-select {
     padding: 0.75rem;
-    border: 1px solid #E2E8F0;
+    border: 1px solid #e2e8f0;
     border-radius: 8px;
     font-size: 14px;
-    color: #0F172A;
+    color: #0f172a;
     background: white;
     transition: all 0.2s ease;
   }
@@ -2435,17 +2434,17 @@
   .form-input:focus,
   .form-select:focus {
     outline: none;
-    border-color: #00B8D4;
+    border-color: #00b8d4;
     box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
   }
 
   .form-select option.low-stock {
-    color: #DC2626;
+    color: #dc2626;
     font-weight: 600;
   }
 
   .lots-section {
-    background: #F8FAFC;
+    background: #f8fafc;
     padding: 1.5rem;
     border-radius: 8px;
   }
@@ -2462,7 +2461,7 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 1rem;
-    background: #00B8D4;
+    background: #00b8d4;
     color: white;
     border: none;
     border-radius: 6px;
@@ -2473,7 +2472,7 @@
   }
 
   .add-lot-btn:hover {
-    background: #0891A6;
+    background: #0891a6;
   }
 
   .add-lot-btn svg {
@@ -2495,7 +2494,7 @@
     align-items: end;
     padding: 1rem;
     background: white;
-    border: 1px solid #E2E8F0;
+    border: 1px solid #e2e8f0;
     border-radius: 8px;
   }
 
@@ -2511,17 +2510,17 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #FEF2F2;
-    color: #DC2626;
-    border: 1px solid #FCA5A5;
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fca5a5;
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s ease;
   }
 
   .remove-lot-btn:hover {
-    background: #FEE2E2;
-    border-color: #F87171;
+    background: #fee2e2;
+    border-color: #f87171;
   }
 
   .remove-lot-btn svg {
@@ -2531,10 +2530,10 @@
   }
 
   .total-section {
-    background: #F8FAFC;
+    background: #f8fafc;
     padding: 1.5rem;
     border-radius: 8px;
-    border: 2px solid #E2E8F0;
+    border: 2px solid #e2e8f0;
   }
 
   .total-row {
@@ -2546,25 +2545,25 @@
 
   .total-row:first-child {
     padding-bottom: 0.75rem;
-    border-bottom: 1px solid #E2E8F0;
+    border-bottom: 1px solid #e2e8f0;
     margin-bottom: 0.75rem;
   }
 
   .total-label {
     font-size: 14px;
-    color: #64748B;
+    color: #64748b;
     font-weight: 500;
   }
 
   .total-value {
     font-size: 16px;
     font-weight: 600;
-    color: #0F172A;
+    color: #0f172a;
   }
 
   .total-ttc {
     font-size: 18px;
-    color: #00B8D4;
+    color: #00b8d4;
   }
 
   .modal-btn:disabled {
