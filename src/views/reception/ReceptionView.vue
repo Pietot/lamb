@@ -1147,7 +1147,6 @@
     color: #64748b;
     line-height: 1.3;
     font-weight: 500;
-    margin: 0 0 4px 0;
   }
 
   /* LOADING & ERROR */
