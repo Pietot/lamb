@@ -166,7 +166,7 @@
           <table class="deliveries-table">
             <thead>
               <tr>
-                <th>Numéro</th>
+                <th>N° livraison</th>
                 <th>Fournisseur</th>
                 <th>Date livraison</th>
                 <th>Bon de livraison</th>
