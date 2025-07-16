@@ -181,7 +181,7 @@
                 <td class="supplier-info">
                   <div class="supplier-profile">
                     <div class="supplier-avatar-container">
-                      <div class="supplier-avatar">
+                      <div class="supplier-avatar" :style="{ backgroundColor: getAvatarColor(delivery.id_fournisseur) }">
                         {{ getSupplierInitials(getSupplierName(delivery.id_fournisseur)) }}
                       </div>
                     </div>
@@ -794,6 +794,11 @@
         }
       };
 
+      const getAvatarColor = id => {
+        const colors = ["#00B8D4", "#2563EB", "#059669", "#D97706", "#7C3AED", "#DC2626"];
+        return colors[id % colors.length];
+      };
+
       const exportDelivery = () => {
         const data = [
           ["Numéro", "Fournisseur", "Date livraison", "Bon de livraison", "Statut", "Notes"],
@@ -1015,6 +1020,7 @@
         getStatusClass,
         getStatusLabel,
         goToPage,
+        getAvatarColor,
         exportDelivery,
         viewDetails,
         markAsCompleted,
@@ -1416,7 +1422,6 @@
   .supplier-avatar {
     width: 40px;
     height: 40px;
-    background: #00b8d4;
     border-radius: 50%;
     display: flex;
     align-items: center;
