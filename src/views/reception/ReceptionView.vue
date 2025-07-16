@@ -666,9 +666,7 @@
               : "";
             const fournisseurName = getSupplierName(delivery.id_fournisseur).toLowerCase();
             const notes = delivery.notes ? delivery.notes.toLowerCase() : "";
-            const dateLivraison = delivery.date_livraison ? delivery.date_livraison.toLowerCase() : "";
-
-            return (
+            const dateLivraison = delivery.date_livraisoneturn (
               numero.includes(query) ||
               bon.includes(query) ||
               fournisseurName.includes(query) ||
@@ -2026,6 +2024,15 @@
     .filter-select {
       width: 100%;
       max-width: none;
+      min-width: auto;
+    }
+
+    .search-container > input:placeholder-shown {
+      text-overflow: ellipsis;
+    }
+
+    .search-container > input:focus::placeholder {
+      color: transparent;
     }
 
     .details-grid {
@@ -2034,10 +2041,6 @@
   }
 
   @media (max-width: 768px) {
-    .search-container {
-      min-width: auto;
-    }
-
     .section-header {
       flex-direction: column;
       gap: 1rem;
@@ -2085,16 +2088,6 @@
     .btn-cancel,
     .btn-submit {
       width: 100%;
-    }
-  }
-
-  @media (max-width: 425px) {
-    .search-container > input:placeholder-shown {
-      text-overflow: ellipsis;
-    }
-
-    .search-container > input:focus::placeholder {
-      color: transparent;
     }
   }
 </style>
