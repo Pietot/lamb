@@ -34,8 +34,8 @@
           </svg>
         </div>
         <div class="stat-content">
-          <p class="stat-label">Livraisons à réceptionner</p>
-          <p class="stat-value">3</p>
+          <p class="stat-label">Total livraisons</p>
+          <p class="stat-value">{{ totalDeliveries }}</p>
         </div>
       </div>
 
@@ -48,8 +48,8 @@
           </svg>
         </div>
         <div class="stat-content">
-          <p class="stat-label">Réceptionnées ce mois</p>
-          <p class="stat-value">12</p>
+          <p class="stat-label">Complétées</p>
+          <p class="stat-value">{{ completedCount }}</p>
         </div>
       </div>
 
@@ -63,8 +63,8 @@
           </svg>
         </div>
         <div class="stat-content">
-          <p class="stat-label">Problèmes signalés</p>
-          <p class="stat-value">1</p>
+          <p class="stat-label">En attente</p>
+          <p class="stat-value">{{ pendingCount }}</p>
         </div>
       </div>
     </div>
@@ -76,7 +76,7 @@
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="Rechercher par ID, référence ou fournisseur"
+            placeholder="Rechercher par numéro, fournisseur ou bon de livraison"
             class="search-input"
           />
           <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -89,9 +89,9 @@
           <label for="supplier-filter" class="filter-label">Fournisseur :</label>
           <select id="supplier-filter" v-model="filters.supplier" class="filter-select">
             <option value="">Tous les fournisseurs</option>
-            <option value="Durand SA">Durand SA</option>
-            <option value="Bernard FR">Bernard FR</option>
-            <option value="Martin SA">Martin SA</option>
+            <option v-for="supplier in uniqueSuppliers" :key="supplier.id_fournisseur" :value="supplier.id_fournisseur">
+              {{ supplier.nom }}
+            </option>
           </select>
           <svg class="filter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path d="M6 9l6 6 6-6" />
@@ -102,9 +102,10 @@
           <label for="status-filter" class="filter-label">Statut :</label>
           <select id="status-filter" v-model="filters.status" class="filter-select">
             <option value="">Tous les statuts</option>
-            <option value="En attente">En attente</option>
-            <option value="Problème">Problème</option>
-            <option value="Réceptionnée">Réceptionnée</option>
+            <option value="completee">Complétée</option>
+            <option value="en_attente">En attente</option>
+            <option value="partielle">Partielle</option>
+            <option value="annulee">Annulée</option>
           </select>
           <svg class="filter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path d="M6 9l6 6 6-6" />
@@ -127,19 +128,32 @@
       </div>
     </div>
 
-    <!-- Livraisons à réceptionner -->
-    <div class="deliveries-section">
+    <!-- Loading State -->
+    <div v-if="loading" class="loading-container">
+      <div class="loader"></div>
+      <p>Chargement des livraisons...</p>
+    </div>
+
+    <!-- Error State -->
+    <div v-else-if="error" class="error-container">
+      <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <p class="error-message">{{ error }}</p>
+      <button @click="fetchData" class="retry-button">Réessayer</button>
+    </div>
+
+    <!-- Livraisons -->
+    <div v-else class="deliveries-section">
       <div class="section-card">
         <div class="section-header">
-          <h3 class="section-title">Livraisons à réceptionner</h3>
+          <h3 class="section-title">Liste des livraisons</h3>
           <div class="table-stats">
             <span class="stat-item">
-              <span class="stat-label">En attente :</span>
-              <span class="stat-value">{{ pendingCount }}</span>
-            </span>
-            <span class="stat-item">
-              <span class="stat-label">Problèmes :</span>
-              <span class="stat-value low">{{ problemCount }}</span>
+              <span class="stat-label">Total :</span>
+              <span class="stat-value">{{ filteredDeliveries.length }}</span>
             </span>
           </div>
         </div>
@@ -148,45 +162,57 @@
           <table class="deliveries-table">
             <thead>
               <tr>
-                <th>ID</th>
+                <th>Numéro</th>
                 <th>Fournisseur</th>
-                <th>Date prévue</th>
-                <th>Commande liée</th>
-                <th>Nb. articles</th>
+                <th>Date livraison</th>
+                <th>Bon de livraison</th>
                 <th>Statut</th>
+                <th>Notes</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="delivery in filteredDeliveries" :key="delivery.id">
-                <td class="delivery-id">{{ delivery.id }}</td>
+              <tr v-for="delivery in paginatedDeliveries" :key="delivery.id_livraison">
+                <td class="delivery-id">{{ delivery.numero_livraison }}</td>
                 <td class="supplier-info">
                   <div class="supplier-profile">
                     <div class="supplier-avatar-container">
                       <div class="supplier-avatar">
-                        {{ getSupplierInitials(delivery.supplier) }}
+                        {{ getSupplierInitials(delivery.id_fournisseur) }}
                       </div>
                     </div>
                     <div class="supplier-details">
-                      <p class="supplier-name">{{ delivery.supplier }}</p>
+                      <p class="supplier-name">{{ getSupplierName(delivery.id_fournisseur) }}</p>
                     </div>
                   </div>
                 </td>
-                <td class="delivery-date">{{ delivery.expectedDate }}</td>
-                <td class="order-reference">{{ delivery.orderRef }}</td>
-                <td class="articles-count">{{ delivery.articlesCount }}</td>
+                <td class="delivery-date">{{ formatDate(delivery.date_livraison) }}</td>
+                <td class="order-reference">{{ delivery.numero_bon_livraison || '-' }}</td>
                 <td>
-                  <span class="status-badge" :class="getStatusClass(delivery.status)">
-                    {{ delivery.status }}
+                  <span class="status-badge" :class="getStatusClass(delivery.statut)">
+                    {{ getStatusLabel(delivery.statut) }}
                   </span>
                 </td>
+                <td class="notes">{{ delivery.notes || '-' }}</td>
                 <td class="actions">
                   <button
                     role="button"
-                    aria-label="Recevoir la livraison"
-                    v-if="delivery.status === 'En attente'"
+                    aria-label="Voir détails"
+                    class="action-btn secondary"
+                    @click="viewDetails(delivery)"
+                    title="Voir détails"
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                  </button>
+                  <button
+                    v-if="delivery.statut === 'en_attente'"
+                    role="button"
+                    aria-label="Marquer comme complétée"
                     class="action-btn success"
-                    @click="receiveDelivery(delivery.id)"
+                    @click="markAsCompleted(delivery.id_livraison)"
                   >
                     <svg viewBox="0 0 448 512">
                       <path
@@ -195,111 +221,145 @@
                       />
                     </svg>
                   </button>
-                  <button
-                    role="button"
-                    aria-label="Signaler un problème"
-                    v-if="delivery.status === 'Problème'"
-                    class="action-btn danger"
-                    @click="reportProblem(delivery.id)"
-                  >
-                    <svg viewBox="0 0 512 512">
-                      <path
-                        fill="currentColor"
-                        d="M34.5 420.4c-1.6 2.8-2.5 6-2.5 9.3c0 10.2 8.2 18.4 18.4 18.4l411.2 0c10.2 0 18.4-8.2 18.4-18.4c0-3.3-.9-6.4-2.5-9.3L276.5 75.8C272.2 68.5 264.4 64 256 64s-16.2 4.5-20.5 11.8L34.5 420.4zM6.9 404.2l201-344.6C217.9 42.5 236.2 32 256 32s38.1 10.5 48.1 27.6l201 344.6c4.5 7.7 6.9 16.5 6.9 25.4c0 27.8-22.6 50.4-50.4 50.4L50.4 480C22.6 480 0 457.4 0 429.6c0-8.9 2.4-17.7 6.9-25.4zM256 160c8.8 0 16 7.2 16 16l0 128c0 8.8-7.2 16-16 16s-16-7.2-16-16l0-128c0-8.8 7.2-16 16-16zM232 384a24 24 0 1 1 48 0 24 24 0 1 1 -48 0z"
-                      />
-                    </svg>
-                  </button>
-                  <button
-                    role="button"
-                    aria-label="Voir détails"
-                    class="action-btn secondary"
-                    @click="viewDetails(delivery.id)"
-                    title="Voir détails"
-                  >
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                      <circle cx="12" cy="12" r="3" />
-                    </svg>
-                  </button>
                 </td>
               </tr>
             </tbody>
             <tr v-if="filteredDeliveries.length === 0">
-              <td colspan="100%" class="empty-message">Aucune livraison trouvée</td>
+              <td colspan="7" class="empty-message">Aucune livraison trouvée</td>
             </tr>
           </table>
         </div>
-      </div>
-    </div>
 
-    <!-- Historique des livraisons -->
-    <div class="history-section">
-      <div class="section-card">
-        <div class="section-header">
-          <h3 class="section-title">Historique des livraisons</h3>
-          <div class="table-stats">
-            <span class="stat-item">
-              <span class="stat-label">Total :</span>
-              <span class="stat-value">{{ deliveryHistory.length }}</span>
-            </span>
+        <!-- Pagination -->
+        <div v-if="totalPages > 1" class="pagination-container">
+          <div class="pagination-info">
+            Affichage {{ startIndex + 1 }}-{{ endIndex }} sur {{ filteredDeliveries.length }} livraisons
+          </div>
+          <div class="pagination-controls">
+            <button 
+              class="pagination-btn" 
+              @click="goToPage(currentPage - 1)"
+              :disabled="currentPage === 1"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+            </button>
+            
+            <div class="page-numbers">
+              <button
+                v-for="page in visiblePages"
+                :key="page"
+                class="page-number"
+                :class="{ 'active': page === currentPage }"
+                @click="goToPage(page)"
+                :disabled="page === '...'"
+              >
+                {{ page }}
+              </button>
+            </div>
+            
+            <button 
+              class="pagination-btn" 
+              @click="goToPage(currentPage + 1)"
+              :disabled="currentPage === totalPages"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </button>
           </div>
         </div>
+      </div>
+    </div>
 
-        <div class="table-container">
-          <table class="history-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Fournisseur</th>
-                <th>Date réception</th>
-                <th>Commande liée</th>
-                <th>Réceptionnée par</th>
-                <th>Statut</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="item in deliveryHistory" :key="item.id">
-                <td class="delivery-id">{{ item.id }}</td>
-                <td>{{ item.supplier }}</td>
-                <td class="delivery-date">{{ item.receptionDate }}</td>
-                <td class="order-reference">{{ item.orderRef }}</td>
-                <td>{{ item.receivedBy }}</td>
-                <td>
-                  <span class="status-badge status-received">
-                    {{ item.status }}
+    <!-- Modal Détails livraison -->
+    <div v-if="showDetailsModal" class="modal-overlay" @click="showDetailsModal = false">
+      <div class="modal-content modal-details" @click.stop>
+        <div class="modal-header">
+          <h3>Détails de la livraison</h3>
+          <button @click="showDetailsModal = false" class="modal-close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body" v-if="selectedDelivery">
+          <div class="details-grid">
+            <div class="details-section">
+              <h4 class="section-subtitle">Informations générales</h4>
+              <div class="detail-row">
+                <span class="detail-label">Numéro livraison:</span>
+                <span class="detail-value">{{ selectedDelivery.numero_livraison }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Bon de livraison:</span>
+                <span class="detail-value">{{ selectedDelivery.numero_bon_livraison || '-' }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Date livraison:</span>
+                <span class="detail-value">{{ formatDateTime(selectedDelivery.date_livraison) }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Statut:</span>
+                <span class="detail-value">
+                  <span class="status-badge" :class="getStatusClass(selectedDelivery.statut)">
+                    {{ getStatusLabel(selectedDelivery.statut) }}
                   </span>
-                </td>
-                <td class="actions">
-                  <button
-                    role="button"
-                    aria-label="Voir détails"
-                    class="action-btn secondary"
-                    @click="viewDeliveryDetails(item.id)"
-                    title="Voir détails"
-                  >
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                      <circle cx="12" cy="12" r="3" />
-                    </svg>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                </span>
+              </div>
+            </div>
+
+            <div class="details-section">
+              <h4 class="section-subtitle">Informations fournisseur</h4>
+              <div class="detail-row">
+                <span class="detail-label">Fournisseur:</span>
+                <span class="detail-value">{{ getSupplierName(selectedDelivery.id_fournisseur) }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Date création:</span>
+                <span class="detail-value">{{ formatDateTime(selectedDelivery.date_creation) }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Dernière modification:</span>
+                <span class="detail-value">{{ formatDateTime(selectedDelivery.date_modification) }}</span>
+              </div>
+            </div>
+            
+            <div class="details-section full-width" v-if="selectedDelivery.notes">
+              <h4 class="section-subtitle">Notes</h4>
+              <div class="notes-content">
+                {{ selectedDelivery.notes }}
+              </div>
+            </div>
+          </div>
+          
+          <div class="modal-actions">
+            <button class="modal-btn secondary" @click="showDetailsModal = false">
+              Fermer
+            </button>
+            <button 
+              v-if="selectedDelivery.statut === 'en_attente'"
+              class="modal-btn primary" 
+              @click="() => { showDetailsModal = false; markAsCompleted(selectedDelivery.id_livraison); }"
+            >
+              Marquer comme complétée
+            </button>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Modal Nouvelle livraison (placeholder) -->
+    <!-- Modal Nouvelle livraison -->
     <div v-if="showNewDeliveryModal" class="modal-overlay" @click="showNewDeliveryModal = false">
-      <div class="modal-content" @click.stop>
+      <div class="modal-content modal-form" @click.stop>
         <div class="modal-header">
-          <h3>Enregistrer une livraison</h3>
+          <h3>Enregistrer une nouvelle livraison</h3>
           <button
             role="button"
             aria-label="Fermer"
-            @click="showNewDeliveryModal = false"
+            @click="closeNewDeliveryModal"
             class="modal-close"
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -309,7 +369,125 @@
           </button>
         </div>
         <div class="modal-body">
-          <p>Fonctionnalité en cours de développement</p>
+          <form @submit.prevent="submitNewDelivery" class="delivery-form">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="fournisseur" class="form-label required">Fournisseur</label>
+                <select 
+                  id="fournisseur" 
+                  v-model="newDeliveryForm.id_fournisseur" 
+                  class="form-select"
+                  required
+                >
+                  <option value="">Sélectionnez un fournisseur</option>
+                  <option 
+                    v-for="supplier in fournisseurs" 
+                    :key="supplier.id_fournisseur" 
+                    :value="supplier.id_fournisseur"
+                  >
+                    {{ supplier.nom }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="date_livraison" class="form-label required">Date de livraison</label>
+                <input 
+                  id="date_livraison" 
+                  type="datetime-local" 
+                  v-model="newDeliveryForm.date_livraison" 
+                  class="form-input"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="bon_livraison" class="form-label">N° Bon de livraison</label>
+                <input 
+                  id="bon_livraison" 
+                  type="text" 
+                  v-model="newDeliveryForm.numero_bon_livraison" 
+                  placeholder="Ex: BL-2025-001 (auto-généré si vide)"
+                  class="form-input"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="statut" class="form-label required">Statut</label>
+                <select 
+                  id="statut" 
+                  v-model="newDeliveryForm.statut" 
+                  class="form-select"
+                  required
+                >
+                  <option value="">Sélectionnez un statut</option>
+                  <option value="en_attente">En attente</option>
+                  <option value="completee">Complétée</option>
+                  <option value="partielle">Partielle</option>
+                  <option value="annulee">Annulée</option>
+                </select>
+              </div>
+
+              <div class="form-group full-width">
+                <label for="notes" class="form-label">Notes</label>
+                <textarea 
+                  id="notes" 
+                  v-model="newDeliveryForm.notes" 
+                  rows="3"
+                  placeholder="Informations complémentaires..."
+                  class="form-textarea"
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" @click="closeNewDeliveryModal" class="btn-cancel">
+                Annuler
+              </button>
+              <button type="submit" class="btn-submit" :disabled="submitting">
+                <span v-if="submitting">Enregistrement...</span>
+                <span v-else>Enregistrer la livraison</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Confirmation -->
+    <div v-if="showConfirmModal" class="modal-overlay" @click="showConfirmModal = false">
+      <div class="modal-content modal-confirm" @click.stop>
+        <div class="modal-header">
+          <h3>Confirmer la réception</h3>
+          <button @click="showConfirmModal = false" class="modal-close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body" v-if="deliveryToComplete">
+          <div class="confirm-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="confirm-content">
+            <h4>Marquer cette livraison comme complétée ?</h4>
+            <p>Livraison <strong>{{ deliveryToComplete.numero_livraison }}</strong></p>
+            <p class="confirm-supplier">Fournisseur : {{ getSupplierName(deliveryToComplete.id_fournisseur) }}</p>
+            <p class="confirm-warning">Cette action confirmera la réception complète de la livraison.</p>
+          </div>
+          
+          <div class="modal-actions">
+            <button class="modal-btn secondary" @click="showConfirmModal = false" :disabled="updating">
+              Annuler
+            </button>
+            <button class="modal-btn success" @click="confirmMarkAsCompleted" :disabled="updating">
+              <span v-if="updating">Mise à jour...</span>
+              <span v-else>Confirmer la réception</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -317,8 +495,7 @@
 </template>
 
 <script>
-  import { ref, computed } from "vue";
-  import { triggerToast } from "@/utils/toastHelper";
+  import { ref, computed, onMounted, watch } from "vue";
   import { VITE_API_URL } from "@/constants/constants.js";
 
   export default {
@@ -333,114 +510,188 @@
       ],
     },
     setup() {
+      // États réactifs
       const searchQuery = ref("");
       const showNewDeliveryModal = ref(false);
+      const showDetailsModal = ref(false);
+      const showConfirmModal = ref(false);
+      const selectedDelivery = ref(null);
+      const deliveryToComplete = ref(null);
+      const livraisons = ref([]);
+      const fournisseurs = ref([]);
+      const loading = ref(true);
+      const error = ref(null);
+      const currentPage = ref(1);
+      const itemsPerPage = 10;
+      const submitting = ref(false);
+      const updating = ref(false);
+
+      // Formulaire nouvelle livraison
+      const newDeliveryForm = ref({
+        id_fournisseur: '',
+        date_livraison: '',
+        numero_bon_livraison: '',
+        statut: 'en_attente',
+        notes: ''
+      });
 
       const filters = ref({
         supplier: "",
         status: "",
       });
 
-      const deliveries = ref([
-        {
-          id: "5003",
-          supplier: "Durand SA",
-          expectedDate: "6 mai 2023",
-          orderRef: "CMD-1205",
-          articlesCount: 8,
-          status: "En attente",
-        },
-        {
-          id: "5002",
-          supplier: "Bernard FR",
-          expectedDate: "6 mai 2023",
-          orderRef: "CMD-1273",
-          articlesCount: 5,
-          status: "En attente",
-        },
-        {
-          id: "5001",
-          supplier: "Bernard FR",
-          expectedDate: "3 mai 2023",
-          orderRef: "CMD-1254",
-          articlesCount: 3,
-          status: "Problème",
-        },
-      ]);
+      // Fonction pour récupérer les données
+      const fetchData = async () => {
+        loading.value = true;
+        error.value = null;
+        
+        try {
+          // Récupérer les livraisons
+          const livraisonsResponse = await fetch(VITE_API_URL + "get_table?table=livraison", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            credentials: "include",
+          });
 
-      const deliveryHistory = ref([
-        {
-          id: "4998",
-          supplier: "Martin SA",
-          receptionDate: "2 mai 2023",
-          orderRef: "CMD-1201",
-          receivedBy: "Jean Dupont",
-          status: "Réceptionnée",
-        },
-        {
-          id: "4997",
-          supplier: "Durand SA",
-          receptionDate: "1 mai 2023",
-          orderRef: "CMD-1198",
-          receivedBy: "Marie Martin",
-          status: "Réceptionnée",
-        },
-        {
-          id: "4996",
-          supplier: "Bernard FR",
-          receptionDate: "29 avr 2023",
-          orderRef: "CMD-1195",
-          receivedBy: "Pierre Leroy",
-          status: "Réceptionnée",
-        },
-      ]);
+          // Récupérer les fournisseurs
+          const fournisseursResponse = await fetch(VITE_API_URL + "get_table?table=fournisseur", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            credentials: "include",
+          });
+
+          if (!livraisonsResponse.ok || !fournisseursResponse.ok) {
+            throw new Error('Erreur lors du chargement des données');
+          }
+
+          const livraisonsData = await livraisonsResponse.json();
+          const fournisseursData = await fournisseursResponse.json();
+          
+          if (livraisonsData.success && livraisonsData.data) {
+            // Trier par date de création décroissante
+            livraisons.value = livraisonsData.data.sort((a, b) => 
+              new Date(b.date_creation) - new Date(a.date_creation)
+            );
+          }
+
+          if (fournisseursData.success && fournisseursData.data) {
+            fournisseurs.value = fournisseursData.data;
+          }
+        } catch (err) {
+          console.error('Erreur lors du chargement:', err);
+          error.value = 'Impossible de charger les données. Veuillez réessayer.';
+        } finally {
+          loading.value = false;
+        }
+      };
+
+      // Computed properties
+      const uniqueSuppliers = computed(() => {
+        return fournisseurs.value.sort((a, b) => a.nom.localeCompare(b.nom));
+      });
+
+      const totalDeliveries = computed(() => livraisons.value.length);
+
+      const completedCount = computed(() => {
+        return livraisons.value.filter(l => l.statut === 'completee').length;
+      });
+
+      const pendingCount = computed(() => {
+        return livraisons.value.filter(l => l.statut === 'en_attente').length;
+      });
 
       const filteredDeliveries = computed(() => {
-        let result = deliveries.value;
+        let result = livraisons.value;
 
+        // Filtre par fournisseur
         if (filters.value.supplier) {
-          result = result.filter(delivery => delivery.supplier === filters.value.supplier);
+          result = result.filter(delivery => 
+            delivery.id_fournisseur == filters.value.supplier
+          );
         }
 
+        // Filtre par statut
         if (filters.value.status) {
-          result = result.filter(delivery => delivery.status === filters.value.status);
+          result = result.filter(delivery => delivery.statut === filters.value.status);
         }
 
         // Filtre par recherche
         if (searchQuery.value) {
-          if (searchQuery.value.startsWith("#")) {
-            // Si la recherche commence par #, on filtre par id
-            const id = searchQuery.value.slice(1).toLowerCase();
-            result = result.filter(supplier => supplier.id.toString().includes(id));
-          } else {
-            const query = searchQuery.value.toLowerCase();
-            result = result.filter(supplier => {
-              const supplierName = supplier.supplier.toLowerCase();
-              const expectedDate = supplier.expectedDate.toLowerCase();
-              const orderRef = supplier.orderRef.toLowerCase();
-              const status = supplier.status.toLowerCase();
-              return (
-                supplierName.includes(query) ||
-                expectedDate.includes(query) ||
-                orderRef.includes(query) ||
-                status.includes(query)
-              );
-            });
-          }
+          const query = searchQuery.value.toLowerCase();
+          result = result.filter(delivery => {
+            const numero = delivery.numero_livraison ? delivery.numero_livraison.toLowerCase() : '';
+            const bon = delivery.numero_bon_livraison ? delivery.numero_bon_livraison.toLowerCase() : '';
+            const fournisseurName = getSupplierName(delivery.id_fournisseur).toLowerCase();
+            const notes = delivery.notes ? delivery.notes.toLowerCase() : '';
+            
+            return (
+              numero.includes(query) ||
+              bon.includes(query) ||
+              fournisseurName.includes(query) ||
+              notes.includes(query)
+            );
+          });
         }
 
         return result;
       });
 
-      const pendingCount = computed(() => {
-        return deliveries.value.filter(d => d.status === "En attente").length;
+      // Pagination computed properties
+      const totalPages = computed(() => {
+        return Math.ceil(filteredDeliveries.value.length / itemsPerPage);
       });
 
-      const problemCount = computed(() => {
-        return deliveries.value.filter(d => d.status === "Problème").length;
+      const startIndex = computed(() => {
+        return (currentPage.value - 1) * itemsPerPage;
       });
 
-      const getSupplierInitials = name => {
+      const endIndex = computed(() => {
+        return Math.min(startIndex.value + itemsPerPage, filteredDeliveries.value.length);
+      });
+
+      const paginatedDeliveries = computed(() => {
+        return filteredDeliveries.value.slice(startIndex.value, endIndex.value);
+      });
+
+      const visiblePages = computed(() => {
+        const pages = [];
+        const total = totalPages.value;
+        const current = currentPage.value;
+
+        if (total <= 7) {
+          for (let i = 1; i <= total; i++) {
+            pages.push(i);
+          }
+        } else {
+          pages.push(1);
+          if (current > 3) pages.push('...');
+          
+          const start = Math.max(2, current - 1);
+          const end = Math.min(total - 1, current + 1);
+          
+          for (let i = start; i <= end; i++) {
+            pages.push(i);
+          }
+          
+          if (current < total - 2) pages.push('...');
+          pages.push(total);
+        }
+
+        return pages;
+      });
+
+      // Fonctions utilitaires
+      const getSupplierName = (supplierId) => {
+        const supplier = fournisseurs.value.find(f => f.id_fournisseur === supplierId);
+        return supplier ? supplier.nom : `Fournisseur #${supplierId}`;
+      };
+
+      const getSupplierInitials = (supplierId) => {
+        const name = getSupplierName(supplierId);
         return name
           .split(" ")
           .map(n => n[0])
@@ -449,61 +700,72 @@
           .substring(0, 2);
       };
 
-      const formatDate = dateString => {
+      const formatDate = (dateString) => {
+        if (!dateString) return '-';
         const date = new Date(dateString);
         const months = [
-          "janv.",
-          "févr.",
-          "mars",
-          "avr.",
-          "mai",
-          "juin",
-          "juil.",
-          "août",
-          "sept.",
-          "oct.",
-          "nov.",
-          "déc.",
+          "janv.", "févr.", "mars", "avr.", "mai", "juin",
+          "juil.", "août", "sept.", "oct.", "nov.", "déc."
         ];
         return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
       };
 
-      const getStatusClass = status => {
+      const formatDateTime = (dateString) => {
+        if (!dateString) return '-';
+        const date = new Date(dateString);
+        return date.toLocaleString('fr-FR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+      };
+
+      const getStatusClass = (status) => {
         const statusClasses = {
-          "En attente": "status-pending",
-          Problème: "status-problem",
-          Réceptionnée: "status-received",
+          "en_attente": "status-pending",
+          "completee": "status-received",
+          "partielle": "status-partial",
+          "annulee": "status-cancelled"
         };
         return statusClasses[status] || "status-default";
       };
 
-      const getStatusLabel = status => {
+      const getStatusLabel = (status) => {
         const statusLabels = {
-          probleme: "Problème",
-          attente: "En attente",
-          receptionnee: "Réceptionnée",
+          "en_attente": "En attente",
+          "completee": "Complétée",
+          "partielle": "Partielle",
+          "annulee": "Annulée"
         };
         return statusLabels[status] || status;
       };
 
+      const goToPage = (page) => {
+        if (page !== '...' && page >= 1 && page <= totalPages.value) {
+          currentPage.value = page;
+        }
+      };
+
       const exportDelivery = () => {
-        // Fonction d'export
         const data = [
-          ["ID", "Fournisseur", "Date prévue", "Commande liée", "Nb. articles", "Statut"],
+          ["Numéro", "Fournisseur", "Date livraison", "Bon de livraison", "Statut", "Notes"],
           ...filteredDeliveries.value.map(d => [
-            d.id,
-            d.supplier,
-            formatDate(d.expectedDate),
-            d.orderRef,
-            d.receivedBy,
-            getStatusLabel(d.status),
+            d.numero_livraison,
+            getSupplierName(d.id_fournisseur),
+            formatDate(d.date_livraison),
+            d.numero_bon_livraison || '-',
+            getStatusLabel(d.statut),
+            d.notes || '-'
           ]),
         ];
 
         if (!data[1]) {
-          triggerToast("Aucune livraison à exporter !", "error");
+          console.log("Aucune livraison à exporter");
           return;
         }
+        
         const csvString = data.map(row => row.join(",")).join("\n");
         const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
         const url = URL.createObjectURL(blob);
@@ -514,38 +776,195 @@
         URL.revokeObjectURL(url);
       };
 
-      const receiveDelivery = deliveryId => {
-        console.log("Réceptionner livraison:", deliveryId);
+      const viewDetails = (delivery) => {
+        selectedDelivery.value = delivery;
+        showDetailsModal.value = true;
       };
 
-      const reportProblem = deliveryId => {
-        console.log("Signaler problème:", deliveryId);
+      const markAsCompleted = (deliveryId) => {
+        const delivery = livraisons.value.find(l => l.id_livraison === deliveryId);
+        if (delivery) {
+          deliveryToComplete.value = delivery;
+          showConfirmModal.value = true;
+        }
       };
 
-      const viewDetails = deliveryId => {
-        console.log("Voir détails:", deliveryId);
+      const confirmMarkAsCompleted = async () => {
+        if (!deliveryToComplete.value) return;
+        
+        updating.value = true;
+        
+        try {
+          const formData = new URLSearchParams();
+          formData.append('id_livraison', deliveryToComplete.value.id_livraison);
+          formData.append('statut', 'completee');
+
+          const response = await fetch(VITE_API_URL + "update_livraison", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            credentials: "include",
+            body: formData.toString(),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || `Erreur HTTP: ${response.status}`);
+          }
+
+          const data = await response.json();
+
+          if (data.success) {
+            showConfirmModal.value = false;
+            deliveryToComplete.value = null;
+            // Recharger les données
+            await fetchData();
+          } else {
+            throw new Error(data.message || "Erreur lors de la mise à jour");
+          }
+        } catch (err) {
+          console.error("Erreur lors de la mise à jour:", err);
+          alert(`Erreur: ${err.message}`);
+        } finally {
+          updating.value = false;
+        }
       };
 
-      const viewDeliveryDetails = deliveryId => {
-        console.log("Voir détails livraison:", deliveryId);
+      // Fonction pour fermer la modal et réinitialiser le formulaire
+      const closeNewDeliveryModal = () => {
+        showNewDeliveryModal.value = false;
+        // Réinitialiser le formulaire
+        newDeliveryForm.value = {
+          id_fournisseur: '',
+          date_livraison: '',
+          numero_bon_livraison: '',
+          statut: 'en_attente',
+          notes: ''
+        };
       };
+
+      // Fonction pour créer une nouvelle livraison
+      const submitNewDelivery = async () => {
+        submitting.value = true;
+        
+        try {
+          // Préparer les données du formulaire
+          const formData = new URLSearchParams();
+          formData.append('id_fournisseur', newDeliveryForm.value.id_fournisseur);
+          
+          // Convertir la date au format MySQL si elle existe
+          if (newDeliveryForm.value.date_livraison) {
+            const dateFormatted = newDeliveryForm.value.date_livraison.replace('T', ' ') + ':00';
+            formData.append('date_livraison', dateFormatted);
+          } else {
+            // Date par défaut si non renseignée
+            formData.append('date_livraison', new Date().toISOString().slice(0, 19).replace('T', ' '));
+          }
+          
+          // Champs obligatoires avec valeurs par défaut
+          formData.append('numero_bon_livraison', newDeliveryForm.value.numero_bon_livraison || 'BL-' + Date.now());
+          formData.append('statut', newDeliveryForm.value.statut);
+          formData.append('notes', newDeliveryForm.value.notes || 'Aucune note');
+          
+          // Ne pas envoyer id_commande_fournisseur ou l'envoyer vide
+          // formData.append('id_commande_fournisseur', '');
+          
+          // ID utilisateur connecté (à remplacer par l'ID réel de l'utilisateur)
+          formData.append('id_utilisateur_reception', '1');
+          
+          // Ajouter numero_livraison (sera remplacé par l'API mais doit être présent)
+          formData.append('numero_livraison', 'TEMP-' + Date.now());
+          
+          // Dates au format MySQL
+          const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
+          formData.append('date_creation', now);
+          formData.append('date_modification', now);
+
+          // Appel API
+          const response = await fetch(VITE_API_URL + "new_livraison", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            credentials: "include",
+            body: formData.toString(),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || `Erreur HTTP: ${response.status}`);
+          }
+
+          const data = await response.json();
+
+          if (data.success) {
+            closeNewDeliveryModal();
+            // Recharger les données
+            await fetchData();
+          } else {
+            throw new Error(data.message || "Erreur lors de la création");
+          }
+        } catch (err) {
+          console.error("Erreur lors de la création:", err);
+          // Afficher l'erreur dans la console avec plus de détails
+          console.error("Détails de l'erreur:", err.message);
+          alert(`Erreur: ${err.message}`);
+        } finally {
+          submitting.value = false;
+        }
+      };
+
+      // Réinitialiser la page quand les filtres changent
+      watch([() => filters.value, searchQuery], () => {
+        currentPage.value = 1;
+      }, { deep: true });
+
+      // Charger les données au montage
+      onMounted(() => {
+        fetchData();
+      });
 
       return {
         searchQuery,
         showNewDeliveryModal,
+        showDetailsModal,
+        showConfirmModal,
+        selectedDelivery,
+        deliveryToComplete,
         filters,
-        deliveries,
-        deliveryHistory,
-        filteredDeliveries,
+        livraisons,
+        fournisseurs,
+        loading,
+        error,
+        currentPage,
+        submitting,
+        updating,
+        newDeliveryForm,
+        totalDeliveries,
+        completedCount,
         pendingCount,
-        problemCount,
+        uniqueSuppliers,
+        filteredDeliveries,
+        paginatedDeliveries,
+        totalPages,
+        startIndex,
+        endIndex,
+        visiblePages,
+        fetchData,
+        getSupplierName,
         getSupplierInitials,
+        formatDate,
+        formatDateTime,
         getStatusClass,
-        receiveDelivery,
-        reportProblem,
+        getStatusLabel,
+        goToPage,
         exportDelivery,
         viewDetails,
-        viewDeliveryDetails,
+        markAsCompleted,
+        confirmMarkAsCompleted,
+        closeNewDeliveryModal,
+        submitNewDelivery
       };
     },
   };
@@ -573,7 +992,7 @@
   }
 
   .new-delivery-button {
-    background: #5500ff;
+    background: #00B8D4;
     color: white;
     border: none;
     border-radius: 8px;
@@ -583,15 +1002,15 @@
     gap: 0.5rem;
     cursor: pointer;
     transition: all 0.2s ease;
-    box-shadow: 0 2px 8px rgba(85, 0, 255, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 184, 212, 0.3);
     font-size: 14px;
     font-weight: 500;
   }
 
   .new-delivery-button:hover {
-    background: #5500cc;
+    background: #0891A6;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(85, 0, 255, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 184, 212, 0.4);
   }
 
   .new-delivery-button svg {
@@ -627,6 +1046,10 @@
 
   .stat-content .stat-value {
     font-size: 28px;
+    font-weight: 700;
+    color: #0F172A;
+    margin: 0;
+    line-height: 1;
   }
 
   .stat-icon {
@@ -668,6 +1091,58 @@
     color: #64748b;
     line-height: 1.3;
     font-weight: 500;
+    margin: 0 0 4px 0;
+  }
+
+  /* LOADING & ERROR */
+  .loading-container,
+  .error-container {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #64748B;
+  }
+
+  .loader {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #F1F5F9;
+    border-top-color: #00B8D4;
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .error-icon {
+    width: 48px;
+    height: 48px;
+    color: #DC2626;
+    margin: 0 auto 1rem;
+  }
+
+  .error-message {
+    color: #DC2626;
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+
+  .retry-button {
+    background: #00B8D4;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 0.5rem 1.5rem;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .retry-button:hover {
+    background: #0891A6;
   }
 
   /* FILTRES */
@@ -695,7 +1170,7 @@
     border-radius: 8px;
     padding: 0.75rem 1rem 0.75rem 2.5rem;
     font-size: 14px;
-    color: black;
+    color: #334155;
     transition: all 0.2s ease;
   }
 
@@ -721,21 +1196,20 @@
     top: -25px;
     left: 3px;
     font-size: 14px;
+    color: #64748B;
   }
 
   .filter-select {
     background: white;
     border: 1px solid #e2e8f0;
     border-radius: 8px;
-    padding-top: 0.75rem;
-    padding-right: 2.5rem;
-    padding-bottom: 0.75rem;
-    padding-left: 1rem;
+    padding: 0.75rem 2.5rem 0.75rem 1rem;
     font-size: 14px;
     color: #64748b;
     min-width: 140px;
     cursor: pointer;
     transition: all 0.2s ease;
+    appearance: none;
   }
 
   .filter-select:hover,
@@ -750,12 +1224,6 @@
     box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
   }
 
-  .filter-select {
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-  }
-
   .filter-icon {
     position: absolute;
     right: 1rem;
@@ -763,10 +1231,11 @@
     transform: translate(25%, -50%);
     pointer-events: none;
     height: 20px;
+    color: #94A3B8;
   }
 
   .export-button {
-    background: #0062ff;
+    background: #3B82F6;
     color: white;
     border: none;
     border-radius: 8px;
@@ -792,8 +1261,7 @@
   }
 
   /* SECTIONS */
-  .deliveries-section,
-  .history-section {
+  .deliveries-section {
     margin-bottom: 2rem;
   }
 
@@ -821,35 +1289,6 @@
   }
 
   /* TABLEAUX */
-  /* TABLEAU */
-  .table-section {
-    margin-bottom: 2rem;
-  }
-
-  .table-card {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    border: 1px solid #f1f5f9;
-    overflow: hidden;
-    text-align: center;
-  }
-
-  .table-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.5rem;
-    border-bottom: 1px solid #e2e8f0;
-  }
-
-  .table-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #0f172a;
-    margin: 0;
-  }
-
   .table-stats {
     display: flex;
     gap: 2rem;
@@ -862,29 +1301,19 @@
     font-size: 14px;
   }
 
-  .stat-value {
-    font-weight: 600;
-    color: #0f172a;
-  }
-
-  .stat-value.low {
-    color: #dc2626;
-  }
-
   .table-container {
     overflow-x: auto;
   }
 
-  .deliveries-table,
-  .history-table {
+  .deliveries-table {
     width: 100%;
     min-width: max-content;
-    text-align: center;
+    border-collapse: collapse;
   }
 
-  .deliveries-table th,
-  .history-table th {
+  .deliveries-table th {
     background: #f8fafc;
+    text-align: left;
     padding: 1rem;
     font-size: 12px;
     font-weight: 600;
@@ -894,26 +1323,24 @@
     border-bottom: 1px solid #e2e8f0;
   }
 
-  .deliveries-table td,
-  .history-table td {
+  .deliveries-table td {
     padding: 1rem;
     border-bottom: 1px solid #f1f5f9;
     font-size: 14px;
-    color: black;
+    color: #334155;
     vertical-align: middle;
   }
 
-  .deliveries-table tbody tr:hover,
-  .history-table tbody tr:hover {
+  .deliveries-table tbody tr:hover {
     background: #f8fafc;
   }
 
-  .deliveries-table tbody tr:last-child td,
-  .history-table tbody tr:last-child td {
+  .deliveries-table tbody tr:last-child td {
     border-bottom: none;
   }
 
   .delivery-id {
+    font-weight: 600;
     color: #0f172a;
   }
 
@@ -925,14 +1352,13 @@
 
   .supplier-avatar-container {
     display: flex;
-    width: 40%;
     justify-content: flex-end;
   }
 
   .supplier-avatar {
     width: 32px;
     height: 32px;
-    background: #0062ff;
+    background: #00B8D4;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -943,17 +1369,16 @@
     flex-shrink: 0;
   }
 
-  .supplier-avatar.large {
-    width: 64px;
-    height: 64px;
-    font-size: 20px;
-  }
-
   .supplier-details {
-    width: 60%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .supplier-name {
+    font-weight: 500;
+    color: #334155;
+    margin: 0;
   }
 
   .delivery-date {
@@ -963,25 +1388,23 @@
 
   .order-reference {
     font-weight: 500;
-    color: #0062ff;
-    cursor: pointer;
+    color: #334155;
   }
 
-  .order-reference:hover {
-    text-decoration: underline;
-  }
-
-  .articles-count {
-    font-weight: 600;
-    color: #0f172a;
-    text-align: center;
+  .notes {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #64748B;
+    font-size: 13px;
   }
 
   .empty-message {
     text-align: center;
     color: #64748b;
     font-style: italic;
-    padding: 1rem;
+    padding: 2rem;
   }
 
   /* BADGES DE STATUT */
@@ -1000,31 +1423,40 @@
     color: #92400e;
   }
 
-  .status-problem {
-    background: #fef2f2;
-    color: #ab0000;
-  }
-
   .status-received {
     background: #d1fae5;
     color: #047857;
+  }
+
+  .status-partial {
+    background: #DBEAFE;
+    color: #1E40AF;
+  }
+
+  .status-cancelled {
+    background: #fef2f2;
+    color: #DC2626;
+  }
+
+  .status-default {
+    background: #F1F5F9;
+    color: #64748B;
   }
 
   /* ACTIONS */
   .actions {
     display: flex;
     justify-content: center;
-    gap: 1.5rem;
+    gap: 0.5rem;
   }
 
   .action-btn {
     border: solid 1px;
     border-radius: 6px;
-    padding: 0.5rem 1rem;
+    padding: 6px;
     font-size: 12px;
     font-weight: 500;
     cursor: pointer;
-    padding: 6px;
     transition: all 0.2s ease;
   }
 
@@ -1032,38 +1464,12 @@
     background: none;
     border-color: #10b981;
     color: #10b981;
-    transition: all 0.2s ease;
   }
 
   .action-btn.success:hover {
     background: #10b981;
     color: white;
     transform: translateY(-2px);
-  }
-
-  .action-btn.success:active {
-    background: #059669;
-    border-color: #059669;
-    color: white;
-  }
-
-  .action-btn.danger {
-    background: none;
-    border-color: #dc2626;
-    color: #dc2626;
-    transition: all 0.2s ease;
-  }
-
-  .action-btn.danger:hover {
-    background: #dc2626;
-    color: white;
-    transform: translateY(-2px);
-  }
-
-  .action-btn.danger:active {
-    background: #b91c1c;
-    border-color: #b91c1c;
-    color: white;
   }
 
   .action-btn.secondary {
@@ -1075,13 +1481,103 @@
   .action-btn.secondary:hover {
     background: #f8fafc;
     border-color: #cbd5e1;
-    color: black;
+    color: #334155;
   }
 
   .action-btn svg {
     width: 16px;
     height: 16px;
     stroke-width: 1.5;
+  }
+
+  /* PAGINATION */
+  .pagination-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #E2E8F0;
+    background: #F8FAFC;
+  }
+
+  .pagination-info {
+    font-size: 14px;
+    color: #64748B;
+  }
+
+  .pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .pagination-btn {
+    background: white;
+    border: 1px solid #E2E8F0;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #64748B;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pagination-btn:hover:not(:disabled) {
+    background: #F8FAFC;
+    border-color: #CBD5E1;
+    color: #334155;
+  }
+
+  .pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .pagination-btn svg {
+    width: 16px;
+    height: 16px;
+    stroke-width: 2;
+  }
+
+  .page-numbers {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .page-number {
+    min-width: 32px;
+    height: 32px;
+    background: white;
+    border: 1px solid #E2E8F0;
+    border-radius: 6px;
+    color: #64748B;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .page-number:hover:not(:disabled):not(.active) {
+    background: #F8FAFC;
+    border-color: #CBD5E1;
+    color: #334155;
+  }
+
+  .page-number.active {
+    background: #00B8D4;
+    border-color: #00B8D4;
+    color: white;
+  }
+
+  .page-number:disabled {
+    cursor: default;
+    color: #CBD5E1;
   }
 
   /* MODAL */
@@ -1106,6 +1602,10 @@
     max-height: 90vh;
     overflow: hidden;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  }
+
+  .modal-details {
+    max-width: 700px;
   }
 
   .modal-header {
@@ -1135,7 +1635,7 @@
 
   .modal-close:hover {
     background: #f1f5f9;
-    color: black;
+    color: #334155;
   }
 
   .modal-close svg {
@@ -1148,6 +1648,282 @@
     padding: 1.5rem;
     text-align: center;
     color: #64748b;
+    overflow-y: auto;
+    max-height: calc(90vh - 120px);
+  }
+
+  /* MODAL DÉTAILS */
+  .details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    text-align: left;
+  }
+
+  .details-section {
+    background: #F8FAFC;
+    padding: 1.5rem;
+    border-radius: 8px;
+  }
+
+  .details-section.full-width {
+    grid-column: 1 / -1;
+  }
+
+  .section-subtitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0F172A;
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #E2E8F0;
+  }
+
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #E2E8F0;
+  }
+
+  .detail-row:last-child {
+    border-bottom: none;
+  }
+
+  .detail-label {
+    font-size: 13px;
+    color: #64748B;
+    font-weight: 500;
+  }
+
+  .detail-value {
+    font-size: 14px;
+    color: #0F172A;
+    font-weight: 600;
+    text-align: right;
+  }
+
+  .notes-content {
+    padding: 1rem;
+    background: white;
+    border-radius: 6px;
+    color: #334155;
+    line-height: 1.5;
+    font-size: 14px;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    padding-top: 1.5rem;
+    border-top: 1px solid #E2E8F0;
+  }
+
+  .modal-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+  }
+
+  .modal-btn.primary {
+    background: #00B8D4;
+    color: white;
+  }
+
+  .modal-btn.primary:hover {
+    background: #0891A6;
+  }
+
+  .modal-btn.secondary {
+    background: #F1F5F9;
+    color: #64748B;
+  }
+
+  .modal-btn.secondary:hover {
+    background: #E2E8F0;
+    color: #334155;
+  }
+
+  .modal-btn.success {
+    background: #059669;
+    color: white;
+  }
+
+  .modal-btn.success:hover:not(:disabled) {
+    background: #047857;
+  }
+
+  .modal-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  /* MODAL CONFIRMATION */
+  .modal-confirm {
+    max-width: 450px;
+  }
+
+  .confirm-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 1.5rem;
+    color: #059669;
+  }
+
+  .confirm-icon svg {
+    width: 100%;
+    height: 100%;
+    stroke-width: 1.5;
+  }
+
+  .confirm-content {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .confirm-content h4 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #0F172A;
+    margin: 0 0 1rem 0;
+  }
+
+  .confirm-content p {
+    margin: 0.5rem 0;
+    color: #64748B;
+    font-size: 14px;
+  }
+
+  .confirm-content strong {
+    color: #0F172A;
+    font-weight: 600;
+  }
+
+  .confirm-supplier {
+    color: #334155;
+  }
+
+  .confirm-warning {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background: #FEF3C7;
+    color: #92400E;
+    border-radius: 6px;
+    font-size: 13px;
+  }
+
+  /* FORMULAIRE */
+  .modal-form {
+    max-width: 600px;
+  }
+
+  .delivery-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .form-group.full-width {
+    grid-column: 1 / -1;
+  }
+
+  .form-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #334155;
+  }
+
+  .form-label.required::after {
+    content: " *";
+    color: #DC2626;
+  }
+
+  .form-input,
+  .form-select,
+  .form-textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #334155;
+    background-color: white;
+    transition: all 0.2s ease;
+  }
+
+  .form-input:focus,
+  .form-select:focus,
+  .form-textarea:focus {
+    outline: none;
+    border-color: #00B8D4;
+    box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
+  }
+
+  .form-textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    padding-top: 1rem;
+    border-top: 1px solid #E2E8F0;
+  }
+
+  .btn-cancel,
+  .btn-submit {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+  }
+
+  .btn-cancel {
+    background: #F1F5F9;
+    color: #64748B;
+  }
+
+  .btn-cancel:hover {
+    background: #E2E8F0;
+    color: #334155;
+  }
+
+  .btn-submit {
+    background: #00B8D4;
+    color: white;
+  }
+
+  .btn-submit:hover:not(:disabled) {
+    background: #0891A6;
+  }
+
+  .btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 
   /* RESPONSIVE */
@@ -1176,7 +1952,10 @@
     .filter-select {
       width: 100%;
       max-width: none;
-      justify-content: center;
+    }
+
+    .details-grid {
+      grid-template-columns: 1fr;
     }
   }
 
@@ -1191,29 +1970,47 @@
       align-items: flex-start;
     }
 
-    .section-stats {
-      width: 100%;
-      justify-content: space-between;
-    }
-
-    .deliveries-table,
-    .history-table {
+    .deliveries-table {
       font-size: 12px;
     }
 
-    .search-input,
-    .filter-select,
-    .search-button {
-      width: 100%;
+    .deliveries-table th,
+    .deliveries-table td {
+      padding: 0.75rem 0.5rem;
     }
 
     .actions {
-      gap: 0.5rem;
+      gap: 0.25rem;
     }
 
     .action-btn {
-      padding: 0.375rem 0.75rem;
-      font-size: 11px;
+      padding: 4px;
+    }
+
+    .pagination-container {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .modal-actions {
+      flex-direction: column;
+    }
+
+    .modal-btn {
+      width: 100%;
+    }
+
+    .form-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .form-actions {
+      flex-direction: column;
+    }
+
+    .btn-cancel,
+    .btn-submit {
+      width: 100%;
     }
   }
 
@@ -1224,6 +2021,11 @@
 
     .search-container > input:focus::placeholder {
       color: transparent;
+    }
+
+    .deliveries-table th:nth-child(6),
+    .deliveries-table td:nth-child(6) {
+      display: none;
     }
   }
 </style>
