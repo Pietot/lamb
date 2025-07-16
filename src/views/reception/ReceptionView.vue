@@ -225,6 +225,17 @@
                       />
                     </svg>
                   </button>
+                  <!-- Bouton invisible pour l'alignement -->
+                  <button
+                    v-else
+                    role="button"
+                    aria-label="Marquer comme complétée"
+                    class="action-btn"
+                    style="border: none; background: transparent; cursor: default;"
+                  >
+                    <svg viewBox="0 0 448 512">
+                    </svg>
+                  </button>
                 </td>
               </tr>
             </tbody>
