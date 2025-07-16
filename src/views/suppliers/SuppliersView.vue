@@ -834,7 +834,7 @@
   import { ref, computed, onMounted, reactive } from "vue";
   import { useRouter } from "vue-router";
   import { triggerToast } from "@/utils/toastHelper";
-  import { VITE_API_URL } from "@/constants/constants.js";
+  import { VITE_API_URL } from "@/constants/constants";
 
   export default {
     name: "SuppliersView",

@@ -353,7 +353,7 @@
 <script>
   import { ref, computed, onMounted } from "vue";
   import { useRouter } from "vue-router";
-  import { VITE_API_URL } from "@/constants/constants.js";
+  import { VITE_API_URL } from "@/constants/constants";
 
   export default {
     name: "AgendaView",

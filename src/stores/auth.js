@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import router from "@/router";
-import { VITE_API_URL } from "@/constants/constants.js";
+import { VITE_API_URL } from "@/constants/constants";
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({

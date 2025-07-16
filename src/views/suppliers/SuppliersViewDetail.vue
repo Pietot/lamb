@@ -484,7 +484,7 @@
 <script>
   import { ref, computed, onMounted, reactive } from "vue";
   import { useRouter, useRoute } from "vue-router";
-  import { VITE_API_URL } from "@/constants/constants.js";
+  import { VITE_API_URL } from "@/constants/constants";
 
   export default {
     name: "SupplierDetailView",

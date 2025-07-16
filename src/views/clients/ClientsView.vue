@@ -867,7 +867,7 @@
 <script>
   import { ref, computed, onMounted, watch } from "vue";
   import { triggerToast } from "@/utils/toastHelper";
-  import { VITE_API_URL } from "@/constants/constants.js";
+  import { VITE_API_URL } from "@/constants/constants";
 
   export default {
     name: "ClientsView",

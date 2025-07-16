@@ -563,7 +563,7 @@
 
 <script>
   import { ref, computed, onMounted } from "vue";
-  import { VITE_API_URL } from "@/constants/constants.js";
+  import { VITE_API_URL } from "@/constants/constants";
 
   export default {
     name: "AdminView",
