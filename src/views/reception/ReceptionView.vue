@@ -163,7 +163,7 @@
         </div>
 
         <div class="table-container">
-          <table class="deliveries-table">
+          <table class="data-table">
             <thead>
               <tr>
                 <th>N° livraison</th>
@@ -1363,15 +1363,14 @@
     overflow-x: auto;
   }
 
-  .deliveries-table {
+  .data-table {
     width: 100%;
     min-width: max-content;
-    border-collapse: collapse;
+    text-align: center;
   }
 
-  .deliveries-table th {
+  .data-table th {
     background: #f8fafc;
-    text-align: left;
     padding: 1rem;
     font-size: 12px;
     font-weight: 600;
@@ -1381,7 +1380,7 @@
     border-bottom: 1px solid #e2e8f0;
   }
 
-  .deliveries-table td {
+  .data-table td {
     padding: 1rem;
     border-bottom: 1px solid #f1f5f9;
     font-size: 14px;
@@ -1389,11 +1388,11 @@
     vertical-align: middle;
   }
 
-  .deliveries-table tbody tr:hover {
+  .data-table tbody tr:hover {
     background: #f8fafc;
   }
 
-  .deliveries-table tbody tr:last-child td {
+  .data-table tbody tr:last-child td {
     border-bottom: none;
   }
 
@@ -1402,7 +1401,7 @@
     color: #0f172a;
   }
 
-  .user-profile {
+  .supplier-profile {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1411,7 +1410,7 @@
 
   .supplier-avatar-container {
     display: flex;
-    width: 45%;
+    width: 35%;
     justify-content: flex-end;
   }
 
@@ -1436,7 +1435,7 @@
   }
 
   .supplier-details {
-    width: 55%;
+    width: 65%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -2037,12 +2036,12 @@
       align-items: flex-start;
     }
 
-    .deliveries-table {
+    .data-table {
       font-size: 12px;
     }
 
-    .deliveries-table th,
-    .deliveries-table td {
+    .data-table th,
+    .data-table td {
       padding: 0.75rem 0.5rem;
     }
 
@@ -2088,11 +2087,6 @@
 
     .search-container > input:focus::placeholder {
       color: transparent;
-    }
-
-    .deliveries-table th:nth-child(6),
-    .deliveries-table td:nth-child(6) {
-      display: none;
     }
   }
 </style>
