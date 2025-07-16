@@ -129,7 +129,6 @@
                 <td class="products-count">
                   <div class="products-preview">
                     <span class="count">{{ getBundleProductsCount(bundle.id_lot) }}</span>
-                    <span class="label">articles</span>
                   </div>
                 </td>
                 <td class="stock">
@@ -1363,14 +1362,8 @@
   }
 
   .products-preview .count {
-    font-size: 18px;
     font-weight: 600;
     color: #0f172a;
-  }
-
-  .products-preview .label {
-    font-size: 12px;
-    color: #64748b;
   }
 
   /* STOCK */
