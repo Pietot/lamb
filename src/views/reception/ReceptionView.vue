@@ -727,11 +727,10 @@
         return supplier ? supplier.nom : `Fournisseur #${supplierId}`;
       };
 
-      const getSupplierInitials = supplierId => {
-        const name = getSupplierName(supplierId);
-        return name
-          .split(" ")
-          .map(n => n[0])
+      const getSupplierInitials = supplier => {
+        const words = supplier.nom.split(/[\s\-&]+/);
+        return words
+          .map(w => w[0])
           .join("")
           .toUpperCase()
           .substring(0, 2);
