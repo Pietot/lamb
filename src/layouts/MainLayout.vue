@@ -109,6 +109,7 @@
   import { computed, ref } from "vue";
   import { useRouter, useRoute } from "vue-router";
   import { useAuthStore } from "@/stores/auth";
+  import { ADMIN, GESTIONAIRE, COMMERCIAL } from "@/constants/constants.js";
 
   // Icônes SVG comme composants
   const DashboardIcon = {
@@ -236,70 +237,70 @@
           label: "Tableau de bord",
           to: "/",
           icon: "DashboardIcon",
-          allowedRoles: [1, 2, 3], // 1=admin, 2=gestionnaire, 3=preparateur
+          allowedRoles: [ADMIN, GESTIONAIRE, COMMERCIAL],
         },
         {
           name: "Stocks",
           label: "Gestion des stocks",
           to: "/stocks",
           icon: "StocksIcon",
-          allowedRoles: [1, 2], // admin et gestionnaire
+          allowedRoles: [ADMIN, GESTIONAIRE],
         },
         {
           name: "Lot",
           label: "Gestion des lots",
           to: "/lot",
           icon: "StocksIcon",
-          allowedRoles: [1, 2], // admin et gestionnaire
+          allowedRoles: [ADMIN, GESTIONAIRE],
         },
         {
           name: "Orders",
           label: "Gestion des commandes",
           to: "/orders",
           icon: "OrdersIcon",
-          allowedRoles: [1, 2], // admin et gestionnaire
+          allowedRoles: [ADMIN, GESTIONAIRE],
         },
         {
           name: "Prepare",
           label: "Commandes à préparer",
           to: "/prepare",
           icon: "PrepareIcon",
-          allowedRoles: [1, 2, 3], // tous
+          allowedRoles: [ADMIN, GESTIONAIRE, COMMERCIAL],
         },
         {
           name: "Reception",
           label: "Réception fournisseur",
           to: "/reception",
           icon: "ReceptionIcon",
-          allowedRoles: [1, 2, 3], // tous
+          allowedRoles: [ADMIN, GESTIONAIRE, COMMERCIAL],
         },
         {
           name: "Agenda",
           label: "Agenda",
           to: "/agenda",
           icon: "AgendaIcon",
-          allowedRoles: [1, 2, 3], // tous
+          allowedRoles: [ADMIN, GESTIONAIRE, COMMERCIAL],
         },
         {
           name: "Clients",
           label: "Clients",
           to: "/clients",
           icon: "ClientsIcon",
-          allowedRoles: [1, 2], // admin et gestionnaire
+          allowedRoles: [ADMIN, GESTIONAIRE],
         },
         {
           name: "Suppliers",
           label: "Fournisseurs",
           to: "/suppliers",
           icon: "SuppliersIcon",
-          allowedRoles: [1, 2], // admin et gestionnaire
+          allowedRoles: [ADMIN, GESTIONAIRE],
         },
         {
           name: "Admin",
           label: "Admin",
           to: "/admin",
           icon: "AdminIcon",
-          allowedRoles: [1], // admin seulement
+          allowedRoles: [ADMIN],
         },
       ];
 
