@@ -475,6 +475,7 @@
 
 <script>
   import { ref, computed, onMounted } from "vue";
+  import { VITE_API_URL } from "@/constants/constants";
 
   export default {
     name: "ProductBundlesView",
@@ -518,7 +519,7 @@
 
         try {
           // Récupérer les lots
-          const lotsResponse = await fetch(import.meta.env.VITE_API_URL + "get_table?table=lot", {
+          const lotsResponse = await fetch(VITE_API_URL + "get_table?table=lot", {
             method: "GET",
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
@@ -528,7 +529,7 @@
 
           // Récupérer les articles
           const articlesResponse = await fetch(
-            import.meta.env.VITE_API_URL + "get_table?table=article",
+            VITE_API_URL + "get_table?table=article",
             {
               method: "GET",
               headers: {
@@ -540,7 +541,7 @@
 
           // Récupérer les associations articles-lots
           const articleLotsResponse = await fetch(
-            import.meta.env.VITE_API_URL + "get_table?table=article_lot",
+            VITE_API_URL + "get_table?table=article_lot",
             {
               method: "GET",
               headers: {
@@ -798,7 +799,7 @@
 
           // Appel API pour créer ou mettre à jour le lot
           const endpoint = isEditing.value ? "update_lot" : "new_lot";
-          const response = await fetch(import.meta.env.VITE_API_URL + endpoint, {
+          const response = await fetch(VITE_API_URL + endpoint, {
             method: "POST",
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
@@ -835,7 +836,7 @@
 
                   // Appel à un endpoint delete_article_lot (à créer si nécessaire)
                   const deleteResponse = await fetch(
-                    import.meta.env.VITE_API_URL + "delete_article_lot",
+                    VITE_API_URL + "delete_article_lot",
                     {
                       method: "POST",
                       headers: {
@@ -873,7 +874,7 @@
                   });
 
                   const articleResponse = await fetch(
-                    import.meta.env.VITE_API_URL + "new_article_lot",
+                    VITE_API_URL + "new_article_lot",
                     {
                       method: "POST",
                       headers: {
