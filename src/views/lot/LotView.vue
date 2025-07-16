@@ -1118,7 +1118,7 @@
   }
 
   .action-button {
-    background: #3b82f6;
+    background: #0062ff;
     color: white;
     border: none;
     border-radius: 8px;
@@ -1133,7 +1133,7 @@
   }
 
   .action-button:hover {
-    background: #2563eb;
+    background: #0056cc;
     transform: translateY(-1px);
   }
 

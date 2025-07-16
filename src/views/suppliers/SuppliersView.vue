@@ -1625,7 +1625,7 @@
 
   .search-button,
   .export-button {
-    background: #3b82f6;
+    background: #0062ff;
     color: white;
     border: none;
     border-radius: 8px;
@@ -1951,7 +1951,7 @@
 
   .action-button,
   .export-button {
-    background: #3b82f6;
+    background: #0062ff;
     color: white;
     border: none;
     border-radius: 8px;
