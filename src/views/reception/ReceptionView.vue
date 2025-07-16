@@ -76,7 +76,7 @@
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="Rechercher par numéro, fournisseur ou bon de livraison"
+            placeholder="Rechercher par numéro, fournisseur, date de livraison, bon de livraison ou notes"
             class="search-input"
           />
           <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
