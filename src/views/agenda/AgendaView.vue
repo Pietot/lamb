@@ -922,7 +922,7 @@
     gap: 0.5rem;
   }
 
-  .today-btn:hover{
+  .today-btn:hover {
     background: #0056cc;
   }
 
