@@ -182,7 +182,7 @@
                   <div class="supplier-profile">
                     <div class="supplier-avatar-container">
                       <div class="supplier-avatar">
-                        {{ getSupplierInitials(delivery.id_fournisseur) }}
+                        {{ getSupplierInitials(getSupplierName(delivery.id_fournisseur)) }}
                       </div>
                     </div>
                     <div class="supplier-details">
@@ -728,7 +728,7 @@
       };
 
       const getSupplierInitials = supplier => {
-        const words = supplier.nom.split(/[\s\-&]+/);
+        const words = supplier.split(/[\s\-&]+/);
         return words
           .map(w => w[0])
           .join("")
@@ -1402,14 +1402,16 @@
     color: #0f172a;
   }
 
-  .supplier-profile {
+  .user-profile {
     display: flex;
+    justify-content: center;
     align-items: center;
     gap: 0.75rem;
   }
 
   .supplier-avatar-container {
     display: flex;
+    width: 45%;
     justify-content: flex-end;
   }
 
@@ -1423,20 +1425,27 @@
     justify-content: center;
     color: white;
     font-weight: 600;
-    font-size: 12px;
+    font-size: 14px;
     flex-shrink: 0;
   }
 
+  .supplier-avatar.large {
+    width: 64px;
+    height: 64px;
+    font-size: 20px;
+  }
+
   .supplier-details {
+    width: 55%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
   }
 
   .supplier-name {
-    font-weight: 500;
-    color: #334155;
-    margin: 0;
+    font-weight: 600;
+    color: #0f172a;
+    margin: 0 0 0.25rem 0;
   }
 
   .delivery-date {
