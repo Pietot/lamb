@@ -25,6 +25,8 @@ try {
         exit;
     }
 
+    $pdo = getPDO();
+
     $stmt = $pdo->prepare('UPDATE commande_lot SET id_lot = :id_lot, id_commande = :id_commande, quantite = :quantite WHERE id_lot = :id_lot AND id_commande = :id_commande');
     $stmt->bindValue(':id_lot', $id_lot);
     $stmt->bindValue(':id_commande', $id_commande);

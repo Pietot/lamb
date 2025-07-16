@@ -24,12 +24,14 @@ try {
         echo json_encode(['success' => false, 'message' => 'Champs invalides'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
     }
+    $pdo = getPDO();
 
-    $stmt = $pdo->prepare('INSERT INTO article_lot (id_article, id_lot, quantite) VALUES (:id_article, :id_lot, :quantite)');
+    $stmt = $pdo->prepare('INSERT INTO article_lot (id_article, id_lot, quantite_article) VALUES (:id_article, :id_lot, :quantite)');
     $stmt->bindValue(':id_article', $id_article);
     $stmt->bindValue(':id_lot', $id_lot);
     $stmt->bindValue(':quantite', $quantite);
     $stmt->execute();
+    
     http_response_code(201);
     echo json_encode(['success' => true, 'message' => 'Article lot créé avec succès'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 } catch (Exception $e) {

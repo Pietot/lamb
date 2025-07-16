@@ -23,6 +23,7 @@ try {
         echo json_encode(['success' => false, 'message' => 'Champs invalides'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
     }
+    $pdo = getPDO();
 
     $stmt = $pdo->prepare('DELETE FROM article_lot WHERE id_article = :id_article AND id_lot = :id_lot');
     $stmt->bindValue(':id_article', $id_article);
