@@ -1414,8 +1414,8 @@
   }
 
   .supplier-avatar {
-    width: 32px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
     background: #00b8d4;
     border-radius: 50%;
     display: flex;
