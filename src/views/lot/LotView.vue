@@ -88,7 +88,7 @@
 
         <!-- Table Content -->
         <div v-else class="table-container">
-          <table class="bundles-table">
+          <table class="data-table">
             <thead>
               <tr>
                 <th>Lot</th>
@@ -1249,14 +1249,14 @@
     overflow-x: auto;
   }
 
-  .bundles-table {
+  .data-table {
     width: 100%;
-    border-collapse: collapse;
+    min-width: max-content;
+    text-align: center;
   }
 
-  .bundles-table th {
+  .data-table th {
     background: #f8fafc;
-    text-align: left;
     padding: 1rem;
     font-size: 12px;
     font-weight: 600;
@@ -1266,7 +1266,7 @@
     border-bottom: 1px solid #e2e8f0;
   }
 
-  .bundles-table td {
+  .data-table td {
     padding: 1rem;
     border-bottom: 1px solid #f1f5f9;
     font-size: 14px;
@@ -1274,16 +1274,17 @@
     vertical-align: middle;
   }
 
-  .bundles-table tbody tr:hover {
+  .data-table tbody tr:hover {
     background: #f8fafc;
   }
 
-  .bundles-table tbody tr:last-child td {
+  .data-table tbody tr:last-child td {
     border-bottom: none;
   }
 
   /* BUNDLE INFO */
   .bundle-info {
+    text-align: left;
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -1948,12 +1949,12 @@
       align-items: flex-start;
     }
 
-    .bundles-table {
+    .data-table {
       font-size: 12px;
     }
 
-    .bundles-table th,
-    .bundles-table td {
+    .data-table th,
+    .data-table td {
       padding: 0.75rem 0.5rem;
     }
 
@@ -1983,17 +1984,6 @@
 
     .modal-btn {
       width: 100%;
-    }
-  }
-
-  @media (max-width: 640px) {
-    .bundles-table th:nth-child(3),
-    .bundles-table td:nth-child(3),
-    .bundles-table th:nth-child(4),
-    .bundles-table td:nth-child(4),
-    .bundles-table th:nth-child(5),
-    .bundles-table td:nth-child(5) {
-      display: none;
     }
   }
 </style>
