@@ -147,11 +147,10 @@
           <!-- Grille des jours -->
           <div class="days-grid">
             <div
-              v-for="day in calendarDays"
+              v-for="day in calendarDays.filter(day => !day.otherMonth)"
               :key="day.date"
               class="day-cell"
               :class="{
-                'other-month': day.otherMonth,
                 'is-today': day.isToday,
                 'has-events': day.events.length > 0,
                 selected: selectedDate && day.date === selectedDate,
@@ -164,7 +163,7 @@
                 <span class="day-number">{{ day.number }}</span>
               </div>
 
-              <div v-if="day.events.length > 0 && !day.otherMonth" class="day-content">
+              <div v-if="day.events.length > 0" class="day-content">
                 <div class="event-dots">
                   <span
                     v-if="day.deliveries > 0"
@@ -1084,16 +1083,6 @@
   .day-cell:hover {
     background: #f1f5f9;
     border-color: #cbd5e1;
-  }
-
-  .day-cell.other-month {
-    opacity: 0.3;
-    cursor: default;
-  }
-
-  .day-cell.other-month:hover {
-    background: #fafbfc;
-    border-color: #e2e8f0;
   }
 
   .day-cell.is-today {
