@@ -741,23 +741,23 @@
         const exportData = filteredBundles.value.map(bundle => {
           // Récupérer les articles du lot
           const bundleArticles = getBundleProducts(bundle.id_lot);
-          const articlesInfo = bundleArticles.map(item => 
-            `${getProductName(item.id_article)} (x${item.quantite_article})`
-          ).join('; ');
-          
+          const articlesInfo = bundleArticles
+            .map(item => `${getProductName(item.id_article)} (x${item.quantite_article})`)
+            .join("; ");
+
           // Calculer la valeur totale
           const totalValue = calculateBundleTotalValue(bundle.id_lot);
-          
+
           return {
-            'Nom du lot': bundle.nom,
-            'Description': bundle.description,
-            'Stock actuel': bundle.quantite_stock,
-            'Seuil d\'alerte': bundle.seuil_alerte,
-            'Statut': getStatusLabel(bundle.quantite_stock, bundle.seuil_alerte),
-            'Date de création': formatDate(bundle.date_creation),
-            'Nombre d\'articles': getBundleProductsCount(bundle.id_lot),
-            'Articles': articlesInfo || 'Aucun article',
-            'Valeur totale': formatCurrency(totalValue)
+            "Nom du lot": bundle.nom,
+            Description: bundle.description,
+            "Stock actuel": bundle.quantite_stock,
+            "Seuil d'alerte": bundle.seuil_alerte,
+            Statut: getStatusLabel(bundle.quantite_stock, bundle.seuil_alerte),
+            "Date de création": formatDate(bundle.date_creation),
+            "Nombre d'articles": getBundleProductsCount(bundle.id_lot),
+            Articles: articlesInfo || "Aucun article",
+            "Valeur totale": formatCurrency(totalValue),
           };
         });
 
@@ -765,36 +765,38 @@
         const headers = Object.keys(exportData[0] || {});
         const csvContent = [
           // En-têtes
-          headers.join(','),
+          headers.join(","),
           // Données
-          ...exportData.map(row => 
-            headers.map(header => {
-              const value = row[header];
-              // Échapper les valeurs contenant des virgules
-              if (value && value.toString().includes(',')) {
-                return `"${value.toString().replace(/"/g, '""')}"`;
-              }
-              return value;
-            }).join(',')
-          )
-        ].join('\n');
+          ...exportData.map(row =>
+            headers
+              .map(header => {
+                const value = row[header];
+                // Échapper les valeurs contenant des virgules
+                if (value && value.toString().includes(",")) {
+                  return `"${value.toString().replace(/"/g, '""')}"`;
+                }
+                return value;
+              })
+              .join(","),
+          ),
+        ].join("\n");
 
         // Créer et télécharger le fichier
-        const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
+        const blob = new Blob(["\ufeff" + csvContent], { type: "text/csv;charset=utf-8;" });
+        const link = document.createElement("a");
         const url = URL.createObjectURL(blob);
-        
-        const today = new Date().toISOString().split('T')[0];
-        link.setAttribute('href', url);
-        link.setAttribute('download', `export_lots_${today}.csv`);
-        link.style.visibility = 'hidden';
-        
+
+        const today = new Date().toISOString().split("T")[0];
+        link.setAttribute("href", url);
+        link.setAttribute("download", `export_lots_${today}.csv`);
+        link.style.visibility = "hidden";
+
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        
+
         // Message de succès (optionnel)
-        console.log('Export réussi:', exportData.length, 'lots exportés');
+        console.log("Export réussi:", exportData.length, "lots exportés");
       };
 
       const openNewBundleModal = () => {
