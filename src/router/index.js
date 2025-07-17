@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
+import { ADMIN, COMMERCIAL, PREPARATEUR } from "@/constants/constants";
 
 const router = createRouter({
   history: createWebHistory("/fashionchic/"),
@@ -27,7 +28,7 @@ const router = createRouter({
       meta: {
         requiresAuth: true,
         layout: "main",
-        roles: [1, 2],
+        roles: [ADMIN, COMMERCIAL],
         title: "Gestion des stocks - Fashion Chic",
       },
     },
@@ -38,7 +39,7 @@ const router = createRouter({
       meta: {
         requiresAuth: true,
         layout: "main",
-        roles: [1, 2],
+        roles: [ADMIN, COMMERCIAL],
         title: "Gestion des commandes - Fashion Chic",
       },
     },
@@ -69,7 +70,7 @@ const router = createRouter({
       meta: {
         requiresAuth: true,
         layout: "main",
-        roles: [1, 2],
+        roles: [ADMIN, COMMERCIAL],
         title: "Gestion des lots  Fashion Chic",
       },
     },
@@ -80,7 +81,7 @@ const router = createRouter({
       meta: {
         requiresAuth: true,
         layout: "main",
-        roles: [1, 2],
+        roles: [ADMIN, COMMERCIAL],
         title: "Gestion des clients - Fashion Chic",
       },
     },
@@ -101,7 +102,7 @@ const router = createRouter({
       meta: {
         requiresAuth: true,
         layout: "main",
-        roles: [1, 2],
+        roles: [ADMIN, COMMERCIAL],
         title: "Gestion des fournisseurs - Fashion Chic",
       },
     },
@@ -112,7 +113,7 @@ const router = createRouter({
       meta: {
         requiresAuth: true,
         layout: "main",
-        roles: [1, 2],
+        roles: [ADMIN, COMMERCIAL],
         title: "Détails du fournisseur - Fashion Chic",
       },
     },
@@ -123,7 +124,7 @@ const router = createRouter({
       meta: {
         requiresAuth: true,
         layout: "main",
-        roles: [1],
+        roles: [ADMIN],
         title: "Administration - Fashion Chic",
       },
     },

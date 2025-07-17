@@ -109,7 +109,7 @@
   import { computed, ref } from "vue";
   import { useRouter, useRoute } from "vue-router";
   import { useAuthStore } from "@/stores/auth";
-  import { ADMIN, GESTIONAIRE, COMMERCIAL } from "@/constants/constants.js";
+  import { ADMIN, COMMERCIAL, PREPARATEUR } from "@/constants/constants.js";
 
   // Icônes SVG comme composants
   const DashboardIcon = {
@@ -237,63 +237,63 @@
           label: "Tableau de bord",
           to: "/",
           icon: "DashboardIcon",
-          allowedRoles: [ADMIN, GESTIONAIRE, COMMERCIAL],
+          allowedRoles: [ADMIN, COMMERCIAL, PREPARATEUR],
         },
         {
           name: "Stocks",
           label: "Gestion des stocks",
           to: "/stocks",
           icon: "StocksIcon",
-          allowedRoles: [ADMIN, GESTIONAIRE],
+          allowedRoles: [ADMIN, COMMERCIAL],
         },
         {
           name: "Lot",
           label: "Gestion des lots",
           to: "/lot",
           icon: "StocksIcon",
-          allowedRoles: [ADMIN, GESTIONAIRE],
+          allowedRoles: [ADMIN, COMMERCIAL],
         },
         {
           name: "Orders",
           label: "Gestion des commandes",
           to: "/orders",
           icon: "OrdersIcon",
-          allowedRoles: [ADMIN, GESTIONAIRE],
+          allowedRoles: [ADMIN, COMMERCIAL],
         },
         {
           name: "Prepare",
           label: "Commandes à préparer",
           to: "/prepare",
           icon: "PrepareIcon",
-          allowedRoles: [ADMIN, GESTIONAIRE, COMMERCIAL],
+          allowedRoles: [ADMIN, COMMERCIAL, PREPARATEUR],
         },
         {
           name: "Reception",
           label: "Réception fournisseur",
           to: "/reception",
           icon: "ReceptionIcon",
-          allowedRoles: [ADMIN, GESTIONAIRE, COMMERCIAL],
+          allowedRoles: [ADMIN, COMMERCIAL, PREPARATEUR],
         },
         {
           name: "Agenda",
           label: "Agenda",
           to: "/agenda",
           icon: "AgendaIcon",
-          allowedRoles: [ADMIN, GESTIONAIRE, COMMERCIAL],
+          allowedRoles: [ADMIN, COMMERCIAL, PREPARATEUR],
         },
         {
           name: "Clients",
           label: "Clients",
           to: "/clients",
           icon: "ClientsIcon",
-          allowedRoles: [ADMIN, GESTIONAIRE],
+          allowedRoles: [ADMIN, COMMERCIAL],
         },
         {
           name: "Suppliers",
           label: "Fournisseurs",
           to: "/suppliers",
           icon: "SuppliersIcon",
-          allowedRoles: [ADMIN, GESTIONAIRE],
+          allowedRoles: [ADMIN, COMMERCIAL],
         },
         {
           name: "Admin",
