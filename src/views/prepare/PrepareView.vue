@@ -360,8 +360,7 @@
 <script>
   import { ref, computed, onMounted } from "vue";
   import { triggerToast } from "@/utils/toastHelper";
-
-  const VITE_API_URL = import.meta.env.VITE_API_URL || "http://localhost/esgi/lamb/lamb/api/";
+  import { VITE_API_URL } from "@/constants/constants";
 
   export default {
     name: "PrepareView",
@@ -403,7 +402,6 @@
             method: "GET",
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
-              Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
             },
             credentials: "include",
           });
@@ -413,7 +411,6 @@
             method: "GET",
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
-              Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
             },
             credentials: "include",
           });
@@ -662,7 +659,6 @@
             method: "GET",
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
-              Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
             },
             credentials: "include",
           });
@@ -672,7 +668,6 @@
             method: "GET",
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
-              Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
             },
             credentials: "include",
           });
