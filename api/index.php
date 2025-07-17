@@ -8,7 +8,7 @@ require_once __DIR__ . '/routes/utils/auth.php';
 
 const ADMIN_ROLE = 1;
 const COMMERCIAL_ROLE = 2;
-const GESTIONNAIRE_ROLE = 3;
+const PREPARATEUR_ROLE = 3;
 
 $requestUri = $_SERVER['REQUEST_URI'];
 $path = parse_url($requestUri, PHP_URL_PATH);
