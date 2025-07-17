@@ -36,7 +36,7 @@
         <div class="filter-wrapper">
           <label for="stocks-filter" class="filter-label">Stocks :</label>
           <select id="stocks-filter" v-model="filters.stockStatus" class="filter-select">
-            <option value="" >Tous les stocks</option>
+            <option value="">Tous les stocks</option>
             <option value="normal">Stock normal</option>
             <option value="low">Stock faible</option>
           </select>
@@ -532,28 +532,22 @@
           });
 
           // Récupérer les articles
-          const articlesResponse = await fetch(
-            VITE_API_URL + "get_table?table=article",
-            {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-              },
-              credentials: "include",
+          const articlesResponse = await fetch(VITE_API_URL + "get_table?table=article", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
             },
-          );
+            credentials: "include",
+          });
 
           // Récupérer les associations articles-lots
-          const articleLotsResponse = await fetch(
-            VITE_API_URL + "get_table?table=article_lot",
-            {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-              },
-              credentials: "include",
+          const articleLotsResponse = await fetch(VITE_API_URL + "get_table?table=article_lot", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
             },
-          );
+            credentials: "include",
+          });
 
           if (!lotsResponse.ok || !articlesResponse.ok || !articleLotsResponse.ok) {
             throw new Error("Erreur lors du chargement des données");
@@ -839,17 +833,14 @@
                   deleteData.append("id_lot", lotId.toString());
 
                   // Appel à un endpoint delete_article_lot (à créer si nécessaire)
-                  const deleteResponse = await fetch(
-                    VITE_API_URL + "delete_article_lot",
-                    {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                      },
-                      credentials: "include",
-                      body: deleteData.toString(),
+                  const deleteResponse = await fetch(VITE_API_URL + "delete_article_lot", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/x-www-form-urlencoded",
                     },
-                  );
+                    credentials: "include",
+                    body: deleteData.toString(),
+                  });
 
                   if (!deleteResponse.ok) {
                     console.error("Erreur lors de la suppression de l'association");
@@ -877,17 +868,14 @@
                     quantite: product.quantite_article.toString(),
                   });
 
-                  const articleResponse = await fetch(
-                    VITE_API_URL + "new_article_lot",
-                    {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                      },
-                      credentials: "include",
-                      body: articleLotData.toString(),
+                  const articleResponse = await fetch(VITE_API_URL + "new_article_lot", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/x-www-form-urlencoded",
                     },
-                  );
+                    credentials: "include",
+                    body: articleLotData.toString(),
+                  });
 
                   const responseText = await articleResponse.text();
 
@@ -1030,7 +1018,7 @@
 
   .new-bundle-button {
     background: #5500ff;
-    color: white; 
+    color: white;
     border: none;
     border-radius: 8px;
     padding: 0.75rem 1.5rem;
@@ -1097,7 +1085,7 @@
     pointer-events: none;
   }
 
- .filter-wrapper {
+  .filter-wrapper {
     position: relative;
     display: inline-block;
   }
