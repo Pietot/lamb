@@ -1152,14 +1152,6 @@
           formData.append("statut", orderData.statut.toString());
           formData.append("montant_ht", orderData.montant_ht.toString());
 
-          console.log("FormData envoyé pour mise à jour:", {
-            id_commande: orderData.id_commande,
-            id_client: orderData.id_client,
-            date_commande: orderData.date_commande,
-            statut: orderData.statut,
-            montant_ht: orderData.montant_ht,
-          });
-
           const response = await fetch(VITE_API_URL + "update_commande", {
             method: "POST",
             body: formData,
