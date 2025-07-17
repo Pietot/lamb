@@ -341,8 +341,8 @@
         const role = authStore.user?.role || 4;
         const roleLabels = {
           1: "Administrateur",
-          2: "Gestionnaire",
-          3: "Commercial",
+          2: "Commercial",
+          3: "Préparateur",
           4: "Utilisateur",
         };
         return roleLabels[role];
