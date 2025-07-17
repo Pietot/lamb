@@ -54,8 +54,8 @@
       <div class="kpi-card kpi-shipped">
         <div class="kpi-icon shipped-icon">
           <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M9 11l3 3L22 4"/>
-            <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+            <path d="M9 11l3 3L22 4" />
+            <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
           </svg>
         </div>
         <div class="kpi-content">
@@ -102,7 +102,6 @@
             <option value="preparation">En préparation</option>
             <option value="expedie">Expédiée</option>
             <option value="2">Expédiée</option>
-
           </select>
           <svg class="filter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path d="M6 9l6 6 6-6" />
@@ -140,10 +139,18 @@
           >
             <div class="order-main">
               <div class="order-info">
-                <span class="order-id">{{ order.numero_commande || `#${String(order.id_commande).padStart(5, "0")}` }}</span>
+                <span class="order-id">{{
+                  order.numero_commande || `#${String(order.id_commande).padStart(5, "0")}`
+                }}</span>
                 <span class="order-client">{{ getClientName(order.id_client) }}</span>
                 <span class="order-date">{{ formatDate(order.date_commande) }}</span>
-                <span class="order-amount">{{ formatCurrency(order.montant_ttc && order.montant_ttc !== "0.00" ? order.montant_ttc : order.montant_ht) }}</span>
+                <span class="order-amount">{{
+                  formatCurrency(
+                    order.montant_ttc && order.montant_ttc !== "0.00"
+                      ? order.montant_ttc
+                      : order.montant_ht,
+                  )
+                }}</span>
               </div>
             </div>
 
@@ -233,7 +240,10 @@
           <div class="order-summary">
             <div class="summary-item">
               <span class="summary-label">Commande:</span>
-              <span class="summary-value">{{ selectedOrder.numero_commande || `#${String(selectedOrder.id_commande).padStart(5, "0")}` }}</span>
+              <span class="summary-value">{{
+                selectedOrder.numero_commande ||
+                `#${String(selectedOrder.id_commande).padStart(5, "0")}`
+              }}</span>
             </div>
             <div class="summary-item">
               <span class="summary-label">Client:</span>
@@ -258,7 +268,9 @@
                     article.nom || `Article #${article.id_article}`
                   }}</span>
                   <span class="article-ref">Réf: {{ article.reference || "N/A" }}</span>
-                  <span v-if="article.description" class="article-description">{{ article.description }}</span>
+                  <span v-if="article.description" class="article-description">{{
+                    article.description
+                  }}</span>
                 </div>
                 <div class="article-quantity">
                   <span class="quantity-label">Quantité:</span>
@@ -274,7 +286,13 @@
           <div class="modal-footer">
             <div class="total-section">
               <span class="total-label">Total de la commande:</span>
-              <span class="total-value">{{ formatCurrency(selectedOrder.montant_ttc && selectedOrder.montant_ttc !== "0.00" ? selectedOrder.montant_ttc : selectedOrder.montant_ht) }}</span>
+              <span class="total-value">{{
+                formatCurrency(
+                  selectedOrder.montant_ttc && selectedOrder.montant_ttc !== "0.00"
+                    ? selectedOrder.montant_ttc
+                    : selectedOrder.montant_ht,
+                )
+              }}</span>
             </div>
           </div>
         </div>
@@ -306,7 +324,10 @@
           </div>
           <p class="confirm-message">
             Êtes-vous sûr de vouloir marquer la commande
-            <strong>{{ orderToComplete.numero_commande || `#${String(orderToComplete.id_commande).padStart(5, "0")}` }}</strong>
+            <strong>{{
+              orderToComplete.numero_commande ||
+              `#${String(orderToComplete.id_commande).padStart(5, "0")}`
+            }}</strong>
             comme terminée ?
           </p>
           <p class="confirm-submessage">
@@ -423,11 +444,12 @@
 
       // Computed properties
       const urgentCount = computed(() => {
-        return orders.value.filter(order => order.statut !== 'expedie' && isUrgent(order)).length;
+        return orders.value.filter(order => order.statut !== "expedie" && isUrgent(order)).length;
       });
 
       const totalPending = computed(() => {
-        return orders.value.filter(order => order.statut === "attente" || order.statut === "1").length;
+        return orders.value.filter(order => order.statut === "attente" || order.statut === "1")
+          .length;
       });
 
       const inProgressCount = computed(() => {
@@ -487,7 +509,7 @@
       const getClientName = clientId => {
         const client = getClient(clientId);
         if (!client) return `Client #${clientId}`;
-        
+
         // Vérifier si on a prénom et nom, sinon utiliser raison_sociale
         if (client.prénom && client.nom) {
           return `${client.prénom} ${client.nom}`;
@@ -496,7 +518,7 @@
         } else if (client.nom) {
           return client.nom;
         }
-        
+
         return `Client #${clientId}`;
       };
 
@@ -546,7 +568,7 @@
       };
 
       const formatCurrency = amount => {
-        const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
+        const numAmount = typeof amount === "string" ? parseFloat(amount) : amount;
         return new Intl.NumberFormat("fr-FR", {
           style: "currency",
           currency: "EUR",
@@ -555,8 +577,8 @@
 
       const isUrgent = order => {
         // Ne pas marquer comme urgent si la commande est déjà expédiée
-        if (order.statut === 'expedie') return false;
-        
+        if (order.statut === "expedie") return false;
+
         // Considérer une commande comme urgente si elle date de plus de 3 jours
         const orderDate = new Date(order.date_commande);
         const now = new Date();
@@ -569,8 +591,8 @@
           attente: "badge-waiting",
           preparation: "badge-progress",
           expedie: "badge-shipped",
-          "1": "badge-waiting", // Statut 1 = En attente
-          "2": "badge-progress" // Statut 1 = En préparation
+          1: "badge-waiting", // Statut 1 = En attente
+          2: "badge-progress", // Statut 1 = En préparation
         };
         return statusClasses[status] || "badge-default";
       };
@@ -580,8 +602,8 @@
           attente: "En attente",
           preparation: "En préparation",
           expedie: "Expédiée",
-          "1": "En attente", // Statut 1 = En attente
-          "2": "En préparation" // Statut 2 = En préparation
+          1: "En attente", // Statut 1 = En attente
+          2: "En préparation", // Statut 2 = En préparation
         };
         return statusLabels[status] || status;
       };
@@ -665,7 +687,7 @@
           if (commandeLotData.success && lotsData.success) {
             // Filtrer les lots de cette commande
             const orderLots = commandeLotData.data.filter(
-              cl => cl.id_commande === order.id_commande
+              cl => cl.id_commande === order.id_commande,
             );
 
             // Créer la liste des articles avec leurs quantités
@@ -676,7 +698,7 @@
                 nom: lot ? lot.nom : `Lot #${orderLot.id_lot}`,
                 reference: lot ? `LOT-${orderLot.id_lot}` : "N/A",
                 quantite: orderLot.quantite,
-                description: lot ? lot.description : ""
+                description: lot ? lot.description : "",
               };
             });
           }

@@ -485,8 +485,8 @@
           expedie: "status-shipped",
           attente: "status-wait",
           annule: "status-cancelled",
-          "1": "status-wait", // Statut 1 = En attente
-          "2": "status-preparing" // Statut 2 = En préparation
+          1: "status-wait", // Statut 1 = En attente
+          2: "status-preparing", // Statut 2 = En préparation
         };
         return statusClasses[status] || "status-default";
       };
@@ -496,8 +496,8 @@
           attente: "En attente",
           preparation: "En préparation",
           expedie: "Expédiée",
-          "1": "En attente", // Statut 1 = En attente
-          "2": "En préparation" // Statut 2 = En préparation
+          1: "En attente", // Statut 1 = En attente
+          2: "En préparation", // Statut 2 = En préparation
         };
         return statusLabels[status] || status;
       };

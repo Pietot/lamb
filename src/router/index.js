@@ -14,30 +14,33 @@ const router = createRouter({
       path: "/",
       name: "Dashboard",
       component: () => import("@/views/dashboard/DashboardView.vue"),
-      meta: { 
-        requiresAuth: true, 
-        layout: "main", 
-        title: "Tableau de bord - Fashion Chic" },
+      meta: {
+        requiresAuth: true,
+        layout: "main",
+        title: "Tableau de bord - Fashion Chic",
+      },
     },
     {
       path: "/stocks",
       name: "Stocks",
       component: () => import("@/views/stocks/StocksView.vue"),
-      meta: { 
-        requiresAuth: true, 
+      meta: {
+        requiresAuth: true,
         layout: "main",
-        roles: [1,2],
-        title: "Gestion des stocks - Fashion Chic" },
+        roles: [1, 2],
+        title: "Gestion des stocks - Fashion Chic",
+      },
     },
     {
       path: "/orders",
       name: "Orders",
       component: () => import("@/views/orders/OrdersView.vue"),
-      meta: { 
-        requiresAuth: true, 
-        layout: "main", 
-        roles: [1,2],
-        title: "Gestion des commandes - Fashion Chic" },
+      meta: {
+        requiresAuth: true,
+        layout: "main",
+        roles: [1, 2],
+        title: "Gestion des commandes - Fashion Chic",
+      },
     },
     {
       path: "/prepare",
@@ -53,39 +56,43 @@ const router = createRouter({
       path: "/reception",
       name: "Reception",
       component: () => import("@/views/reception/ReceptionView.vue"),
-      meta: { 
-        requiresAuth: true, 
-        layout: "main", 
-        title: "Réception des commandes - Fashion Chic" },
+      meta: {
+        requiresAuth: true,
+        layout: "main",
+        title: "Réception des commandes - Fashion Chic",
+      },
     },
     {
       path: "/lot",
       name: "Lot",
       component: () => import("@/views/lot/LotView.vue"),
-      meta: { 
-        requiresAuth: 
-        true, layout: "main", 
-        roles: [1,2],
-        title: "Gestion des lots  Fashion Chic" },
+      meta: {
+        requiresAuth: true,
+        layout: "main",
+        roles: [1, 2],
+        title: "Gestion des lots  Fashion Chic",
+      },
     },
     {
       path: "/clients",
       name: "Clients",
       component: () => import("@/views/clients/ClientsView.vue"),
-      meta: { 
-        requiresAuth: true, 
-        layout: "main", 
-        roles: [1,2],
-        title: "Gestion des clients - Fashion Chic" },
+      meta: {
+        requiresAuth: true,
+        layout: "main",
+        roles: [1, 2],
+        title: "Gestion des clients - Fashion Chic",
+      },
     },
     {
       path: "/agenda",
       name: "Agenda",
       component: () => import("@/views/agenda/AgendaView.vue"),
-      meta: { 
-        requiresAuth: true, 
-        layout: "main", 
-        title: "Agenda - Fashion Chic" },
+      meta: {
+        requiresAuth: true,
+        layout: "main",
+        title: "Agenda - Fashion Chic",
+      },
     },
     {
       path: "/suppliers",
@@ -94,7 +101,7 @@ const router = createRouter({
       meta: {
         requiresAuth: true,
         layout: "main",
-        roles: [1,2],
+        roles: [1, 2],
         title: "Gestion des fournisseurs - Fashion Chic",
       },
     },
@@ -102,11 +109,12 @@ const router = createRouter({
       path: "/suppliers/:id",
       name: "SupplierDetail",
       component: () => import("@/views/suppliers/SuppliersViewDetail.vue"),
-      meta: { 
-        requiresAuth: true, 
-        layout: "main", 
-        roles: [1,2],
-        title: "Détails du fournisseur - Fashion Chic" },
+      meta: {
+        requiresAuth: true,
+        layout: "main",
+        roles: [1, 2],
+        title: "Détails du fournisseur - Fashion Chic",
+      },
     },
     {
       path: "/admin",
@@ -116,7 +124,7 @@ const router = createRouter({
         requiresAuth: true,
         layout: "main",
         roles: [1],
-        title: "Administration - Fashion Chic"
+        title: "Administration - Fashion Chic",
       },
     },
     {
@@ -129,11 +137,12 @@ const router = createRouter({
       path: "/blackjack",
       name: "Blackjack",
       component: () => import("@/views/blackjack/BlackjackView.vue"),
-      meta: { 
+      meta: {
         requiresAuth: true,
-        layout: "main", 
-        requiresKonami: true, 
-        title: "Blackjack - Fashion Chic" },
+        layout: "main",
+        requiresKonami: true,
+        title: "Blackjack - Fashion Chic",
+      },
     },
   ],
 });
@@ -162,6 +171,5 @@ router.beforeEach(async (to, from, next) => {
   }
   next();
 });
-
 
 export default router;

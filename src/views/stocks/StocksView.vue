@@ -661,7 +661,7 @@
                   required
                 >
                   <option value="">Sélectionner une catégorie</option>
-                  <option value="1">Sport </option>
+                  <option value="1">Sport</option>
                   <option value="2">Vêtements Femme</option>
                   <option value="3">Accessoires</option>
                   <option value="4">Enfants</option>
