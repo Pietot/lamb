@@ -339,8 +339,8 @@
 <script>
   import { ref, computed, onMounted } from "vue";
   import { triggerToast } from "@/utils/toastHelper";
+  import { VITE_API_URL } from "@/constants/constants";
 
-  const VITE_API_URL = import.meta.env.VITE_API_URL || "http://localhost/esgi/lamb/lamb/api/";
 
   export default {
     name: "PrepareView",
