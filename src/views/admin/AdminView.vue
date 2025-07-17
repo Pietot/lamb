@@ -627,8 +627,11 @@
       const rolePermissions = {
         1: [
           // Test
-          "Accès de test",
-          "Fonctionnalités limitées",
+          "Gestion des utilisateurs",
+          "Configuration système",
+          "Accès aux logs",
+          "Gestion des rôles",
+          "Accès complet",
         ],
         2: [
           // Gestionnaire
@@ -639,9 +642,8 @@
         ],
         3: [
           // Commercial
-          "Gestion des clients",
-          "Création de commandes",
-          "Suivi des ventes",
+          "Préparation de commande",
+          "Agenda",
         ],
         4: [
           // Administrateur
@@ -656,7 +658,7 @@
       const roleDescriptions = {
         1: "Compte de test avec accès limité",
         2: "Gestion des opérations",
-        3: "Gestion des ventes et clients",
+        3: "Prépare les commmandes",
         4: "Accès complet au système",
       };
 

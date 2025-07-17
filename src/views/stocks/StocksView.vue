@@ -42,7 +42,7 @@
           <label for="category-filter" class="filter-label">Catégorie :</label>
           <select id="category-filter" v-model="filters.category" class="filter-select">
             <option value="">Toutes les catégories</option>
-            <option value="1">Vêtements Homme</option>
+            <option value="1">Sport</option>
             <option value="2">Vêtements Femme</option>
             <option value="3">Accessoires</option>
             <option value="4">Enfants</option>
@@ -339,7 +339,7 @@
                   required
                 >
                   <option value="">Sélectionner une catégorie</option>
-                  <option value="1">Vêtements Homme</option>
+                  <option value="1">Sport</option>
                   <option value="2">Vêtements Femme</option>
                   <option value="3">Accessoires</option>
                   <option value="4">Enfants</option>
@@ -661,7 +661,7 @@
                   required
                 >
                   <option value="">Sélectionner une catégorie</option>
-                  <option value="1">Vêtements Homme</option>
+                  <option value="1">Sport </option>
                   <option value="2">Vêtements Femme</option>
                   <option value="3">Accessoires</option>
                   <option value="4">Enfants</option>
@@ -864,7 +864,7 @@
 
       // Mapping des catégories
       const categories = {
-        1: "Vêtements Homme",
+        1: "Sports",
         2: "Vêtements Femme",
         3: "Accessoires",
         4: "Enfants",
