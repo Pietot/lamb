@@ -2,7 +2,7 @@
   <div class="prepare-page">
     <!-- En-tête -->
     <div class="page-header">
-      <h2 class="page-title">Commandes à préparer</h2>
+      <h2 class="page-title">Gestion des préparations</h2>
     </div>
 
     <!-- Cartes KPI -->
@@ -33,7 +33,7 @@
           </svg>
         </div>
         <div class="kpi-content">
-          <p class="kpi-label">En file d'attente</p>
+          <p class="kpi-label">En attente</p>
           <p class="kpi-value">{{ totalPending }}</p>
         </div>
       </div>
@@ -46,8 +46,21 @@
           </svg>
         </div>
         <div class="kpi-content">
-          <p class="kpi-label">En cours</p>
+          <p class="kpi-label">En préparation</p>
           <p class="kpi-value">{{ inProgressCount }}</p>
+        </div>
+      </div>
+
+      <div class="kpi-card kpi-shipped">
+        <div class="kpi-icon shipped-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M9 11l3 3L22 4"/>
+            <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+          </svg>
+        </div>
+        <div class="kpi-content">
+          <p class="kpi-label">Expédiées</p>
+          <p class="kpi-value">{{ shippedCount }}</p>
         </div>
       </div>
     </div>
@@ -59,7 +72,7 @@
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="Rechercher par numéro, fournisseur ou montant"
+            placeholder="Rechercher par numéro de commande, client ou montant"
             class="search-input"
           />
           <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -85,26 +98,16 @@
           <select id="status-filter" v-model="filterStatus" class="filter-select">
             <option value="">Tous les statuts</option>
             <option value="attente">En attente</option>
+            <option value="1">En attente (1)</option>
             <option value="preparation">En préparation</option>
+            <option value="expedie">Expédiée</option>
+            <option value="2">Expédiée</option>
+
           </select>
           <svg class="filter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path d="M6 9l6 6 6-6" />
           </svg>
         </div>
-
-        <button
-          role="button"
-          aria-label="Exporter les commandes"
-          class="export-button"
-          @click="exportOrders"
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-            <polyline points="7,10 12,15 17,10" />
-            <line x1="12" y1="15" x2="12" y2="3" />
-          </svg>
-          Exporter
-        </button>
       </div>
     </div>
 
@@ -137,10 +140,10 @@
           >
             <div class="order-main">
               <div class="order-info">
-                <span class="order-id">#{{ String(order.id_commande).padStart(5, "0") }}</span>
+                <span class="order-id">{{ order.numero_commande || `#${String(order.id_commande).padStart(5, "0")}` }}</span>
                 <span class="order-client">{{ getClientName(order.id_client) }}</span>
                 <span class="order-date">{{ formatDate(order.date_commande) }}</span>
-                <span class="order-amount">{{ formatCurrency(order.montant_ttc) }}</span>
+                <span class="order-amount">{{ formatCurrency(order.montant_ttc && order.montant_ttc !== "0.00" ? order.montant_ttc : order.montant_ht) }}</span>
               </div>
             </div>
 
@@ -156,7 +159,7 @@
                 <button
                   role="button"
                   aria-label="Commencer la préparation"
-                  v-if="order.statut === 'attente'"
+                  v-if="order.statut === 'attente' || order.statut === '1'"
                   class="action-btn primary"
                   @click="startPreparation(order)"
                 >
@@ -175,15 +178,12 @@
 
                 <button
                   role="button"
-                  aria-label="Voir les détails"
-                  class="action-btn icon-btn"
-                  @click="viewOrder(order)"
-                  title="Voir détails"
+                  aria-label="Commande expédiée"
+                  v-else-if="order.statut === 'expedie'"
+                  class="action-btn completed"
+                  disabled
                 >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                    <circle cx="12" cy="12" r="3" />
-                  </svg>
+                  Expédiée
                 </button>
 
                 <button
@@ -233,9 +233,7 @@
           <div class="order-summary">
             <div class="summary-item">
               <span class="summary-label">Commande:</span>
-              <span class="summary-value"
-                >#{{ String(selectedOrder.id_commande).padStart(5, "0") }}</span
-              >
+              <span class="summary-value">{{ selectedOrder.numero_commande || `#${String(selectedOrder.id_commande).padStart(5, "0")}` }}</span>
             </div>
             <div class="summary-item">
               <span class="summary-label">Client:</span>
@@ -260,6 +258,7 @@
                     article.nom || `Article #${article.id_article}`
                   }}</span>
                   <span class="article-ref">Réf: {{ article.reference || "N/A" }}</span>
+                  <span v-if="article.description" class="article-description">{{ article.description }}</span>
                 </div>
                 <div class="article-quantity">
                   <span class="quantity-label">Quantité:</span>
@@ -275,7 +274,7 @@
           <div class="modal-footer">
             <div class="total-section">
               <span class="total-label">Total de la commande:</span>
-              <span class="total-value">{{ formatCurrency(selectedOrder.montant_ttc) }}</span>
+              <span class="total-value">{{ formatCurrency(selectedOrder.montant_ttc && selectedOrder.montant_ttc !== "0.00" ? selectedOrder.montant_ttc : selectedOrder.montant_ht) }}</span>
             </div>
           </div>
         </div>
@@ -307,7 +306,7 @@
           </div>
           <p class="confirm-message">
             Êtes-vous sûr de vouloir marquer la commande
-            <strong>#{{ String(orderToComplete.id_commande).padStart(5, "0") }}</strong>
+            <strong>{{ orderToComplete.numero_commande || `#${String(orderToComplete.id_commande).padStart(5, "0")}` }}</strong>
             comme terminée ?
           </p>
           <p class="confirm-submessage">
@@ -339,9 +338,9 @@
 
 <script>
   import { ref, computed, onMounted } from "vue";
-  import { useRouter } from "vue-router";
   import { triggerToast } from "@/utils/toastHelper";
-  import { VITE_API_URL } from "@/constants/constants";
+
+  const VITE_API_URL = import.meta.env.VITE_API_URL || "http://localhost/esgi/lamb/lamb/api/";
 
   export default {
     name: "PrepareView",
@@ -355,8 +354,6 @@
       ],
     },
     setup() {
-      const router = useRouter();
-
       // États
       const orders = ref([]);
       const clients = ref([]);
@@ -385,6 +382,7 @@
             method: "GET",
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
+              Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
             },
             credentials: "include",
           });
@@ -394,22 +392,22 @@
             method: "GET",
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
+              Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
             },
             credentials: "include",
           });
 
           if (!ordersResponse.ok || !clientsResponse.ok) {
-            throw new Error("Erreur lors du chargement des données");
+            throw new Error("Erreur lors du chargement des commandes");
           }
 
           const ordersData = await ordersResponse.json();
           const clientsData = await clientsResponse.json();
 
           if (ordersData.success && ordersData.data) {
-            // Filtrer seulement les commandes en attente ou en préparation
-            orders.value = ordersData.data.filter(
-              order => order.statut === "attente" || order.statut === "preparation",
-            );
+            // Récupérer toutes les commandes sans filtrage
+            orders.value = ordersData.data;
+            console.log("Nombre total de commandes:", orders.value.length);
           }
 
           if (clientsData.success && clientsData.data) {
@@ -425,15 +423,19 @@
 
       // Computed properties
       const urgentCount = computed(() => {
-        return orders.value.filter(order => isUrgent(order)).length;
+        return orders.value.filter(order => order.statut !== 'expedie' && isUrgent(order)).length;
       });
 
       const totalPending = computed(() => {
-        return orders.value.filter(order => order.statut === "attente").length;
+        return orders.value.filter(order => order.statut === "attente" || order.statut === "1").length;
       });
 
       const inProgressCount = computed(() => {
         return orders.value.filter(order => order.statut === "preparation").length;
+      });
+
+      const shippedCount = computed(() => {
+        return orders.value.filter(order => order.statut === "expedie").length;
       });
 
       const filteredOrders = computed(() => {
@@ -453,18 +455,19 @@
 
         // Filtre par recherche
         if (searchQuery.value) {
-          if (searchQuery.value.startsWith("#")) {
-            // Si la recherche commence par #, on filtre par id
-            const id = searchQuery.value.slice(1).toLowerCase();
-            result = result.filter(order => order.id_commande.toString().includes(id));
-          } else {
-            const query = searchQuery.value.toLowerCase();
-            result = result.filter(order => {
-              const client = getClient(order.id_client);
-              const clientName = client ? `${client.raison_sociale}`.toLowerCase() : "";
-              return order.id_commande.toString().includes(query) || clientName.includes(query);
-            });
-          }
+          const query = searchQuery.value.toLowerCase();
+          result = result.filter(order => {
+            const client = getClient(order.id_client);
+            const clientName = client ? getClientName(order.id_client).toLowerCase() : "";
+            const numeroCommande = order.numero_commande ? order.numero_commande.toLowerCase() : "";
+            return (
+              order.id_commande.toString().includes(query) ||
+              numeroCommande.includes(query) ||
+              clientName.includes(query) ||
+              (order.montant_ht && order.montant_ht.toString().includes(query)) ||
+              (order.montant_ttc && order.montant_ttc.toString().includes(query))
+            );
+          });
         }
 
         // Trier par urgence puis par date
@@ -483,7 +486,18 @@
 
       const getClientName = clientId => {
         const client = getClient(clientId);
-        return client ? `${client.raison_sociale}` : `Client #${clientId}`;
+        if (!client) return `Client #${clientId}`;
+        
+        // Vérifier si on a prénom et nom, sinon utiliser raison_sociale
+        if (client.prénom && client.nom) {
+          return `${client.prénom} ${client.nom}`;
+        } else if (client.raison_sociale) {
+          return client.raison_sociale;
+        } else if (client.nom) {
+          return client.nom;
+        }
+        
+        return `Client #${clientId}`;
       };
 
       const formatDate = dateString => {
@@ -532,13 +546,17 @@
       };
 
       const formatCurrency = amount => {
+        const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
         return new Intl.NumberFormat("fr-FR", {
           style: "currency",
           currency: "EUR",
-        }).format(amount);
+        }).format(numAmount || 0);
       };
 
       const isUrgent = order => {
+        // Ne pas marquer comme urgent si la commande est déjà expédiée
+        if (order.statut === 'expedie') return false;
+        
         // Considérer une commande comme urgente si elle date de plus de 3 jours
         const orderDate = new Date(order.date_commande);
         const now = new Date();
@@ -551,6 +569,9 @@
           attente: "badge-waiting",
           preparation: "badge-progress",
           expedie: "badge-shipped",
+          "1": "badge-waiting", // Statut 1 = En attente
+          "2": "badge-progress" // Statut 1 = En préparation
+
         };
         return statusClasses[status] || "badge-default";
       };
@@ -560,15 +581,24 @@
           attente: "En attente",
           preparation: "En préparation",
           expedie: "Expédiée",
+          "1": "En attente", // Statut 1 = En attente
+          "2": "En préparation" // Statut 2 = En préparation
         };
         return statusLabels[status] || status;
       };
 
       const startPreparation = async order => {
-        // TODO: Appeler l'API pour mettre à jour le statut
-        const index = orders.value.findIndex(o => o.id_commande === order.id_commande);
-        if (index !== -1) {
-          orders.value[index].statut = "preparation";
+        try {
+          // TODO: Implémenter l'appel API pour mettre à jour le statut
+          // Pour l'instant, on met à jour localement
+          const index = orders.value.findIndex(o => o.id_commande === order.id_commande);
+          if (index !== -1) {
+            orders.value[index].statut = "preparation";
+            triggerToast("Commande en préparation", "success");
+          }
+        } catch (err) {
+          console.error("Erreur lors de la mise à jour:", err);
+          triggerToast("Erreur lors de la mise à jour", "error");
         }
       };
 
@@ -580,63 +610,23 @@
       const confirmCompletePreparation = async () => {
         if (!orderToComplete.value) return;
 
-        // TODO: Appeler l'API pour mettre à jour le statut
-        const index = orders.value.findIndex(
-          o => o.id_commande === orderToComplete.value.id_commande,
-        );
-        if (index !== -1) {
-          orders.value[index].statut = "expedie";
-          // Retirer de la liste après un court délai
-          setTimeout(() => {
-            orders.value = orders.value.filter(
-              o => o.id_commande !== orderToComplete.value.id_commande,
-            );
-          }, 500);
+        try {
+          // TODO: Implémenter l'appel API pour mettre à jour le statut
+          // Pour l'instant, on met à jour localement
+          const index = orders.value.findIndex(
+            o => o.id_commande === orderToComplete.value.id_commande,
+          );
+          if (index !== -1) {
+            orders.value[index].statut = "expedie";
+            triggerToast("Commande marquée comme expédiée", "success");
+          }
+        } catch (err) {
+          console.error("Erreur lors de la mise à jour:", err);
+          triggerToast("Erreur lors de la mise à jour", "error");
         }
 
         showConfirmModal.value = false;
         orderToComplete.value = null;
-      };
-
-      const exportOrders = () => {
-        // Fonction d'export
-        const data = [
-          [
-            "ID",
-            "Numéro de commande",
-            "ID Client",
-            "Date de commande",
-            "Statut",
-            "Montant HT",
-            "Montant TTC",
-          ],
-          ...filteredOrders.value.map(o => [
-            o.id_commande,
-            o.numero_commande,
-            o.id_client,
-            formatDate(o.date_commande),
-            getStatusLabel(o.statut),
-            formatCurrency(o.montant_ht),
-            formatCurrency(o.montant_ttc),
-          ]),
-        ];
-
-        if (!data[1]) {
-          triggerToast("Aucune commande à exporter !", "error");
-          return;
-        }
-        const csvString = data.map(row => row.join(",")).join("\n");
-        const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "commandes.csv";
-        a.click();
-        URL.revokeObjectURL(url);
-      };
-
-      const viewOrder = order => {
-        router.push(`/orders/${order.id_commande}`);
       };
 
       const viewOrderContent = async order => {
@@ -645,31 +635,59 @@
         loadingArticles.value = true;
         orderArticles.value = [];
 
-        // TODO: Récupérer les articles de la commande via l'API
-        // Pour l'instant, on simule avec des données
-        setTimeout(() => {
-          orderArticles.value = [
-            {
-              id_article: 1,
-              nom: "Robe d'été fleurie",
-              reference: "REF-001",
-              quantite: 2,
+        try {
+          // Récupérer les liaisons commande-lot
+          const commandeLotResponse = await fetch(VITE_API_URL + "get_table?table=commande_lot", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
             },
-            {
-              id_article: 2,
-              nom: "T-shirt basique blanc",
-              reference: "REF-002",
-              quantite: 5,
+            credentials: "include",
+          });
+
+          // Récupérer les informations des lots
+          const lotsResponse = await fetch(VITE_API_URL + "get_table?table=lot", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
             },
-            {
-              id_article: 3,
-              nom: "Jean slim noir",
-              reference: "REF-003",
-              quantite: 3,
-            },
-          ];
+            credentials: "include",
+          });
+
+          if (!commandeLotResponse.ok || !lotsResponse.ok) {
+            throw new Error("Erreur lors du chargement des articles");
+          }
+
+          const commandeLotData = await commandeLotResponse.json();
+          const lotsData = await lotsResponse.json();
+
+          if (commandeLotData.success && lotsData.success) {
+            // Filtrer les lots de cette commande
+            const orderLots = commandeLotData.data.filter(
+              cl => cl.id_commande === order.id_commande
+            );
+
+            // Créer la liste des articles avec leurs quantités
+            orderArticles.value = orderLots.map(orderLot => {
+              const lot = lotsData.data.find(l => l.id_lot === orderLot.id_lot);
+              return {
+                id_article: orderLot.id_lot,
+                nom: lot ? lot.nom : `Lot #${orderLot.id_lot}`,
+                reference: lot ? `LOT-${orderLot.id_lot}` : "N/A",
+                quantite: orderLot.quantite,
+                description: lot ? lot.description : ""
+              };
+            });
+          }
+        } catch (err) {
+          console.error("Erreur lors du chargement des articles:", err);
+          // Si erreur, afficher un message
+          orderArticles.value = [];
+        } finally {
           loadingArticles.value = false;
-        }, 1000);
+        }
       };
 
       // Charger les données au montage
@@ -693,6 +711,7 @@
         urgentCount,
         totalPending,
         inProgressCount,
+        shippedCount,
         filteredOrders,
         fetchData,
         getClientName,
@@ -705,8 +724,6 @@
         startPreparation,
         completePreparation,
         confirmCompletePreparation,
-        exportOrders,
-        viewOrder,
         viewOrderContent,
       };
     },
@@ -734,7 +751,7 @@
   /* SECTION KPI */
   .kpi-section {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 1.5rem;
     margin-bottom: 2rem;
   }
@@ -786,6 +803,11 @@
     color: #d97706;
   }
 
+  .shipped-icon {
+    background: #d1fae5;
+    color: #059669;
+  }
+
   .kpi-content {
     flex: 1;
   }
@@ -794,6 +816,7 @@
     font-size: 13px;
     color: #64748b;
     font-weight: 500;
+    margin: 0 0 4px 0;
   }
 
   .kpi-value {
@@ -855,6 +878,7 @@
     top: -25px;
     left: 3px;
     font-size: 14px;
+    color: #64748b;
   }
 
   .filter-select {
@@ -870,6 +894,9 @@
     min-width: 140px;
     cursor: pointer;
     transition: all 0.2s ease;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
   }
 
   .filter-select:hover,
@@ -884,12 +911,6 @@
     box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
   }
 
-  .filter-select {
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-  }
-
   .filter-icon {
     position: absolute;
     right: 1rem;
@@ -897,32 +918,7 @@
     transform: translate(25%, -50%);
     pointer-events: none;
     height: 20px;
-  }
-
-  .export-button {
-    background: #0062ff;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 0.75rem 1.5rem;
-    font-size: 14px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-
-  .export-button:hover {
-    background: #0056cc;
-    transform: translateY(-1px);
-  }
-
-  .export-button svg {
-    width: 16px;
-    height: 16px;
-    stroke-width: 2;
+    color: #94a3b8;
   }
 
   /* LOADING & ERROR */
@@ -1040,7 +1036,7 @@
   .order-info {
     display: flex;
     align-items: center;
-    gap: 2rem;
+    gap: 1.5rem;
     flex-wrap: wrap;
   }
 
@@ -1053,7 +1049,8 @@
   .order-id {
     font-weight: 600;
     color: #0f172a;
-    font-size: 14px;
+    font-size: 13px;
+    white-space: nowrap;
   }
 
   .order-client {
@@ -1077,15 +1074,22 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    min-width: 255px;
   }
 
   .badge {
-    padding: 6px 16px;
+    padding: 6px 8px;
     border-radius: 24px;
     font-size: 13px;
     font-weight: 500;
     white-space: nowrap;
     letter-spacing: -0.01em;
+    min-width: 120px;
+    width: 120px;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .badge-urgent {
@@ -1108,6 +1112,11 @@
     color: #047857;
   }
 
+  .badge-default {
+    background: #f1f5f9;
+    color: #64748b;
+  }
+
   .order-actions {
     display: flex;
     align-items: center;
@@ -1121,11 +1130,14 @@
   .action-btn {
     border: none;
     border-radius: 8px;
-    padding: 0.625rem 1.25rem;
+    padding: 0.625rem 1rem;
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
+    min-width: 120px;
+    width: 120px;
+    text-align: center;
   }
 
   .action-btn.primary {
@@ -1146,6 +1158,16 @@
     background: #047857;
   }
 
+  .action-btn.completed {
+    background: #e2e8f0;
+    color: #64748b;
+    cursor: not-allowed;
+  }
+
+  .action-btn.completed:hover {
+    background: #e2e8f0;
+  }
+
   .action-btn.icon-btn {
     background: white;
     border: 1px solid #e2e8f0;
@@ -1156,6 +1178,7 @@
     justify-content: center;
     width: 36px;
     height: 36px;
+    min-width: 36px;
   }
 
   .action-btn.icon-btn:hover {
@@ -1213,6 +1236,7 @@
     border-bottom: 1px solid #e2e8f0;
   }
 
+  .modal-header h2,
   .modal-header h3 {
     font-size: 18px;
     font-weight: 600;
@@ -1306,17 +1330,19 @@
   .article-item {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     padding: 0.75rem;
     background: #f8fafc;
     border-radius: 6px;
     border: 1px solid #e2e8f0;
+    gap: 1rem;
   }
 
   .article-info {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
+    flex: 1;
   }
 
   .article-name {
@@ -1330,10 +1356,18 @@
     color: #64748b;
   }
 
+  .article-description {
+    font-size: 12px;
+    color: #94a3b8;
+    font-style: italic;
+  }
+
   .article-quantity {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    flex-shrink: 0;
+    padding-top: 0.25rem;
   }
 
   .quantity-label {
@@ -1447,11 +1481,13 @@
   }
 
   /* RESPONSIVE */
-  @media (max-width: 1024px) {
+  @media (max-width: 1200px) {
     .kpi-section {
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(2, 1fr);
     }
+  }
 
+  @media (max-width: 1024px) {
     .filter-group {
       flex-direction: column;
       align-items: stretch;
@@ -1466,6 +1502,10 @@
   }
 
   @media (max-width: 768px) {
+    .kpi-section {
+      grid-template-columns: 1fr;
+    }
+
     .search-container {
       min-width: auto;
     }
