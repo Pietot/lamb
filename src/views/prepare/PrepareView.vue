@@ -571,7 +571,6 @@
           expedie: "badge-shipped",
           "1": "badge-waiting", // Statut 1 = En attente
           "2": "badge-progress" // Statut 1 = En préparation
-
         };
         return statusClasses[status] || "badge-default";
       };
