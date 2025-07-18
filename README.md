@@ -1,37 +1,55 @@
 # fashion-chic
 
-This template should help get you started developing with Vue 3 in Vite.
+Ce modèle vous aidera à démarrer le développement avec Vue 3 et Vite.
 
-## Recommended IDE Setup
+## Configuration recommandée de l'IDE
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (et désactivez Vetur).
 
-## Customize configuration
+## Personnalisation de la configuration
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+Voir la [documentation de configuration de Vite](https://vite.dev/config/).
 
-## Prerequisite
+## Prérequis
 
-- Clone the repo in `C:\wamp64\www` if you're using wamp, or in `C:\xampp\htdocs` if you're using xampp.
+- Cloner le dépôt dans `C:\wamp64\www` si vous utilisez WAMP, ou dans `C:\xampp\htdocs` si vous utilisez XAMPP.
+- Importer la base de données depuis `api\routes\utils\sql\lamb.sql` dans votre serveur de base de données.
+- Compléter les fichiers `.env` dans `api\routes\utils\.env` et `.env.local`.
 
-- Import the database in `backend\sql\lamb.sql` to your database.
-
-- Fill the .envs in `backend\.env` and `.env.local` (usally `VITE_API_URL=http://localhost/lamb/backend/login.php`)
-
-## Project Setup
+## Installation du projet
 
 ```sh
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+### Compilation et rechargement à chaud pour le développement
 
 ```sh
 npm run dev
 ```
 
-### Compile and Minify for Production
+### Compilation et minification pour la production
 
 ```sh
 npm run build
+```
+
+### Pour mettre à jour les .env
+```sh
+npm run setup-env
+```
+
+### Pour réinitialiser .env
+```sh
+npm install
+```
+
+### Pour installer vite si besoin
+```sh
+npm vite install
+```
+
+### Pour formatter le code (facultatif)
+```sh
+npm run pretty
 ```
