@@ -679,8 +679,9 @@
         return phone;
       };
 
-      const getSupplierInitials = supplier => {
-        const words = supplier.nom.split(/[\s\-&]+/);
+      const getSupplierInitials = () => {
+        if (!supplier.value || !supplier.value.nom) return "";
+        const words = supplier.value.nom.split(/[\s\-&]+/);
         return words
           .map(w => w[0])
           .join("")
