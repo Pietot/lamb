@@ -24,6 +24,7 @@
 
       <!-- Formulaire de connexion -->
       <div class="login-form-container">
+        <div class="login-title">Connexion</div>
         <form @submit.prevent="handleLogin" class="login-form">
           <!-- Champ LOGIN -->
           <div class="form-field">
@@ -75,11 +76,6 @@
             {{ isLoading ? "CONNEXION..." : "LOGIN" }}
           </button>
         </form>
-
-        <!-- Lien mot de passe oublié -->
-        <div class="forgot-password">
-          <a href="#" class="forgot-link">Mot de passe oublié</a>
-        </div>
       </div>
 
       <!-- Message d'erreur -->
@@ -275,16 +271,20 @@
   }
 
   /* FORMULAIRE */
+  .login-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1.5rem;
+    letter-spacing: 1px;
+  }
+
   .login-form-container {
     background: white;
     border-radius: 20px;
     padding: 2.5rem 2rem;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(10px);
-    margin-bottom: 1.5rem;
-  }
-
-  .login-form {
     margin-bottom: 1.5rem;
   }
 
@@ -370,24 +370,6 @@
     opacity: 0.7;
     cursor: not-allowed;
     transform: none;
-  }
-
-  /* LIEN MOT DE PASSE OUBLIÉ */
-  .forgot-password {
-    text-align: center;
-  }
-
-  .forgot-link {
-    color: #6b7280;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 500;
-    transition: color 0.2s ease;
-  }
-
-  .forgot-link:hover {
-    color: #00b8d4;
-    text-decoration: underline;
   }
 
   /* MESSAGE D'ERREUR */
